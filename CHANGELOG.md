@@ -1,5 +1,112 @@
 #CHANGELOG
 
+## [1.13.62] - 2020-06-09
+
+### Changed
+
+- Version number only (because App Store Connect insist on an increase)
+
+
+## [1.12.61] - 2020-06-09
+
+### Changed
+
+- Updated CZ/FR/SV translations
+- Refined animation when adding a custom field
+
+### Fixed
+
+- Progress bar sometimes appeared misplaced [thanks, Michael]
+- Excessive text view change notifications (fixes #107) [thanks, Michael]
+
+
+## [1.12.60] - 2020-06-04
+
+### Changed
+
+- Updated DE/ES/RU translations
+
+### Fixed
+
+- Database file descriptions were shown in the system in wrong language (fixes #103) [thanks, majijiwi]
+- Load entries with missing field values, treat them as empty [thanks, Oliver]
+- Support Steam TOTP configured in KeePassXC with the "encoder" parameter (closes #101) [thanks, Manan] 
+- Added search settings to localizable resources
+
+## [1.12.59] - 2020-05-26
+
+### Added
+
+- New setting: whether to auto-unlock the last used database [thanks, Stanislav and Niklas]
+- New settings: whether to search in field names and in protected values [thanks, Paolo]
+- After copying a field, you can also quickly share it to other apps
+- More detailed loading progress messages for .kdbx databases
+- Entries marked as non-autofillable in KeePassXC won't appear in AutoFill (closes #100) [thanks, Igor]
+
+### Changed
+
+- Refined accessibility: respect the "bold text" system setting
+- Support email template now includes device type (iPhone/iPad)
+
+### Fixed
+
+- Animation of the "Copied" overlay when switching between fields
+- With extra-large font, group names appeared trimmed by height
+- Don't show AppLock setup prompt if master keys are not stored
+- Minor layout and wording improvements in the settings
+
+
+## [1.12.58] - 2020-05-10
+
+### Added
+
+- App Lock setup is now part of initial onboarding [thanks, everyone]
+- Added animated prompts to insert/touch YubiKey 5Ci key
+- New setting: show protected fields (off by default) (closes #95) [thanks, Jerry & Jeffrey]
+- New setting: use Universal Clipboard (off by default) [thanks, Daniel]
+- Added file operation buttons to the File Info dialog [thanks, Dirk]
+- The notes field is expandable now
+
+### Changed
+
+- Updated/refined some translations
+
+### Fixed
+
+- Parsing of misformatted ISO 8601 timestamps (sometimes created by MiniKeePass) [thanks, everyone]
+- Biometric auth asked for a premium upgrade under a heavy use [thanks, Theo]
+- Import conflict resolution dialog did not appear for key files
+- Groups and entries always appeared as non-expiring in v1 databases [thanks, Stefan]
+- Layout of the hardware key picker on iPad
+
+
+## [1.11.57] - 2020-04-16
+
+### Added
+
+- Re-added support for YubiKey 5Ci (and other YubiKeys with MFi interface)
+
+
+## [1.11.56] - 2020-04-16
+
+### Added
+
+- Auto-unlock the last used database on iPad like on iPhone (if allowed by the settings and on first launch only) [thanks, everyone]
+- New setting: whether AutoFill should automatically proceed when there is only one suitable entry (related #76) [thanks, Nicolai]
+
+### Fixed
+
+- Now it is possible to edit/move Recycle Bin in .kdbx databases [thanks, Amnuay]
+- Sometimes it was not possible to select databases from Google Drive [thanks, K.B.]
+
+
+## [1.11.55] - 2020-04-11
+
+### Added
+
+- Italian translation
+
+
 ## [1.11.54] - 2020-04-10
 
 ### Added

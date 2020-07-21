@@ -59,6 +59,7 @@ public class Settings {
         case backupFilesVisible
 
         case startupDatabase
+        case autoUnlockStartupDatabase
         case rememberDatabaseKey
         case keepKeyFileAssociations
         case keepHardwareKeyAssociations
@@ -70,18 +71,25 @@ public class Settings {
         case recentUserActivityTimestamp
         case appLockTimeout
         case databaseLockTimeout
+        
         case clipboardTimeout
+        case universalClipboardEnabled
 
-        case startWithSearch
         case groupSortOrder
         case entryListDetail
         case entryViewerPage
+        case hideProtectedFields
+        
+        case startWithSearch
+        case searchFieldNames
+        case searchProtectedValues
 
         case backupDatabaseOnSave
         case backupKeepingDuration
         
         case autoFillFinishedOK
         case copyTOTPOnAutoFill
+        case autoFillPerfectMatch
         
         case hapticFeedbackEnabled
         
@@ -783,6 +791,21 @@ public class Settings {
         }
     }
     
+    public var isAutoUnlockStartupDatabase: Bool {
+        get {
+            let stored = UserDefaults.appGroupShared
+                .object(forKey: Keys.autoUnlockStartupDatabase.rawValue)
+                as? Bool
+            return stored ?? true
+        }
+        set {
+            updateAndNotify(
+                oldValue: isAutoUnlockStartupDatabase,
+                newValue: newValue,
+                key: .autoUnlockStartupDatabase)
+        }
+    }
+    
     public var isRememberDatabaseKey: Bool {
         get {
             let stored = UserDefaults.appGroupShared
@@ -959,6 +982,7 @@ public class Settings {
         }
     }
     
+    
     public var clipboardTimeout: ClipboardTimeout {
         get {
             if let rawValue = UserDefaults.appGroupShared
@@ -978,21 +1002,21 @@ public class Settings {
         }
     }
     
-    
-    public var isStartWithSearch: Bool {
+    public var isUniversalClipboardEnabled: Bool {
         get {
             let stored = UserDefaults.appGroupShared
-                .object(forKey: Keys.startWithSearch.rawValue)
+                .object(forKey: Keys.universalClipboardEnabled.rawValue)
                 as? Bool
             return stored ?? false
         }
         set {
             updateAndNotify(
-                oldValue: isStartWithSearch,
+                oldValue: isUniversalClipboardEnabled,
                 newValue: newValue,
-                key: .startWithSearch)
+                key: .universalClipboardEnabled)
         }
     }
+    
     
     public var groupSortOrder: GroupSortOrder {
         get {
@@ -1043,6 +1067,66 @@ public class Settings {
                 oldValue: entryViewerPage,
                 newValue: newValue,
                 key: Keys.entryViewerPage)
+        }
+    }
+    
+    public var isHideProtectedFields: Bool {
+        get {
+            let stored = UserDefaults.appGroupShared
+                .object(forKey: Keys.hideProtectedFields.rawValue) as? Bool
+            return stored ?? true
+        }
+        set {
+            updateAndNotify(
+                oldValue: isHideProtectedFields,
+                newValue: newValue,
+                key: Keys.hideProtectedFields)
+        }
+    }
+    
+    
+    public var isStartWithSearch: Bool {
+        get {
+            let stored = UserDefaults.appGroupShared
+                .object(forKey: Keys.startWithSearch.rawValue)
+                as? Bool
+            return stored ?? false
+        }
+        set {
+            updateAndNotify(
+                oldValue: isStartWithSearch,
+                newValue: newValue,
+                key: .startWithSearch)
+        }
+    }
+
+    public var isSearchFieldNames: Bool {
+        get {
+            let stored = UserDefaults.appGroupShared
+                .object(forKey: Keys.searchFieldNames.rawValue)
+                as? Bool
+            return stored ?? true
+        }
+        set {
+            updateAndNotify(
+                oldValue: isSearchFieldNames,
+                newValue: newValue,
+                key: .searchFieldNames)
+        }
+    }
+    
+    public var isSearchProtectedValues: Bool {
+        get {
+            let stored = UserDefaults.appGroupShared
+                .object(forKey: Keys.searchProtectedValues.rawValue)
+                as? Bool
+            return stored ?? true
+        }
+        set {
+            updateAndNotify(
+                oldValue: isSearchProtectedValues,
+                newValue: newValue,
+                key: .searchProtectedValues)
         }
     }
     
@@ -1115,7 +1199,22 @@ public class Settings {
                 key: .copyTOTPOnAutoFill)
         }
     }
-    
+
+    public var autoFillPerfectMatch: Bool {
+        get {
+            let stored = UserDefaults.appGroupShared
+                .object(forKey: Keys.autoFillPerfectMatch.rawValue)
+                as? Bool
+            return stored ?? true
+        }
+        set {
+            updateAndNotify(
+                oldValue: autoFillPerfectMatch,
+                newValue: newValue,
+                key: .autoFillPerfectMatch)
+        }
+    }
+
     public var isHapticFeedbackEnabled: Bool {
         get {
             let stored = UserDefaults.appGroupShared

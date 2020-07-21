@@ -4,6 +4,24 @@
 /* Type of keyboard to show for App Lock passcode: digits only (PIN code). */
 "[AppLock/Passcode/KeyboardType/title] Numeric" = "Numerisch";
 
+/* Error message when the challenge-response communication has been cancelled by the user. */
+"[ChallengeResponseError] cancelled" = "Vom Benutzer abgebrochen.";
+
+/* Error message when the hardware key is not plugged in. */
+"[ChallengeResponseError] keyNotConnected" = "Hardwareschlüssel ist nicht verbunden.";
+
+/* Error message when trying to use challenge-response hardware in AutoFill. */
+"[ChallengeResponseError] notAvailableInAutoFill" = "Hardwareschlüssel sind in AutoFill nicht verfügbar.";
+
+/* Error message when trying to use challenge-response with a kdb database. */
+"[ChallengeResponseError] notSupportedByDatabaseFormat" = "Hardwareschlüssel werden von diesem Datenbankformat nicht unterstützt.";
+
+/* Error message when trying to use a hardware challenge-response key on unsupported device/iOS version. %@ will be the name of the hardware interface, such as `NFC` or `Lightning`. */
+"[ChallengeResponseError] notSupportedByDeviceOrSystem" = "Hardwareschlüssel werden von diesem Gerät oder dieser iOS-Version nicht unterstützt (%@)";
+
+/* Error message: the hardware key (or its slot) was not configured for challenge-response operations. */
+"[ChallengeResponseError] slotNotConfigured" = "Hardwareschlüssel ist nicht für \"Challenge-Response\" konfiguriert.";
+
 /* Progress status */
 "[Cipher/Progress] Decrypting" = "Entschlüsseln";
 
@@ -60,6 +78,9 @@
 
 /* Progress status */
 "[Database/Progress] Loading key file..." = "Schlüsseldatei wird geladen...";
+
+/* Progress status */
+"[Database/Progress/resolving]" = "Kontaktiere den Speicheranbieter...";
 
 /* Error message */
 "[Database/Unlock/Error] Failed to open key file" = "Schlüsseldatei konnte nicht geöffnet werden";
@@ -177,6 +198,15 @@
 
 /* Progress bar status */
 "[Database2/Progress] Writing encrypted blocks" = "Verschlüsselte Blöcke werden geschrieben";
+
+/* Progress bar status: un-zipping the database content */
+"[Database2/Progress/decompressing]" = "Dekomprimiere Datenbank";
+
+/* Progress bar status */
+"[Database2/Progress/integrityCheck]" = "Integrität wird überprüft";
+
+/* Progress bar status: parsing decrypted XML content */
+"[Database2/Progress/parsingXML]" = "Lade Datenbank";
 
 /* Error message while saving a database. [errorDescription: String] */
 "[Database2/Saving/Error] Data compression error: %@" = "Datenkomprimierungsfehler: %@";

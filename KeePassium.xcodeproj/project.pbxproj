@@ -67,6 +67,8 @@
 		752B1E9320E8AA070073AABD /* EditableField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 752B1E9220E8AA070073AABD /* EditableField.swift */; };
 		752BB12520F089B30070FAC0 /* SettingsItemListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 752BB12420F089B30070FAC0 /* SettingsItemListVC.swift */; };
 		752ED68D2235547D00C20D3E /* SettingsDataProtectionVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 752ED68C2235547D00C20D3E /* SettingsDataProtectionVC.swift */; };
+		752F5887247DCA5F0097ED20 /* SettingsSearchVC.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 752F588A247DCA5F0097ED20 /* SettingsSearchVC.storyboard */; };
+		752F5888247DCA5F0097ED20 /* SettingsSearchVC.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 752F588A247DCA5F0097ED20 /* SettingsSearchVC.storyboard */; };
 		7532A24D21C5A035005DF56F /* KeyFileChooserVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7532A24C21C5A035005DF56F /* KeyFileChooserVC.swift */; };
 		7533030F23C52A1500F38CC7 /* DestinationGroupPickerVC.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7533031223C52A1500F38CC7 /* DestinationGroupPickerVC.storyboard */; };
 		7533031023C52A1500F38CC7 /* DestinationGroupPickerVC.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7533031223C52A1500F38CC7 /* DestinationGroupPickerVC.storyboard */; };
@@ -186,6 +188,8 @@
 		75802634222ED11D00F4525F /* ProgressVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75802633222ED11D00F4525F /* ProgressVC.swift */; };
 		75802635222ED11D00F4525F /* ProgressVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75802633222ED11D00F4525F /* ProgressVC.swift */; };
 		7582544B2211BB830053FCC9 /* Watchdog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7546FBD820C3A3F600C5D834 /* Watchdog.swift */; };
+		75839A90246B1A78003DAB7F /* SettingsSearchVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75839A8F246B1A78003DAB7F /* SettingsSearchVC.swift */; };
+		75839A91246B1A78003DAB7F /* SettingsSearchVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75839A8F246B1A78003DAB7F /* SettingsSearchVC.swift */; };
 		7584B3F120DD908A0086C094 /* UITextView+border.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7584B3F020DD908A0086C094 /* UITextView+border.swift */; };
 		758544642351FE8D000D5E5E /* UIFont+monospace.swift in Sources */ = {isa = PBXBuildFile; fileRef = 758544632351FE8D000D5E5E /* UIFont+monospace.swift */; };
 		758544652351FE8D000D5E5E /* UIFont+monospace.swift in Sources */ = {isa = PBXBuildFile; fileRef = 758544632351FE8D000D5E5E /* UIFont+monospace.swift */; };
@@ -195,6 +199,14 @@
 		758BF0DD20D220B300897C83 /* WatchdogAwareTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 758BF0DC20D220B300897C83 /* WatchdogAwareTextField.swift */; };
 		758D8E902274D2BE00644FA6 /* DatabaseCreatorVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 758D8E8F2274D2BE00644FA6 /* DatabaseCreatorVC.swift */; };
 		7596771E20FB36BD00E54827 /* SettingsAppTimeoutVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7596771D20FB36BD00E54827 /* SettingsAppTimeoutVC.swift */; };
+		759894B724620AF6006B6709 /* FileExportHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 759894B624620AF6006B6709 /* FileExportHelper.swift */; };
+		759894B824620AF6006B6709 /* FileExportHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 759894B624620AF6006B6709 /* FileExportHelper.swift */; };
+		759894B924620AF6006B6709 /* FileExportHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 759894B624620AF6006B6709 /* FileExportHelper.swift */; };
+		759894BA24620AF6006B6709 /* FileExportHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 759894B624620AF6006B6709 /* FileExportHelper.swift */; };
+		759894BC24620D33006B6709 /* FileDestructionHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 759894BB24620D33006B6709 /* FileDestructionHelper.swift */; };
+		759894BD24620D33006B6709 /* FileDestructionHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 759894BB24620D33006B6709 /* FileDestructionHelper.swift */; };
+		759894BE24620D33006B6709 /* FileDestructionHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 759894BB24620D33006B6709 /* FileDestructionHelper.swift */; };
+		759894BF24620D33006B6709 /* FileDestructionHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 759894BB24620D33006B6709 /* FileDestructionHelper.swift */; };
 		7598963F2341590300DF39AA /* KeePassiumLib.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 75FEC2222175292C0034334B /* KeePassiumLib.framework */; };
 		759896402341590300DF39AA /* KeePassiumLib.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 75FEC2222175292C0034334B /* KeePassiumLib.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		7599637022E112E50004BC85 /* Attachment+extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7599636F22E112E50004BC85 /* Attachment+extensions.swift */; };
@@ -450,6 +462,10 @@
 		75ED429D2313A3EF003DE72E /* SettingsDatabaseTimeoutVC.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 75ED429F2313A3EF003DE72E /* SettingsDatabaseTimeoutVC.storyboard */; };
 		75ED42A42313C0BB003DE72E /* SettingsClipboardTimeoutVC.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 75ED42A62313C0BB003DE72E /* SettingsClipboardTimeoutVC.storyboard */; };
 		75ED42A92313C20A003DE72E /* SettingsItemListVC.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 75ED42AB2313C20A003DE72E /* SettingsItemListVC.storyboard */; };
+		75F28785245D646B00F03657 /* MFIKeyActionSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75F28781245D646B00F03657 /* MFIKeyActionSheetView.swift */; };
+		75F28786245D646B00F03657 /* MFIKeyActionSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75F28781245D646B00F03657 /* MFIKeyActionSheetView.swift */; };
+		75F28787245D646B00F03657 /* MFIKeyActionSheetView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 75F28782245D646B00F03657 /* MFIKeyActionSheetView.xib */; };
+		75F28788245D646B00F03657 /* MFIKeyActionSheetView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 75F28782245D646B00F03657 /* MFIKeyActionSheetView.xib */; };
 		75F4ACFC21776F4800B22D8B /* LString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75F4ACFB21776F4800B22D8B /* LString.swift */; };
 		75F5CACD20BD18320056C969 /* UIView+extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75F5CACC20BD18320056C969 /* UIView+extension.swift */; };
 		75FEC2232175292C0034334B /* KeePassiumLib.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 75FEC2222175292C0034334B /* KeePassiumLib.framework */; };
@@ -579,6 +595,17 @@
 		752B1E9220E8AA070073AABD /* EditableField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditableField.swift; sourceTree = "<group>"; };
 		752BB12420F089B30070FAC0 /* SettingsItemListVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsItemListVC.swift; sourceTree = "<group>"; };
 		752ED68C2235547D00C20D3E /* SettingsDataProtectionVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsDataProtectionVC.swift; sourceTree = "<group>"; };
+		752F5889247DCA5F0097ED20 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/SettingsSearchVC.storyboard; sourceTree = "<group>"; };
+		752F588E247DCA660097ED20 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/SettingsSearchVC.strings"; sourceTree = "<group>"; };
+		752F5890247DCA670097ED20 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/SettingsSearchVC.strings"; sourceTree = "<group>"; };
+		752F5892247DCA690097ED20 /* cs */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = cs; path = cs.lproj/SettingsSearchVC.strings; sourceTree = "<group>"; };
+		752F5894247DCA6A0097ED20 /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/SettingsSearchVC.strings; sourceTree = "<group>"; };
+		752F5896247DCA6B0097ED20 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/SettingsSearchVC.strings; sourceTree = "<group>"; };
+		752F5898247DCA6D0097ED20 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/SettingsSearchVC.strings; sourceTree = "<group>"; };
+		752F589A247DCA6E0097ED20 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/SettingsSearchVC.strings; sourceTree = "<group>"; };
+		752F589C247DCA700097ED20 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/SettingsSearchVC.strings; sourceTree = "<group>"; };
+		752F589E247DCA720097ED20 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/SettingsSearchVC.strings; sourceTree = "<group>"; };
+		752F58A0247DCA740097ED20 /* sv */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sv; path = sv.lproj/SettingsSearchVC.strings; sourceTree = "<group>"; };
 		7532A24C21C5A035005DF56F /* KeyFileChooserVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyFileChooserVC.swift; sourceTree = "<group>"; };
 		7533031123C52A1500F38CC7 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/DestinationGroupPickerVC.storyboard; sourceTree = "<group>"; };
 		753376F023CA650C00603F4A /* PasswordStringHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PasswordStringHelper.swift; sourceTree = "<group>"; };
@@ -598,6 +625,50 @@
 		7547C9EB234900FE004B159C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/PremiumProVC.storyboard; sourceTree = "<group>"; };
 		754804FA238E51AF0068C863 /* PopoverAnchor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PopoverAnchor.swift; sourceTree = "<group>"; };
 		7548BC1721B07BFE001B00E9 /* ProtectedTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProtectedTextField.swift; sourceTree = "<group>"; };
+		754A322B24426AA300632B39 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		754A322C24426AA300632B39 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		754A322D24426AA300632B39 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/FileInfoVC.strings; sourceTree = "<group>"; };
+		754A322E24426AA300632B39 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/Localizable.strings; sourceTree = "<group>"; };
+		754A322F24426AA300632B39 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/ChangeMasterKeyVC.strings; sourceTree = "<group>"; };
+		754A323024426AA300632B39 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/KeyFileChooserVC.strings; sourceTree = "<group>"; };
+		754A323124426AA300632B39 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/Localizable.strings; sourceTree = "<group>"; };
+		754A323224426AA300632B39 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/ViewEntryFieldsVC.strings; sourceTree = "<group>"; };
+		754A323324426AA300632B39 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/CrashReportVC.strings; sourceTree = "<group>"; };
+		754A323424426AA300632B39 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/EditEntryVC.strings; sourceTree = "<group>"; };
+		754A323524426AA300632B39 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/SettingsAppLockVC.strings; sourceTree = "<group>"; };
+		754A323624426AA300632B39 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/SettingsBackupVC.strings; sourceTree = "<group>"; };
+		754A323724426AA300632B39 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/ChooseDatabaseVC.strings; sourceTree = "<group>"; };
+		754A323824426AA300632B39 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/ChooseIconVC.strings; sourceTree = "<group>"; };
+		754A323924426AA300632B39 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/SettingsFileSortingVC.strings; sourceTree = "<group>"; };
+		754A323A24426AA300632B39 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/SettingsDataProtectionVC.strings; sourceTree = "<group>"; };
+		754A323B24426AA300632B39 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/EditGroupVC.strings; sourceTree = "<group>"; };
+		754A323C24426AA300632B39 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/UnlockDatabaseVC.strings; sourceTree = "<group>"; };
+		754A323D24426AA300632B39 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/ViewEntryVC.strings; sourceTree = "<group>"; };
+		754A323E24426AA300632B39 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/DiagnosticsViewerVC.strings; sourceTree = "<group>"; };
+		754A323F24426AA300632B39 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/SettingsDatabaseTimeoutVC.strings; sourceTree = "<group>"; };
+		754A324024426AA300632B39 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/EntryFinderVC.strings; sourceTree = "<group>"; };
+		754A324124426AA300632B39 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/ViewGroupVC.strings; sourceTree = "<group>"; };
+		754A324224426AA300632B39 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/SettingsItemListVC.strings; sourceTree = "<group>"; };
+		754A324324426AA300632B39 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/ChooseKeyFileVC.strings; sourceTree = "<group>"; };
+		754A324424426AA300632B39 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/SettingsAppTimeoutVC.strings; sourceTree = "<group>"; };
+		754A324524426AA300632B39 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/DatabaseChooserVC.strings; sourceTree = "<group>"; };
+		754A324624426AA300632B39 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/SettingsAutoFillVC.strings; sourceTree = "<group>"; };
+		754A324724426AA300632B39 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/AboutVC.strings; sourceTree = "<group>"; };
+		754A324824426AA300632B39 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/ViewEntryFilesVC.strings; sourceTree = "<group>"; };
+		754A324924426AA300632B39 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/FirstSetupVC.strings; sourceTree = "<group>"; };
+		754A324A24426AA300632B39 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/ViewEntryHistoryVC.strings; sourceTree = "<group>"; };
+		754A324B24426AA300632B39 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/ViewDiagnosticsVC.strings; sourceTree = "<group>"; };
+		754A324C24426AA300632B39 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/WelcomeVC.strings; sourceTree = "<group>"; };
+		754A324D24426AA300632B39 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/PremiumContainerVC.strings; sourceTree = "<group>"; };
+		754A324E24426AA300632B39 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/DatabaseCreatorVC.strings; sourceTree = "<group>"; };
+		754A324F24426AA300632B39 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/PremiumVC.strings; sourceTree = "<group>"; };
+		754A325024426AA300632B39 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/SettingsVC.strings; sourceTree = "<group>"; };
+		754A325124426AA300632B39 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/DatabaseUnlockerVC.strings; sourceTree = "<group>"; };
+		754A325224426AA300632B39 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/PremiumProVC.strings; sourceTree = "<group>"; };
+		754A325324426AA300632B39 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/SettingsClipboardTimeoutVC.strings; sourceTree = "<group>"; };
+		754A325424426AA300632B39 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/PasswordGeneratorVC.strings; sourceTree = "<group>"; };
+		754A325524426AA300632B39 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/PasscodeInputVC.strings; sourceTree = "<group>"; };
+		754A325624426AA300632B39 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/SettingsBackupTimeoutPickerVC.strings; sourceTree = "<group>"; };
 		754BF07B2082A6BD00E3A292 /* KeePassium.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = KeePassium.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		754BF07E2082A6BD00E3A292 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		754BF0872082A6BD00E3A292 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -705,18 +776,22 @@
 		757ADC4923A12DD100D708D2 /* HardwareKeyPicker.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = HardwareKeyPicker.storyboard; sourceTree = "<group>"; };
 		757ADC4E23A5180600D708D2 /* DismissablePopover.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DismissablePopover.swift; sourceTree = "<group>"; };
 		757ADC4F23A5180600D708D2 /* DismissableNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DismissableNavigationController.swift; sourceTree = "<group>"; };
+		757CFD7A24892E28001CD231 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		757D336020EF382D000A47F0 /* SettingsDatabaseTimeoutVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsDatabaseTimeoutVC.swift; sourceTree = "<group>"; };
 		757D336220EF5081000A47F0 /* SettingsClipboardTimeoutVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsClipboardTimeoutVC.swift; sourceTree = "<group>"; };
 		757EF2F420EB3D1C0024AACD /* PasswordGeneratorVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordGeneratorVC.swift; sourceTree = "<group>"; };
 		757FB3C721F8D34A00F016FA /* PasscodeInputVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PasscodeInputVC.swift; sourceTree = "<group>"; };
 		75802630222EBC3800F4525F /* ProgressVC.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = ProgressVC.storyboard; sourceTree = "<group>"; };
 		75802633222ED11D00F4525F /* ProgressVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressVC.swift; sourceTree = "<group>"; };
+		75839A8F246B1A78003DAB7F /* SettingsSearchVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsSearchVC.swift; sourceTree = "<group>"; };
 		7584B3F020DD908A0086C094 /* UITextView+border.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITextView+border.swift"; sourceTree = "<group>"; };
 		758544632351FE8D000D5E5E /* UIFont+monospace.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIFont+monospace.swift"; sourceTree = "<group>"; };
 		758BF0D720D1B1DA00897C83 /* ValidatingTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValidatingTextField.swift; sourceTree = "<group>"; };
 		758BF0DC20D220B300897C83 /* WatchdogAwareTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchdogAwareTextField.swift; sourceTree = "<group>"; };
 		758D8E8F2274D2BE00644FA6 /* DatabaseCreatorVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseCreatorVC.swift; sourceTree = "<group>"; };
 		7596771D20FB36BD00E54827 /* SettingsAppTimeoutVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsAppTimeoutVC.swift; sourceTree = "<group>"; };
+		759894B624620AF6006B6709 /* FileExportHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileExportHelper.swift; sourceTree = "<group>"; };
+		759894BB24620D33006B6709 /* FileDestructionHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileDestructionHelper.swift; sourceTree = "<group>"; };
 		7599636F22E112E50004BC85 /* Attachment+extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Attachment+extensions.swift"; sourceTree = "<group>"; };
 		759BCEAF2144E6E7002FC18B /* RootSplitVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RootSplitVC.swift; sourceTree = "<group>"; };
 		75A26773228E7D200097C693 /* PremiumVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PremiumVC.swift; sourceTree = "<group>"; };
@@ -1013,6 +1088,8 @@
 		75ED42B12315896C003DE72E /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/FirstSetupVC.strings; sourceTree = "<group>"; };
 		75F15C9F233E512F001FA223 /* KeePassiumLib-PRO.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = "KeePassiumLib-PRO.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
 		75F15CA2233E5399001FA223 /* KeePassiumLib-PRO.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = "KeePassiumLib-PRO.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		75F28781245D646B00F03657 /* MFIKeyActionSheetView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MFIKeyActionSheetView.swift; sourceTree = "<group>"; };
+		75F28782245D646B00F03657 /* MFIKeyActionSheetView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MFIKeyActionSheetView.xib; sourceTree = "<group>"; };
 		75F4ACBF2175F7A400B22D8B /* DiagLib.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = DiagLib.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		75F4ACFB21776F4800B22D8B /* LString.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LString.swift; sourceTree = "<group>"; };
 		75F5CACC20BD18320056C969 /* UIView+extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+extension.swift"; sourceTree = "<group>"; };
@@ -1241,6 +1318,8 @@
 				75ED42AB2313C20A003DE72E /* SettingsItemListVC.storyboard */,
 				752ED68C2235547D00C20D3E /* SettingsDataProtectionVC.swift */,
 				751E0CE82309AE5D0088BB10 /* SettingsDataProtectionVC.storyboard */,
+				75839A8F246B1A78003DAB7F /* SettingsSearchVC.swift */,
+				752F588A247DCA5F0097ED20 /* SettingsSearchVC.storyboard */,
 			);
 			path = settings;
 			sourceTree = "<group>";
@@ -1299,6 +1378,8 @@
 				75F4ACFB21776F4800B22D8B /* LString.swift */,
 				75679ACA22F8095F00372301 /* AppInfo.swift */,
 				7546FBD820C3A3F600C5D834 /* Watchdog.swift */,
+				759894B624620AF6006B6709 /* FileExportHelper.swift */,
+				759894BB24620D33006B6709 /* FileDestructionHelper.swift */,
 				753A3EE920D3776D00A1CF70 /* Refreshable.swift */,
 				75779863223023D3006671BD /* ProgressViewHost.swift */,
 				754804FA238E51AF0068C863 /* PopoverAnchor.swift */,
@@ -1416,6 +1497,7 @@
 		757ADC4323A1045C00D708D2 /* challenge-response */ = {
 			isa = PBXGroup;
 			children = (
+				75F2877F245D646B00F03657 /* MFIKeyActionSheet */,
 				7558D06123CE2F3E00547621 /* ChallengeResponseManager.swift */,
 				757ADC4423A1047600D708D2 /* HardwareKeyPicker.swift */,
 				757ADC4923A12DD100D708D2 /* HardwareKeyPicker.storyboard */,
@@ -1510,6 +1592,15 @@
 				751E0D3D2309B01A0088BB10 /* DiagnosticsViewerVC.storyboard */,
 			);
 			path = controllers;
+			sourceTree = "<group>";
+		};
+		75F2877F245D646B00F03657 /* MFIKeyActionSheet */ = {
+			isa = PBXGroup;
+			children = (
+				75F28781245D646B00F03657 /* MFIKeyActionSheetView.swift */,
+				75F28782245D646B00F03657 /* MFIKeyActionSheetView.xib */,
+			);
+			path = MFIKeyActionSheet;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1668,6 +1759,7 @@
 				sv,
 				es,
 				fr,
+				it,
 			);
 			mainGroup = 754BF0722082A6BD00E3A292;
 			productRefGroup = 754BF07C2082A6BD00E3A292 /* Products */;
@@ -1715,6 +1807,7 @@
 				751E0D132309AF540088BB10 /* ChooseDatabaseVC.storyboard in Resources */,
 				757ADC4A23A12DD100D708D2 /* HardwareKeyPicker.storyboard in Resources */,
 				755B862E23054FA200E9FC83 /* AboutVC.storyboard in Resources */,
+				75F28787245D646B00F03657 /* MFIKeyActionSheetView.xib in Resources */,
 				754BF08D2082A6BD00E3A292 /* LaunchScreen.storyboard in Resources */,
 				751E0CEF2309AE920088BB10 /* SettingsBackupVC.storyboard in Resources */,
 				755E7DA2232008300010E199 /* Localizable.strings in Resources */,
@@ -1747,6 +1840,7 @@
 				75ED429D2313A3EF003DE72E /* SettingsDatabaseTimeoutVC.storyboard in Resources */,
 				751E0CE92309AE860088BB10 /* SettingsFileSortingVC.storyboard in Resources */,
 				7547C9EA234900B3004B159C /* PremiumProVC.storyboard in Resources */,
+				752F5887247DCA5F0097ED20 /* SettingsSearchVC.storyboard in Resources */,
 				751E0CF52309AEBB0088BB10 /* SettingsAutoFillVC.storyboard in Resources */,
 				751E0D1C2309AF670088BB10 /* UnlockDatabaseVC.storyboard in Resources */,
 				75ED42A42313C0BB003DE72E /* SettingsClipboardTimeoutVC.storyboard in Resources */,
@@ -1765,6 +1859,7 @@
 				75B38C52233E5B7C006BDEFC /* ChooseDatabaseVC.storyboard in Resources */,
 				757ADC4C23A12DD100D708D2 /* HardwareKeyPicker.storyboard in Resources */,
 				75B38C53233E5B7C006BDEFC /* AboutVC.storyboard in Resources */,
+				75F28788245D646B00F03657 /* MFIKeyActionSheetView.xib in Resources */,
 				75B38C54233E5B7C006BDEFC /* LaunchScreen.storyboard in Resources */,
 				75B38C55233E5B7C006BDEFC /* SettingsBackupVC.storyboard in Resources */,
 				75B38C56233E5B7C006BDEFC /* Localizable.strings in Resources */,
@@ -1797,6 +1892,7 @@
 				75B38C70233E5B7C006BDEFC /* PlaceholderVC.storyboard in Resources */,
 				75B38C71233E5B7C006BDEFC /* SettingsDatabaseTimeoutVC.storyboard in Resources */,
 				75B38C72233E5B7C006BDEFC /* SettingsFileSortingVC.storyboard in Resources */,
+				752F5888247DCA5F0097ED20 /* SettingsSearchVC.storyboard in Resources */,
 				75B38C73233E5B7C006BDEFC /* SettingsAutoFillVC.storyboard in Resources */,
 				75B38C74233E5B7C006BDEFC /* UnlockDatabaseVC.storyboard in Resources */,
 				75B38C75233E5B7C006BDEFC /* SettingsClipboardTimeoutVC.storyboard in Resources */,
@@ -1878,6 +1974,7 @@
 				753F924F2290705D005E496F /* SKProduct+extension.swift in Sources */,
 				75CBABA521C1C2D100B8AFE2 /* FileInfoVC.swift in Sources */,
 				75D5D4012235CD720003CD55 /* CrashReportVC.swift in Sources */,
+				759894B824620AF6006B6709 /* FileExportHelper.swift in Sources */,
 				75679ACC22F887AB00372301 /* AppInfo.swift in Sources */,
 				75480504238E51AF0068C863 /* PopoverAnchor.swift in Sources */,
 				7532A24D21C5A035005DF56F /* KeyFileChooserVC.swift in Sources */,
@@ -1908,6 +2005,7 @@
 				75802635222ED11D00F4525F /* ProgressVC.swift in Sources */,
 				75C11F1F22208D6B0042FB2B /* LAContext+biometrics.swift in Sources */,
 				754D7C0A238C2135005652E1 /* KeyFileTextField.swift in Sources */,
+				759894BD24620D33006B6709 /* FileDestructionHelper.swift in Sources */,
 				757FB3CC21F9B4AF00F016FA /* ProtectedTextField.swift in Sources */,
 				750CFBDB21BAD7FF00E62B09 /* UIAlertController+extensions.swift in Sources */,
 				75CBAB9D21C166D600B8AFE2 /* Coordinator.swift in Sources */,
@@ -1943,6 +2041,7 @@
 				752BB12520F089B30070FAC0 /* SettingsItemListVC.swift in Sources */,
 				752ED68D2235547D00C20D3E /* SettingsDataProtectionVC.swift in Sources */,
 				751BE253211C395D0071050A /* ViewDiagnosticsVC.swift in Sources */,
+				759894B724620AF6006B6709 /* FileExportHelper.swift in Sources */,
 				75E4CA5D232C455D00EB6805 /* UserNameHelper.swift in Sources */,
 				7561850320E033DB00EEFAEE /* WatchdogAwareTextView.swift in Sources */,
 				75D3AEB523BDD582003028FB /* DestinationGroupPickerVC.swift in Sources */,
@@ -1966,13 +2065,16 @@
 				75E446C92330307300E24E70 /* Xcode11GM_LocalizedLabel.swift in Sources */,
 				75781A2D20CA3D7A00BE474F /* SettingsFileSortingVC.swift in Sources */,
 				752B1E9320E8AA070073AABD /* EditableField.swift in Sources */,
+				759894BC24620D33006B6709 /* FileDestructionHelper.swift in Sources */,
 				756FF64420BAB20300FF890B /* UIColor+namedColors.swift in Sources */,
 				75B5FB7B20D61BC000D402D9 /* ViewableEntryFieldFactory.swift in Sources */,
 				7529EAEB211577EA0093B117 /* UITableViewCell+extension.swift in Sources */,
 				75CA919A20E90C3700B286F0 /* EntryChangeObserver+Notifier.swift in Sources */,
 				75C94C6120B4BAC4004FA29D /* ViewEntryHistoryVC.swift in Sources */,
+				75F28785245D646B00F03657 /* MFIKeyActionSheetView.swift in Sources */,
 				75802634222ED11D00F4525F /* ProgressVC.swift in Sources */,
 				75E7612122DE7A9800397D8C /* PremiumBenefitView.swift in Sources */,
+				75839A90246B1A78003DAB7F /* SettingsSearchVC.swift in Sources */,
 				7575B24722D846B900B84B3F /* SearchHelper.swift in Sources */,
 				754DE31220A5C4A4002ED5F9 /* ChooseKeyFileVC.swift in Sources */,
 				757D336320EF5081000A47F0 /* SettingsClipboardTimeoutVC.swift in Sources */,
@@ -2052,6 +2154,7 @@
 				75B38BF7233E5B7C006BDEFC /* SettingsItemListVC.swift in Sources */,
 				75B38BF8233E5B7C006BDEFC /* SettingsDataProtectionVC.swift in Sources */,
 				75B38BF9233E5B7C006BDEFC /* ViewDiagnosticsVC.swift in Sources */,
+				759894B924620AF6006B6709 /* FileExportHelper.swift in Sources */,
 				75B38BFA233E5B7C006BDEFC /* UserNameHelper.swift in Sources */,
 				75B38BFB233E5B7C006BDEFC /* WatchdogAwareTextView.swift in Sources */,
 				75D3AEB623BDD582003028FB /* DestinationGroupPickerVC.swift in Sources */,
@@ -2075,13 +2178,16 @@
 				75B38C0B233E5B7C006BDEFC /* Xcode11GM_LocalizedLabel.swift in Sources */,
 				75B38C0C233E5B7C006BDEFC /* SettingsFileSortingVC.swift in Sources */,
 				75B38C0D233E5B7C006BDEFC /* EditableField.swift in Sources */,
+				759894BE24620D33006B6709 /* FileDestructionHelper.swift in Sources */,
 				75B38C0E233E5B7C006BDEFC /* UIColor+namedColors.swift in Sources */,
 				75B38C0F233E5B7C006BDEFC /* ViewableEntryFieldFactory.swift in Sources */,
 				75B38C10233E5B7C006BDEFC /* UITableViewCell+extension.swift in Sources */,
 				75B38C11233E5B7C006BDEFC /* EntryChangeObserver+Notifier.swift in Sources */,
 				75B38C12233E5B7C006BDEFC /* ViewEntryHistoryVC.swift in Sources */,
+				75F28786245D646B00F03657 /* MFIKeyActionSheetView.swift in Sources */,
 				75B38C13233E5B7C006BDEFC /* ProgressVC.swift in Sources */,
 				75B38C14233E5B7C006BDEFC /* PremiumBenefitView.swift in Sources */,
+				75839A91246B1A78003DAB7F /* SettingsSearchVC.swift in Sources */,
 				75B38C15233E5B7C006BDEFC /* SearchHelper.swift in Sources */,
 				75B38C16233E5B7C006BDEFC /* ChooseKeyFileVC.swift in Sources */,
 				75B38C17233E5B7C006BDEFC /* SettingsClipboardTimeoutVC.swift in Sources */,
@@ -2156,6 +2262,7 @@
 				75D7DF7C233E5E310029AD87 /* SKProduct+extension.swift in Sources */,
 				75D7DF7D233E5E310029AD87 /* FileInfoVC.swift in Sources */,
 				75D7DF7E233E5E310029AD87 /* CrashReportVC.swift in Sources */,
+				759894BA24620AF6006B6709 /* FileExportHelper.swift in Sources */,
 				75D7DF7F233E5E310029AD87 /* AppInfo.swift in Sources */,
 				75480506238E51AF0068C863 /* PopoverAnchor.swift in Sources */,
 				75D7DF80233E5E310029AD87 /* KeyFileChooserVC.swift in Sources */,
@@ -2186,6 +2293,7 @@
 				75D7DF95233E5E310029AD87 /* ProgressVC.swift in Sources */,
 				75D7DF96233E5E310029AD87 /* LAContext+biometrics.swift in Sources */,
 				754D7C0C238C2135005652E1 /* KeyFileTextField.swift in Sources */,
+				759894BF24620D33006B6709 /* FileDestructionHelper.swift in Sources */,
 				75D7DF97233E5E310029AD87 /* ProtectedTextField.swift in Sources */,
 				75D7DF98233E5E310029AD87 /* UIAlertController+extensions.swift in Sources */,
 				75D7DF99233E5E310029AD87 /* Coordinator.swift in Sources */,
@@ -2246,6 +2354,7 @@
 				75FDEF55233ABEEC00F17C26 /* sv */,
 				75AC35C723549DE700B60614 /* es */,
 				756B2442243F74E000AA121A /* fr */,
+				754A323A24426AA300632B39 /* it */,
 			);
 			name = SettingsDataProtectionVC.storyboard;
 			sourceTree = "<group>";
@@ -2263,6 +2372,7 @@
 				75FDEF58233ABEEC00F17C26 /* sv */,
 				75AC35CA23549DE700B60614 /* es */,
 				756B2441243F74E000AA121A /* fr */,
+				754A323924426AA300632B39 /* it */,
 			);
 			name = SettingsFileSortingVC.storyboard;
 			sourceTree = "<group>";
@@ -2280,6 +2390,7 @@
 				75FDEF6F233ABEEC00F17C26 /* sv */,
 				75AC35E123549DE700B60614 /* es */,
 				756B2458243F74E000AA121A /* fr */,
+				754A325024426AA300632B39 /* it */,
 			);
 			name = SettingsVC.storyboard;
 			sourceTree = "<group>";
@@ -2297,6 +2408,7 @@
 				75FDEF59233ABEEC00F17C26 /* sv */,
 				75AC35CB23549DE700B60614 /* es */,
 				756B243E243F74E000AA121A /* fr */,
+				754A323624426AA300632B39 /* it */,
 			);
 			name = SettingsBackupVC.storyboard;
 			sourceTree = "<group>";
@@ -2314,6 +2426,7 @@
 				75FDEF54233ABEEC00F17C26 /* sv */,
 				75AC35C623549DE700B60614 /* es */,
 				756B243D243F74E000AA121A /* fr */,
+				754A323524426AA300632B39 /* it */,
 			);
 			name = SettingsAppLockVC.storyboard;
 			sourceTree = "<group>";
@@ -2331,6 +2444,7 @@
 				75FDEF66233ABEEC00F17C26 /* sv */,
 				75AC35D723549DE700B60614 /* es */,
 				756B244E243F74E000AA121A /* fr */,
+				754A324624426AA300632B39 /* it */,
 			);
 			name = SettingsAutoFillVC.storyboard;
 			sourceTree = "<group>";
@@ -2348,6 +2462,7 @@
 				75FDEF6E233ABEEC00F17C26 /* sv */,
 				75AC35E023549DE700B60614 /* es */,
 				756B2457243F74E000AA121A /* fr */,
+				754A324F24426AA300632B39 /* it */,
 			);
 			name = PremiumVC.storyboard;
 			sourceTree = "<group>";
@@ -2365,6 +2480,7 @@
 				75FDEF61233ABEEC00F17C26 /* sv */,
 				75AC35D123549DE700B60614 /* es */,
 				756B2449243F74E000AA121A /* fr */,
+				754A324124426AA300632B39 /* it */,
 			);
 			name = ViewGroupVC.storyboard;
 			sourceTree = "<group>";
@@ -2382,6 +2498,7 @@
 				75FDEF5A233ABEEC00F17C26 /* sv */,
 				75AC35CC23549DE700B60614 /* es */,
 				756B2443243F74E000AA121A /* fr */,
+				754A323B24426AA300632B39 /* it */,
 			);
 			name = EditGroupVC.storyboard;
 			sourceTree = "<group>";
@@ -2399,6 +2516,7 @@
 				75FDEF53233ABEEC00F17C26 /* sv */,
 				75AC35C523549DE700B60614 /* es */,
 				756B243C243F74E000AA121A /* fr */,
+				754A323424426AA300632B39 /* it */,
 			);
 			name = EditEntryVC.storyboard;
 			sourceTree = "<group>";
@@ -2416,6 +2534,7 @@
 				75FDEF72233ABEEC00F17C26 /* sv */,
 				75AC35E523549DE700B60614 /* es */,
 				756B245C243F74E000AA121A /* fr */,
+				754A325424426AA300632B39 /* it */,
 			);
 			name = PasswordGeneratorVC.storyboard;
 			sourceTree = "<group>";
@@ -2433,6 +2552,7 @@
 				75FDEF5C233ABEEC00F17C26 /* sv */,
 				75AC35CE23549DE700B60614 /* es */,
 				756B2445243F74E000AA121A /* fr */,
+				754A323D24426AA300632B39 /* it */,
 			);
 			name = ViewEntryVC.storyboard;
 			sourceTree = "<group>";
@@ -2450,6 +2570,7 @@
 				75FDEF51233ABEEC00F17C26 /* sv */,
 				75AC35C323549DE700B60614 /* es */,
 				756B243A243F74E000AA121A /* fr */,
+				754A323224426AA300632B39 /* it */,
 			);
 			name = ViewEntryFieldsVC.storyboard;
 			sourceTree = "<group>";
@@ -2467,6 +2588,7 @@
 				75FDEF68233ABEEC00F17C26 /* sv */,
 				75AC35D923549DE700B60614 /* es */,
 				756B2450243F74E000AA121A /* fr */,
+				754A324824426AA300632B39 /* it */,
 			);
 			name = ViewEntryFilesVC.storyboard;
 			sourceTree = "<group>";
@@ -2484,6 +2606,7 @@
 				75FDEF6A233ABEEC00F17C26 /* sv */,
 				75AC35DB23549DE700B60614 /* es */,
 				756B2452243F74E000AA121A /* fr */,
+				754A324A24426AA300632B39 /* it */,
 			);
 			name = ViewEntryHistoryVC.storyboard;
 			sourceTree = "<group>";
@@ -2501,6 +2624,7 @@
 				75FDEF56233ABEEC00F17C26 /* sv */,
 				75AC35C823549DE700B60614 /* es */,
 				756B243F243F74E000AA121A /* fr */,
+				754A323724426AA300632B39 /* it */,
 			);
 			name = ChooseDatabaseVC.storyboard;
 			sourceTree = "<group>";
@@ -2518,6 +2642,7 @@
 				75FDEF63233ABEEC00F17C26 /* sv */,
 				75AC35D423549DE700B60614 /* es */,
 				756B244B243F74E000AA121A /* fr */,
+				754A324324426AA300632B39 /* it */,
 			);
 			name = ChooseKeyFileVC.storyboard;
 			sourceTree = "<group>";
@@ -2535,6 +2660,7 @@
 				75FDEF4E233ABEEC00F17C26 /* sv */,
 				75AC35BE23549DE700B60614 /* es */,
 				756B2437243F74E000AA121A /* fr */,
+				754A322F24426AA300632B39 /* it */,
 			);
 			name = ChangeMasterKeyVC.storyboard;
 			sourceTree = "<group>";
@@ -2552,6 +2678,7 @@
 				75FDEF5B233ABEEC00F17C26 /* sv */,
 				75AC35CD23549DE700B60614 /* es */,
 				756B2444243F74E000AA121A /* fr */,
+				754A323C24426AA300632B39 /* it */,
 			);
 			name = UnlockDatabaseVC.storyboard;
 			sourceTree = "<group>";
@@ -2569,6 +2696,7 @@
 				75FDEF6D233ABEEC00F17C26 /* sv */,
 				75AC35DF23549DE700B60614 /* es */,
 				756B2456243F74E000AA121A /* fr */,
+				754A324E24426AA300632B39 /* it */,
 			);
 			name = DatabaseCreatorVC.storyboard;
 			sourceTree = "<group>";
@@ -2586,6 +2714,7 @@
 				75FDEF57233ABEEC00F17C26 /* sv */,
 				75AC35C923549DE700B60614 /* es */,
 				756B2440243F74E000AA121A /* fr */,
+				754A323824426AA300632B39 /* it */,
 			);
 			name = ChooseIconVC.storyboard;
 			sourceTree = "<group>";
@@ -2603,6 +2732,7 @@
 				75FDEF4C233ABEEC00F17C26 /* sv */,
 				75AC35E723549DE700B60614 /* es */,
 				756B2435243F74E000AA121A /* fr */,
+				754A322D24426AA300632B39 /* it */,
 			);
 			name = FileInfoVC.storyboard;
 			sourceTree = "<group>";
@@ -2620,6 +2750,7 @@
 				75FDEF52233ABEEC00F17C26 /* sv */,
 				75AC35C423549DE700B60614 /* es */,
 				756B243B243F74E000AA121A /* fr */,
+				754A323324426AA300632B39 /* it */,
 			);
 			name = CrashReportVC.storyboard;
 			sourceTree = "<group>";
@@ -2637,6 +2768,7 @@
 				75FDEF69233ABEEC00F17C26 /* sv */,
 				75AC35DA23549DE700B60614 /* es */,
 				756B2451243F74E000AA121A /* fr */,
+				754A324924426AA300632B39 /* it */,
 			);
 			name = FirstSetupVC.storyboard;
 			sourceTree = "<group>";
@@ -2654,6 +2786,7 @@
 				75FDEF65233ABEEC00F17C26 /* sv */,
 				75AC35D623549DE700B60614 /* es */,
 				756B244D243F74E000AA121A /* fr */,
+				754A324524426AA300632B39 /* it */,
 			);
 			name = DatabaseChooserVC.storyboard;
 			sourceTree = "<group>";
@@ -2671,6 +2804,7 @@
 				75FDEF70233ABEEC00F17C26 /* sv */,
 				75AC35E223549DE700B60614 /* es */,
 				756B2459243F74E000AA121A /* fr */,
+				754A325124426AA300632B39 /* it */,
 			);
 			name = DatabaseUnlockerVC.storyboard;
 			sourceTree = "<group>";
@@ -2688,6 +2822,7 @@
 				75FDEF60233ABEEC00F17C26 /* sv */,
 				75AC35D223549DE700B60614 /* es */,
 				756B2448243F74E000AA121A /* fr */,
+				754A324024426AA300632B39 /* it */,
 			);
 			name = EntryFinderVC.storyboard;
 			sourceTree = "<group>";
@@ -2705,6 +2840,7 @@
 				75FDEF50233ABEEC00F17C26 /* sv */,
 				75AC35C023549DE700B60614 /* es */,
 				756B2438243F74E000AA121A /* fr */,
+				754A323024426AA300632B39 /* it */,
 			);
 			name = KeyFileChooserVC.storyboard;
 			sourceTree = "<group>";
@@ -2722,8 +2858,27 @@
 				75FDEF5D233ABEEC00F17C26 /* sv */,
 				75AC35CF23549DE700B60614 /* es */,
 				756B2446243F74E000AA121A /* fr */,
+				754A323E24426AA300632B39 /* it */,
 			);
 			name = DiagnosticsViewerVC.storyboard;
+			sourceTree = "<group>";
+		};
+		752F588A247DCA5F0097ED20 /* SettingsSearchVC.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				752F5889247DCA5F0097ED20 /* Base */,
+				752F588E247DCA660097ED20 /* zh-Hans */,
+				752F5890247DCA670097ED20 /* zh-Hant */,
+				752F5892247DCA690097ED20 /* cs */,
+				752F5894247DCA6A0097ED20 /* nl */,
+				752F5896247DCA6B0097ED20 /* fr */,
+				752F5898247DCA6D0097ED20 /* de */,
+				752F589A247DCA6E0097ED20 /* it */,
+				752F589C247DCA700097ED20 /* ru */,
+				752F589E247DCA720097ED20 /* es */,
+				752F58A0247DCA740097ED20 /* sv */,
+			);
+			name = SettingsSearchVC.storyboard;
 			sourceTree = "<group>";
 		};
 		7533031223C52A1500F38CC7 /* DestinationGroupPickerVC.storyboard */ = {
@@ -2747,6 +2902,7 @@
 				756C4CC8234A41F8003F7E52 /* zh-Hant */,
 				75AC35E323549DE700B60614 /* es */,
 				756B245A243F74E000AA121A /* fr */,
+				754A325224426AA300632B39 /* it */,
 			);
 			name = PremiumProVC.storyboard;
 			sourceTree = "<group>";
@@ -2780,6 +2936,7 @@
 				75FDEF67233ABEEC00F17C26 /* sv */,
 				75AC35D823549DE700B60614 /* es */,
 				756B244F243F74E000AA121A /* fr */,
+				754A324724426AA300632B39 /* it */,
 			);
 			name = AboutVC.storyboard;
 			sourceTree = "<group>";
@@ -2797,6 +2954,7 @@
 				75FDEF73233ABEEC00F17C26 /* sv */,
 				75AC35E623549DE700B60614 /* es */,
 				756B245D243F74E000AA121A /* fr */,
+				754A325524426AA300632B39 /* it */,
 			);
 			name = PasscodeInputVC.storyboard;
 			sourceTree = "<group>";
@@ -2814,6 +2972,7 @@
 				75FDEF6B233ABEEC00F17C26 /* sv */,
 				75AC35DC23549DE700B60614 /* es */,
 				756B2453243F74E000AA121A /* fr */,
+				754A324B24426AA300632B39 /* it */,
 			);
 			name = ViewDiagnosticsVC.storyboard;
 			sourceTree = "<group>";
@@ -2831,6 +2990,7 @@
 				75FDEF6C233ABEEC00F17C26 /* sv */,
 				75AC35DE23549DE700B60614 /* es */,
 				756B2455243F74E000AA121A /* fr */,
+				754A324C24426AA300632B39 /* it */,
 			);
 			name = WelcomeVC.storyboard;
 			sourceTree = "<group>";
@@ -2847,6 +3007,7 @@
 				75FDEF4A233ABEEC00F17C26 /* sv */,
 				75AC35BC23549DE700B60614 /* es */,
 				756B2433243F74E000AA121A /* fr */,
+				754A322B24426AA300632B39 /* it */,
 			);
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
@@ -2863,6 +3024,8 @@
 				75FDEF4B233ABEEC00F17C26 /* sv */,
 				75AC35BD23549DE700B60614 /* es */,
 				756B2434243F74E000AA121A /* fr */,
+				754A322C24426AA300632B39 /* it */,
+				757CFD7A24892E28001CD231 /* en */,
 			);
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
@@ -2879,6 +3042,7 @@
 				75FDEF4D233ABEEC00F17C26 /* sv */,
 				75AC35BF23549DE700B60614 /* es */,
 				756B2436243F74E000AA121A /* fr */,
+				754A322E24426AA300632B39 /* it */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
@@ -2895,6 +3059,7 @@
 				75FDEF4F233ABEEC00F17C26 /* sv */,
 				75AC35C223549DE700B60614 /* es */,
 				756B2439243F74E000AA121A /* fr */,
+				754A323124426AA300632B39 /* it */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
@@ -2912,6 +3077,7 @@
 				756C4CDA234A49DA003F7E52 /* sv */,
 				75AC35DD23549DE700B60614 /* es */,
 				756B2454243F74E000AA121A /* fr */,
+				754A324D24426AA300632B39 /* it */,
 			);
 			name = PremiumContainerVC.storyboard;
 			sourceTree = "<group>";
@@ -2929,6 +3095,7 @@
 				75FDEF64233ABEEC00F17C26 /* sv */,
 				75AC35D523549DE700B60614 /* es */,
 				756B244C243F74E000AA121A /* fr */,
+				754A324424426AA300632B39 /* it */,
 			);
 			name = SettingsAppTimeoutVC.storyboard;
 			sourceTree = "<group>";
@@ -2946,6 +3113,7 @@
 				75FDEF74233ABEEC00F17C26 /* sv */,
 				75AC35C123549DE700B60614 /* es */,
 				756B245E243F74E000AA121A /* fr */,
+				754A325624426AA300632B39 /* it */,
 			);
 			name = SettingsBackupTimeoutPickerVC.storyboard;
 			sourceTree = "<group>";
@@ -2963,6 +3131,7 @@
 				75FDEF5F233ABEEC00F17C26 /* sv */,
 				75AC35D023549DE700B60614 /* es */,
 				756B2447243F74E000AA121A /* fr */,
+				754A323F24426AA300632B39 /* it */,
 			);
 			name = SettingsDatabaseTimeoutVC.storyboard;
 			sourceTree = "<group>";
@@ -2980,6 +3149,7 @@
 				75FDEF71233ABEEC00F17C26 /* sv */,
 				75AC35E423549DE700B60614 /* es */,
 				756B245B243F74E000AA121A /* fr */,
+				754A325324426AA300632B39 /* it */,
 			);
 			name = SettingsClipboardTimeoutVC.storyboard;
 			sourceTree = "<group>";
@@ -2997,6 +3167,7 @@
 				75FDEF62233ABEEC00F17C26 /* sv */,
 				75AC35D323549DE700B60614 /* es */,
 				756B244A243F74E000AA121A /* fr */,
+				754A324224426AA300632B39 /* it */,
 			);
 			name = SettingsItemListVC.storyboard;
 			sourceTree = "<group>";
@@ -3010,12 +3181,12 @@
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CODE_SIGN_ENTITLEMENTS = "KeePassium AutoFill/KeePassium_AutoFill.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 54;
+				CURRENT_PROJECT_VERSION = 62;
 				DEVELOPMENT_TEAM = 84W4PHXS24;
 				INFOPLIST_FILE = "KeePassium AutoFill/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
-				MARKETING_VERSION = 1.11;
+				MARKETING_VERSION = 1.13;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "";
@@ -3034,12 +3205,12 @@
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CODE_SIGN_ENTITLEMENTS = "KeePassium AutoFill/KeePassium_AutoFill.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 54;
+				CURRENT_PROJECT_VERSION = 62;
 				DEVELOPMENT_TEAM = 84W4PHXS24;
 				INFOPLIST_FILE = "KeePassium AutoFill/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
-				MARKETING_VERSION = 1.11;
+				MARKETING_VERSION = 1.13;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.keepassium.ios.KeePassium-AutoFill";
@@ -3179,7 +3350,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = "app-icon";
 				CODE_SIGN_ENTITLEMENTS = KeePassium/KeePassium.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 54;
+				CURRENT_PROJECT_VERSION = 62;
 				DEVELOPMENT_TEAM = 84W4PHXS24;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_OPTIMIZATION_LEVEL = fast;
@@ -3188,7 +3359,7 @@
 				INFOPLIST_FILE = KeePassium/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 1.11;
+				MARKETING_VERSION = 1.13;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_BUNDLE_IDENTIFIER = com.keepassium.ios;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -3206,7 +3377,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = "app-icon";
 				CODE_SIGN_ENTITLEMENTS = KeePassium/KeePassium.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 54;
+				CURRENT_PROJECT_VERSION = 62;
 				DEVELOPMENT_TEAM = 84W4PHXS24;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_OPTIMIZATION_LEVEL = fast;
@@ -3215,7 +3386,7 @@
 				INFOPLIST_FILE = KeePassium/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 1.11;
+				MARKETING_VERSION = 1.13;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_BUNDLE_IDENTIFIER = com.keepassium.ios;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -3233,7 +3404,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = "app-icon-pro";
 				CODE_SIGN_ENTITLEMENTS = KeePassium/KeePassium.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 54;
+				CURRENT_PROJECT_VERSION = 62;
 				DEVELOPMENT_TEAM = 84W4PHXS24;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_OPTIMIZATION_LEVEL = fast;
@@ -3242,7 +3413,7 @@
 				INFOPLIST_FILE = "$(SRCROOT)/KeePassium/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 1.11;
+				MARKETING_VERSION = 1.13;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_BUNDLE_IDENTIFIER = com.keepassium.ios.pro;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -3260,7 +3431,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = "app-icon-pro";
 				CODE_SIGN_ENTITLEMENTS = KeePassium/KeePassium.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 54;
+				CURRENT_PROJECT_VERSION = 62;
 				DEVELOPMENT_TEAM = 84W4PHXS24;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_OPTIMIZATION_LEVEL = fast;
@@ -3269,7 +3440,7 @@
 				INFOPLIST_FILE = "$(SRCROOT)/KeePassium/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 1.11;
+				MARKETING_VERSION = 1.13;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_BUNDLE_IDENTIFIER = com.keepassium.ios.pro;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -3286,12 +3457,12 @@
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CODE_SIGN_ENTITLEMENTS = "KeePassium AutoFill/KeePassium_AutoFill.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 54;
+				CURRENT_PROJECT_VERSION = 62;
 				DEVELOPMENT_TEAM = 84W4PHXS24;
 				INFOPLIST_FILE = "$(SRCROOT)/KeePassium AutoFill/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
-				MARKETING_VERSION = 1.11;
+				MARKETING_VERSION = 1.13;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "";
@@ -3310,12 +3481,12 @@
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CODE_SIGN_ENTITLEMENTS = "KeePassium AutoFill/KeePassium_AutoFill.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 54;
+				CURRENT_PROJECT_VERSION = 62;
 				DEVELOPMENT_TEAM = 84W4PHXS24;
 				INFOPLIST_FILE = "$(SRCROOT)/KeePassium AutoFill/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
-				MARKETING_VERSION = 1.11;
+				MARKETING_VERSION = 1.13;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.keepassium.ios.pro.KeePassium-AutoFill";
