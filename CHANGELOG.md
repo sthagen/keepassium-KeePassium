@@ -1,5 +1,151 @@
 #CHANGELOG
 
+## [1.14.69] - 2020-08-11
+
+### Added
+
+- Special icon for databases in Trash (Recently Deleted) folder
+
+### Fixed
+
+- Crash after updating the app (iPad) [thanks, everyone]
+- Crash when adding an entry attachment	[thanks, Sophie]
+- File refresh spinner were invisible in dark mode
+- Some icons in the settings
+
+
+## [1.14.68] - 2020-08-04
+
+### Added
+
+- Customizable app icon
+- Offline fallback option: KeePassium maintains a backup copy of the last loaded/saved version of database
+
+### Changed
+
+- Default app icon changed to Atom Blue (freemium) and Atom Black (Pro)
+- By default, backups are now kept for 2 months instead of forever
+- More detailed file location description for internal files
+- Code: switched to KeePassium's own, checked fork of TPInAppReceipt
+- AppLock setup reminder can be dismissed [thanks, Dan]
+- Minor UI refinements here and there
+- Updated DE/FR/JA/NL/RU translations [thanks, everyone]
+
+### Removed
+
+- Xcode11GM_LocalizedLabel, an obsolete workaround for #60
+
+### Fixed
+
+- Excessive caching of file attributes (size, timestamps)
+- After transferring to a new device, AppLock did not always accept the correct passcode [thanks, Kirsten]
+- Add note that Universal Clipboard timeout on external devices is fixed at 2 minutes [thanks, Christian]
+- Backup files with non-standard extensions were not shown
+- Tapping the "Show backup files" could change the file sort order instead
+- Sporadic crash immediately after loading a database
+- AutoFill Setup smallprint always appeared in English
+- Return key behavior when changing DB master key
+- Hardware key picker is localized now
+
+
+## [1.14.67] - 2020-07-25
+
+### Changed
+
+- More human-friendly messages about missing file provider
+- Replaced problematic NSFileCoordinator calls with UIDocument ones
+- Refined purchase dialog UI on iPad
+- Updated Japanese translation [thanks, miyar520]
+
+### Fixed
+
+- Fixed persistent timeouts when using Google Drive, DS file and some other clouds. [thanks, everyone]
+- Fixed freezing when there are many backup files (fixes #114) [thanks, Paul]
+- Added missing credits for Yubico Mobile SDK and TPInAppReceipt library
+
+
+## [1.14.66] - 2020-07-18
+
+### Added
+
+- "Exclude from iCloud/iTunes backup" option for local files (closes #97) [thanks, everyone]
+- Free trial period for premium subscriptions
+
+### Changed
+
+- Accepting databases with any file extension (closes #113) [thanks, everyone]
+- Removed premium upgrade button from DB unlock screen
+- Upgraded to Swift 5
+
+
+## [1.14.65] - 2020-07-14
+
+### Added
+
+- New "Clear master keys on database timeout" switch to close-but-not-lock databases in multi-device scenarios [thanks, Niklas]
+- New UI for premium upgrade
+
+### Changed
+
+- Increased file timeout from 5 to 15 seconds [thanks, everyone]
+- More human-friendly error messages when cloud provider does not respond
+- Updated Japanese and Russian translation [thanks, miyar520]
+- Minor UI improvements throughout
+
+### Fixed
+
+- Crash on cold launch with an argument [thanks, Helmut]
+- Jumpy pull-to-refresh animation [thanks, Sebastian]
+- Respect the "Search enabled" flag of KP2 groups [thanks, David]
+- Disabled search and auto-type in newly created Recycle Bin
+
+
+## [1.14.64] - 2020-06-28
+
+### Added
+
+- Japanese translation [thanks, Hiroto Sakai and miyar520]
+
+### Changed
+
+- Refined sorting: files with errors are always listed last
+- [TestFlight only] the "[no leftNavController](https://github.com/keepassium/KeePassium/blob/46a3c09d8a00ebd0c82d8707ba89b9ecbd273de7/KeePassium/database/UnlockDatabaseVC.swift#L468)" crash will produce a debug log file
+- Updated German translation [thanks, Sebastian]
+
+### Fixed
+
+- Crash when importing an already existing file [thanks, Marc]
+
+
+## [1.14.63] - 2020-06-21
+
+### Added
+
+- More detailed storage location of files
+- Wait animation while waiting to access files (#92, #109)
+- AutoFill will show the Caller ID (calling app domain or URL) [thanks, Markus]
+- File Info dialog for key files in AutoFill
+- Export and Remove buttons to File Info dialog
+
+### Changed
+
+- More detailed load/save progress messages
+- More recognizable "sort order" icon
+- Added extended diagnostics for DSfile's "7b226572726f7222" issue
+
+### Fixed
+
+- Added a 5-second timeout to all file operations (fixes #92,#109)
+- File Info dialog now loads asynchronously [thanks, Tim]
+- More reliable refreshing of file lists (each file independently)
+- Handling DB settings/keys when the target file is missing
+- KDB root group appeared expired (fixes #108) [thanks, Stefan]
+- App crashed when selecting "Enable AppLock" reminder with VoiceOver [thanks, Dickson]
+- Refresh entry viewer after dismissing entry editor [thanks, Felix]
+- Refresh search results after changing search settings [thanks, Paolo]
+- Standard field names are excluded from search [thanks, Paolo]
+
+
 ## [1.13.62] - 2020-06-09
 
 ### Changed

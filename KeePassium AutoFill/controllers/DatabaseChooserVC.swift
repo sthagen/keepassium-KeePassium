@@ -17,7 +17,7 @@ protocol DatabaseChooserDelegate: class {
     func databaseChooser(_ sender: DatabaseChooserVC, shouldShowInfoForDatabase urlRef: URLReference)
 }
 
-class DatabaseChooserVC: UITableViewController, Refreshable {
+class DatabaseChooserVC: UITableViewController, DynamicFileList, Refreshable {
     private enum CellID {
         static let fileItem = "FileItemCell"
         static let noFiles = "NoFilesCell"
@@ -29,12 +29,14 @@ class DatabaseChooserVC: UITableViewController, Refreshable {
 
     private let fileInfoReloader = FileInfoReloader()
 
+    internal var ongoingUpdateAnimations = 0
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         clearsSelectionOnViewWillAppear = true
         
         let refreshControl = UIRefreshControl()
-        refreshControl.addTarget(self, action: #selector(refresh), for: .valueChanged)
+        refreshControl.addTarget(self, action: #selector(didPullToRefresh), for: .valueChanged)
         self.refreshControl = refreshControl
 
         let longPressGestureRecognizer = UILongPressGestureRecognizer(
@@ -51,23 +53,52 @@ class DatabaseChooserVC: UITableViewController, Refreshable {
         refresh()
     }
     
+    
+    @objc
+    private func didPullToRefresh() {
+        if !tableView.isDragging {
+            refreshControl?.endRefreshing()
+            refresh()
+        }
+    }
+    
+    override func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        if refreshControl?.isRefreshing ?? false {
+            refreshControl?.endRefreshing()
+            refresh()
+        }
+    }
+
     @objc func refresh() {
         databaseRefs = FileKeeper.shared.getAllReferences(
             fileType: .database,
             includeBackup: Settings.current.isBackupFilesVisible)
-        fileInfoReloader.reload(databaseRefs) { [weak self] in
-            guard let self = self else { return }
-            self.sortFileList()
-            if self.refreshControl?.isRefreshing ?? false {
-                self.refreshControl?.endRefreshing()
+        sortFileList()
+        
+        fileInfoReloader.getInfo(
+            for: databaseRefs,
+            update: { [weak self] (ref) in
+                guard let self = self else { return }
+                self.sortAndAnimateFileInfoUpdate(refs: &self.databaseRefs, in: self.tableView)
+            },
+            completion: { [weak self] in
+                guard let self = self else { return }
+                DispatchQueue.main.asyncAfter(deadline: .now() + self.sortingAnimationDuration) {
+                    [weak self] in
+                    self?.sortFileList()
+                }
             }
-        }
+        )
     }
     
     fileprivate func sortFileList() {
         let fileSortOrder = Settings.current.filesSortOrder
         databaseRefs.sort { return fileSortOrder.compare($0, $1) }
         tableView.reloadData()
+    }
+
+    func getIndexPath(for fileIndex: Int) -> IndexPath {
+        return IndexPath(row: fileIndex, section: 0)
     }
     
     
@@ -104,17 +135,28 @@ class DatabaseChooserVC: UITableViewController, Refreshable {
         }
     }
 
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-
+    override func tableView(
+        _ tableView: UITableView,
+        cellForRowAt indexPath: IndexPath)
+        -> UITableViewCell
+    {
         guard databaseRefs.count > 0 else {
             let cell = tableView.dequeueReusableCell(withIdentifier: CellID.noFiles, for: indexPath)
             return cell
         }
         
-        let cell = tableView
-            .dequeueReusableCell(withIdentifier: CellID.fileItem, for: indexPath)
-            as! DatabaseFileListCell
-        cell.urlRef = databaseRefs[indexPath.row]
+        let cell = FileListCellFactory.dequeueReusableCell(
+            from: tableView,
+            withIdentifier: CellID.fileItem,
+            for: indexPath,
+            for: .database)
+        let dbRef = databaseRefs[indexPath.row]
+        cell.showInfo(from: dbRef)
+        cell.isAnimating = dbRef.isRefreshingInfo
+        cell.accessoryTapHandler = { [weak self, indexPath] cell in
+            guard let self = self else { return }
+            self.tableView(self.tableView, accessoryButtonTappedForRowWith: indexPath)
+        }
         return cell
     }
 

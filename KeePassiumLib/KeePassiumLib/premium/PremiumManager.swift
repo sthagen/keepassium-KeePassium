@@ -23,7 +23,6 @@ public enum InAppProduct: String {
     case forever2 = "com.keepassium.ios.iap.forever.2"
     case montlySubscription = "com.keepassium.ios.iap.subscription.1month"
     case yearlySubscription = "com.keepassium.ios.iap.subscription.1year"
-    case yearlyBusinessSubscription = "com.keepassium.ios.iap.subscription.1year.business"
     
     public var period: Period {
         return InAppProduct.period(productIdentifier: self.rawValue)
@@ -36,25 +35,11 @@ public enum InAppProduct: String {
              .betaForever:
             return false
         case .montlySubscription,
-             .yearlySubscription,
-             .yearlyBusinessSubscription:
+             .yearlySubscription:
             return true
         }
     }
     
-    public var hasPrioritySupport: Bool {
-        switch self {
-        case .yearlyBusinessSubscription:
-            return true
-        case .forever,
-             .forever2,
-             .betaForever,
-             .montlySubscription,
-             .yearlySubscription:
-            return false
-        }
-    }
-
     public static func period(productIdentifier: String) -> Period {
         if productIdentifier.contains(".forever") {
             return .oneTime
@@ -107,6 +92,10 @@ public class PremiumManager: NSObject {
     private let heavyUseThreshold: TimeInterval = 8 * 60 * 60 / 12 
 #endif
 
+    
+    public private(set) var isTrialAvailable: Bool = true
+    
+    public private(set) var fallbackDate: Date? = nil
     
     public enum Status {
         case initialGracePeriod
@@ -241,6 +230,15 @@ public class PremiumManager: NSObject {
     }
     
     
+    public func reloadReceipt(withLogging: Bool=false) {
+        guard BusinessModel.type == .freemium else { return }
+        let receiptAnalyzer = ReceiptAnalyzer()
+        receiptAnalyzer.loadReceipt()
+        self.isTrialAvailable = !receiptAnalyzer.containsTrial
+        self.fallbackDate = receiptAnalyzer.fallbackDate
+    }
+    
+    
     public func isAvailable(feature: PremiumFeature) -> Bool {
         return feature.isAvailable(in: status)
     }
@@ -276,8 +274,7 @@ public class PremiumManager: NSObject {
     private let purchaseableProductIDs = Set<String>([
         InAppProduct.forever2.rawValue,
         InAppProduct.montlySubscription.rawValue,
-        InAppProduct.yearlySubscription.rawValue,
-        InAppProduct.yearlyBusinessSubscription.rawValue])
+        InAppProduct.yearlySubscription.rawValue])
     
     private var productsRequest: SKProductsRequest?
 
@@ -296,6 +293,7 @@ public class PremiumManager: NSObject {
     
     
     public func startObservingTransactions() {
+        reloadReceipt()
         SKPaymentQueue.default().add(self)
     }
     
@@ -349,6 +347,7 @@ extension PremiumManager: SKPaymentTransactionObserver {
         _ queue: SKPaymentQueue,
         updatedTransactions transactions: [SKPaymentTransaction])
     {
+        reloadReceipt()
         for transaction in transactions {
             switch transaction.transactionState {
             case .purchased:
@@ -365,6 +364,9 @@ extension PremiumManager: SKPaymentTransactionObserver {
             case .deferred:
                 delegate?.purchaseDeferred(in: self)
                 break
+            @unknown default:
+                Diag.warning("Unknown transaction state")
+                assertionFailure()
             }
         }
     }
@@ -378,6 +380,7 @@ extension PremiumManager: SKPaymentTransactionObserver {
     }
 
     public func paymentQueueRestoreCompletedTransactionsFinished(_ queue: SKPaymentQueue) {
+        ReceiptAnalyzer.logPurchaseHistory()
         Diag.debug("Finished restoring purchases")
         delegate?.purchaseRestoringFinished(in: self)
     }

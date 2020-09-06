@@ -96,11 +96,14 @@ public class FileKeeper {
     
     private var urlToOpen: URL?
     private var openMode: OpenMode = .openInPlace
+    private var pendingFileType: FileType?
     private var pendingOperationGroup = DispatchGroup()
     
     fileprivate let docDirURL: URL
     fileprivate let backupDirURL: URL
     fileprivate let inboxDirURL: URL
+    
+    fileprivate var referenceCache = ReferenceCache()
     
     public var hasPendingFileOperations: Bool {
         return urlToOpen != nil
@@ -205,8 +208,10 @@ public class FileKeeper {
                 refs.append(ref)
             }
         }
-        return refs
+        let result = referenceCache.update(with: refs, fileType: fileType, isExternal: isExternal)
+        return result
     }
+    
     
     private func storeReferences(
         _ refs: [URLReference],
@@ -221,7 +226,8 @@ public class FileKeeper {
     private func findStoredExternalReferenceFor(url: URL, fileType: FileType) -> URLReference? {
         let storedRefs = getStoredReferences(fileType: fileType, forExternalFiles: true)
         for ref in storedRefs {
-            if let refUrl = try? ref.resolve(), refUrl == url {
+            let storedURL = ref.cachedURL ?? ref.bookmarkedURL
+            if storedURL == url {
                 return ref
             }
         }
@@ -231,7 +237,7 @@ public class FileKeeper {
     public func deleteFile(_ urlRef: URLReference, fileType: FileType, ignoreErrors: Bool) throws {
         Diag.debug("Will trash local file [fileType: \(fileType)]")
         do {
-            let url = try urlRef.resolve()
+            let url = try urlRef.resolveSync() 
             try FileManager.default.removeItem(at: url)
             Diag.info("Local file deleted")
             FileKeeperNotifier.notifyFileRemoved(urlRef: urlRef, fileType: fileType)
@@ -243,13 +249,12 @@ public class FileKeeper {
                 throw FileKeeperError.removalError(reason: error.localizedDescription)
             }
         }
-
     }
     
     public func removeExternalReference(_ urlRef: URLReference, fileType: FileType) {
         Diag.debug("Removing URL reference [fileType: \(fileType)]")
         var refs = getStoredReferences(fileType: fileType, forExternalFiles: true)
-        if let index = refs.index(of: urlRef) {
+        if let index = refs.firstIndex(of: urlRef) {
             refs.remove(at: index)
             storeReferences(refs, fileType: fileType, forExternalFiles: true)
             FileKeeperNotifier.notifyFileRemoved(urlRef: urlRef, fileType: fileType)
@@ -273,7 +278,8 @@ public class FileKeeper {
         }
 
         if includeBackup {
-            result.append(contentsOf:scanLocalDirectory(backupDirURL, fileType: fileType))
+            let backupFileRefs = scanLocalDirectory(backupDirURL, fileType: fileType)
+            result.append(contentsOf: backupFileRefs)
         }
         return result
     }
@@ -281,13 +287,17 @@ public class FileKeeper {
     func scanLocalDirectory(_ dirURL: URL, fileType: FileType) -> [URLReference] {
         var refs: [URLReference] = []
         let location = getLocation(for: dirURL)
+        assert(location != .external, "This should be used only on local directories.")
+        
+        let isIgnoreFileType = (location == .internalBackup)
         do {
             let dirContents = try FileManager.default.contentsOfDirectory(
                 at: dirURL,
                 includingPropertiesForKeys: nil,
                 options: [])
             for url in dirContents {
-                if !url.isDirectory && FileType(for: url) == fileType {
+                let isFileTypeMatch = isIgnoreFileType || FileType(for: url) == fileType
+                if isFileTypeMatch && !url.isDirectory {
                     let urlRef = try URLReference(from: url, location: location)
                     refs.append(urlRef)
                 }
@@ -295,25 +305,28 @@ public class FileKeeper {
         } catch {
             Diag.error(error.localizedDescription)
         }
-        return refs
+        let cachedRefs = referenceCache.update(with: refs, from: dirURL, fileType: fileType)
+        return cachedRefs
     }
     
     public func addFile(
         url: URL,
+        fileType: FileType?,
         mode: OpenMode,
         success successHandler: ((URLReference)->Void)?,
         error errorHandler: ((FileKeeperError)->Void)?)
     {
-        prepareToAddFile(url: url, mode: mode, notify: false)
+        prepareToAddFile(url: url, fileType: fileType, mode: mode, notify: false)
         processPendingOperations(success: successHandler, error: errorHandler)
     }
     
-    public func prepareToAddFile(url: URL, mode: OpenMode, notify: Bool=true) {
+    public func prepareToAddFile(url: URL, fileType: FileType?, mode: OpenMode, notify: Bool=true) {
         Diag.debug("Preparing to add file [mode: \(mode)]")
         let origURL = url
         let actualURL = origURL.resolvingSymlinksInPath()
         print("\n originURL: \(origURL) \n actualURL: \(actualURL) \n")
         self.urlToOpen = origURL
+        self.pendingFileType = fileType
         self.openMode = mode
         if notify {
             FileKeeperNotifier.notifyPendingFileOperation()
@@ -331,8 +344,21 @@ public class FileKeeper {
         guard let sourceURL = urlToOpen else { return }
         urlToOpen = nil
 
+        let fileType = pendingFileType ?? FileType(for: sourceURL)
+        pendingFileType = nil
+
         Diag.debug("Will process pending file operations")
 
+        let mainQueueSuccessHandler: (URLReference)->Void = { (urlRef) in
+            DispatchQueue.main.async {
+                successHandler?(urlRef)
+            }
+        }
+        let mainQueueErrorHandler: (FileKeeperError)->Void = { (error) in
+            DispatchQueue.main.async {
+                errorHandler?(error)
+            }
+        }
         guard sourceURL.isFileURL else {
             Diag.error("Tried to import a non-file URL: \(sourceURL.redacted)")
             let messageNotAFileURL = NSLocalizedString(
@@ -343,39 +369,38 @@ public class FileKeeper {
             switch openMode {
             case .import:
                 let importError = FileKeeperError.importError(reason: messageNotAFileURL)
-                errorHandler?(importError)
+                mainQueueErrorHandler(importError)
                 return
             case .openInPlace:
                 let openError = FileKeeperError.openError(reason: messageNotAFileURL)
-                errorHandler?(openError)
+                mainQueueErrorHandler(openError)
                 return
             }
         }
         
         
-        let fileType = FileType(for: sourceURL)
         let location = getLocation(for: sourceURL)
         switch location {
         case .external:
             processExternalFile(
                 url: sourceURL,
                 fileType: fileType,
-                success: successHandler,
-                error: errorHandler)
+                success: mainQueueSuccessHandler,
+                error: mainQueueErrorHandler)
         case .internalDocuments, .internalBackup:
             processInternalFile(
                 url: sourceURL,
                 fileType: fileType,
                 location: location,
-                success: successHandler,
-                error: errorHandler)
+                success: mainQueueSuccessHandler,
+                error: mainQueueErrorHandler)
         case .internalInbox:
             processInboxFile(
                 url: sourceURL,
                 fileType: fileType,
                 location: location,
-                success: successHandler,
-                error: errorHandler)
+                success: mainQueueSuccessHandler,
+                error: mainQueueErrorHandler)
         }
     }
     
@@ -420,6 +445,7 @@ public class FileKeeper {
             }
             importFile(
                 url: sourceURL,
+                fileProvider: nil, 
                 success: { (url) in
                     do {
                         let urlRef = try URLReference(
@@ -451,21 +477,25 @@ public class FileKeeper {
         success successHandler: ((URLReference) -> Void)?,
         error errorHandler: ((FileKeeperError) -> Void)?)
     {
-        importFile(url: sourceURL, success: { url in
-            do {
-                let urlRef = try URLReference(from: url, location: location)
-                if fileType == .database {
-                    Settings.current.startupDatabase = urlRef
+        importFile(
+            url: sourceURL,
+            fileProvider: FileProvider.localStorage,
+            success: { url in
+                do {
+                    let urlRef = try URLReference(from: url, location: location)
+                    if fileType == .database {
+                        Settings.current.startupDatabase = urlRef
+                    }
+                    FileKeeperNotifier.notifyFileAdded(urlRef: urlRef, fileType: fileType)
+                    Diag.info("Inbox file added successfully [fileType: \(fileType)]")
+                    successHandler?(urlRef)
+                } catch {
+                    Diag.error("Failed to import inbox file [type: \(fileType), message: \(error.localizedDescription)]")
+                    let importError = FileKeeperError.importError(reason: error.localizedDescription)
+                    errorHandler?(importError)
                 }
-                FileKeeperNotifier.notifyFileAdded(urlRef: urlRef, fileType: fileType)
-                Diag.info("Inbox file added successfully [fileType: \(fileType)]")
-                successHandler?(urlRef)
-            } catch {
-                Diag.error("Failed to import inbox file [type: \(fileType), message: \(error.localizedDescription)]")
-                let importError = FileKeeperError.importError(reason: error.localizedDescription)
-                errorHandler?(importError)
-            }
-        }, error: errorHandler)
+            },
+            error: errorHandler)
     }
     
     
@@ -498,40 +528,32 @@ public class FileKeeper {
         error errorHandler: ((FileKeeperError) -> Void)?)
     {
         Diag.debug("Will add external file reference")
-        let dummyDoc = FileDocument(fileURL: sourceURL)
         
-        dummyDoc.open(
-            successHandler: { [weak self] in
-                guard let _self = self else { return }
-                do {
-                    let newRef = try URLReference(from: sourceURL, location: .external)
-                    
-                    var storedRefs = _self.getStoredReferences(
-                        fileType: fileType,
-                        forExternalFiles: true)
-                    storedRefs.insert(newRef, at: 0)
-                    _self.storeReferences(storedRefs, fileType: fileType, forExternalFiles: true)
-                    
-                    Diag.info("External URL reference added OK")
-                    successHandler?(newRef)
-                } catch {
-                    Diag.error("Failed to create URL reference [error: '\(error.localizedDescription)', url: '\(sourceURL.redacted)']")
-                    let importError = FileKeeperError.openError(reason: error.localizedDescription)
-                    errorHandler?(importError)
-                }
-            },
-            errorHandler: { (error) in
-                Diag.error("Failed to open document [error: '\(error.localizedDescription)', url: '\(sourceURL.redacted)']")
-                let docError = FileKeeperError.openError(reason: error.localizedDescription)
-                errorHandler?(docError)
-
+        URLReference.create(for: sourceURL, location: .external) {
+            [weak self] result in
+            guard let self = self else { return }
+            switch result {
+            case .success(let newRef):
+                var storedRefs = self.getStoredReferences(
+                    fileType: fileType,
+                    forExternalFiles: true)
+                storedRefs.insert(newRef, at: 0)
+                self.storeReferences(storedRefs, fileType: fileType, forExternalFiles: true)
+                
+                Diag.info("External URL reference added OK")
+                successHandler?(newRef)
+            case .failure(let fileAccessError):
+                Diag.error("Failed to create URL reference [error: '\(fileAccessError.localizedDescription)', url: '\(sourceURL.redacted)']")
+                let importError = FileKeeperError.openError(reason: fileAccessError.localizedDescription)
+                errorHandler?(importError)
             }
-        )
+        }
     }
     
     
     private func importFile(
         url sourceURL: URL,
+        fileProvider: FileProvider?,
         success successHandler: ((URL) -> Void)?,
         error errorHandler: ((FileKeeperError)->Void)?)
     {
@@ -546,23 +568,23 @@ public class FileKeeper {
         }
         
         Diag.debug("Will import a file")
-        let doc = FileDocument(fileURL: sourceURL)
-        doc.open(
-            successHandler: { 
+        let doc = BaseDocument(fileURL: sourceURL, fileProvider: fileProvider)
+        doc.open { [self] result in 
+            switch result {
+            case .success(let docData):
                 self.saveDataWithConflictResolution(
-                    doc.data,
+                    docData,
                     to: targetURL,
                     conflictResolution: .ask,
                     success: successHandler,
                     error: errorHandler)
-            },
-            errorHandler: { error in 
-                Diag.error("Failed to import external file [message: \(error.localizedDescription)]")
-                let importError = FileKeeperError.importError(reason: error.localizedDescription)
+            case .failure(let fileAccessError):
+                Diag.error("Failed to import external file [message: \(fileAccessError.localizedDescription)]")
+                let importError = FileKeeperError.importError(reason: fileAccessError.localizedDescription)
                 errorHandler?(importError)
                 self.clearInbox()
             }
-        )
+        }
     }
     
     private func saveDataWithConflictResolution(
@@ -656,7 +678,12 @@ public class FileKeeper {
     }
     
     
-    func makeBackup(nameTemplate: String, contents: ByteArray) {
+    enum BackupMode {
+        case latest
+        case timestamped
+    }
+    
+    func makeBackup(nameTemplate: String, mode: BackupMode, contents: ByteArray) {
         guard !contents.isEmpty else {
             Diag.info("No data to backup.")
             return
@@ -665,7 +692,28 @@ public class FileKeeper {
             .addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) else { return }
         guard let nameTemplateURL = URL(string: encodedNameTemplate) else { return }
         
-        deleteExpiredBackupFiles()
+        let timestamp: Date
+        let fileNameSuffix: String
+        switch mode {
+        case .latest:
+            timestamp = Date.now
+            fileNameSuffix = ".latest"
+        case .timestamped:
+            timestamp = Date.now - 1.0
+            let dateFormatter = DateFormatter()
+            dateFormatter.locale = Locale(identifier: "en_US_POSIX")
+            dateFormatter.dateFormat = "yyyy-MM-dd_HHmmss"
+            fileNameSuffix = "_" + dateFormatter.string(from: timestamp)
+        }
+        
+        let baseFileName = nameTemplateURL
+            .deletingPathExtension()
+            .absoluteString
+            .removingPercentEncoding  
+            ?? nameTemplate           
+        let backupFileURL = backupDirURL
+            .appendingPathComponent(baseFileName + fileNameSuffix, isDirectory: false)
+            .appendingPathExtension(nameTemplateURL.pathExtension)
         
         let fileManager = FileManager.default
         do {
@@ -673,28 +721,19 @@ public class FileKeeper {
                 at: backupDirURL,
                 withIntermediateDirectories: true,
                 attributes: nil)
-
-            let timestamp = Date.now - 1.0
-            let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "yyyy-MM-dd_HHmmss"
-            let timestampStr = dateFormatter.string(from: timestamp)
-
-            let baseFileName = nameTemplateURL
-                .deletingPathExtension()
-                .absoluteString
-                .removingPercentEncoding  
-                ?? nameTemplate           
-            let baseFileExt = nameTemplateURL.pathExtension
-            let backupFileURL = backupDirURL
-                .appendingPathComponent(baseFileName + "_" + timestampStr, isDirectory: false)
-                .appendingPathExtension(baseFileExt)
-            try contents.asData.write(to: backupFileURL, options: .atomic)
             
+            try contents.asData.write(to: backupFileURL, options: .atomic)
             try fileManager.setAttributes(
                 [FileAttributeKey.creationDate: timestamp,
                  FileAttributeKey.modificationDate: timestamp],
                 ofItemAtPath: backupFileURL.path)
-            Diag.info("Backup copy created OK")
+
+            switch mode {
+            case .latest:
+                Diag.info("Latest backup updated OK")
+            case .timestamped:
+                Diag.info("Backup copy created OK")
+            }
         } catch {
             Diag.warning("Failed to make backup copy [error: \(error.localizedDescription)]")
         }
@@ -704,31 +743,92 @@ public class FileKeeper {
         return scanLocalDirectory(backupDirURL, fileType: .database)
     }
     
-    @discardableResult
-    public func deleteExpiredBackupFiles() -> Bool {
+    public func deleteExpiredBackupFiles() {
         Diag.debug("Will perform backup maintenance")
-        let isAllOK = deleteBackupFiles(olderThan: Settings.current.backupKeepingDuration.seconds)
-        Diag.info("Backup maintenance completed [allOK: \(isAllOK)]")
-        return isAllOK
+        deleteBackupFiles(olderThan: Settings.current.backupKeepingDuration.seconds)
+        Diag.info("Backup maintenance completed")
     }
 
-    @discardableResult
-    public func deleteBackupFiles(olderThan maxAge: TimeInterval) -> Bool {
+    public func deleteBackupFiles(olderThan maxAge: TimeInterval) {
         let allBackupFileRefs = getBackupFiles()
-        var isEverythingProcessedOK = true
         let now = Date.now
         for fileRef in allBackupFileRefs {
-            guard let modificationDate = fileRef.getInfo().modificationDate else { continue }
-            if now.timeIntervalSince(modificationDate) < maxAge {
-                continue
-            }
-            do {
-                try deleteFile(fileRef, fileType: .database, ignoreErrors: false)
-                FileKeeperNotifier.notifyFileRemoved(urlRef: fileRef, fileType: .database)
-            } catch {
-                isEverythingProcessedOK = false
+            fileRef.getCachedInfo(canFetch: true) { [weak self] result in
+                guard let self = self else { return }
+                switch result {
+                case .success(let fileInfo):
+                    guard let modificationDate = fileInfo.modificationDate else {
+                        Diag.warning("Failed to get backup file age.")
+                        return
+                    }
+                    guard now.timeIntervalSince(modificationDate) > maxAge else {
+                        return
+                    }
+                    do {
+                        try self.deleteFile(fileRef, fileType: .database, ignoreErrors: false)
+                        FileKeeperNotifier.notifyFileRemoved(urlRef: fileRef, fileType: .database)
+                    } catch {
+                        Diag.warning("Failed to delete backup file [reason: \(error.localizedDescription)]")
+                    }
+                case .failure(let error):
+                    Diag.warning("Failed to check backup file age [reason: \(error.localizedDescription)]")
+                }
             }
         }
-        return isEverythingProcessedOK
+    }
+}
+
+
+fileprivate class ReferenceCache {
+    private struct FileTypeExternalKey: Hashable {
+        var fileType: FileType
+        var isExternal: Bool
+    }
+    private struct DirectoryFileTypeKey: Hashable {
+        var directory: URL
+        var fileType: FileType
+    }
+    
+    private var cache = [FileTypeExternalKey: [URLReference]]()
+    private var cacheSet = [FileTypeExternalKey: Set<URLReference>]()
+    private var directoryCache = [DirectoryFileTypeKey: [URLReference]]()
+    private var directoryCacheSet = [DirectoryFileTypeKey: Set<URLReference>]()
+    
+    func update(with newRefs: [URLReference], fileType: FileType, isExternal: Bool) -> [URLReference] {
+        let key = FileTypeExternalKey(fileType: fileType, isExternal: isExternal)
+        guard var _cache = cache[key], let _cacheSet = cacheSet[key] else {
+            cache[key] = newRefs
+            cacheSet[key] = Set(newRefs)
+            return newRefs
+        }
+        let newRefsSet = Set(newRefs)
+        let addedRefs = newRefsSet.subtracting(_cacheSet)
+        let removedRefs = _cacheSet.subtracting(newRefsSet)
+        if !removedRefs.isEmpty {
+            _cache.removeAll { ref in removedRefs.contains(ref) }
+        }
+        _cache.append(contentsOf: addedRefs)
+        cache[key] = _cache
+        cacheSet[key] = _cacheSet.subtracting(removedRefs).union(addedRefs)
+        return _cache
+    }
+    
+    func update(with newRefs: [URLReference], from directory: URL, fileType: FileType) -> [URLReference] {
+        let key = DirectoryFileTypeKey(directory: directory, fileType: fileType)
+        guard var _directoryCache = directoryCache[key],
+            let _directoryCacheSet = directoryCacheSet[key] else
+        {
+            directoryCache[key] = newRefs
+            directoryCacheSet[key] = Set(newRefs)
+            return newRefs
+        }
+        let newRefsSet = Set(newRefs)
+        let addedRefs = newRefsSet.subtracting(_directoryCacheSet)
+        let removedRefs = _directoryCacheSet.subtracting(newRefsSet)
+        _directoryCache.removeAll { ref in removedRefs.contains(ref) }
+        _directoryCache.append(contentsOf: addedRefs)
+        directoryCache[key] = _directoryCache
+        directoryCacheSet[key] = _directoryCacheSet.subtracting(removedRefs).union(addedRefs)
+        return _directoryCache
     }
 }

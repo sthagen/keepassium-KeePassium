@@ -50,7 +50,7 @@ class ChooseKeyFileVC: UITableViewController, Refreshable {
         
         fileKeeperNotifications = FileKeeperNotifications(observer: self)
         let refreshControl = UIRefreshControl()
-        refreshControl.addTarget(self, action: #selector(refresh), for: .valueChanged)
+        refreshControl.addTarget(self, action: #selector(didPullToRefresh), for: .valueChanged)
         self.refreshControl = refreshControl
         
         let longPressGestureRecognizer = UILongPressGestureRecognizer(
@@ -71,9 +71,7 @@ class ChooseKeyFileVC: UITableViewController, Refreshable {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         fileKeeperNotifications.startObserving()
-        if FileKeeper.shared.hasPendingFileOperations {
-            processPendingFileOperations()
-        }
+        processPendingFileOperations()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -87,15 +85,33 @@ class ChooseKeyFileVC: UITableViewController, Refreshable {
     }
 
     
-    @objc func refresh() {
-        urlRefs = FileKeeper.shared.getAllReferences(fileType: .keyFile, includeBackup: false)
-        fileInfoReloader.reload(urlRefs) { [weak self] in
-            guard let self = self else { return }
-            self.sortFileList()
-            if self.refreshControl?.isRefreshing ?? false {
-                self.refreshControl?.endRefreshing()
-            }
+    @objc
+    private func didPullToRefresh() {
+        if !tableView.isDragging {
+            refreshControl?.endRefreshing()
+            refresh()
         }
+    }
+    
+    override func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        if refreshControl?.isRefreshing ?? false {
+            refreshControl?.endRefreshing()
+            refresh()
+        }
+    }
+
+    func refresh() {
+        urlRefs = FileKeeper.shared.getAllReferences(fileType: .keyFile, includeBackup: false)
+        fileInfoReloader.getInfo(
+            for: urlRefs,
+            update: { [weak self] (ref) in
+                self?.tableView.reloadData()
+            },
+            completion: { [weak self] in
+                self?.sortFileList()
+            }
+        )
+        tableView.reloadData()
     }
     
     fileprivate func sortFileList() {
@@ -124,12 +140,11 @@ class ChooseKeyFileVC: UITableViewController, Refreshable {
     
     func didPressDeleteKeyFile(at indexPath: IndexPath) {
         let urlRef = urlRefs[indexPath.row - 1]
-        let fileInfo = urlRef.getInfo()
-        if fileInfo.hasError {
+        if urlRef.hasError {
             deleteKeyFile(urlRef: urlRef)
         } else {
             let confirmDeletionAlert = UIAlertController.make(
-                title: fileInfo.fileName,
+                title: urlRef.visibleFileName,
                 message: LString.confirmKeyFileDeletion,
                 cancelButtonTitle: LString.actionCancel)
             let deleteAction = UIAlertAction(title: LString.actionDelete, style: .destructive)
@@ -195,24 +210,17 @@ class ChooseKeyFileVC: UITableViewController, Refreshable {
                 for: indexPath)
         }
         
-        let fileInfo = urlRefs[indexPath.row - 1].getInfo()
-
-        let cell = tableView.dequeueReusableCell(withIdentifier: CellID.keyFile, for: indexPath)
-        cell.textLabel?.text = fileInfo.fileName
-        guard !fileInfo.hasError else {
-            cell.detailTextLabel?.text = fileInfo.errorMessage
-            cell.detailTextLabel?.textColor = UIColor.errorMessage
-            return cell
-        }
-        
-        if let lastModifiedDate = fileInfo.modificationDate  {
-            let dateString = DateFormatter.localizedString(
-                from: lastModifiedDate,
-                dateStyle: .long,
-                timeStyle: .medium)
-            cell.detailTextLabel?.text = dateString
-        } else {
-            cell.detailTextLabel?.text = nil
+        let keyFileRef = urlRefs[indexPath.row - 1]
+        let cell = FileListCellFactory.dequeueReusableCell(
+            from: tableView,
+            withIdentifier: CellID.keyFile,
+            for: indexPath,
+            for: .keyFile)
+        cell.showInfo(from: keyFileRef)
+        cell.isAnimating = keyFileRef.isRefreshingInfo
+        cell.accessoryTapHandler = { [weak self, indexPath] cell in
+            guard let self = self else { return }
+            self.tableView(self.tableView, accessoryButtonTappedForRowWith: indexPath)
         }
         return cell
     }
@@ -236,12 +244,13 @@ class ChooseKeyFileVC: UITableViewController, Refreshable {
     {
         let urlRef = urlRefs[indexPath.row - 1]
         let popoverAnchor = PopoverAnchor(tableView: tableView, at: indexPath)
-        let databaseInfoVC = FileInfoVC.make(urlRef: urlRef, fileType: .keyFile, at: popoverAnchor)
-        databaseInfoVC.canExport = true
-        databaseInfoVC.onDismiss = {
-            databaseInfoVC.dismiss(animated: true, completion: nil)
+        let keyFileInfoVC = FileInfoVC.make(urlRef: urlRef, fileType: .keyFile, at: popoverAnchor)
+        keyFileInfoVC.canExport = false
+        keyFileInfoVC.onDismiss = { [weak self, weak keyFileInfoVC] in
+            self?.refresh()
+            keyFileInfoVC?.dismiss(animated: true, completion: nil)
         }
-        present(databaseInfoVC, animated: true, completion: nil)
+        present(keyFileInfoVC, animated: true, completion: nil)
     }
     
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
@@ -277,14 +286,11 @@ class ChooseKeyFileVC: UITableViewController, Refreshable {
             try FileKeeper.shared.deleteFile(
                 urlRef,
                 fileType: .keyFile,
-                ignoreErrors: urlRef.info.hasError)
+                ignoreErrors: urlRef.hasError)
             DatabaseSettingsManager.shared.removeAllAssociations(of: urlRef)
             refresh()
         } catch {
-            let errorAlert = UIAlertController.make(
-                title: LString.titleError,
-                message: error.localizedDescription)
-            present(errorAlert, animated: true, completion: nil)
+            showErrorAlert(error)
         }
     }
 }
@@ -328,7 +334,7 @@ extension ChooseKeyFileVC: UIDocumentPickerDelegate {
         }
         
         let fileKeeper = FileKeeper.shared
-        fileKeeper.prepareToAddFile(url: url, mode: .import)
+        fileKeeper.prepareToAddFile(url: url, fileType: .keyFile, mode: .import)
         fileKeeper.processPendingOperations(
             success: {
                 [weak self] (addedRef) in
@@ -336,11 +342,7 @@ extension ChooseKeyFileVC: UIDocumentPickerDelegate {
             },
             error: {
                 [weak self] (error) in
-                guard let _self = self else { return }
-                let alert = UIAlertController.make(
-                    title: LString.titleFileImportError,
-                    message: error.localizedDescription)
-                _self.present(alert, animated: true, completion: nil)
+                self?.showErrorAlert(error, title: LString.titleFileImportError)
             }
         )
     }
@@ -353,7 +355,9 @@ extension ChooseKeyFileVC: FileKeeperObserver {
     }
     
     func fileKeeperHasPendingOperation() {
-        processPendingFileOperations()
+        if isViewLoaded {
+            processPendingFileOperations()
+        }
     }
     
     func fileKeeper(didRemoveFile urlRef: URLReference, fileType: FileType) {
@@ -364,13 +368,8 @@ extension ChooseKeyFileVC: FileKeeperObserver {
     private func processPendingFileOperations() {
         FileKeeper.shared.processPendingOperations(
             success: nil,
-            error: {
-                [weak self] (error) in
-                guard let _self = self else { return }
-                let alert = UIAlertController.make(
-                    title: LString.titleError,
-                    message: error.localizedDescription)
-                _self.present(alert, animated: true, completion: nil)
+            error: { [weak self] (error) in
+                self?.showErrorAlert(error)
             }
         )
     }

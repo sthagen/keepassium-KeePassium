@@ -17,12 +17,17 @@ enum ImageAsset: String {
     case editItemToolbar = "edit-item-toolbar"
     case lockDatabaseToolbar = "lock-database-toolbar"
     case openURLCellAccessory = "open-url-cellaccessory"
+    case fileInfoCellAccessory = "file-info-cellaccessory"
     case deleteItemListitem = "delete-item-listitem"
     case editItemListitem = "rename-item-listitem"
-    case databaseCloudListitem = "database-cloud-listitem"
-    case databaseLocalListitem = "database-local-listitem"
+    case sortOrderAscToolbar = "sort-order-asc-toolbar"
+    case sortOrderDescToolbar = "sort-order-desc-toolbar"
     case databaseBackupListitem = "database-backup-listitem"
-    case databaseErrorListitem = "database-error-listitem"
+    case databaseTrashedListitem = "database-trashed-listitem"
+    case fileProviderGenericListitem = "fp-generic-listitem"
+    case fileProviderOnMyIPadListitem = "fp-on-ipad-listitem"
+    case fileProviderOnMyIPhoneListitem = "fp-on-iphone-listitem"
+    case keyFileListitem = "keyfile-listitem"
     case hideAccessory = "hide-accessory"
     case unhideAccessory = "unhide-accessory"
     case hideListitem = "hide-listitem"
@@ -30,12 +35,16 @@ enum ImageAsset: String {
     case copyToClipboardAccessory = "copy-to-clipboard-accessory"
     case biometryTouchIDListitem = "touch-id-listitem"
     case biometryFaceIDListitem = "face-id-listitem"
+    case premiumFeatureBadge = "premium-feature-badge"
     case premiumBenefitMultiDB = "premium-benefit-multidb"
     case premiumBenefitDBTimeout = "premium-benefit-db-timeout"
     case premiumBenefitPreview = "premium-benefit-preview"
     case premiumBenefitHardwareKeys = "premium-benefit-yubikey"
+    case premiumBenefitCustomAppIcons = "premium-benefit-custom-appicons"
     case premiumBenefitSupport = "premium-benefit-support"
     case premiumBenefitShiny = "premium-benefit-shiny"
+    case premiumConditionCheckedListitem = "premium-condition-checked-listitem"
+    case premiumConditionUncheckedListitem = "premium-condition-unchecked-listitem"
     case expandRowCellAccessory = "expand-row-cellaccessory"
     case collapseRowCellAccessory = "collapse-row-cellaccessory"
     case viewMoreAccessory = "view-more-accessory"
@@ -75,17 +84,4 @@ extension UIImage {
         return kpIcon(forID: group.iconID)
     }
     
-    static func databaseIcon(for urlRef: URLReference) -> UIImage {
-        guard !urlRef.info.hasError else {
-            return UIImage(asset: .databaseErrorListitem)
-        }
-        switch urlRef.location {
-        case .external:
-            return UIImage(asset: .databaseCloudListitem)
-        case .internalDocuments, .internalInbox:
-            return UIImage(asset: .databaseLocalListitem)
-        case .internalBackup:
-            return UIImage(asset: .databaseBackupListitem)
-        }
-    }
 }

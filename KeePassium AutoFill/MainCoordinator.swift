@@ -249,10 +249,11 @@ class MainCoordinator: NSObject, Coordinator {
         refreshFileList()
     }
 
-    func showDatabaseFileInfo(fileRef: URLReference) {
+    func showDatabaseFileInfo(in databaseChooser: DatabaseChooserVC, for fileRef: URLReference) {
         let databaseInfoVC = FileInfoVC.make(urlRef: fileRef, fileType: .database, at: nil)
         databaseInfoVC.canExport = true
-        databaseInfoVC.onDismiss = { [weak self] in
+        databaseInfoVC.onDismiss = { [weak self, weak databaseChooser] in
+            databaseChooser?.refresh()
             self?.navigationController.popViewController(animated: true)
         }
         navigationController.pushViewController(databaseInfoVC, animated: true)
@@ -307,7 +308,7 @@ class MainCoordinator: NSObject, Coordinator {
     }
     
     func showDatabaseContent(database: Database, databaseRef: URLReference) {
-        let fileName = databaseRef.info.fileName
+        let fileName = databaseRef.visibleFileName
         let databaseName = URL(string: fileName)?.deletingPathExtension().absoluteString ?? fileName
         
         let entriesVC = EntryFinderVC.instantiateFromStoryboard()
@@ -410,7 +411,7 @@ extension MainCoordinator: DatabaseChooserDelegate {
     
     func databaseChooser(_ sender: DatabaseChooserVC, shouldShowInfoForDatabase urlRef: URLReference) {
         watchdog.restart()
-        showDatabaseFileInfo(fileRef: urlRef)
+        showDatabaseFileInfo(in: sender, for: urlRef)
     }
 }
 
@@ -471,7 +472,19 @@ extension MainCoordinator: KeyFileChooserDelegate {
         }
     }
     
+    func didPressFileInfo(in keyFileChooser: KeyFileChooserVC, for urlRef: URLReference) {
+        watchdog.restart()
+        let keyFileInfoVC = FileInfoVC.make(urlRef: urlRef, fileType: .keyFile, at: nil)
+        keyFileInfoVC.canExport = false
+        keyFileInfoVC.onDismiss = { [weak self, weak keyFileChooser] in
+            keyFileChooser?.refresh()
+            self?.navigationController.popViewController(animated: true)
+        }
+        navigationController.pushViewController(keyFileInfoVC, animated: true)
+    }
+    
     func didPressAddKeyFile(in keyFileChooser: KeyFileChooserVC, popoverAnchor: PopoverAnchor) {
+        watchdog.restart()
         addKeyFile(popoverAnchor: popoverAnchor)
     }
 }
@@ -516,7 +529,7 @@ extension MainCoordinator: DatabaseManagerObserver {
         Settings.current.isAutoFillFinishedOK = true
         databaseUnlockerVC.hideProgressOverlay()
         
-        if urlRef.info.hasPermissionError257 {
+        if urlRef.hasPermissionError257 {
             databaseUnlockerVC.showErrorMessage(
                 message,
                 reason: reason,
@@ -563,34 +576,20 @@ extension MainCoordinator: UIDocumentPickerDelegate {
     }
     
     private func addDatabaseURL(_ url: URL) {
-        guard FileType.isDatabaseFile(url: url) else {
-            let fileName = url.lastPathComponent
-            let errorAlert = UIAlertController.make(
-                title: LString.titleWarning,
-                message: String.localizedStringWithFormat(
-                    NSLocalizedString(
-                        "[Database/Add] Selected file \"%@\" does not look like a database.",
-                        value: "Selected file \"%@\" does not look like a database.",
-                        comment: "Warning when trying to add a random file as a database. [fileName: String]"),
-                    fileName),
-                cancelButtonTitle: LString.actionOK)
-            navigationController.present(errorAlert, animated: true, completion: nil)
-            return
+        FileAddingHelper.ensureDatabaseFile(url: url, parent: navigationController) {
+            [weak self] (url) in
+            FileKeeper.shared.prepareToAddFile(url: url, fileType: .database, mode: .openInPlace)
+            FileKeeper.shared.processPendingOperations(
+                success: { [weak self] (urlRef) in
+                    guard let self = self else { return }
+                    self.navigationController.popToRootViewController(animated: true)
+                    self.refreshFileList()
+                },
+                error: { [weak self] (error) in
+                    self?.navigationController.showErrorAlert(error)
+                }
+            )
         }
-        
-        FileKeeper.shared.prepareToAddFile(url: url, mode: .openInPlace)
-        FileKeeper.shared.processPendingOperations(
-            success: { (urlRef) in
-                self.navigationController.popToRootViewController(animated: true)
-                self.refreshFileList()
-            },
-            error: { (error) in
-                let alert = UIAlertController.make(
-                    title: LString.titleError,
-                    message: error.localizedDescription)
-                self.navigationController.present(alert, animated: true, completion: nil)
-            }
-        )
     }
 
     private func addKeyFileURL(_ url: URL) {
@@ -603,16 +602,13 @@ extension MainCoordinator: UIDocumentPickerDelegate {
             return
         }
 
-        FileKeeper.shared.prepareToAddFile(url: url, mode: .openInPlace)
+        FileKeeper.shared.prepareToAddFile(url: url, fileType: .keyFile, mode: .openInPlace)
         FileKeeper.shared.processPendingOperations(
             success: { [weak self] (urlRef) in
                 self?.refreshFileList()
             },
             error: { [weak self] (error) in
-                let alert = UIAlertController.make(
-                    title: LString.titleError,
-                    message: error.localizedDescription)
-                self?.navigationController.present(alert, animated: true, completion: nil)
+                self?.navigationController.showErrorAlert(error)
             }
         )
     }
@@ -676,13 +672,9 @@ extension MainCoordinator: EntryFinderDelegate {
         DatabaseManager.shared.closeDatabase(
             clearStoredKey: true,
             ignoreErrors: false,
-            completion: { [weak self] (errorMessage) in
-                if let errorMessage = errorMessage {
-                    let errorAlert = UIAlertController.make(
-                        title: LString.titleError,
-                        message: errorMessage,
-                        cancelButtonTitle: LString.actionDismiss)
-                    self?.navigationController.present(errorAlert, animated: true, completion: nil)
+            completion: { [weak self] (error) in
+                if let error = error {
+                    self?.navigationController.showErrorAlert(error)
                 } else {
                     self?.navigationController.popToRootViewController(animated: true)
                 }
@@ -818,10 +810,7 @@ extension MainCoordinator: PasscodeInputDelegate {
             }
         } catch {
             Diag.error(error.localizedDescription)
-            let alert = UIAlertController.make(
-                title: LString.titleKeychainError,
-                message: error.localizedDescription)
-            sender.present(alert, animated: true, completion: nil)
+            sender.showErrorAlert(error, title: LString.titleKeychainError)
         }
     }
     

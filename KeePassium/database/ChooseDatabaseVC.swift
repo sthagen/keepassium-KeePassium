@@ -9,20 +9,41 @@
 import UIKit
 import KeePassiumLib
 
+
+protocol AppLockSetupCellDelegate: class {
+    func didPressEnableAppLock(in cell: AppLockSetupCell)
+    func didPressClose(in cell: AppLockSetupCell)
+}
+
 class AppLockSetupCell: UITableViewCell {
-    var buttonHandler: (() -> Void)?
-    @IBAction func didPressButton(_ sender: Any) {
-        buttonHandler?()
+    @IBOutlet weak var dismissButton: UIButton!
+
+    weak var delegate: AppLockSetupCellDelegate?
+    
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        dismissButton.accessibilityLabel = LString.actionDismiss
+    }
+    
+    @IBAction func didPressEnableAppLock(_ sender: Any) {
+        delegate?.didPressEnableAppLock(in: self)
+    }
+    
+    @IBAction func didPressClose(_ sender: UIButton) {
+        delegate?.didPressClose(in: self)
     }
 }
 
-class ChooseDatabaseVC: UITableViewController, Refreshable {
+
+class ChooseDatabaseVC: UITableViewController, DynamicFileList, Refreshable {
+    
     private enum CellID: String {
         case fileItem = "FileItemCell"
         case noFiles = "NoFilesCell"
         case appLockSetup = "AppLockSetupCell"
     }
     @IBOutlet weak var addDatabaseBarButton: UIBarButtonItem!
+    @IBOutlet weak var sortOrderButton: UIBarButtonItem!
     
     private var _isEnabled = true
     var isEnabled: Bool {
@@ -55,6 +76,8 @@ class ChooseDatabaseVC: UITableViewController, Refreshable {
     
     private var isJustLaunched = true
     
+    internal var ongoingUpdateAnimations = 0
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -69,7 +92,7 @@ class ChooseDatabaseVC: UITableViewController, Refreshable {
         settingsNotifications = SettingsNotifications(observer: self)
         
         let refreshControl = UIRefreshControl()
-        refreshControl.addTarget(self, action: #selector(refresh), for: .valueChanged)
+        refreshControl.addTarget(self, action: #selector(didPullToRefresh), for: .valueChanged)
         self.refreshControl = refreshControl
         
         clearsSelectionOnViewWillAppear = false
@@ -148,7 +171,7 @@ class ChooseDatabaseVC: UITableViewController, Refreshable {
         let canAutoSelectDatabase = isTwoPaneMode || Settings.current.isAutoUnlockStartupDatabase
         
         guard let startDatabase = Settings.current.startupDatabase,
-            let selRow = databaseRefs.index(of: startDatabase),
+            let selRow = databaseRefs.firstIndex(of: startDatabase),
             canAutoSelectDatabase else
         {
             tableView.selectRow(at: nil, animated: true, scrollPosition: .none)
@@ -162,17 +185,43 @@ class ChooseDatabaseVC: UITableViewController, Refreshable {
         }
     }
     
-    @objc func refresh() {
+
+    @objc
+    private func didPullToRefresh() {
+        if !tableView.isDragging {
+            refreshControl?.endRefreshing()
+            refresh()
+        }
+    }
+    override func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        if refreshControl?.isRefreshing ?? false {
+            refreshControl?.endRefreshing()
+            refresh()
+        }
+    }
+    
+    func refresh() {
+        refreshSortOrderButton()
+        
         databaseRefs = FileKeeper.shared.getAllReferences(
             fileType: .database,
             includeBackup: Settings.current.isBackupFilesVisible)
-        fileInfoReloader.reload(databaseRefs) { [weak self] in
-            guard let self = self else { return }
-            self.sortFileList()
-            if self.refreshControl?.isRefreshing ?? false {
-                self.refreshControl?.endRefreshing()
+        sortFileList()
+
+        fileInfoReloader.getInfo(
+            for: databaseRefs,
+            update: { [weak self] (ref) in
+                guard let self = self else { return }
+                self.sortAndAnimateFileInfoUpdate(refs: &self.databaseRefs, in: self.tableView)
+            },
+            completion: { [weak self] in
+                guard let self = self else { return }
+                DispatchQueue.main.asyncAfter(deadline: .now() + self.sortingAnimationDuration) {
+                    [weak self] in
+                    self?.sortFileList()
+                }
             }
-        }
+        )
     }
     
     fileprivate func sortFileList() {
@@ -181,16 +230,26 @@ class ChooseDatabaseVC: UITableViewController, Refreshable {
         tableView.reloadData()
     }
     
+    private func refreshSortOrderButton() {
+        sortOrderButton.image = Settings.current.filesSortOrder.toolbarIcon
+    }
+    
+    func getIndexPath(for fileIndex: Int) -> IndexPath {
+        return IndexPath(row: fileIndex, section: 0)
+    }
+    
     private func shouldShowAppLockSetup() -> Bool {
         let settings = Settings.current
+        if settings.isHideAppLockSetupReminder {
+            return false
+        }
         let isDataVulnerable = settings.isRememberDatabaseKey && !settings.isAppLockEnabled
         return isDataVulnerable
     }
     
     
     private func getDeleteActionName(for urlRef: URLReference) -> String {
-        let fileInfo = urlRef.getInfo()
-        if urlRef.location == .external || fileInfo.hasError {
+        if urlRef.location == .external || urlRef.hasError {
             return LString.actionRemoveFile
         } else {
             return LString.actionDeleteFile
@@ -327,37 +386,13 @@ class ChooseDatabaseVC: UITableViewController, Refreshable {
 
     func didPressExportDatabase(at indexPath: IndexPath) {
         let urlRef = databaseRefs[indexPath.row]
-        do {
-            let url = try urlRef.resolve()
-            let exportSheet = UIActivityViewController(
-                activityItems: [url],
-                applicationActivities: nil)
-            if let popover = exportSheet.popoverPresentationController {
-                guard let sourceView = tableView.cellForRow(at: indexPath) else {
-                    assertionFailure()
-                    return
-                }
-                popover.sourceView = sourceView
-                popover.sourceRect = CGRect(
-                    x: sourceView.bounds.width,
-                    y: sourceView.center.y,
-                    width: 0,
-                    height: 0)
-            }
-            present(exportSheet, animated: true, completion: nil)
-        } catch {
-            Diag.error("Failed to resolve URL reference [message: \(error.localizedDescription)]")
-            let alert = UIAlertController.make(
-                title: LString.titleFileExportError,
-                message: error.localizedDescription)
-            present(alert, animated: true, completion: nil)
-        }
+        let popoverAnchor = PopoverAnchor(tableView: tableView, at: indexPath)
+        FileExportHelper.showFileExportSheet(urlRef, at: popoverAnchor, parent: self)
     }
         
     func didPressDeleteDatabase(at indexPath: IndexPath) {
         let urlRef = databaseRefs[indexPath.row]
-        let info = urlRef.getInfo()
-        if info.hasError {
+        if urlRef.hasError {
             removeDatabaseFile(urlRef: urlRef)
             return
         }
@@ -387,7 +422,7 @@ class ChooseDatabaseVC: UITableViewController, Refreshable {
             }
         }
         let confirmationAlert = UIAlertController.make(
-            title: info.fileName,
+            title: urlRef.visibleFileName,
             message: message,
             cancelButtonTitle: LString.actionCancel)
         confirmationAlert.addAction(destructiveAction)
@@ -414,18 +449,14 @@ class ChooseDatabaseVC: UITableViewController, Refreshable {
 
         DatabaseSettingsManager.shared.removeSettings(for: urlRef)
         do {
-            let fileInfo = urlRef.getInfo()
             try FileKeeper.shared.deleteFile(
                 urlRef,
                 fileType: .database,
-                ignoreErrors: fileInfo.hasError)
+                ignoreErrors: urlRef.hasError)
             refresh()
         } catch {
             Diag.error("Failed to delete database file [reason: \(error.localizedDescription)]")
-            let errorAlert = UIAlertController.make(
-                title: LString.titleError,
-                message: error.localizedDescription)
-            present(errorAlert, animated: true, completion: nil)
+            showErrorAlert(error)
         }
     }
     
@@ -440,13 +471,8 @@ class ChooseDatabaseVC: UITableViewController, Refreshable {
     private func processPendingFileOperations() {
         FileKeeper.shared.processPendingOperations(
             success: nil,
-            error: {
-                [weak self] (error) in
-                guard let _self = self else { return }
-                let alert = UIAlertController.make(
-                    title: LString.titleError,
-                    message: error.localizedDescription)
-                _self.present(alert, animated: true, completion: nil)
+            error: { [weak self] (error) in
+                self?.showErrorAlert(error)
             }
         )
     }
@@ -491,18 +517,24 @@ class ChooseDatabaseVC: UITableViewController, Refreshable {
                 .dequeueReusableCell(withIdentifier: cellType.rawValue, for: indexPath)
             return cell
         case .fileItem:
-            let cell = tableView
-                .dequeueReusableCell(withIdentifier: cellType.rawValue, for: indexPath)
-                as! DatabaseFileListCell
-            cell.urlRef = databaseRefs[indexPath.row]
+            let cell = FileListCellFactory.dequeueReusableCell(
+                from: tableView,
+                withIdentifier: cellType.rawValue,
+                for: indexPath,
+                for: .database)
+            let dbRef = databaseRefs[indexPath.row]
+            cell.showInfo(from: dbRef)
+            cell.isAnimating = dbRef.isRefreshingInfo
+            cell.accessoryTapHandler = { [weak self, indexPath] cell in
+                guard let self = self else { return }
+                self.tableView(self.tableView, accessoryButtonTappedForRowWith: indexPath)
+            }
             return cell
         case .appLockSetup:
             let cell = tableView
                 .dequeueReusableCell(withIdentifier: cellType.rawValue, for: indexPath)
                 as! AppLockSetupCell
-            cell.buttonHandler = { [weak self] in
-                self?.didPressAppLockSetup()
-            }
+            cell.delegate = self
             return cell
         }
     }
@@ -535,8 +567,9 @@ class ChooseDatabaseVC: UITableViewController, Refreshable {
         let popoverAnchor = PopoverAnchor(tableView: tableView, at: indexPath)
         let databaseInfoVC = FileInfoVC.make(urlRef: urlRef, fileType: .database, at: popoverAnchor)
         databaseInfoVC.canExport = true
-        databaseInfoVC.onDismiss = {
-            databaseInfoVC.dismiss(animated: true, completion: nil)
+        databaseInfoVC.onDismiss = { [weak self, weak databaseInfoVC] in
+            self?.refresh()
+            databaseInfoVC?.dismiss(animated: true, completion: nil)
         }
         present(databaseInfoVC, animated: true, completion: nil)
     }
@@ -551,6 +584,9 @@ class ChooseDatabaseVC: UITableViewController, Refreshable {
         editActionsForRowAt indexPath: IndexPath
         ) -> [UITableViewRowAction]?
     {
+        guard indexPath.row < databaseRefs.count else {
+            return nil
+        }
         let shareAction = UITableViewRowAction(
             style: .default,
             title: LString.actionExport)
@@ -602,7 +638,9 @@ extension ChooseDatabaseVC: FileKeeperObserver {
     }
 
     func fileKeeperHasPendingOperation() {
-        processPendingFileOperations()
+        if isViewLoaded {
+            processPendingFileOperations()
+        }
     }
 }
 
@@ -612,32 +650,19 @@ extension ChooseDatabaseVC: UIDocumentPickerDelegate {
         didPickDocumentsAt urls: [URL])
     {
         guard let url = urls.first else { return }
-        guard FileType.isDatabaseFile(url: url) else {
-            let fileName = url.lastPathComponent
-            let errorMessage = String.localizedStringWithFormat(
-                NSLocalizedString(
-                    "[Database/Add] Selected file \"%@\" does not look like a database.",
-                    value: "Selected file \"%@\" does not look like a database.",
-                    comment: "Warning when trying to add a random file as a database. [fileName: String]"),
-                fileName)
-            let errorAlert = UIAlertController.make(
-                title: LString.titleWarning,
-                message: errorMessage,
-                cancelButtonTitle: LString.actionOK)
-            present(errorAlert, animated: true, completion: nil)
-            return
+        FileAddingHelper.ensureDatabaseFile(url: url, parent: self) { [weak self] (url) in
+            guard let self = self else { return }
+            switch controller.documentPickerMode {
+            case .open:
+                FileKeeper.shared.prepareToAddFile(url: url, fileType: .database, mode: .openInPlace)
+            case .import:
+                FileKeeper.shared.prepareToAddFile(url: url, fileType: .database, mode: .import)
+            default:
+                assertionFailure("Unexpected document picker mode")
+            }
+            self.processPendingFileOperations()
+            self.navigationController?.popToViewController(self, animated: true) 
         }
-        
-        switch controller.documentPickerMode {
-        case .open:
-            FileKeeper.shared.prepareToAddFile(url: url, mode: .openInPlace)
-        case .import:
-            FileKeeper.shared.prepareToAddFile(url: url, mode: .import)
-        default:
-            assertionFailure("Unexpected document picker mode")
-        }
-        processPendingFileOperations()
-        navigationController?.popToViewController(self, animated: true) 
     }
 }
 
@@ -673,7 +698,13 @@ extension ChooseDatabaseVC: WelcomeDelegate {
 
 extension ChooseDatabaseVC: PasscodeInputDelegate {
     func passcodeInputDidCancel(_ sender: PasscodeInputVC) {
-        Settings.current.isAppLockEnabled = false
+        do {
+            try Keychain.shared.removeAppPasscode() 
+        } catch {
+            Diag.error(error.localizedDescription)
+            showErrorAlert(error, title: LString.titleKeychainError)
+            return
+        }
         sender.dismiss(animated: true, completion: nil)
         tableView.reloadData()
     }
@@ -687,17 +718,23 @@ extension ChooseDatabaseVC: PasscodeInputDelegate {
             [weak self] in
             do {
                 try Keychain.shared.setAppPasscode(passcode)
-                let settings = Settings.current
-                settings.isAppLockEnabled = true
-                settings.isBiometricAppLockEnabled = true
+                Settings.current.isBiometricAppLockEnabled = true
                 self?.tableView.reloadData()
             } catch {
                 Diag.error(error.localizedDescription)
-                let alert = UIAlertController.make(
-                    title: LString.titleKeychainError,
-                    message: error.localizedDescription)
-                self?.present(alert, animated: true, completion: nil)
+                self?.showErrorAlert(error, title: LString.titleKeychainError)
             }
         }
+    }
+}
+
+extension ChooseDatabaseVC: AppLockSetupCellDelegate {
+    func didPressClose(in cell: AppLockSetupCell) {
+        Settings.current.isHideAppLockSetupReminder = true
+        tableView.reloadSections([0], with: .automatic)
+    }
+    
+    func didPressEnableAppLock(in cell: AppLockSetupCell) {
+        didPressAppLockSetup()
     }
 }

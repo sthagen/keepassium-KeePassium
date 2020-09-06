@@ -71,6 +71,7 @@ public class Settings {
         case recentUserActivityTimestamp
         case appLockTimeout
         case databaseLockTimeout
+        case lockDatabasesOnTimeout
         
         case clipboardTimeout
         case universalClipboardEnabled
@@ -100,6 +101,8 @@ public class Settings {
         case passwordGeneratorIncludeDigits
         case passwordGeneratorIncludeLookAlike
         case passcodeKeyboardType
+        
+        case hideAppLockSetupReminder
     }
 
     fileprivate enum Notifications {
@@ -380,13 +383,14 @@ public class Settings {
     
     public enum BackupKeepingDuration: Int {
         public static let allValues: [BackupKeepingDuration] = [
-            .forever, _1year, _6months, _4weeks, _1week, _1day, _4hours, _1hour
+            .forever, _1year, _6months, _2months, _4weeks, _1week, _1day, _4hours, _1hour
         ]
         case _1hour = 3600
         case _4hours = 14400
         case _1day = 86400
         case _1week = 604_800
         case _4weeks = 2_419_200
+        case _2months = 5_270_400
         case _6months = 15_552_000
         case _1year = 31_536_000
         case forever
@@ -641,28 +645,31 @@ public class Settings {
         }
 
         public func compare(_ lhs: URLReference, _ rhs: URLReference) -> Bool {
+            guard let lhsInfo = lhs.getCachedInfoSync(canFetch: false) else { return false }
+            guard let rhsInfo = rhs.getCachedInfoSync(canFetch: false) else { return true }
+            
             switch self {
             case .noSorting:
                 return false
             case .nameAsc:
-                return lhs.info.fileName.localizedCaseInsensitiveCompare(rhs.info.fileName) == .orderedAscending
+                return lhsInfo.fileName.localizedCaseInsensitiveCompare(rhsInfo.fileName) == .orderedAscending
             case .nameDesc:
-                return lhs.info.fileName.localizedCaseInsensitiveCompare(rhs.info.fileName) == .orderedDescending
+                return lhsInfo.fileName.localizedCaseInsensitiveCompare(rhsInfo.fileName) == .orderedDescending
             case .creationTimeAsc:
-                guard let date1 = lhs.info.creationDate,
-                    let date2 = rhs.info.creationDate else { return false }
+                guard let date1 = lhsInfo.creationDate else { return true }
+                guard let date2 = rhsInfo.creationDate else { return false }
                 return date1.compare(date2) == .orderedAscending
             case .creationTimeDesc:
-                guard let date1 = lhs.info.creationDate,
-                    let date2 = rhs.info.creationDate else { return false }
+                guard let date1 = lhsInfo.creationDate else { return true }
+                guard let date2 = rhsInfo.creationDate else { return false }
                 return date1.compare(date2) == .orderedDescending
             case .modificationTimeAsc:
-                guard let date1 = lhs.info.modificationDate,
-                    let date2 = rhs.info.modificationDate else { return false }
+                guard let date1 = lhsInfo.modificationDate else { return true}
+                guard let date2 = rhsInfo.modificationDate else { return false }
                 return date1.compare(date2) == .orderedAscending
             case .modificationTimeDesc:
-                guard let date1 = lhs.info.modificationDate,
-                    let date2 = rhs.info.modificationDate else { return false }
+                guard let date1 = lhsInfo.modificationDate else { return true }
+                guard let date2 = rhsInfo.modificationDate else { return false }
                 return date1.compare(date2) == .orderedDescending
             }
         }
@@ -864,17 +871,13 @@ public class Settings {
     
     public var isAppLockEnabled: Bool {
         get {
-            let stored = UserDefaults.appGroupShared
-                .object(forKey: Keys.appLockEnabled.rawValue)
-                as? Bool
-            return stored ?? false
+            let hasPasscode = try? Keychain.shared.isAppPasscodeSet() 
+            return hasPasscode ?? false
         }
-        set {
-            updateAndNotify(
-                oldValue: isAppLockEnabled,
-                newValue: newValue,
-                key: .appLockEnabled)
-        }
+    }
+    
+    internal func notifyAppLockEnabledChanged() {
+        postChangeNotification(changedKey: .appLockEnabled)
     }
     
     public var isBiometricAppLockEnabled: Bool {
@@ -979,6 +982,21 @@ public class Settings {
             if newValue != oldValue {
                 postChangeNotification(changedKey: Keys.databaseLockTimeout)
             }
+        }
+    }
+    
+    public var isLockDatabasesOnTimeout: Bool {
+        get {
+            let stored = UserDefaults.appGroupShared
+                .object(forKey: Keys.lockDatabasesOnTimeout.rawValue)
+                as? Bool
+            return stored ?? true
+        }
+        set {
+            updateAndNotify(
+                oldValue: isLockDatabasesOnTimeout,
+                newValue: newValue,
+                key: .lockDatabasesOnTimeout)
         }
     }
     
@@ -1130,7 +1148,13 @@ public class Settings {
         }
     }
     
-    
+
+    public var isBackupDatabaseOnLoad: Bool {
+        get {
+            return isBackupDatabaseOnSave
+        }
+    }
+
     public var isBackupDatabaseOnSave: Bool {
         get {
             let stored = UserDefaults.appGroupShared
@@ -1154,7 +1178,7 @@ public class Settings {
             {
                 return timeout
             }
-            return BackupKeepingDuration.forever
+            return BackupKeepingDuration._2months
         }
         set {
             let oldValue = backupKeepingDuration
@@ -1215,6 +1239,7 @@ public class Settings {
         }
     }
 
+    
     public var isHapticFeedbackEnabled: Bool {
         get {
             let stored = UserDefaults.appGroupShared
@@ -1229,7 +1254,22 @@ public class Settings {
                 key: .hapticFeedbackEnabled)
         }
     }
-    
+
+    public var isHideAppLockSetupReminder: Bool {
+        get {
+            let stored = UserDefaults.appGroupShared
+                .object(forKey: Keys.hideAppLockSetupReminder.rawValue)
+                as? Bool
+            return stored ?? false
+        }
+        set {
+            updateAndNotify(
+                oldValue: isHideAppLockSetupReminder,
+                newValue: newValue,
+                key: .hideAppLockSetupReminder)
+        }
+    }
+
     
     public var passwordGeneratorLength: Int {
         get {

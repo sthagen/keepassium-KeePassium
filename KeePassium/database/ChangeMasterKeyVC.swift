@@ -33,8 +33,8 @@ class ChangeMasterKeyVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        databaseNameLabel.text = databaseRef.info.fileName
-        databaseIcon.image = UIImage.databaseIcon(for: databaseRef)
+        databaseNameLabel.text = databaseRef.visibleFileName
+        databaseIcon.image = databaseRef.getIcon(fileType: .database)
         
         passwordField.invalidBackgroundColor = nil
         repeatPasswordField.invalidBackgroundColor = nil
@@ -162,7 +162,12 @@ extension ChangeMasterKeyVC: UITextFieldDelegate {
         case passwordField:
             repeatPasswordField.becomeFirstResponder()
         case repeatPasswordField:
-            didPressSaveChanges(self)
+            if repeatPasswordField.isValid {
+                didPressSaveChanges(self)
+            } else {
+                repeatPasswordField.shake()
+                passwordMismatchImage.shake()
+            }
         default:
             break
         }
@@ -222,14 +227,11 @@ extension ChangeMasterKeyVC: KeyFileChooserDelegate {
             return
         }
         
-        if let errorMessage = keyFileRef.info.errorMessage {
+        if let error = keyFileRef.error {
             keyFileField.text = ""
-            let errorAlert = UIAlertController.make(
-                title: LString.titleError,
-                message: errorMessage)
-            present(errorAlert, animated: true, completion: nil)
+            showErrorAlert(error)
         } else {
-            keyFileField.text = keyFileRef.info.fileName
+            keyFileField.text = keyFileRef.visibleFileName
         }
     }
 }

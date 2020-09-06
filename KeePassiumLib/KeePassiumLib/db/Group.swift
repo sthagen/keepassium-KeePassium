@@ -27,6 +27,10 @@ public class Group: DatabaseItem, Eraseable {
     }
     public var isDeleted: Bool
     
+    public var isIncludeEntriesInSearch: Bool {
+        return true 
+    }
+    
     private var isChildrenModified: Bool
     public var groups = [Group]()
     public var entries = [Entry]()
@@ -230,6 +234,9 @@ public class Group: DatabaseItem, Eraseable {
             }
         }
         
+        guard isIncludeEntriesInSearch else {
+            return
+        }
         for entry in entries {
             if entry.matches(query: query) {
                 result.append(entry)
@@ -240,7 +247,7 @@ public class Group: DatabaseItem, Eraseable {
 
 extension Array where Element == Group {
     mutating func remove(_ group: Group) {
-        if let index = index(where: {$0 === group}) {
+        if let index = firstIndex(where: {$0 === group}) {
             remove(at: index)
         }
     }

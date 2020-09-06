@@ -362,7 +362,7 @@ public class Database2: Database {
     func decryptBlocksV3(data: ByteArray, cipher: DataCipher) throws -> ByteArray {
         Diag.debug("Decrypting V3 blocks")
         progress.addChild(cipher.initProgress(), withPendingUnitCount: ProgressSteps.decryption)
-        var decryptedData = try cipher.decrypt(
+        let decryptedData = try cipher.decrypt(
             cipherText: data,
             key: cipherKey,
             iv: header.initialVector) 
@@ -638,6 +638,8 @@ public class Database2: Database {
             let backupGroup = meta.createRecycleBinGroup()
             root.add(group: backupGroup)
             backupGroup.isDeleted = true
+            backupGroup.isSearchingEnabled = false
+            backupGroup.isAutoTypeEnabled = false
             Diag.verbose("RecycleBin group created")
             return backupGroup
         }

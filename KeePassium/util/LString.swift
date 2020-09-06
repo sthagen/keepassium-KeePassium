@@ -15,6 +15,11 @@ public enum LString {
         value: "OK",
         comment: "Action/button: generic OK"
     )
+    public static let actionContinue = NSLocalizedString(
+        "[Generic] Continue",
+        value: "Continue",
+        comment: "Action/button to proceed with the action"
+    )
     public static let actionCancel = NSLocalizedString(
         "[Generic] Cancel",
         value: "Cancel",
@@ -196,6 +201,11 @@ public enum LString {
         value: "Delete key file?\n Make sure you have a backup.",
         comment: "Message to confirm deletion of a key file."
     )
+    public static let confirmKeyFileRemoval = NSLocalizedString(
+        "[KeyFile/Remove/Confirm/text] Remove key file from the list?\n The file will remain intact and you can add it again later.",
+        value: "Remove key file from the list?\n The file will remain intact and you can add it again later.",
+        comment: "Message to confirm removal of a key file from the app. (This keeps the file, but removes its reference from the app.)"
+    )
     public static let confirmDatabaseDeletion = NSLocalizedString(
         "[Database/Delete/Confirm/text] Delete database file?\n Make sure you have a backup.",
         value: "Delete database file?\n Make sure you have a backup.",
@@ -212,7 +222,11 @@ public enum LString {
         value: "Create Database",
         comment: "Title of a form for creating a database"
     )
-
+    public static let warningNonDatabaseExtension = NSLocalizedString(
+        "[Database/Add] Selected file \"%@\" does not look like a database.",
+        value: "Selected file \"%@\" does not look like a database.",
+        comment: "Warning when trying to add a random file as a database. [fileName: String]")
+    
     public static let actionCreateGroup = NSLocalizedString(
         "[Group/Create/action] Create Group",
         value: "Create Group",
@@ -274,6 +288,29 @@ public enum LString {
         comment: "Name of an entry field"
     )
 
+    
+    
+    public static let trashDirectoryName = NSLocalizedString(
+        "[Generic/Directory/Recently Deleted/name]",
+        value: "Recently Deleted",
+        comment: "Name of the Recently Deleted (Recycle Bin) directory, as shown in the Files app"
+    )
+    public static let titleExcludeFromBackup = NSLocalizedString(
+        "[FileInfo/isExcludedFromBackup/title]",
+        value: "Exclude From iCloud/iTunes Backup",
+        comment: "Title of a setting: is the file exluded from iCloud/iTunes backup. For example: `Exclude From Backup: <Yes>`"
+    )
+    public static let titleBackupSettings = NSLocalizedString(
+        "[FileInfo/Backup/header]",
+        value: "Backup",
+        comment: "Section header: file backup settings"
+    )
+
+    public static let errorFailedToChangeFileAttributes = NSLocalizedString(
+        "[FileInfo/Error/failed to change attributes]",
+        value: "Failed to update file attributes.",
+        comment: "Error message shown when the user tries to change file attributes (such as creation/modification date, backup flag, etc)"
+    )
     
     public static let titleTouchID  = NSLocalizedString(
         "[AppLock/Biometric/Hint] Unlock KeePassium",

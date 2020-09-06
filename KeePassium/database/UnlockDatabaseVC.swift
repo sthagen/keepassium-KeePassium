@@ -22,7 +22,6 @@ class UnlockDatabaseVC: UIViewController, Refreshable {
     @IBOutlet private weak var databaseIconImage: UIImageView!
     @IBOutlet weak var masterKeyKnownLabel: UILabel!
     @IBOutlet weak var lockDatabaseButton: UIButton!
-    @IBOutlet weak var getPremiumButton: UIButton!
     @IBOutlet weak var announcementButton: UIButton!
     
     public var databaseRef: URLReference! {
@@ -41,6 +40,8 @@ class UnlockDatabaseVC: UIViewController, Refreshable {
     var isAutoUnlockEnabled = true
     fileprivate var isAutomaticUnlock = false
 
+    private var isViewAppeared = false
+    
     static func make(databaseRef: URLReference) -> UnlockDatabaseVC {
         let vc = UnlockDatabaseVC.instantiateFromStoryboard()
         vc.databaseRef = databaseRef
@@ -54,11 +55,6 @@ class UnlockDatabaseVC: UIViewController, Refreshable {
         keyFileField.delegate = self
         
         fileKeeperNotifications = FileKeeperNotifications(observer: self)
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(refreshPremiumStatus),
-            name: PremiumManager.statusUpdateNotification,
-            object: nil)
 
         view.backgroundColor = UIColor(patternImage: UIImage(asset: .backgroundPattern))
         view.layer.isOpaque = false
@@ -91,7 +87,6 @@ class UnlockDatabaseVC: UIViewController, Refreshable {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        refreshPremiumStatus()
         refresh()
         if isMovingToParent && canAutoUnlock() {
             showProgressOverlay(animated: false)
@@ -100,6 +95,13 @@ class UnlockDatabaseVC: UIViewController, Refreshable {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        guard !isViewAppeared else {
+            Diag.warning("Unbalanced call to viewDidAppear, ignoring")
+            assertionFailure("Unbalanced call to viewDidAppear")
+            return
+        }
+        isViewAppeared = true
+
         fileKeeperNotifications.startObserving()
         NotificationCenter.default.addObserver(
             self,
@@ -140,6 +142,7 @@ class UnlockDatabaseVC: UIViewController, Refreshable {
             object: nil)
         fileKeeperNotifications.stopObserving()
         super.viewWillDisappear(animated)
+        isViewAppeared = false
     }
     
     override func didReceiveMemoryWarning() {
@@ -150,11 +153,11 @@ class UnlockDatabaseVC: UIViewController, Refreshable {
     func refresh() {
         guard isViewLoaded else { return }
         
-        databaseIconImage.image = UIImage.databaseIcon(for: databaseRef)
-        databaseNameLabel.text = databaseRef.info.fileName
-        if databaseRef.info.hasError {
-            let text = databaseRef.info.errorMessage
-            if databaseRef.info.hasPermissionError257 {
+        databaseIconImage.image = databaseRef.getIcon(fileType: .database)
+        databaseNameLabel.text = databaseRef.visibleFileName
+        if databaseRef.hasError {
+            let text = databaseRef.error?.localizedDescription
+            if databaseRef.hasPermissionError257 {
                 showErrorMessage(text, suggestion: LString.tryToReAddFile)
             } else {
                 showErrorMessage(text)
@@ -176,18 +179,6 @@ class UnlockDatabaseVC: UIViewController, Refreshable {
         }
         refreshNews()
         refreshInputMode()
-    }
-    
-    @objc private func refreshPremiumStatus() {
-        switch PremiumManager.shared.status {
-        case .initialGracePeriod,
-             .freeLightUse,
-             .freeHeavyUse:
-            getPremiumButton.isHidden = false
-        case .subscribed,
-             .lapsed:
-            getPremiumButton.isHidden = true
-        }
     }
     
     private func refreshInputMode() {
@@ -404,17 +395,12 @@ class UnlockDatabaseVC: UIViewController, Refreshable {
         refreshInputMode()
     }
     
-    private var premiumCoordinator: PremiumCoordinator?
-    @IBAction func didPressUpgradeToPremium(_ sender: Any) {
-        assert(premiumCoordinator == nil)
-        premiumCoordinator = PremiumCoordinator(presentingViewController: self)
-        premiumCoordinator?.delegate = self
-        premiumCoordinator?.start()
-    }
-    
     
     func canAutoUnlock() -> Bool {
-        guard isAutoUnlockEnabled && Settings.current.isAutoUnlockStartupDatabase else {
+        guard isAutoUnlockEnabled &&
+            Settings.current.isAutoUnlockStartupDatabase &&
+            !FileKeeper.shared.hasPendingFileOperations else
+        {
             return false
         }
         guard let splitVC = splitViewController, splitVC.isCollapsed else { return isJustLaunched }
@@ -462,9 +448,14 @@ class UnlockDatabaseVC: UIViewController, Refreshable {
             return
         }
         let viewGroupVC = ViewGroupVC.make(group: database.root, loadingWarnings: loadingWarnings)
-        guard let leftNavController =
-            splitViewController?.viewControllers.first as? UINavigationController else
+        guard let splitVC = splitViewController,
+            let firstVC = splitVC.viewControllers.first,
+            let leftNavController = firstVC as? UINavigationController else
         {
+            let splitVC = splitViewController
+            let firstVC = splitViewController?.viewControllers.first
+            Diag.writeToPersistentLog("splitVC: \(splitVC.debugDescription)\nfirstVC: \(firstVC.debugDescription)")
+            
             fatalError("No leftNavController?!")
         }
         if leftNavController.topViewController is UnlockDatabaseVC {
@@ -502,17 +493,17 @@ extension UnlockDatabaseVC: HardwareKeyPickerDelegate {
 
 extension UnlockDatabaseVC: KeyFileChooserDelegate {
     func setKeyFile(urlRef: URLReference?) {
-        keyFileRef = urlRef
+        self.keyFileRef = urlRef
         DatabaseSettingsManager.shared.updateSettings(for: databaseRef) { (dbSettings) in
             dbSettings.maybeSetAssociatedKeyFile(keyFileRef)
         }
 
-        guard let fileInfo = urlRef?.info else {
+        guard let keyFileRef = keyFileRef else {
             Diag.debug("No key file selected")
             keyFileField.text = ""
             return
         }
-        if let errorDetails = fileInfo.errorMessage {
+        if let errorDetails = keyFileRef.error?.localizedDescription {
             let errorMessage = String.localizedStringWithFormat(
                 NSLocalizedString(
                     "[Database/Unlock] Key file error: %@",
@@ -524,7 +515,7 @@ extension UnlockDatabaseVC: KeyFileChooserDelegate {
             keyFileField.text = ""
         } else {
             Diag.info("Key file set successfully")
-            keyFileField.text = fileInfo.fileName
+            keyFileField.text = keyFileRef.visibleFileName
         }
     }
     
@@ -634,30 +625,17 @@ extension UnlockDatabaseVC: FileKeeperObserver {
     }
 
     func fileKeeperHasPendingOperation() {
-        processPendingFileOperations()
+        if isViewLoaded {
+            processPendingFileOperations()
+        }
     }
 
     private func processPendingFileOperations() {
         FileKeeper.shared.processPendingOperations(
             success: nil,
-            error: {
-                [weak self] (error) in
-                guard let _self = self else { return }
-                let alert = UIAlertController.make(
-                    title: LString.titleError,
-                    message: error.localizedDescription)
-                _self.present(alert, animated: true, completion: nil)
+            error: { [weak self] (error) in
+                self?.showErrorAlert(error)
             }
         )
-    }
-}
-
-extension UnlockDatabaseVC: PremiumCoordinatorDelegate {
-    func didUpgradeToPremium(in premiumCoordinator: PremiumCoordinator) {
-        refresh()
-    }
-    
-    func didFinish(_ premiumCoordinator: PremiumCoordinator) {
-        self.premiumCoordinator = nil
     }
 }

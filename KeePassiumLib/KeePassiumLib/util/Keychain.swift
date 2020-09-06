@@ -136,6 +136,7 @@ public class Keychain {
     public func setAppPasscode(_ passcode: String) throws {
         let dataHash = ByteArray(utf8String: passcode).sha256.asData
         try set(service: .general, account: appPasscodeAccount, data: dataHash) 
+        Settings.current.notifyAppLockEnabledChanged()
     }
 
     public func isAppPasscodeSet() throws -> Bool {
@@ -155,16 +156,15 @@ public class Keychain {
 
     public func removeAppPasscode() throws {
         try remove(service: .general, account: appPasscodeAccount) 
+        Settings.current.notifyAppLockEnabledChanged()
     }
     
     
     internal func getDatabaseSettings(for databaseRef: URLReference) throws -> DatabaseSettings? {
-        guard !databaseRef.info.hasError else {
-            Diag.warning("Database with an error, cannot load DB-specific settings")
+        guard let account = databaseRef.getDescriptor() else {
+            Diag.warning("Cannot get database descriptor")
             return nil
         }
-
-        guard let account = databaseRef.getDescriptor() else { return nil }
         if let data = try get(service: .databaseSettings, account: account) { 
             return DatabaseSettings.deserialize(from: data)
         }
@@ -172,10 +172,11 @@ public class Keychain {
     }
     
     internal func setDatabaseSettings(_ dbSettings: DatabaseSettings, for databaseRef: URLReference) throws {
-        guard !databaseRef.info.hasError else { return }
-        
         let data = dbSettings.serialize()
-        guard let account = databaseRef.getDescriptor() else { return }
+        guard let account = databaseRef.getDescriptor() else {
+            Diag.warning("Cannot get database descriptor")
+            return
+        }
         try set(service: .databaseSettings, account: account, data: data)
     }
     

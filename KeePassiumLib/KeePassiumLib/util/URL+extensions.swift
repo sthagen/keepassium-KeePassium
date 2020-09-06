@@ -19,27 +19,43 @@ public extension URL {
         return nil
     }
     
-    var fileModificationDate: Date? {
-        guard let attr = try? FileManager.default
-            .attributesOfItem(atPath: self.path) else { return nil }
-        return attr[FileAttributeKey.modificationDate] as? Date
-    }
-
-    var fileCreationDate: Date? {
-        guard let attr = try? FileManager.default
-            .attributesOfItem(atPath: self.path) else { return nil }
-        return attr[FileAttributeKey.creationDate] as? Date
-    }
-    
-    var fileSize: Int64? {
-        guard let attr = try? FileManager.default
-            .attributesOfItem(atPath: self.path) else { return nil}
-        return attr[FileAttributeKey.size] as? Int64
-    }
-    
     var isDirectory: Bool {
         let res = try? resourceValues(forKeys: [.isDirectoryKey])
         return res?.isDirectory ?? false
+    }
+    
+    var isExcludedFromBackup: Bool? {
+        let res = try? resourceValues(forKeys: [.isExcludedFromBackupKey])
+        return res?.isExcludedFromBackup
+    }
+    
+    var isInTrashDirectory: Bool {
+        do {
+            let fileManager = FileManager.default
+            var relationship = FileManager.URLRelationship.other
+            try fileManager.getRelationship(&relationship, of: .trashDirectory, in: [], toItemAt: self)
+            return relationship == .contains
+        } catch {
+            let isSimpleNameMatch = self.pathComponents.contains(".Trash")
+            return isSimpleNameMatch
+        }
+    }
+    
+    @discardableResult
+    mutating func setExcludedFromBackup(_ isExcluded: Bool) -> Bool {
+        var values = URLResourceValues()
+        values.isExcludedFromBackup = isExcluded
+        do {
+            try setResourceValues(values)
+            if isExcludedFromBackup != nil && isExcludedFromBackup! == isExcluded {
+                return true
+            }
+            Diag.warning("Failed to change backup attribute: the modification did not last.")
+            return false
+        } catch {
+            Diag.warning("Failed to change backup attribute [reason: \(error.localizedDescription)]")
+            return false
+        }
     }
     
     var redacted: URL {

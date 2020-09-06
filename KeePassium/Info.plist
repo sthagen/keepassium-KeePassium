@@ -48,9 +48,169 @@
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIcons</key>
-	<dict/>
+	<dict>
+		<key>CFBundleAlternateIcons</key>
+		<dict>
+            <key>appicon-atom-black</key>
+            <dict>
+                <key>CFBundleIconFiles</key>
+                <array>
+                    <string>appicon-atom-black_iPhoneApp_60</string>
+                </array>
+                <key>UIPrerenderedIcon</key>
+                <false/>
+            </dict>
+            <key>appicon-atom-blue</key>
+            <dict>
+                <key>CFBundleIconFiles</key>
+                <array>
+                    <string>appicon-atom-blue_iPhoneApp_60</string>
+                </array>
+                <key>UIPrerenderedIcon</key>
+                <false/>
+            </dict>
+            <key>appicon-atom-white</key>
+            <dict>
+                <key>CFBundleIconFiles</key>
+                <array>
+                    <string>appicon-atom-white_iPhoneApp_60</string>
+                </array>
+                <key>UIPrerenderedIcon</key>
+                <false/>
+            </dict>
+            <key>appicon-calc</key>
+            <dict>
+                <key>CFBundleIconFiles</key>
+                <array>
+                    <string>appicon-calc_iPhoneApp_60</string>
+                </array>
+                <key>UIPrerenderedIcon</key>
+                <false/>
+            </dict>
+            <key>appicon-classic-free</key>
+            <dict>
+                <key>CFBundleIconFiles</key>
+                <array>
+                    <string>appicon-classic-free_iPhoneApp_60</string>
+                </array>
+                <key>UIPrerenderedIcon</key>
+                <false/>
+            </dict>
+            <key>appicon-classic-pro</key>
+            <dict>
+                <key>CFBundleIconFiles</key>
+                <array>
+                    <string>appicon-classic-pro_iPhoneApp_60</string>
+                </array>
+                <key>UIPrerenderedIcon</key>
+                <false/>
+            </dict>
+            <key>appicon-info</key>
+            <dict>
+                <key>CFBundleIconFiles</key>
+                <array>
+                    <string>appicon-info_iPhoneApp_60</string>
+                </array>
+                <key>UIPrerenderedIcon</key>
+                <false/>
+            </dict>
+            <key>appicon-keepass</key>
+            <dict>
+                <key>CFBundleIconFiles</key>
+                <array>
+                    <string>appicon-keepass_iPhoneApp_60</string>
+                </array>
+                <key>UIPrerenderedIcon</key>
+                <false/>
+            </dict>
+		</dict>
+	</dict>
 	<key>CFBundleIcons~ipad</key>
-	<dict/>
+    <dict>
+        <key>CFBundleAlternateIcons</key>
+        <dict>
+            <key>appicon-atom-black</key>
+            <dict>
+                <key>CFBundleIconFiles</key>
+                <array>
+                    <string>appicon-atom-black_iPadApp_76</string>
+                    <string>appicon-atom-black_iPadProApp_83.5</string>
+                </array>
+                <key>UIPrerenderedIcon</key>
+                <false/>
+            </dict>
+            <key>appicon-atom-blue</key>
+            <dict>
+                <key>CFBundleIconFiles</key>
+                <array>
+                    <string>appicon-atom-blue_iPadApp_76</string>
+                    <string>appicon-atom-blue_iPadProApp_83.5</string>
+                </array>
+                <key>UIPrerenderedIcon</key>
+                <false/>
+            </dict>
+            <key>appicon-atom-white</key>
+            <dict>
+                <key>CFBundleIconFiles</key>
+                <array>
+                    <string>appicon-atom-white_iPadApp_76</string>
+                    <string>appicon-atom-white_iPadProApp_83.5</string>
+                </array>
+                <key>UIPrerenderedIcon</key>
+                <false/>
+            </dict>
+            <key>appicon-calc</key>
+            <dict>
+                <key>CFBundleIconFiles</key>
+                <array>
+                    <string>appicon-calc_iPadApp_76</string>
+                    <string>appicon-calc_iPadProApp_83.5</string>
+                </array>
+                <key>UIPrerenderedIcon</key>
+                <false/>
+            </dict>
+            <key>appicon-classic-free</key>
+            <dict>
+                <key>CFBundleIconFiles</key>
+                <array>
+                    <string>appicon-classic-free_iPadApp_76</string>
+                    <string>appicon-classic-free_iPadProApp_83.5</string>
+                </array>
+                <key>UIPrerenderedIcon</key>
+                <false/>
+            </dict>
+            <key>appicon-classic-pro</key>
+            <dict>
+                <key>CFBundleIconFiles</key>
+                <array>
+                    <string>appicon-classic-pro_iPadApp_76</string>
+                    <string>appicon-classic-pro_iPadProApp_83.5</string>
+                </array>
+                <key>UIPrerenderedIcon</key>
+                <false/>
+            </dict>
+            <key>appicon-info</key>
+            <dict>
+                <key>CFBundleIconFiles</key>
+                <array>
+                    <string>appicon-info_iPadApp_76</string>
+                    <string>appicon-info_iPadProApp_83.5</string>
+                </array>
+                <key>UIPrerenderedIcon</key>
+                <false/>
+            </dict>
+            <key>appicon-keepass</key>
+            <dict>
+                <key>CFBundleIconFiles</key>
+                <array>
+                    <string>appicon-keepass_iPadApp_76</string>
+                    <string>appicon-keepass_iPadProApp_83.5</string>
+                </array>
+                <key>UIPrerenderedIcon</key>
+                <false/>
+            </dict>
+        </dict>
+    </dict>
 	<key>CFBundleIdentifier</key>
 	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>CFBundleInfoDictionaryVersion</key>
@@ -216,13 +376,6 @@
 			<dict/>
 		</dict>
 		<dict>
-			<key>UTTypeTagSpecification</key>
-			<dict>
-				<key>public.filename-extension</key>
-				<string>kdb</string>
-				<key>public.mime-type</key>
-				<string>application/strongbox</string>
-			</dict>
 			<key>UTTypeConformsTo</key>
 			<array>
 				<string>com.markmcguill.strongbox.kdb</string>
@@ -231,15 +384,15 @@
 			<array/>
 			<key>UTTypeIdentifier</key>
 			<string>com.markmcguill.strongbox.kdb</string>
-		</dict>
-		<dict>
 			<key>UTTypeTagSpecification</key>
 			<dict>
 				<key>public.filename-extension</key>
-				<string>kdbx</string>
+				<string>kdb</string>
 				<key>public.mime-type</key>
 				<string>application/strongbox</string>
 			</dict>
+		</dict>
+		<dict>
 			<key>UTTypeConformsTo</key>
 			<array>
 				<string>com.markmcguill.strongbox.kdbx</string>
@@ -248,6 +401,13 @@
 			<array/>
 			<key>UTTypeIdentifier</key>
 			<string>com.markmcguill.strongbox.kdbx</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<string>kdbx</string>
+				<key>public.mime-type</key>
+				<string>application/strongbox</string>
+			</dict>
 		</dict>
 		<dict>
 			<key>UTTypeConformsTo</key>

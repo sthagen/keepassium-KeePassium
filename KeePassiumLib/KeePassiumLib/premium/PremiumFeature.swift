@@ -11,7 +11,9 @@ public enum PremiumFeature: Int {
         .canUseMultipleDatabases, 
         .canUseLongDatabaseTimeouts, 
         .canPreviewAttachments, 
-        .canUseHardwareKeys
+        .canUseHardwareKeys,    
+        .canKeepMasterKeyOnDatabaseTimeout, 
+        .canChangeAppIcon,
     ]
     
     case canUseMultipleDatabases = 0
@@ -22,6 +24,10 @@ public enum PremiumFeature: Int {
     
     case canUseHardwareKeys = 4
     
+    case canKeepMasterKeyOnDatabaseTimeout = 5
+    
+    case canChangeAppIcon = 6
+    
     public func isAvailable(in status: PremiumManager.Status) -> Bool {
         switch self {
         case .canUseMultipleDatabases:
@@ -31,6 +37,10 @@ public enum PremiumFeature: Int {
         case .canPreviewAttachments:
             return status != .freeHeavyUse
         case .canUseHardwareKeys:
+            return status == .subscribed || status == .lapsed
+        case .canKeepMasterKeyOnDatabaseTimeout:
+            return status == .subscribed || status == .lapsed
+        case .canChangeAppIcon:
             return status == .subscribed || status == .lapsed
         }
     }
