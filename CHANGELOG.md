@@ -1,5 +1,111 @@
 #CHANGELOG
 
+## [1.18.76] - 2020-10-03
+
+### Changed
+
+- Enabled express unlock in the free version.
+
+### Fixed
+
+- Possible database corruption on save in v1.18 (fixes #130) [thanks, everyone]
+- URL fields not recognized on iOS 14 if default browser is not Safari (fixes #129) [thanks, Ivo]
+
+
+## [1.18.75] - 2020-10-01
+
+### Added
+
+- [Premium] Express unlock using the stored decryption key. This also allows opening YubiKey-protected databases in AutoFill.
+
+### Changed
+
+- Free version won't count broken databases towards the free DB limit
+- Added detection of Stratospherix FileBrowser file provider
+- Refined local storage icons
+
+### Fixed
+
+- Slow decryption of databases (fixes #128) [thanks, everyone]
+- Preserve DB settings on DB deletion, if another DB uses them [thanks, Tim]
+- Crash when unselecting a YubiKey in AutoFill
+- Detection of file access permission error
+- Delete .latest backups when manually deleting all backups via settings
+
+
+## [1.17.74] - 2020-09-19
+
+### Changed
+ 
+- (iOS 14) Suggesting to re-add the database if it seems missing.
+- Keeping the .latest backup file regardless of its age
+- Refined CallerID in AutoFill to make it easier to copy [thanks, Adam]
+- Showing a wait animation when deleting many backup files
+- Increased the max length of generated passwords to 100 [thanks, u/ReevaluateAdNauseam]
+
+### Fixed
+
+- Recognizing storage providers on iOS 14
+- Freezing when there are hundreds of backup files (related #109) [thanks, everyone]
+- Opening files with unregistered extensions [thanks, Kevin]
+- Displaying multi-line Caller ID URLs in AutoFill [thanks, Adam]
+- App icon picker UI on iOS 12 (closes #123) [thanks, dragonblitz10]
+- Sometimes backup files were shown as external ones
+- Opening kdbx4 files with UInt32 transformRounds (keeweb/keeweb#1598) [thanks, Mitchell]
+- Hopefully fixed: text missing in entry viewer [thanks, Lionel and Jean-Marc]
+- Splash screen background color in dark mode
+
+
+## [1.16.73] - 2020-08-31
+
+### Added
+
+- Change entry text size with a zoom gesture [thanks, Rick and Thomas]
+
+### Changed
+
+- Refined: preserving the expanded/collapsed state of the Notes field [thanks, Arjan and Thomas]
+- Improved Export and Trash icons [thanks, Ivo]
+- Updated translations [thanks, everyone]
+
+### Fixed
+
+- Help article text was black in dark mode [thanks, Christian]
+
+
+## [1.15.72] - 2020-08-28
+
+### Fixed
+
+- Replaced "Try it free" with "Upgrade now" to address AppStore reviewer's comment
+
+
+## [1.15.71] - 2020-08-28
+
+### Fixed
+
+- Moved trial conditions to the purchase button itself (to address AppStore reviewer's comment)
+
+
+## [1.15.70] - 2020-08-27
+
+### Added
+
+- Perpetual fallback license for subscriptions (a.k.a. "rent-to-own license")
+- App history screen (What's New)
+
+### Changed
+
+- Improved search with diacritics: insensitive to diacritics, unless you use diacritics in the query (closes #118) [thanks, hunhejj]
+- Improved haptic feedback in AutoFill
+- Updated translations [thanks, everyone]
+
+### Fixed 
+
+- Replacing broken references to external files failed sometimes [thanks, Paul]
+- Relative project file paths on GitHub (thanks, @mj)
+
+
 ## [1.14.69] - 2020-08-11
 
 ### Added

@@ -80,6 +80,7 @@ public class Settings {
         case entryListDetail
         case entryViewerPage
         case hideProtectedFields
+        case collapseNotesField
         
         case startWithSearch
         case searchFieldNames
@@ -103,6 +104,7 @@ public class Settings {
         case passcodeKeyboardType
         
         case hideAppLockSetupReminder
+        case textScale
     }
 
     fileprivate enum Notifications {
@@ -1102,6 +1104,20 @@ public class Settings {
         }
     }
     
+    public var isCollapseNotesField: Bool {
+        get {
+            let stored = UserDefaults.appGroupShared
+                .object(forKey: Keys.collapseNotesField.rawValue) as? Bool
+            return stored ?? false
+        }
+        set {
+            updateAndNotify(
+                oldValue: isCollapseNotesField,
+                newValue: newValue,
+                key: Keys.collapseNotesField)
+        }
+    }
+    
     
     public var isStartWithSearch: Bool {
         get {
@@ -1270,6 +1286,27 @@ public class Settings {
         }
     }
 
+    private let textScaleAllowedRange: ClosedRange<CGFloat> = 0.5...2.0
+    
+    public var textScale: CGFloat {
+        get {
+            let storedValueOrNil = UserDefaults.appGroupShared
+                .object(forKey: Keys.textScale.rawValue)
+                as? CGFloat
+            if let value = storedValueOrNil {
+                return value.clamped(to: textScaleAllowedRange)
+            } else {
+                return 1.0
+            }
+        }
+        set {
+            updateAndNotify(
+                oldValue: textScale,
+                newValue: newValue.clamped(to: textScaleAllowedRange),
+                key: .textScale)
+        }
+    }
+    
     
     public var passwordGeneratorLength: Int {
         get {
@@ -1405,7 +1442,7 @@ public class Settings {
         }
     }
 
-    private func updateAndNotify(oldValue: Int, newValue: Int, key: Keys) {
+    private func updateAndNotify<T: SignedNumeric>(oldValue: T, newValue: T, key: Keys) {
         UserDefaults.appGroupShared.set(newValue, forKey: key.rawValue)
         if newValue != oldValue {
             postChangeNotification(changedKey: key)

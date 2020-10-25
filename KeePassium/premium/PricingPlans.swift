@@ -19,6 +19,7 @@ struct PricingPlanCondition {
         case allPremiumFeatures
         case upcomingPremiumFeatures
         case currentPremiumFeatures
+        case perpetualFallback
     }
     enum HelpReference {
         case none
@@ -46,6 +47,8 @@ struct PricingPlanCondition {
             return LString.planConditionUpcomingPremiumFeatures
         case .currentPremiumFeatures:
             return LString.planConditionCurrentPremiumFeatures
+        case .perpetualFallback:
+            return LString.planConditionPerpetualFallback
         }
     }
 }
@@ -219,7 +222,6 @@ class RealPricingPlan: PricingPlan {
             assertionFailure("Need a subscription price")
             return
         }
-        callToAction = LString.premiumCallToActionStartTrial
         ctaSubtitle = String.localizedStringWithFormat(
             LString.trialConditionsTemplate, // "%@ free, then %@",
             localizedTrialDuration,
@@ -240,6 +242,7 @@ class PricingPlanPremiumMonthly: RealPricingPlan {
             PricingPlanCondition(kind: .updatesAndFixes, isIncluded: true, moreInfo: .none),
             PricingPlanCondition(kind: .emailSupport, isIncluded: true, moreInfo: .none),
             PricingPlanCondition(kind: .allPremiumFeatures, isIncluded: true, moreInfo: .none),
+            PricingPlanCondition(kind: .perpetualFallback, isIncluded: true, moreInfo: .perpetualFallback),
         ]
         self.benefits = [
             PricingPlanBenefit.multipleDatabases,
@@ -266,6 +269,7 @@ class PricingPlanPremiumYearly: RealPricingPlan {
             PricingPlanCondition(kind: .updatesAndFixes, isIncluded: true, moreInfo: .none),
             PricingPlanCondition(kind: .emailSupport, isIncluded: true, moreInfo: .none),
             PricingPlanCondition(kind: .allPremiumFeatures, isIncluded: true, moreInfo: .none),
+            PricingPlanCondition(kind: .perpetualFallback, isIncluded: true, moreInfo: .perpetualFallback),
         ]
         self.benefits = [
             PricingPlanBenefit.multipleDatabases,

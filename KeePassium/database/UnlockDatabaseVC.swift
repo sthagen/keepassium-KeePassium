@@ -36,6 +36,8 @@ class UnlockDatabaseVC: UIViewController, Refreshable {
     private var yubiKey: YubiKey?
     private var fileKeeperNotifications: FileKeeperNotifications!
     
+    private var canUseFinalKey = true
+    
     var isJustLaunched = false 
     var isAutoUnlockEnabled = true
     fileprivate var isAutomaticUnlock = false
@@ -102,6 +104,9 @@ class UnlockDatabaseVC: UIViewController, Refreshable {
         }
         isViewAppeared = true
 
+        let premiumManager = PremiumManager.shared
+        canUseFinalKey = canUseFinalKey && premiumManager.isAvailable(feature: .canUseExpressUnlock)
+
         fileKeeperNotifications.startObserving()
         NotificationCenter.default.addObserver(
             self,
@@ -157,7 +162,7 @@ class UnlockDatabaseVC: UIViewController, Refreshable {
         databaseNameLabel.text = databaseRef.visibleFileName
         if databaseRef.hasError {
             let text = databaseRef.error?.localizedDescription
-            if databaseRef.hasPermissionError257 {
+            if databaseRef.hasPermissionError257 || databaseRef.isFileMissingIOS14 {
                 showErrorMessage(text, suggestion: LString.tryToReAddFile)
             } else {
                 showErrorMessage(text)
@@ -426,8 +431,10 @@ class UnlockDatabaseVC: UIViewController, Refreshable {
             databaseKey.challengeHandler = _challengeHandler
             DatabaseManager.shared.startLoadingDatabase(
                 database: databaseRef,
-                compositeKey: databaseKey)
+                compositeKey: databaseKey,
+                canUseFinalKey: canUseFinalKey)
         } else {
+            canUseFinalKey = false 
             guard !isAutomaticUnlock else {
                 Diag.debug("Aborting auto-unlock, there is no stored key")
                 refreshInputMode()
@@ -579,14 +586,20 @@ extension UnlockDatabaseVC: DatabaseManagerObserver {
     
     func databaseManager(database urlRef: URLReference, invalidMasterKey message: String) {
         DatabaseManager.shared.removeObserver(self)
-        DatabaseSettingsManager.shared.updateSettings(for: urlRef) { (dbSettings) in
-            dbSettings.clearMasterKey()
+        if canUseFinalKey {
+            Diag.info("Express unlock failed, retrying slow")
+            canUseFinalKey = false
+            tryToUnlockDatabase(isAutomaticUnlock: isAutomaticUnlock)
+        } else {
+            DatabaseSettingsManager.shared.updateSettings(for: urlRef) { (dbSettings) in
+                dbSettings.clearMasterKey()
+            }
+            refresh()
+            hideProgressOverlay(quickly: true)
+            
+            showErrorMessage(message, haptics: .wrongPassword)
+            maybeFocusOnPassword()
         }
-        refresh()
-        hideProgressOverlay(quickly: true)
-        
-        showErrorMessage(message, haptics: .wrongPassword)
-        maybeFocusOnPassword()
     }
     
     func databaseManager(didLoadDatabase urlRef: URLReference, warnings: DatabaseLoadingWarnings) {
@@ -612,7 +625,16 @@ extension UnlockDatabaseVC: DatabaseManagerObserver {
         hideProgressOverlay(quickly: true)
         
         isAutoUnlockEnabled = false
-        showErrorMessage(message, details: reason, haptics: .error)
+        if databaseRef.hasPermissionError257 || databaseRef.isFileMissingIOS14 {
+            showErrorMessage(
+                message,
+                details: reason,
+                suggestion: LString.tryToReAddFile,
+                haptics: .error
+            )
+        } else {
+            showErrorMessage(message, details: reason, haptics: .error)
+        }
         maybeFocusOnPassword()
     }
 }
