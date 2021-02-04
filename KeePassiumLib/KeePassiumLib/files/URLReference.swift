@@ -84,13 +84,19 @@ public class URLReference:
         return (nsError.domain == NSCocoaErrorDomain) && (nsError.code == 257)
     }
     
-    public var isFileMissingIOS14: Bool {
-        guard #available(iOS 14, *), location == .external else {
+    public var hasFileMissingError: Bool {
+        guard location == .external,
+              let underlyingError = error?.underlyingError,
+              let nsError = underlyingError as NSError? else { return false }
+        
+        switch nsError.domain {
+        case NSCocoaErrorDomain:
+            return nsError.code == CocoaError.Code.fileNoSuchFile.rawValue
+        case NSFileProviderErrorDomain:
+            return nsError.code == NSFileProviderError.noSuchItem.rawValue
+        default:
             return false
         }
-        guard let underlyingError = error?.underlyingError,
-              let nsError = underlyingError as NSError? else { return false }
-        return (nsError.domain == NSCocoaErrorDomain) && (nsError.code == 4)
     }
     
     private let data: Data
@@ -151,13 +157,21 @@ public class URLReference:
             data = Data() 
         } else {
             data = try url.bookmarkData(
-                options: [.minimalBookmark],
+                options: URLReference.getBookmarkCreationOptions(),
                 includingResourceValuesForKeys: nil,
                 relativeTo: nil) 
         }
         processReference()
     }
 
+    private static func getBookmarkCreationOptions() -> URL.BookmarkCreationOptions {
+        if ProcessInfo.isRunningOnMac {
+            return []
+        } else {
+            return [.minimalBookmark]
+        }
+    }
+    
     public static func == (lhs: URLReference, rhs: URLReference) -> Bool {
         guard lhs.location == rhs.location else { return false }
         guard let lhsOriginalURL = lhs.originalURL, let rhsOriginalURL = rhs.originalURL else {
@@ -479,10 +493,10 @@ public class URLReference:
         }
         
         if fallbackToNamesake {
-            guard let fileName = self.cachedInfo?.fileName else {
+            guard let fileName = self.url?.lastPathComponent else {
                 return nil
             }
-            return refs.first(where: { $0.cachedInfo?.fileName == fileName })
+            return refs.first(where: { $0.url?.lastPathComponent == fileName })
         }
         return nil
     }
@@ -587,14 +601,17 @@ public class URLReference:
             _hackyBookmarkedURLString = nil
         }
         if let urlString = _sandboxBookmarkedURLString ?? _hackyBookmarkedURLString {
-            self.bookmarkedURL = URL(fileURLWithPath: urlString)
+            self.bookmarkedURL = URL(fileURLWithPath: urlString, isDirectory: false)
         }
         if let fileProviderID = _fileProviderID {
             self.fileProvider = FileProvider(rawValue: fileProviderID)
         } else {
+            if ProcessInfo.isRunningOnMac {
+                self.fileProvider = .localStorage
+                return
+            }
             assertionFailure()
             self.fileProvider = nil
         }
     }
-
 }

@@ -47,7 +47,7 @@ public class DatabaseLoader: ProgressObserver {
         static let willDecryptDatabase: Int64 = 0
         static let didDecryptDatabase: Int64 = 100
         
-        static let willMakeBackup: Int64 = -1
+        static let willMakeBackup: Int64 = -1 
     }
     
     weak var delegate: DatabaseLoaderDelegate?
@@ -286,7 +286,7 @@ public class DatabaseLoader: ProgressObserver {
         progress.completedUnitCount = ProgressSteps.didReadKeyFile
         let keyHelper = database.keyHelper
         let passwordData = keyHelper.getPasswordData(password: compositeKey.password)
-        if passwordData.isEmpty && keyFileData.isEmpty {
+        if passwordData.isEmpty && keyFileData.isEmpty && compositeKey.challengeHandler == nil {
             Diag.error("Both password and key file are empty")
             stopObservingProgress()
             delegate?.databaseLoader(
@@ -300,6 +300,26 @@ public class DatabaseLoader: ProgressObserver {
         }
         compositeKey.setProcessedComponents(passwordData: passwordData, keyFileData: keyFileData)
         onCompositeKeyComponentsProcessed(dbDoc: dbDoc, compositeKey: compositeKey)
+    }
+    
+    private func addFileLocationWarnings(to warnings: DatabaseLoadingWarnings) {
+        guard let dbFileInfo = dbRef.getCachedInfoSync(canFetch: false) else {
+            return
+        }
+        
+        if dbFileInfo.isInTrash {
+            let trashWarning = String.localizedStringWithFormat(
+                LString.Warning.fileIsInTrashTemplate,
+                dbFileInfo.fileName
+            )
+            Diag.warning(trashWarning)
+            warnings.messages.insert(trashWarning, at: 0)
+        }
+        if dbRef.location == .internalBackup {
+            let temporaryBackupWarning = LString.Warning.temporaryBackupDatabase
+            Diag.warning(temporaryBackupWarning)
+            warnings.messages.insert(temporaryBackupWarning, at: 0)
+        }
     }
     
     func onCompositeKeyComponentsProcessed(dbDoc: DatabaseDocument, compositeKey: CompositeKey) {
@@ -322,6 +342,7 @@ public class DatabaseLoader: ProgressObserver {
                 && DatabaseManager.shouldUpdateLatestBackup(for: dbRef)
             if shouldUpdateBackup {
                 Diag.debug("Updating latest backup")
+                progress.completedUnitCount = ProgressSteps.willMakeBackup
                 progress.status = LString.Progress.makingDatabaseBackup
                 assert(dbRef.url != nil)
                 FileKeeper.shared.makeBackup(
@@ -330,6 +351,8 @@ public class DatabaseLoader: ProgressObserver {
                     contents: dbDoc.data)
             }
             
+            addFileLocationWarnings(to: warnings)
+
             progress.completedUnitCount = ProgressSteps.all
             progress.localizedDescription = LString.Progress.done
             delegate?.databaseLoaderDidFinish(self, for: dbRef, withResult: dbDoc)

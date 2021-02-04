@@ -1,3 +1,6 @@
+/* Suggestion/hint for available user action */
+"[Accessibility] Double tap to copy to clipboard" = "Нажмите дважды, чтобы скопировать в буфер обмена";
+
 /* Action/button to unlock the App Lock with passcode */
 "[AppLock] Unlock" = "Открыть";
 
@@ -18,6 +21,12 @@
 
 /* Name of biometric authentication method. Trademarked, do not translate unless Apple traslated it to your language. */
 "[BiometricAuthType] Touch ID" = "Touch ID";
+
+/* Action copy some named value to clipboard. For example: `Copy Password`. [valueName: String] */
+"[Clipboard/Copy/namedValue]" = "Скопировать %@";
+
+/* Notification: an item has been copied to clipboard */
+"[Clipboard/Copy/notification]" = "Скопировано";
 
 /* Warning when trying to add a random file as a database. [fileName: String] */
 "[Database/Add] Selected file \"%@\" does not look like a database." = "Выбранный файл \"%@\" не похож на базу паролей.";
@@ -89,10 +98,10 @@
 "[Database/Opened/Warning/lastEdited] Database was last edited by: %@" = "Последние изменения в базе паролей были сделаны: %@";
 
 /* Title of a warning message, shown after opening a problematic database */
-"[Database/Opened/Warning/title] Your database is ready, but there was an issue." = "Ваша база паролей готова, но есть проблема.";
+"[Database/Opened/Warning/title] Your database is ready, but there was an issue." = "База паролей готова, но есть проблема.";
 
 /* Message to confirm removal of database file from the app. (This keeps the file, but removes its reference from the app.) */
-"[Database/Remove/Confirm/text] Remove database from the list?\n The file will remain intact and you can add it again later." = "Удалить базу паролей из списка?\nФайл останется нетронутым и вы сможете добавить его позже.";
+"[Database/Remove/Confirm/text] Remove database from the list?\n The file will remain intact and you can add it again later." = "Убрать базу паролей из списка?\nФайл останется нетронутым, вы сможете добавить его позже.";
 
 /* Status message: finished saving a database */
 "[Database/Saving/Status] Done" = "Готово";
@@ -152,10 +161,10 @@
 "[Entry/History] Expiry Date" = "Дата окончания";
 
 /* Title of a field with date and time when the entry was last accessed/viewed */
-"[Entry/History] Last Access Date" = "Дата последнего доступа";
+"[Entry/History] Last Access Date" = "Дата доступа";
 
 /* Title of a field with entry's last modification date and time */
-"[Entry/History] Last Modification Date" = "Дата последнего изменения";
+"[Entry/History] Last Modification Date" = "Дата изменения";
 
 /* Title of a list with previous versions/revisions of an entry. */
 "[Entry/History] Previous Versions" = "Предыдущие версии";
@@ -170,7 +179,10 @@
 "[Entry/View] Edit Entry" = "Изменить запись";
 
 /* A suggestion shown after specific file errors (either databases or key files). */
-"[File/PermissionDenied] Try to remove the file from the app, then add it again." = "Попробуйте убрать файл из приложения, затем добавить его снова.";
+"[File/PermissionDenied] Try to remove the file from the app, then add it again." = "Попробуйте убрать файл из приложения, а затем добавить его снова.";
+
+/* Action: re-add (a broken) database or key file to the app. */
+"[File/Re-add/title]" = "Добавить файл снова";
 
 /* Section header: file backup settings */
 "[FileInfo/Backup/header]" = "Резервирование";
@@ -182,7 +194,7 @@
 "[FileInfo/Field/title] Creation Date" = "Дата создания";
 
 /* Field title */
-"[FileInfo/Field/title] File Location" = "Местонахождение файла";
+"[FileInfo/Field/title] File Location" = "Расположение файла";
 
 /* Field title */
 "[FileInfo/Field/title] File Name" = "Имя файла";
@@ -191,7 +203,7 @@
 "[FileInfo/Field/title] File Size" = "Размер файла";
 
 /* Field title */
-"[FileInfo/Field/title] Last Modification Date" = "Дата последнего изменения";
+"[FileInfo/Field/title] Last Modification Date" = "Дата изменения";
 
 /* Title of a field with an error message */
 "[FileInfo/Field/valueError] Error" = "Ошибка";
@@ -212,7 +224,10 @@
 "[Generic] Continue" = "Продолжить";
 
 /* Action/button to move an item (to another group/folder/etc) */
-"[Generic] Copy" = "Копировать";
+"[Generic] Copy" = "Скопировать";
+
+/* Action/button to create an item (entry, group, file — depending on context) */
+"[Generic] Create" = "Создать";
 
 /* Action/button to delete an item (destroys the item/file) */
 "[Generic] Delete" = "Удалить";
@@ -232,11 +247,20 @@
 /* Action/button to export an item to another app */
 "[Generic] Export" = "Экспорт";
 
+/* Action/button to view more help/info about some topic */
+"[Generic] Learn more" = "Подробнее…";
+
+/* Checkbox/Button to show additional actions */
+"[Generic] More Actions" = "Дополнительные действия";
+
 /* Action/button to move an item (to another group/folder/etc) */
 "[Generic] Move" = "Переместить";
 
 /* Action/button: generic OK */
-"[Generic] OK" = "ОК";
+"[Generic] OK" = "OK";
+
+/* Action/button to open URL in the appropriate app (usually, web browser) */
+"[Generic] Open URL" = "Открыть URL";
 
 /* Action/button to replace/overwrite an item */
 "[Generic] Overwrite" = "Перезаписать";
@@ -247,8 +271,14 @@
 /* Action/button to replace an item with another one */
 "[Generic] Replace" = "Заменить";
 
+/* Action/button to share an item with another app (AirDrop, send an email, etc) */
+"[Generic] Share" = "Поделиться";
+
 /* Action/button to show additional information about an error or item */
 "[Generic] Show Details" = "Подробности";
+
+/* Action/button to show sensitive info as it is, in plain text (as opposed to asterisks) */
+"[Generic] Show In Plain Text" = "Показать открытым текстом";
 
 /* Checkbox/Button to show a text field in its full size */
 "[Generic] Show more" = "Развернуть";
@@ -257,7 +287,7 @@
 "[Generic/ConfirmDelete/title] Are you sure?" = "Вы уверены?";
 
 /* Name of the Recently Deleted (Recycle Bin) directory, as shown in the Files app */
-"[Generic/Directory/Recently Deleted/name]" = "Недавно удаленные";
+"[Generic/Directory/Recently Deleted/name]" = "Недавно удалённые";
 
 /* Notification text when the user tries to close a document with unsaved changes */
 "[Generic/Edit/Aborting/text] Discard unsaved changes?" = "Отменить несохранённые изменения?";
@@ -289,6 +319,9 @@
 /* Title of an warning message */
 "[Generic/title] Warning" = "Внимание";
 
+/* VoiceOver description of a group [groupTitle: String, itemCount: Int] */
+"[Group/a11y/description]" = "%@, группа";
+
 /* Action/button to create a new sub-group in the current group */
 "[Group/Create/action] Create Group" = "Создать группу";
 
@@ -302,10 +335,10 @@
 "[Group/New/defaultName] New Group" = "Новая группа";
 
 /* A notification that hardware keys (e.g. YubiKey) cannot be used in AutoFill (the OS does not allow the AutoFill to use NFC/MFI). */
-"[HardwareKey/AutoFill/NotAvailable] Hardware keys are not available in AutoFill." = "Аппаратные ключи не доступны в Автозаполнении.";
+"[HardwareKey/AutoFill/NotAvailable] Hardware keys are not available in AutoFill." = "Аппаратные ключи недоступны в Автозаполнении.";
 
 /* A notification that NFC (Near Field Communication) interface is not supported by the current iOS version. */
-"[HardwareKey/NFC/OS too old]" = "NFC требует iOS 13 или более поздней версии.";
+"[HardwareKey/NFC/OS too old]" = "Для NFC требуется iOS 13 или более новая версия.";
 
 /* Master key/unlock option: don't use hardware keys */
 "[HardwareKey/None] No Hardware Key" = "Без аппаратного ключа";
@@ -314,7 +347,7 @@
 "[HardwareKey/YubiKey/Slot] YubiKey Slot #%d" = "YubiKey слот %d";
 
 /* Generic title of in-app help article */
-"[Help Viewer/title]" = "Помощь";
+"[Help Viewer/title]" = "Справка";
 
 /* Name of an entry/group category (visual style): default one, like in KeePass */
 "[ItemCategory] Default (KeePass)" = "По умолчанию (KeePass)";
@@ -323,13 +356,13 @@
 "[KeyFile/Delete/Confirm/text] Delete key file?\n Make sure you have a backup." = "Удалить ключевой файл?\nУбедитесь, что у вас есть резервная копия.";
 
 /* Message to confirm removal of a key file from the app. (This keeps the file, but removes its reference from the app.) */
-"[KeyFile/Remove/Confirm/text] Remove key file from the list?\n The file will remain intact and you can add it again later." = "Удалить ключевой файл из списка?\n Файл останется нетронутым и вы можете добавить его позже.";
+"[KeyFile/Remove/Confirm/text] Remove key file from the list?\n The file will remain intact and you can add it again later." = "Убрать ключевой файл из списка?\nФайл останется нетронутым, вы сможете добавить его позже.";
 
 /* Explanation of the premium feature */
 "[Premium/Benefits/AttachmentPreview/details]" = "Просматривайте прикреплённые файлы прямо в KeePassium, не оставляя следов в других приложениях. (Работает с изображениями, документами, архивами и другими файлами.)";
 
 /* Title of a premium feature */
-"[Premium/Benefits/AttachmentPreview/title]" = "Просмотр без следа";
+"[Premium/Benefits/AttachmentPreview/title]" = "Просмотр без следов";
 
 /* Explanation of a premium feature */
 "[Premium/Benefits/CustomAppIcon/details]" = "Сделайте иконку приложения уникальной, привычной — или вообще замаскируйте KeePassium под калькулятор.";
@@ -338,13 +371,13 @@
 "[Premium/Benefits/CustomAppIcon/title]" = "Смените иконку приложения";
 
 /* Explanation of the premium feature */
-"[Premium/Benefits/DatabaseTimeout/details]" = "Надоело вводить основной пароль? Держите вашу базу паролей открытой дольше, и разблокируйте её одним нажатием.";
+"[Premium/Benefits/DatabaseTimeout/details]" = "Надоело вводить мастер-пароль? Держите базу паролей открытой дольше и разблокируйте её одним нажатием.";
 
 /* Title of a premium feature */
 "[Premium/Benefits/DatabaseTimeout/title]" = "Экономьте своё время";
 
 /* Explanation of the premium feature */
-"[Premium/Benefits/HardwareKeys/details]" = "Защитите свои секреты аппаратным ключом, таким как YubiKey.";
+"[Premium/Benefits/HardwareKeys/details]" = "Защитите свои секреты аппаратным ключом YubiKey.";
 
 /* Title of a premium feature */
 "[Premium/Benefits/HardwareKeys/title]" = "Используйте аппаратные ключи";
@@ -361,6 +394,15 @@
 /* List of premium benefits/advantages */
 "[Premium/Benefits/Positive/header] " = "Что Вы получите";
 
+/* Explanation of a premium feature */
+"[Premium/Benefits/ViewFieldReferences/details]" = "Вместо создания нескольких копий одной и той же информации используйте ссылки на поля для её показа из других записей.";
+
+/* Title of a premium feature */
+"[Premium/Benefits/ViewFieldReferences/title]" = "Показать ссылки на поля";
+
+/* Call to action */
+"[Premium/CallToAction/buyNow]" = "Купить";
+
 /* Call to action: continue using the free version */
 "[Premium/CallToAction/free]" = "Продолжить тестирование";
 
@@ -369,6 +411,9 @@
 
 /* Call to action: upgrade to premium */
 "[Premium/CallToAction/upgradeNow]" = "Включить Премиум";
+
+/* Action: open AppStore subscription management page */
+"[Premium/ManageSubscriptions/action]" = "Управление подписками";
 
 /* Name of the permanent/never-ending license. */
 "[Premium/perpetualLicense]" = "Постоянная лицензия";
@@ -386,22 +431,31 @@
 "[Premium/Price Plan/Conditions/community support]" = "Поддержка: онлайн-форумы";
 
 /* What's included in a price plan: existing premium features only (as opposed to `current + future`) */
-"[Premium/Price Plan/Conditions/current premium features]" = "Текущие премиум функции";
+"[Premium/Price Plan/Conditions/current premium features]" = "Текущие премиум-функции";
 
 /* What's included in a price plan: support via email */
 "[Premium/Price Plan/Conditions/email support]" = "Поддержка: электронная почта";
 
+/* Family Sharing programme. Translation must match Apple's: https://www.apple.com/family-sharing/ */
+"[Premium/Price Plan/Conditions/family sharing]" = "Семейный доступ";
+
 /* What's included in a free plan: reminders that the version is free */
 "[Premium/Price Plan/Conditions/freemium reminders]" = "Напоминания о бесплатной версии";
+
+/* Upgrade conditions for current-version premium purchase. */
+"[Premium/Price Plan/Conditions/full price upgrade]" = "Премиум-функции, добавленные в будущем, потребуют новой покупки по полной цене.";
 
 /* What's included in a price plan: upcoming premium features (as opposed to `current only`) */
 "[Premium/Price Plan/Conditions/future premium features]" = "Будущие премиум-функции";
 
 /* What's included in a price plan. Please leave `perpetual fallback license` in English. */
-"[Premium/Price Plan/Conditions/perpetual fallback]" = "Лицензия \"Покупка путём аренды\" (Резервная бессрочная лицензия)";
+"[Premium/Price Plan/Conditions/perpetual fallback]" = "Лицензия \"Аренда с выкупом\" (Резервная бессрочная лицензия)";
+
+/* What's included in a subscription plan. By subscribing for a certain period, the user receives a permanent license for a version of the app. More info: https://keepassium.com/articles/perpetual-fallback-license/ */
+"[Premium/Price Plan/Conditions/subscription as purchase]" = "Подписка как покупка";
 
 /* What's included in a price plan */
-"[Premium/Price Plan/Conditions/updates and bug fixes]" = "Обновления и исправление ошибок";
+"[Premium/Price Plan/Conditions/updates and bug fixes]" = "Обновления и исправления ошибок";
 
 /* Price of the free pricing plan */
 "[Premium/Price Plan/Free/price]" = "Бесплатно";
@@ -416,7 +470,7 @@
 "[Premium/status] Beta testing" = "Бета-тестирование";
 
 /* Status: premium subscription has expired. For example: `Expired 1 day ago`. [timeFormatted: String, includes the time unit (day, hour, minute)] */
-"[Premium/status] Expired %@ ago. Please renew." = "Подписка закончилась %@ назад. Пожалуйста, обновите её.";
+"[Premium/status] Expired %@ ago. Please renew." = "Подписка закончилась %@ назад. Обновите её.";
 
 /* Status: scheduled renewal date of a premium subscription. For example: `Next renewal on 1 Jan 2050`. [expiryDateString: String] */
 "[Premium/status] Next renewal on %@" = "Следующее обновление %@";
@@ -425,19 +479,22 @@
 "[Premium/status] Valid forever" = "Навсегда";
 
 /* Subscription conditions */
-"[Premium/Subscription/Legal/text]" = "\nОплата будет снята с вашего аккаунта Apple ID после подтверждения покупки. \n\nПодписка автоматически возобновляется, если не отменена минимум за 24 часа до конца текущего периода. Плата за продление подписки будет снята с Вашего счёта в течение суток до окончания текущего периода. \n\nВы можете изменить или отменить свои подписки, зайдя в настройки своего аккаунта в App Store после покупки.\n";
+"[Premium/Subscription/Legal/text]" = "\nОплата будет снята с Вашего аккаунта Apple ID после подтверждения покупки. \n\nПодписка автоматически возобновляется, если не отменена минимум за 24 часа до конца текущего периода. Плата за продление подписки будет снята с Вашего счёта в течение суток до окончания текущего периода. \n\nВы можете изменить или отменить подписки, зайдя в настройки своего аккаунта в App Store после покупки.\n";
 
 /* Trial conditions. For example `30 days free, then $1 per month` */
 "[Premium/Trial/trial then price]" = "%1$@ бесплатно, затем %2$@";
 
 /* Error message: AppStore returned no available in-app purchase options */
-"[Premium/Upgrade] Hmm, there are no upgrades available. This should not happen, please contact support." = "Хм, нет доступных покупок. Такого быть не должно, пожалуйста, свяжитесь с поддержкой.";
+"[Premium/Upgrade] Hmm, there are no upgrades available. This should not happen, please contact support." = "Нет доступных покупок. Такого быть не должно, свяжитесь со службой поддержки.";
 
 /* Action/button to start choosing premium versions and possibly buying one */
 "[Premium/Upgrade/action] Upgrade to Premium" = "Включить Премиум";
 
-/* Message shown when in-app purchase is deferred until parental approval. */
-"[Premium/Upgrade/Deferred/text] Thank you! You can use KeePassium while purchase is awaiting approval from a parent" = "Спасибо! Вы можете использовать KeePassium, пока покупка ожидает родительского подтверждения.";
+/* Message shown after buying a lifetime version. */
+"[Premium/Upgrade/cancelOngoingSubscription]" = "Проверьте, не нужно ли отменить старую подписку.";
+
+/* Message shown when in-app purchase is deferred until approval (parental or corporate). */
+"[Premium/Upgrade/Deferred/text] Thank you! You can use KeePassium while purchase is awaiting approval." = "Спасибо! Вы можете использовать KeePassium, пока покупка ожидает подтверждения.";
 
 /* Product price for monthly premium subscription. [localizedPrice: String] */
 "[Premium/Upgrade/price] %@ / month" = "%@ / месяц";
@@ -469,6 +526,9 @@
 /* Title of an error message: there were no in-app purchases that can be restored */
 "[Premium/Upgrade/RestoreFailed/title] Sorry" = "Извините";
 
+/* Message shown after buying or subscribing. */
+"[Premium/Upgrade/Success/thankYou]" = "Спасибо за покупку!";
+
 /* Status: how long the app has been used during some time period. For example: `App being useful: 1hr/month, about 12hr/year`. [monthlyUsage: String, annualUsage: String — already include the time unit (hours, minutes)] */
 "[Premium/usage] App being useful: %@/month, that is around %@/year." = "Приложение полезно %1$@/месяц, т.е. около %2$@/год.";
 
@@ -476,13 +536,13 @@
 "[PremiumFeature/CustomAppIcons/title]" = "Другая иконка приложения";
 
 /* A generic description of a premium feature */
-"[PremiumFeature/Generic/description]" = "Вы нашли премиум-функцию! Подключите KeePassium Premium и пользуйтесь всеми возможностями программы.";
+"[PremiumFeature/Generic/description]" = "Перейдите на полную версию KeePassium и пользуйтесь всеми возможностями программы.";
 
 /* A generic title of a premium feature */
 "[PremiumFeature/Generic/title]" = "Премиум-функция";
 
 /* Description/advertisement for the `Hardware Keys` premium feature */
-"[PremiumFeature/HardwareKeys/description]" = "Укрепите свою защиту с помощью аппаратных ключей (YubiKey) в премиум-версии приложения.";
+"[PremiumFeature/HardwareKeys/description]" = "Усильте защиту с помощью аппаратных ключей (YubiKey) в премиум-версии приложения.";
 
 /* Title of a premium feature: ability use hardware keys (e.g. YubiKey) for encryption (In Title Case) */
 "[PremiumFeature/HardwareKeys/title] Hardware Keys" = "Аппаратные ключи";
@@ -511,6 +571,12 @@
 /* Settings switch: whether AppLock is allowed to use Touch ID/Face ID. Example: 'Use Touch ID'. [biometryTypeName: String] */
 "[Settings/AppLock/Biometric/title] Use %@" = "Использовать %@";
 
+/* Explanation for the `Lock on App Launch` setting */
+"[Settings/AppLock/LockOnLaunch/description]" = "Гарантирует, что KeePassium будет заблокирован после принудительного закрытия приложения или перезагрузки устройства.";
+
+/* Setting switch: whether to lock the app after it was terminated and relaunched. */
+"[Settings/AppLock/LockOnLaunch/title]" = "Блокировать приложение при запуске";
+
 /* Settings: subtitle of the `App Protection` section. biometryTypeName will be either 'Touch ID' or 'Face ID'. [biometryTypeName: String] */
 "[Settings/AppLock/subtitle] App Lock, %@, timeout" = "Блокировка приложения, %@, задержки";
 
@@ -521,7 +587,7 @@
 "[Settings/Backup] Delete ALL Backup Files (%d)" = "Удалить ВСЕ резервные копии (%d)";
 
 /* Status message: there are no backup files to delete */
-"[Settings/Backup] No Backup Files Found" = "Резервных копий не найдено";
+"[Settings/Backup] No Backup Files Found" = "Нет резервных копий";
 
 /* Confirmation dialog message to delete all backup files */
 "[Settings/Backup/Delete/title] Delete all backup files?" = "Удалить все резервные копии?";
@@ -539,10 +605,10 @@
 "[Settings/ClearMasterKeys/Cleared/title] Cleared" = "Готово";
 
 /* Description of the clipboard/pasteboard timeout. */
-"[Settings/ClipboardTimeout/description] When you copy some text from an entry, the app will automatically clear your clipboard (pasteboard) after this time." = "Когда вы копируете какой-то текст из записи, приложение автоматически очистит буфер обмена через заданное время.";
+"[Settings/ClipboardTimeout/description] When you copy some text from an entry, the app will automatically clear your clipboard (pasteboard) after this time." = "При копировании какого-либо текста из записи он будет автоматически удалён из буфера обмена через заданное время.";
 
 /* Description of the Database Lock Timeout */
-"[Settings/DatabaseLockTimeout/description] If you are not interacting with the app for some time, the database will be closed for your safety. To open it, you will need to enter its master password again." = "Если вы не трогаете приложение в течение некоторого времени, база паролей будет автоматически закрыта и заблокирована. Чтобы открыть её, нужно будет снова ввести основной пароль.";
+"[Settings/DatabaseLockTimeout/description] If you are not interacting with the app for some time, the database will be closed for your safety. To open it, you will need to enter its master password again." = "Если вы не используете приложение в течение некоторого времени, база паролей будет автоматически закрыта и заблокирована. Чтобы открыть её, нужно будет снова ввести мастер-пароль.";
 
 /* Title of a settings section about making backup files */
 "[Settings/FileLists/Backup/title] Backup" = "Резервирование";
@@ -569,7 +635,7 @@
 "[YubiKey] Touch the key" = "Прикоснитесь к ключу";
 
 /* Selector choice: use YubiKey to encrypt/decrypt database. For example: `Use YubiKey Slot 1`. [slotID: Int] */
-"[YubiKey] Use YubiKey Slot %d" = "Использовать YubiKey слот %d";
+"[YubiKey] Use YubiKey Slot %d" = "Использовать YubiKey-слот %d";
 
 /* Action/button to add database to the app */
 "Add Database" = "Добавить базу паролей";

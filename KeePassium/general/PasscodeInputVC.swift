@@ -81,7 +81,6 @@ class PasscodeInputVC: UIViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
         switch mode {
         case .setup:
             mainButton.setTitle(LString.actionDone, for: .normal)
@@ -93,13 +92,21 @@ class PasscodeInputVC: UIViewController {
         refreshBiometricsButton()
         
         if shouldActivateKeyboard {
-            passcodeTextField.becomeFirstResponder()
+            DispatchQueue.main.async { [self] in
+                self.passcodeTextField.becomeFirstResponder()
+            }
         }
+        super.viewWillAppear(animated)
     }
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         updateKeyboardLayoutConstraints()
+        if shouldActivateKeyboard {
+            DispatchQueue.main.async { [self] in
+                self.passcodeTextField.becomeFirstResponder()
+            }
+        }
     }
     
     override func viewDidLayoutSubviews() {
@@ -127,15 +134,8 @@ class PasscodeInputVC: UIViewController {
         }
     }
     
-    override var canBecomeFirstResponder: Bool {
-        return passcodeTextField.canBecomeFirstResponder
-    }
-    
-    @discardableResult
-    override func becomeFirstResponder() -> Bool {
-        let result = super.becomeFirstResponder()
+    func showKeyboard() {
         passcodeTextField.becomeFirstResponder()
-        return result
     }
     
     private func setKeyboardType(_ type: Settings.PasscodeKeyboardType) {

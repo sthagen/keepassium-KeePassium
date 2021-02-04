@@ -124,6 +124,8 @@ class SettingsVC: UITableViewController, Refreshable {
                     comment: "Settings: subtitle of the `App Protection` section when biometric auth is not available.")
         }
         refreshPremiumStatus()
+        
+        contactSupportCell.accessibilityValue = SupportEmailComposer.getSupportEmail()
     }
     
     
@@ -308,10 +310,7 @@ class SettingsVC: UITableViewController, Refreshable {
     }
     
     func didPressManageSubscription() {
-        guard let application = AppGroup.applicationShared,
-            let url = URL(string: "itms-apps://apps.apple.com/account/subscriptions")
-            else { assertionFailure(); return }
-        application.open(url, options: [:])
+        AppStoreHelper.openSubscriptionManagement()
     }
     
     

@@ -31,8 +31,25 @@ class PricingPlanConditionCell: UITableViewCell {
     @IBOutlet weak var checkmarkImage: UIImageView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var detailButton: UIButton!
+    var helpReference: PricingPlanCondition.HelpReference = .none
     
+    var isChecked: Bool = false {
+        didSet {
+            if isChecked {
+                checkmarkImage?.image = UIImage(asset: .premiumConditionCheckedListitem)
+                checkmarkImage?.tintColor = .primaryText
+                titleLabel?.textColor = .primaryText
+                accessibilityTraits.remove(.notEnabled)
+            } else {
+                checkmarkImage?.image = UIImage(asset: .premiumConditionUncheckedListitem)
+                checkmarkImage?.tintColor = .disabledText
+                titleLabel?.textColor = .disabledText
+                accessibilityTraits.insert(.notEnabled)
+            }
+        }
+    }
     @IBAction func didPressDetailButton(_ sender: UIButton) {
+        assert(helpReference != .none)
         delegate?.didPressDetailButton(in: self)
     }
 }
@@ -48,7 +65,7 @@ class PricingPlanBenefitCell: UITableViewCell {
 
 protocol PricingPlanCollectionCellDelegate: class {
     func didPressPurchaseButton(in cell: PricingPlanCollectionCell, with pricePlan: PricingPlan)
-    func didPressPerpetualFallbackInfo(in cell: PricingPlanConditionCell, with pricePlan: PricingPlan)
+    func didPressHelpButton(in cell: PricingPlanConditionCell, with pricePlan: PricingPlan)
 }
 
 class PricingPlanCollectionCell: UICollectionViewCell {
@@ -224,22 +241,10 @@ extension PricingPlanCollectionCell: UITableViewDataSource {
             as! PricingPlanConditionCell
         cell.delegate = self
         cell.titleLabel?.text = condition.localizedTitle
-        if condition.isIncluded {
-            cell.checkmarkImage?.image = UIImage(asset: .premiumConditionCheckedListitem)
-            cell.checkmarkImage?.tintColor = .primaryText
-            cell.titleLabel.textColor = .primaryText
-        } else {
-            cell.checkmarkImage?.image = UIImage(asset: .premiumConditionUncheckedListitem)
-            cell.checkmarkImage?.tintColor = .disabledText
-            cell.titleLabel.textColor = .disabledText
-        }
+        cell.isChecked = condition.isIncluded
         
-        switch condition.moreInfo {
-        case .none:
-            cell.detailButton.isHidden = true
-        case .perpetualFallback:
-            cell.detailButton.isHidden = false
-        }
+        cell.helpReference = condition.moreInfo
+        cell.detailButton.isHidden = (condition.moreInfo == .none)
         return cell
     }
     
@@ -323,6 +328,6 @@ extension PricingPlanCollectionCell: UITableViewDataSource {
 
 extension PricingPlanCollectionCell: PricingPlanConditionCellDelegate {
     func didPressDetailButton(in cell: PricingPlanConditionCell) {
-        delegate?.didPressPerpetualFallbackInfo(in: cell, with: pricingPlan)
+        delegate?.didPressHelpButton(in: cell, with: pricingPlan)
     }
 }

@@ -75,16 +75,35 @@ public enum LString {
         value: "Done",
         comment: "Action/button to finish (editing) and keep changes"
     )
+    public static let actionCreate = NSLocalizedString(
+        "[Generic] Create",
+        value: "Create",
+        comment: "Action/button to create an item (entry, group, file — depending on context)"
+    )
     public static let actionShowMore = NSLocalizedString(
         "[Generic] Show more",
         value: "Show more",
         comment: "Checkbox/Button to show a text field in its full size"
     )
-
+    public static let actionOpenURL = NSLocalizedString(
+        "[Generic] Open URL",
+        value: "Open URL",
+        comment: "Action/button to open URL in the appropriate app (usually, web browser)"
+    )
+    public static let actionShare = NSLocalizedString(
+        "[Generic] Share",
+        value: "Share",
+        comment: "Action/button to share an item with another app (AirDrop, send an email, etc)"
+    )
     public static let actionShowDetails = NSLocalizedString(
         "[Generic] Show Details",
         value: "Show Details",
         comment: "Action/button to show additional information about an error or item"
+    )
+    public static let actionShowInPlainText = NSLocalizedString(
+        "[Generic] Show In Plain Text",
+        value: "Show In Plain Text",
+        comment: "Action/button to show sensitive info as it is, in plain text (as opposed to asterisks)"
     )
     public static let actionExport = NSLocalizedString(
         "[Generic] Export",
@@ -96,7 +115,12 @@ public enum LString {
         value: "Contact Us",
         comment: "Action/button to write an email to support"
     )
-
+    public static let actionLearnMore = NSLocalizedString(
+        "[Generic] Learn more",
+        value: "Learn more…",
+        comment: "Action/button to view more help/info about some topic"
+    )
+    
     public static let actionDeleteFile = NSLocalizedString(
         "[Generic/File] Delete",
         value: "Delete",
@@ -122,6 +146,12 @@ public enum LString {
         "[Premium/Upgrade/action] Upgrade to Premium",
         value: "Upgrade to Premium",
         comment: "Action/button to start choosing premium versions and possibly buying one")
+
+    public static let titleMoreActions = NSLocalizedString(
+        "[Generic] More Actions",
+        value: "More Actions",
+        comment: "Checkbox/Button to show additional actions"
+    )
 
     public static let titleError = NSLocalizedString(
         "[Generic/title] Error",
@@ -157,12 +187,33 @@ public enum LString {
         value: "Try to remove the file from the app, then add it again.",
         comment: "A suggestion shown after specific file errors (either databases or key files)."
     )
+    public static let actionReAddFile = NSLocalizedString(
+        "[File/Re-add/title]",
+        value: "Add the file again",
+        comment: "Action: re-add (a broken) database or key file to the app."
+    )
     public static let fileAlreadyExists = NSLocalizedString(
         "[Generic/File/title] File already exists",
         value: "File already exists",
         comment: "Message shown when trying to copy into an existing file."
     )
     
+    public static let actionCopyToClipboardTemplate = NSLocalizedString(
+        "[Clipboard/Copy/namedValue]",
+        value: "Copy %@",
+        comment: "Action copy some named value to clipboard. For example: `Copy Password`. [valueName: String]"
+    )
+    public static let titleCopiedToClipboard = NSLocalizedString(
+        "[Clipboard/Copy/notification]",
+        value: "Copied",
+        comment: "Notification: an item has been copied to clipboard"
+    )
+
+    public static let hintDoubleTapToCopyToClipboard = NSLocalizedString(
+        "[Accessibility] Double tap to copy to clipboard",
+        value: "Double tap to copy to clipboard",
+        comment: "Suggestion/hint for available user action"
+    )
 
     public static let databaseStatusLoading = NSLocalizedString(
         "[Database/Loading/Status] Loading...",
@@ -261,6 +312,12 @@ public enum LString {
         "[Entry/Edit/CreateField/defaultName] Field Name",
         value: "Field Name",
         comment: "Default name of a newly created entry field")
+    
+    public static let titleGroupDescriptionTemplate = NSLocalizedString(
+        "[Group/a11y/description]",
+        value: "%@, Group",
+        comment: "VoiceOver description of a group [groupTitle: String, itemCount: Int]"
+    )
     
     public static let fieldTitle = NSLocalizedString(
         "[Entry/Field/name] Title",
@@ -362,4 +419,12 @@ public enum LString {
         "[YubiKey] Touch the key",
         value: "Touch the key",
         comment: "Call for action: touch the sides of YubiKey 5Ci to continue")
+    
+    
+    public static func directionAwareConcatenate(_ parts: [String]) -> String {
+        if UIApplication.shared.userInterfaceLayoutDirection == .rightToLeft {
+            return parts.reversed().joined()
+        }
+        return parts.joined()
+    }
 }

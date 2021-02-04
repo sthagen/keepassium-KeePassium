@@ -17,7 +17,7 @@
 "Faj-km-pM5.headerTitle" = "クイック解錠";
 
 /* Class = "UITableViewSection"; footerTitle = "Use Universal Clipboard to copy and paste between your Apple devices. On external devices, this clipboard is cleared after two minutes."; ObjectID = "g9a-rJ-4WJ"; */
-"g9a-rJ-4WJ.footerTitle" = "ユニバーサルクリップボードを使用すれば、お使いのAppleデバイス間でコピー＆ペーストが出来ます。外部デバイスでは、このクリップボードは2分後に消去されます。";
+"g9a-rJ-4WJ.footerTitle" = "ユニバーサルクリップボードなら、お使いのAppleデバイス間でコピー＆ペーストできます。外部デバイスではクリップボードは2分後に消去されます。";
 
 /* Class = "UILabel"; text = "Clear Master Keys on Timeout"; ObjectID = "gTm-F6-EDQ"; */
 "gTm-F6-EDQ.text" = "タイムアウト時にマスターキーを消去";
@@ -52,6 +52,9 @@
 /* Class = "UILabel"; text = "Hide Passwords"; ObjectID = "pid-k2-idJ"; */
 "pid-k2-idJ.text" = "パスワードを隠す";
 
+/* Class = "UILabel"; text = "Cache Derived Encryption Keys"; ObjectID = "siQ-LK-GXZ"; Note = "Setting: preserve (cache) calculated database keys"; */
+"siQ-LK-GXZ.text" = "派生した暗号鍵をキャッシュ";
+
 /* Class = "UILabel"; text = "Clipboard Timeout"; ObjectID = "SSu-Sr-MCg"; */
 "SSu-Sr-MCg.text" = "クリップボードのタイムアウト";
 
@@ -60,4 +63,10 @@
 
 /* Class = "UILabel"; text = "Universal Clipboard"; ObjectID = "YL6-U9-FM6"; */
 "YL6-U9-FM6.text" = "ユニバーサルクリップボード";
+
+/* Class = "UITableViewSection"; footerTitle = "Cached keys allow KeePassium to skip key derivation and YubiKey scans whenever possible. "; ObjectID = "Zqb-p5-Ft8"; Note = "Section title: advanced/expert settings"; */
+"Zqb-p5-Ft8.footerTitle" = "キーをキャッシュすると、KeePassiumは鍵の派生やYubiKeyスキャンを省略できるようになります。 ";
+
+/* Class = "UITableViewSection"; headerTitle = "Advanced"; ObjectID = "Zqb-p5-Ft8"; Note = "Section title: advanced/expert settings"; */
+"Zqb-p5-Ft8.headerTitle" = "高度な設定";
 

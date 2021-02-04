@@ -84,13 +84,14 @@ public class Database2: Database {
     private enum ProgressSteps {
         static let all: Int64 = 100
         static let keyDerivation: Int64 = 60
+        static let resolvingReferences: Int64 = 5
 
         static let decryption: Int64 = 20
         static let readingBlocks: Int64 = 5
         static let gzipUnpack: Int64 = 5
-        static let parsing: Int64 = 10
+        static let parsing: Int64 = 5
         
-        static let packing: Int64 = 10
+        static let packing: Int64 = 5
         static let gzipPack: Int64 = 5
         static let encryption: Int64 = 20
         static let writingBlocks: Int64 = 5
@@ -162,12 +163,7 @@ public class Database2: Database {
         Diag.info("Loading KP2 database")
         progress.completedUnitCount = 0
         progress.totalUnitCount = ProgressSteps.all
-        progress.localizedDescription = NSLocalizedString(
-            "[Database2/Progress] Loading database",
-            bundle: Bundle.framework,
-            value: "Loading database",
-            comment: "Progress bar status")
-
+        progress.localizedDescription = LString.Progress.database2LoadingDatabase
         do {
             try header.read(data: dbFileData) 
             Diag.debug("Header read OK [format: \(header.formatVersion)]")
@@ -197,11 +193,7 @@ public class Database2: Database {
             Diag.verbose("== DB2 progress CP3: \(progress.completedUnitCount)")
             
             if header.isCompressed {
-                progress.localizedDescription = NSLocalizedString(
-                    "[Database2/Progress/decompressing]",
-                    bundle: Bundle.framework,
-                    value: "Decompressing database",
-                    comment: "Progress bar status: un-zipping the database content")
+                progress.localizedDescription = LString.Progress.database2DecompressingDatabase
                 Diag.debug("Inflating Gzip data")
                 decryptedData = try decryptedData.gunzipped() 
             } else {
@@ -227,16 +219,30 @@ public class Database2: Database {
             if let backupGroup = getBackupGroup(createIfMissing: false) {
                 backupGroup.deepSetDeleted(true)
             }
+
+            progress.localizedDescription = LString.Progress.database2IntegrityCheck
             
-            progress.localizedDescription = NSLocalizedString(
-                "[Database2/Progress/integrityCheck]",
-                bundle: Bundle.framework,
-                value: "Checking integrity",
-                comment: "Progress bar status")
-            checkAttachmentsIntegrity(warnings: warnings)
+            assert(root != nil)
+            var allCurrentEntries = [Entry]()
+            root?.collectAllEntries(to: &allCurrentEntries) 
+
+            var allEntriesPlusHistory = [Entry](reserveCapacity: allCurrentEntries.count * 4)
+            allCurrentEntries.forEach { entry in
+                allEntriesPlusHistory.append(entry)
+                guard let entry2 = entry as? Entry2 else { assertionFailure(); return }
+                allEntriesPlusHistory.append(contentsOf: entry2.history)
+            }
             
-            checkCustomFieldsIntegrity(warnings: warnings)
-            
+            resolveReferences(
+                allEntries: allEntriesPlusHistory,
+                parentProgress: progress,
+                pendingProgressUnits: ProgressSteps.resolvingReferences
+            )
+
+            checkAttachmentsIntegrity(allEntries: allCurrentEntries, warnings: warnings)
+
+            checkCustomFieldsIntegrity(allEntries: allCurrentEntries, warnings: warnings)
+
             Diag.debug("Content loaded OK")
             Diag.verbose("== DB2 progress CP5: \(progress.completedUnitCount)")
         } catch let error as Header2.HeaderError {
@@ -244,6 +250,9 @@ public class Database2: Database {
             throw DatabaseError.loadError(reason: error.localizedDescription)
         } catch let error as CryptoError {
             Diag.error("Crypto error [reason: \(error.localizedDescription)]")
+            throw DatabaseError.loadError(reason: error.localizedDescription)
+        } catch let error as KeyFileError {
+            Diag.error("Key file error [reason: \(error.localizedDescription)]")
             throw DatabaseError.loadError(reason: error.localizedDescription)
         } catch let error as ChallengeResponseError {
             Diag.error("Challenge-response error [reason: \(error.localizedDescription)]")
@@ -313,11 +322,7 @@ public class Database2: Database {
         let allBlocksData = ByteArray(capacity: blockBytesCount)
         let readingProgress = ProgressEx()
         readingProgress.totalUnitCount = Int64(blockBytesCount)
-        readingProgress.localizedDescription = NSLocalizedString(
-            "[Database2/Progress] Reading database content",
-            bundle: Bundle.framework,
-            value: "Reading database content",
-            comment: "Progress bar status")
+        readingProgress.localizedDescription = LString.Progress.database2ReadingContent
         progress.addChild(readingProgress, withPendingUnitCount: ProgressSteps.readingBlocks)
         var blockIndex: UInt64 = 0
         while true {
@@ -387,11 +392,7 @@ public class Database2: Database {
         var blockID: UInt32 = 0
         let readingProgress = ProgressEx()
         readingProgress.totalUnitCount = Int64(decryptedData.count - startData.count)
-        readingProgress.localizedDescription = NSLocalizedString(
-            "[Database2/Progress] Reading database content",
-            bundle: Bundle.framework,
-            value: "Reading database content",
-            comment: "Progress bar status")
+        readingProgress.localizedDescription = LString.Progress.database2ReadingContent
         progress.addChild(readingProgress, withPendingUnitCount: ProgressSteps.readingBlocks)
         while(true) {
             guard let inBlockID: UInt32 = decryptedStream.readUInt32() else {
@@ -475,11 +476,7 @@ public class Database2: Database {
         parsingOptions.parserSettings.shouldTrimWhitespace = false
         do {
             Diag.debug("Parsing XML")
-            progress.localizedDescription = NSLocalizedString(
-                "[Database2/Progress/parsingXML]",
-                bundle: Bundle.framework,
-                value: "Parsing database",
-                comment: "Progress bar status: parsing decrypted XML content")
+            progress.localizedDescription = LString.Progress.database2ParsingXML
             let xmlDoc = try AEXMLDocument(xml: xmlData.asData, options: parsingOptions)
             if let xmlError = xmlDoc.error {
                 Diag.error("Cannot parse XML: \(xmlError.localizedDescription)")
@@ -563,7 +560,6 @@ public class Database2: Database {
     
     func deriveMasterKey(compositeKey: CompositeKey, cipher: DataCipher, canUseFinalKey: Bool) throws {
         Diag.debug("Start key derivation")
-        progress.addChild(header.kdf.initProgress(), withPendingUnitCount: ProgressSteps.keyDerivation)
 
         if canUseFinalKey,
            compositeKey.state == .final,
@@ -572,15 +568,17 @@ public class Database2: Database {
         {
             self.cipherKey = _cipherKey
             self.hmacKey = _hmacKey
+            progress.completedUnitCount += ProgressSteps.keyDerivation
             return
         }
 
+        progress.addChild(header.kdf.initProgress(), withPendingUnitCount: ProgressSteps.keyDerivation)
         var combinedComponents: SecureByteArray
         if compositeKey.state == .processedComponents {
-            combinedComponents = keyHelper.combineComponents(
+            combinedComponents = try keyHelper.combineComponents(
                 passwordData: compositeKey.passwordData!, 
                 keyFileData: compositeKey.keyFileData!    
-            )
+            ) 
             compositeKey.setCombinedStaticComponents(combinedComponents)
         } else if compositeKey.state >= .combinedComponents {
             combinedComponents = compositeKey.combinedStaticComponents! 
@@ -661,7 +659,7 @@ public class Database2: Database {
     }
     
     
-    func checkAttachmentsIntegrity(warnings: DatabaseLoadingWarnings) {
+    func checkAttachmentsIntegrity(allEntries: [Entry], warnings: DatabaseLoadingWarnings) {
         func mapAttachmentNamesByID(of entry: Entry2, nameByID: inout [Binary2.ID: String]) {
             (entry.attachments as! [Attachment2]).forEach { (attachment) in
                 nameByID[attachment.id] = attachment.name
@@ -678,9 +676,6 @@ public class Database2: Database {
                 insertAllAttachmentIDs(of: historyEntry, into: &ids)
             }
         }
-        
-        var allEntries = [Entry]()
-        root?.collectAllEntries(to: &allEntries)
         
         maybeFixAttachmentNames(entries: allEntries, warnings: warnings)
         
@@ -708,6 +703,7 @@ public class Database2: Database {
                     comment: "A warning about unused attachments after loading the database. [lastUsedAppName: String]"),
                 lastUsedAppName)
             warnings.messages.append(warningMessage)
+            warnings.isGeneratorImportant = true
             
             let unusedIDs = unusedBinaries
                 .map { String($0) }
@@ -772,7 +768,7 @@ public class Database2: Database {
             return
         }
         let listOfEntryNames = affectedEntries
-            .compactMap { $0.getGroupPath() + "/" + $0.title } 
+            .compactMap { $0.getGroupPath() + "/" + $0.resolvedTitle } 
             .map { "\"\($0)\"" } 
             .joined(separator: "\n ") 
         
@@ -785,13 +781,10 @@ public class Database2: Database {
             listOfEntryNames)
         Diag.warning(warningMessage)
         warnings.messages.append(warningMessage)
+        warnings.isGeneratorImportant = true
     }
     
-    private func checkCustomFieldsIntegrity(warnings: DatabaseLoadingWarnings) {
-        guard let root = root else { return }
-        var allEntries = [Entry]()
-        root.collectAllEntries(to: &allEntries)
-        
+    private func checkCustomFieldsIntegrity(allEntries: [Entry], warnings: DatabaseLoadingWarnings) {
         let problematicEntries = allEntries.filter { entry in
             let isProblematicEntry = entry.fields.reduce(false) { result, field in
                 return result || field.name.isEmpty
@@ -801,7 +794,7 @@ public class Database2: Database {
         guard problematicEntries.count > 0 else { return }
         
         let entryPaths = problematicEntries
-            .map { entry in "'\(entry.title)' in '\(entry.getGroupPath())'" }
+            .map { entry in "'\(entry.resolvedTitle)' in '\(entry.getGroupPath())'" }
             .joined(separator: "\n")
         let warningMessage = String.localizedStringWithFormat(
             NSLocalizedString(
@@ -811,8 +804,9 @@ public class Database2: Database {
                 comment: "A warning about misformatted custom fields after loading the database. [entryPaths: String]"),
             entryPaths)
         warnings.messages.append(warningMessage)
+        warnings.isGeneratorImportant = true
     }
-    
+        
     private func updateBinaries(root: Group2) {
         Diag.verbose("Updating all binaries")
         var allEntries = [Entry2]() as [Entry]
@@ -898,6 +892,9 @@ public class Database2: Database {
         } catch let error as CryptoError {
             Diag.error("Crypto error [reason: \(error.localizedDescription)]")
             throw DatabaseError.saveError(reason: error.localizedDescription)
+        } catch let error as KeyFileError {
+            Diag.error("Key file error [reason: \(error.localizedDescription)]")
+            throw DatabaseError.saveError(reason: error.localizedDescription)
         } catch let error as ChallengeResponseError {
             Diag.error("Challenge-response error [reason: \(error.localizedDescription)]")
             throw DatabaseError.saveError(reason: error.localizedDescription)
@@ -926,6 +923,14 @@ public class Database2: Database {
             try encryptBlocksV4(to: outStream, xmlData: xmlData) 
         }
         Diag.debug("Content encryption OK")
+        
+        var allEntries = [Entry]()
+        root?.collectAllEntries(to: &allEntries)
+        resolveReferences(
+            allEntries: allEntries,
+            parentProgress: progress,
+            pendingProgressUnits: ProgressSteps.resolvingReferences
+        )
         
         progress.completedUnitCount = progress.totalUnitCount
         return outStream.data!
@@ -1002,11 +1007,7 @@ public class Database2: Database {
         
         let writeProgress = ProgressEx()
         writeProgress.totalUnitCount = Int64(data.count)
-        writeProgress.localizedDescription = NSLocalizedString(
-            "[Database2/Progress] Writing encrypted blocks",
-            bundle: Bundle.framework,
-            value: "Writing encrypted blocks",
-            comment: "Progress bar status")
+        writeProgress.localizedDescription = LString.Progress.database2WritingBlocks
         progress.addChild(writeProgress, withPendingUnitCount: ProgressSteps.writingBlocks)
         
         Diag.verbose("\(data.count) bytes to write")
@@ -1100,11 +1101,7 @@ public class Database2: Database {
         var blockStart: Int = 0
         var blockID: UInt32 = 0
         let writingProgress = ProgressEx()
-        writingProgress.localizedDescription = NSLocalizedString(
-            "[Database2/Progress] Writing encrypted blocks",
-            bundle: Bundle.framework,
-            value: "Writing encrypted blocks",
-            comment: "Progress bar status")
+        writingProgress.localizedDescription = LString.Progress.database2WritingBlocks
         writingProgress.totalUnitCount = Int64(inData.count)
         progress.addChild(writingProgress, withPendingUnitCount: ProgressSteps.writingBlocks)
         while blockStart != inData.count {

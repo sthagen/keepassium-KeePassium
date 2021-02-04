@@ -199,20 +199,16 @@ class ViewEntryFieldsVC: UITableViewController, Refreshable {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let fieldNumber = indexPath.row
         let field = sortedFields[fieldNumber]
-        guard let text = field.value else { return }
+        guard let text = field.resolvedValue else { return }
 
-        let timeout = Double(Settings.current.clipboardTimeout.seconds)
-        if text.isOpenableURL {
-            Clipboard.general.insert(url: URL(string: text)!, timeout: timeout)
-        } else {
-            Clipboard.general.insert(text: text, timeout: timeout)
-        }
+        Clipboard.general.insert(text)
         entry?.touch(.accessed)
         animateCopyToClipboard(indexPath: indexPath, field: field)
     }
     
     func animateCopyToClipboard(indexPath: IndexPath, field: ViewableField) {
         copiedCellView.field = field
+        HapticFeedback.play(.copiedToClipboard)
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
             self.copiedCellView.show(in: self.tableView, at: indexPath)
@@ -250,8 +246,10 @@ extension ViewEntryFieldsVC: ViewableFieldCellDelegate {
     }
     
     func didLongTapAccessoryButton(_ cell: ViewableFieldCell) {
-        guard let value = cell.field?.value else { return }
+        guard let value = cell.field?.resolvedValue else { return }
         guard let accessoryView = cell.accessoryView else { return }
+        
+        HapticFeedback.play(.contextMenuOpened)
         
         var items: [Any] = [value]
         if value.isOpenableURL, let url = URL(string: value) {
@@ -269,11 +267,13 @@ extension ViewEntryFieldsVC: ViewableFieldCellDelegate {
 
 extension ViewEntryFieldsVC: FieldCopiedViewDelegate {
     func didPressExport(in view: FieldCopiedView, field: ViewableField) {
-        guard let value = field.value else {
+        guard let value = field.resolvedValue else {
             assertionFailure()
             return
         }
         view.hide(animated: true)
+
+        HapticFeedback.play(.contextMenuOpened)
         let activityController = UIActivityViewController(
             activityItems: [value],
             applicationActivities: nil)

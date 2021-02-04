@@ -20,11 +20,25 @@ struct PricingPlanCondition {
         case upcomingPremiumFeatures
         case currentPremiumFeatures
         case perpetualFallback
+        case familySharing
     }
+    
     enum HelpReference {
         case none
         case perpetualFallback
+        case familySharing
+        var articleKey: HelpArticle.Key {
+            switch self {
+            case .none:
+                fatalError()
+            case .perpetualFallback:
+                return .perpetualFallbackLicense
+            case .familySharing:
+                return .appStoreFamilySharingProgramme
+            }
+        }
     }
+    
     var kind: Kind
     var isIncluded: Bool
     var moreInfo: HelpReference
@@ -48,7 +62,9 @@ struct PricingPlanCondition {
         case .currentPremiumFeatures:
             return LString.planConditionCurrentPremiumFeatures
         case .perpetualFallback:
-            return LString.planConditionPerpetualFallback
+            return LString.planConditionSubscriptionAsPurchase
+        case .familySharing:
+            return LString.planConditionFamilySharing
         }
     }
 }
@@ -111,6 +127,18 @@ struct PricingPlanBenefit {
         description: NSLocalizedString(
             "[Premium/Benefits/CustomAppIcon/details]",
             value: "Make KeePassium look unique, familiar, or disguise it as a calculator — the choice is yours.",
+            comment: "Explanation of a premium feature")
+    )
+    
+    static let viewFieldReferences = PricingPlanBenefit(
+        image: .premiumBenefitFieldReferences,
+        title: NSLocalizedString(
+            "[Premium/Benefits/ViewFieldReferences/title]",
+            value: "Show field references",
+            comment: "Title of a premium feature"),
+        description: NSLocalizedString(
+            "[Premium/Benefits/ViewFieldReferences/details]",
+            value: "Use field references to show information from other entries, instead of creating multiple copies of the same information.",
             comment: "Explanation of a premium feature")
     )
 }
@@ -190,6 +218,7 @@ class FreePricingPlan: PricingPlan {
             PricingPlanBenefit.attachmentPreview,
             PricingPlanBenefit.yubikeyChallengeResponse,
             PricingPlanBenefit.customAppIcons,
+            PricingPlanBenefit.viewFieldReferences,
         ]
         self.smallPrint = nil
     }
@@ -239,10 +268,11 @@ class PricingPlanPremiumMonthly: RealPricingPlan {
         self.callToAction = LString.premiumCallToActionUpgradeNow
         self.ctaSubtitle = nil
         self.conditions = [
-            PricingPlanCondition(kind: .updatesAndFixes, isIncluded: true, moreInfo: .none),
-            PricingPlanCondition(kind: .emailSupport, isIncluded: true, moreInfo: .none),
             PricingPlanCondition(kind: .allPremiumFeatures, isIncluded: true, moreInfo: .none),
+            PricingPlanCondition(kind: .updatesAndFixes, isIncluded: true, moreInfo: .none),
             PricingPlanCondition(kind: .perpetualFallback, isIncluded: true, moreInfo: .perpetualFallback),
+            PricingPlanCondition(kind: .emailSupport, isIncluded: true, moreInfo: .none),
+            PricingPlanCondition(kind: .familySharing, isIncluded: true, moreInfo: .familySharing),
         ]
         self.benefits = [
             PricingPlanBenefit.multipleDatabases,
@@ -250,6 +280,7 @@ class PricingPlanPremiumMonthly: RealPricingPlan {
             PricingPlanBenefit.attachmentPreview,
             PricingPlanBenefit.yubikeyChallengeResponse,
             PricingPlanBenefit.customAppIcons,
+            PricingPlanBenefit.viewFieldReferences,
         ]
         self.smallPrint = LString.subscriptionConditions
         self.maybeOfferTrial() 
@@ -266,10 +297,11 @@ class PricingPlanPremiumYearly: RealPricingPlan {
         self.callToAction = LString.premiumCallToActionUpgradeNow
         self.ctaSubtitle = nil
         self.conditions = [
-            PricingPlanCondition(kind: .updatesAndFixes, isIncluded: true, moreInfo: .none),
-            PricingPlanCondition(kind: .emailSupport, isIncluded: true, moreInfo: .none),
             PricingPlanCondition(kind: .allPremiumFeatures, isIncluded: true, moreInfo: .none),
+            PricingPlanCondition(kind: .updatesAndFixes, isIncluded: true, moreInfo: .none),
             PricingPlanCondition(kind: .perpetualFallback, isIncluded: true, moreInfo: .perpetualFallback),
+            PricingPlanCondition(kind: .emailSupport, isIncluded: true, moreInfo: .none),
+            PricingPlanCondition(kind: .familySharing, isIncluded: true, moreInfo: .familySharing),
         ]
         self.benefits = [
             PricingPlanBenefit.multipleDatabases,
@@ -277,6 +309,7 @@ class PricingPlanPremiumYearly: RealPricingPlan {
             PricingPlanBenefit.attachmentPreview,
             PricingPlanBenefit.yubikeyChallengeResponse,
             PricingPlanBenefit.customAppIcons,
+            PricingPlanBenefit.viewFieldReferences,
         ]
         self.smallPrint = LString.subscriptionConditions
         self.maybeOfferTrial() 
@@ -291,11 +324,11 @@ class PricingPlanPremiumForever: RealPricingPlan {
         self.callToAction = LString.premiumCallToActionUpgradeNow
         self.ctaSubtitle = nil
         self.conditions = [
-            PricingPlanCondition(kind: .updatesAndFixes, isIncluded: true, moreInfo: .none),
-            PricingPlanCondition(kind: .emailSupport, isIncluded: true, moreInfo: .none),
             PricingPlanCondition(kind: .allPremiumFeatures, isIncluded: true, moreInfo: .none),
             PricingPlanCondition(kind: .upcomingPremiumFeatures, isIncluded: true, moreInfo: .none),
-            
+            PricingPlanCondition(kind: .updatesAndFixes, isIncluded: true, moreInfo: .none),
+            PricingPlanCondition(kind: .emailSupport, isIncluded: true, moreInfo: .none),
+            PricingPlanCondition(kind: .familySharing, isIncluded: false, moreInfo: .familySharing),
         ]
         self.benefits = [
             PricingPlanBenefit.multipleDatabases,
@@ -303,6 +336,7 @@ class PricingPlanPremiumForever: RealPricingPlan {
             PricingPlanBenefit.attachmentPreview,
             PricingPlanBenefit.yubikeyChallengeResponse,
             PricingPlanBenefit.customAppIcons,
+            PricingPlanBenefit.viewFieldReferences,
         ]
         self.smallPrint = nil
     }

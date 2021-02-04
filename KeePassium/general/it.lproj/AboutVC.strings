@@ -34,8 +34,8 @@
 /* Class = "UILabel"; text = "MIT license"; ObjectID = "bAq-tq-nuY"; */
 "bAq-tq-nuY.text" = "Licenza MIT";
 
-/* Class = "UILabel"; text = "©2020 Andrei Popleteev"; ObjectID = "bmf-Ed-H4x"; */
-"bmf-Ed-H4x.text" = "© 2020 Andrei Popleteev";
+/* Class = "UILabel"; text = "©2021 Andrei Popleteev"; ObjectID = "bmf-Ed-H4x"; */
+"bmf-Ed-H4x.text" = "© 2021 Andrei Popleteev";
 
 /* Class = "UILabel"; text = "KeePass by Dominik Reichl"; ObjectID = "CNI-b8-7Da"; */
 "CNI-b8-7Da.text" = "KeePass di Dominik Reichl";
@@ -134,5 +134,5 @@
 "wYr-Ya-qAP.text" = "Icona impostazioni di sistema di Vicons Design";
 
 /* Class = "UILabel"; text = "Yubico Mobile iOS SDK by Yubico AB"; ObjectID = "Xee-Y1-Dcw"; */
-"Xee-Y1-Dcw.text" = "Yubico Mobile iOS SDK by Yubico AB";
+"Xee-Y1-Dcw.text" = "Yubico Mobile iOS SDK di Yubico AB";
 

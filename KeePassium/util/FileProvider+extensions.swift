@@ -12,11 +12,7 @@ extension FileProvider {
     var icon: UIImage? {
         switch self {
         case .localStorage:
-            if UIDevice.current.userInterfaceIdiom == .pad {
-                return UIImage(named: "fp-on-ipad-listitem")
-            } else {
-                return UIImage(named: "fp-on-iphone-listitem")
-            }
+            return getLocalStorageIcon()
         case .box:
             return UIImage(named: "fp-box-listitem")
         case .boxcryptor:
@@ -46,6 +42,7 @@ extension FileProvider {
         case .amerigo:        fallthrough
         case .amerigoFree:    fallthrough
         case .feFileExplorer: fallthrough
+        case .qnapQFile:      fallthrough
         case .readdleDocuments: fallthrough
         case .resilioSync:    fallthrough
         case .stratospherixFileBrowser: fallthrough
@@ -54,6 +51,17 @@ extension FileProvider {
         case .yandexDisk:     fallthrough
         case .other:
             return UIImage(asset: .fileProviderGenericListitem)
+        }
+    }
+    
+    private func getLocalStorageIcon() -> UIImage? {
+        guard UIDevice.current.userInterfaceIdiom == .pad else {
+            return UIImage(named: "fp-on-iphone-listitem")
+        }
+        if ProcessInfo.isRunningOnMac {
+            return UIImage(named: "fp-on-hard-drive-listitem")
+        } else {
+            return UIImage(named: "fp-on-ipad-listitem")
         }
     }
 }

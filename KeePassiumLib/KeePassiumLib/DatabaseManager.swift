@@ -215,22 +215,43 @@ public class DatabaseManager {
         success successHandler: @escaping((_ compositeKey: CompositeKey) -> Void),
         error errorHandler: @escaping((_ errorMessage: String) -> Void))
     {
+        let mainQueueSuccessHandler: (_ compositeKey: CompositeKey)->Void = { (compositeKey) in
+            DispatchQueue.main.async {
+                successHandler(compositeKey)
+            }
+        }
+        let mainQueueErrorHandler: (_ errorMessage: String)->Void = { (errorMessage) in
+            DispatchQueue.main.async {
+                errorHandler(errorMessage)
+            }
+        }
+        
         let dataReadyHandler = { (keyFileData: ByteArray) -> Void in
             let passwordData = keyHelper.getPasswordData(password: password)
-            if passwordData.isEmpty && keyFileData.isEmpty {
+            if passwordData.isEmpty && keyFileData.isEmpty && challengeHandler == nil {
                 Diag.error("Password and key file are both empty")
-                errorHandler(LString.Error.passwordAndKeyFileAreBothEmpty)
+                mainQueueErrorHandler(LString.Error.passwordAndKeyFileAreBothEmpty)
                 return
             }
-            let staticComponents = keyHelper.combineComponents(
-                passwordData: passwordData, 
-                keyFileData: keyFileData    
-            )
-            let compositeKey = CompositeKey(
-                staticComponents: staticComponents,
-                challengeHandler: challengeHandler)
-            Diag.debug("New composite key created successfully")
-            successHandler(compositeKey)
+            do {
+                let staticComponents = try keyHelper.combineComponents(
+                    passwordData: passwordData, 
+                    keyFileData: keyFileData    
+                ) 
+                let compositeKey = CompositeKey(
+                    staticComponents: staticComponents,
+                    challengeHandler: challengeHandler)
+                Diag.debug("New composite key created successfully")
+                mainQueueSuccessHandler(compositeKey)
+            } catch let error as KeyFileError {
+                Diag.error("Key file error [reason: \(error.localizedDescription)]")
+                mainQueueErrorHandler(error.localizedDescription)
+            } catch {
+                let message = "Caught unrecognized exception" 
+                assertionFailure(message)
+                Diag.error(message)
+                mainQueueErrorHandler(message)
+            }
         }
         
         guard let keyFileRef = keyFileRef else {
@@ -248,12 +269,12 @@ public class DatabaseManager {
                         dataReadyHandler(keyFileData)
                     case .failure(let fileAccessError):
                         Diag.error("Failed to open key file [error: \(fileAccessError.localizedDescription)]")
-                        errorHandler(LString.Error.failedToOpenKeyFile)
+                        mainQueueErrorHandler(LString.Error.failedToOpenKeyFile)
                     }
                 }
             case .failure(let accessError):
                 Diag.error("Failed to open key file [error: \(accessError.localizedDescription)]")
-                errorHandler(LString.Error.failedToOpenKeyFile)
+                mainQueueErrorHandler(LString.Error.failedToOpenKeyFile)
             }
         }
     }

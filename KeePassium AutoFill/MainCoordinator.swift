@@ -79,7 +79,9 @@ class MainCoordinator: NSObject, Coordinator {
                 completion: nil)
         }
 
-        PremiumManager.shared.usageMonitor.startInterval()
+        let premiumManager = PremiumManager.shared
+        premiumManager.reloadReceipt()
+        premiumManager.usageMonitor.startInterval()
 
         rootController.present(pageController, animated: false, completion: nil)
         startMainFlow()
@@ -128,7 +130,9 @@ class MainCoordinator: NSObject, Coordinator {
             )
         }
         
-        let passwordCredential = ASPasswordCredential(user: entry.userName, password: entry.password)
+        let passwordCredential = ASPasswordCredential(
+            user: entry.resolvedUserName,
+            password: entry.resolvedPassword)        
         rootController.extensionContext.completeRequest(withSelectedCredential: passwordCredential) {
             (expired) in
             HapticFeedback.play(.credentialsPasted)
@@ -391,7 +395,7 @@ extension MainCoordinator: DatabaseChooserDelegate {
         watchdog.restart()
         let existingNonBackupDatabaseRefs = sender.databaseRefs.filter {
             ($0.location != .internalBackup) && 
-                !($0.hasPermissionError257 || $0.isFileMissingIOS14) 
+                !($0.hasPermissionError257 || $0.hasFileMissingError) 
         }
         if existingNonBackupDatabaseRefs.count > 0 {
             if PremiumManager.shared.isAvailable(feature: .canUseMultipleDatabases) {
@@ -534,6 +538,7 @@ extension MainCoordinator: DatabaseManagerObserver {
            let dbSettings = DatabaseSettingsManager.shared.getSettings(for: urlRef),
            let compositeKey = dbSettings.masterKey
         {
+            Diag.info("Express unlock failed, retrying with key derivation")
             canUseFinalKey = false
             tryToUnlockDatabase(
                 database: urlRef,
@@ -553,7 +558,7 @@ extension MainCoordinator: DatabaseManagerObserver {
         Settings.current.isAutoFillFinishedOK = true
         databaseUnlockerVC.hideProgressOverlay()
         
-        if urlRef.hasPermissionError257 || urlRef.isFileMissingIOS14 {
+        if urlRef.hasPermissionError257 || urlRef.hasFileMissingError {
             databaseUnlockerVC.showErrorMessage(
                 message,
                 reason: reason,
@@ -736,14 +741,19 @@ extension MainCoordinator: WatchdogDelegate {
         passcodeInputVC.isCancelAllowed = true
         passcodeInputVC.isBiometricsAllowed = shouldUseBiometrics
         passcodeInputVC.modalTransitionStyle = .crossDissolve
-        passcodeInputVC.shouldActivateKeyboard = !shouldUseBiometrics
+        if #available(iOS 14, *) {
+            passcodeInputVC.shouldActivateKeyboard = true
+        } else {
+            passcodeInputVC.shouldActivateKeyboard = !shouldUseBiometrics
+        }
         
         pageController.setViewControllers(
             [passcodeInputVC],
             direction: .reverse,
             animated: true,
             completion: { [weak self] (finished) in
-                self?.showBiometricAuth()
+                passcodeInputVC.shouldActivateKeyboard = false
+                self?.maybeShowBiometricAuth()
             }
         )
         self.passcodeInputController = passcodeInputVC
@@ -778,17 +788,27 @@ extension MainCoordinator: WatchdogDelegate {
         return context.canEvaluatePolicy(policy, error: nil)
     }
     
-    private func showBiometricAuth() {
+    private func maybeShowBiometricAuth() {
         guard isBiometricAuthAvailable() else {
             isBiometricAuthShown = false
             return
         }
-
+        
+        if #available(iOS 14, *) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { [weak self] in
+                self?.actuallyShowBiometrics()
+            }
+        } else {
+            actuallyShowBiometrics()
+        }
+    }
+    
+    private func actuallyShowBiometrics() {
         let context = LAContext()
         let policy = LAPolicy.deviceOwnerAuthenticationWithBiometrics
         context.localizedFallbackTitle = "" // hide "Enter Password" fallback; nil won't work
         context.localizedCancelTitle = LString.actionUsePasscode
-        
+
         Diag.debug("Biometric auth: showing request")
         context.evaluatePolicy(policy, localizedReason: LString.titleTouchID) {
             [weak self](authSuccessful, authError) in
@@ -803,7 +823,7 @@ extension MainCoordinator: WatchdogDelegate {
                 Diag.warning("Biometric auth failed [message: \(authError?.localizedDescription ?? "nil")]")
                 DispatchQueue.main.async {
                     [weak self] in
-                    self?.passcodeInputController?.becomeFirstResponder()
+                    self?.passcodeInputController?.showKeyboard()
                 }
             }
         }
@@ -839,7 +859,7 @@ extension MainCoordinator: PasscodeInputDelegate {
     }
     
     func passcodeInputDidRequestBiometrics(_ sender: PasscodeInputVC) {
-        showBiometricAuth()
+        maybeShowBiometricAuth()
     }
 }
 
@@ -859,5 +879,11 @@ extension MainCoordinator: FirstSetupDelegate {
     
     func didPressAddDatabase(in firstSetup: FirstSetupVC, at popoverAnchor: PopoverAnchor) {
         addDatabase(popoverAnchor: popoverAnchor)
+    }
+    
+    func didPressSkip(in firstSetup: FirstSetupVC) {
+        watchdog.restart()
+        navigationController.popToRootViewController(animated: true)
+        refreshFileList()
     }
 }

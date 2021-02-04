@@ -22,6 +22,7 @@ public enum FileProvider: Hashable {
         "com.microsoft.skydrive.onedrivefileprovider": .oneDrive,
         "com.owncloud.ios-app.ownCloud-File-Provider": .ownCloud,
         "com.pcloud.pcloud.FileProvider": .pCloud,
+        "com.qnap.qfile.FileProvider": .qnapQFile,
         "com.readdle.ReaddleDocsIPad.DocsExtFileProvider": .readdleDocuments,
         "com.resilio.sync.fileprovider": .resilioSync,
         "com.apple.SMBClientProvider.FileProvider": .smbShare,
@@ -48,6 +49,7 @@ public enum FileProvider: Hashable {
     case oneDrive
     case ownCloud
     case pCloud
+    case qnapQFile
     case readdleDocuments
     case resilioSync
     case smbShare
@@ -150,6 +152,12 @@ public enum FileProvider: Hashable {
                 bundle: Bundle.framework,
                 value: "pCloud",
                 comment: "Localized name of the storage service: pCloud (https://pcloud.com)")
+        case .qnapQFile:
+            return NSLocalizedString(
+                "[FileProvider/qnapQFile/name]",
+                bundle: Bundle.framework,
+                value: "Qfile",
+                comment: "Localized name of the storage service: QNAP Qfile (https://apps.apple.com/app/qfile/id526330408)")
         case .readdleDocuments:
             return NSLocalizedString(
                 "[FileProvider/Readdle Documents/name]",
@@ -211,21 +219,30 @@ public enum FileProvider: Hashable {
                 value: "Yandex.Disk",
                 comment: "Localized name of the storage service: Yandex.Disk (https://disk.yandex.com)")
         case .localStorage:
-            if UIDevice.current.userInterfaceIdiom == .pad {
-                return NSLocalizedString(
-                    "[FileProvider/On My iPad/name]",
-                    bundle: Bundle.framework,
-                    value: "On My iPad",
-                    comment: "Localized name of the local on-device storage, as shown in the Files app.")
-            } else {
-                return NSLocalizedString(
-                    "[FileProvider/On My iPhone/name]",
-                    bundle: Bundle.framework,
-                    value: "On My iPhone",
-                    comment: "Localized name of the local on-device storage, as shown in the Files app.")
-            }
+            return getLocalStorageName()
         case .other(let id):
             return id
         }
+    }
+    
+    private func getLocalStorageName() -> String {
+        guard UIDevice.current.userInterfaceIdiom == .pad else {
+            return NSLocalizedString(
+                "[FileProvider/On My iPhone/name]",
+                bundle: Bundle.framework,
+                value: "On My iPhone",
+                comment: "Localized name of the local on-device storage, as shown in the Files app.")
+        }
+        
+        if ProcessInfo.isRunningOnMac {
+            return "macOS" 
+        } else {
+            return NSLocalizedString(
+                "[FileProvider/On My iPad/name]",
+                bundle: Bundle.framework,
+                value: "On My iPad",
+                comment: "Localized name of the local on-device storage, as shown in the Files app.")
+        }
+
     }
 }
