@@ -10,9 +10,7 @@ import KeePassiumLib
 
 class AppIconSwitcherCoordinator: Coordinator {
     var childCoordinators = [Coordinator]()
-    
-    typealias DismissHandler = (AppIconSwitcherCoordinator) -> Void
-    var dismissHandler: DismissHandler?
+    var dismissHandler: CoordinatorDismissHandler?
     
     private let router: NavigationRouter
     private let picker: AppIconPicker
@@ -24,8 +22,16 @@ class AppIconSwitcherCoordinator: Coordinator {
         picker.delegate = self
     }
     
+    deinit {
+        assert(childCoordinators.isEmpty)
+        removeAllChildCoordinators()
+    }
+    
     func start() {
-        router.push(picker, animated: true, onPop: { [self] (viewController) in 
+        router.push(picker, animated: true, onPop: {
+            [weak self] (viewController) in
+            guard let self = self else { return }
+            self.removeAllChildCoordinators()
             self.dismissHandler?(self)
         })
         NotificationCenter.default.addObserver(

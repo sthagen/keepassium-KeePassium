@@ -1,5 +1,115 @@
 #CHANGELOG
 
+## [1.24.87] - 2021-05-06
+
+### Added
+
+- Support for KDBX 4.1 format [thanks, Dominik]
+- Korean translation [thanks, somni]
+
+### Improved
+
+- Updated all translations [thanks, everyone]
+
+### Fixed
+
+- Regression in 1.24.86: entry history was not updated on save
+- In .kdb databases, deleted Backup group would get broken until DB reload
+
+
+## [1.24.86] - 2021-04-26
+
+### Added
+
+- Possibilty to add and select custom icons for groups and entries (closes #84) [thanks, Igor]
+- Slovak translation [thanks, onegin1]
+- Thai translation [thanks, poonnawit]
+- Turkish translation [thanks, ofmelnik]
+
+### Improved
+
+- Visibility of black custom icons in dark mode [thanks, Jon]
+- Updated all translations [thanks, everyone]
+- Tech debt: internal improvements to streamline further development
+
+### Fixed
+
+- Editor changes were not detected in some rare cases
+- Updating associated key components only after successful DB save [thanks, Doug]
+- "Hide Passwords" switch in Appearance settings did not work [thanks, Greg]
+- Minor UI fixes
+
+
+## [1.23.85] - 2021-03-29
+
+### Improved
+
+- Added "1 week" database timeout option [thanks, as]
+
+### Fixed
+
+- Fixed processing of OTP parameters defined as otpauth URL [thanks, Marcel]
+- VoiceOver will announce toast notifications
+
+
+## [1.22.84] - 2021-03-19
+
+### Added
+
+- Setup one-time passwords (TOTP) with QR codes (closes #24) [thanks, Igor]
+
+### Improved
+
+- Better-looking context menus (iOS 13+)
+- Less important messages are shown as subtle popups (toasts)
+- More informative messages if database saving fails (looking at you, OneDrive)
+- If database saving failed, the app will offer to save it elsewhere
+- Pressing Enter in AutoFill search will select the first result
+- On database creation, remind the user to remember the password
+- More balanced App Store review prompts
+- Updated all translations [thanks, everyone]
+
+### Fixed
+
+- Regression in 1.22.83 beta destroyed TAB/CR/LF characters on save (related #148)
+- Some accessibility labels were not translated
+- macOS: AutoFill disappeared immediately on show (fixes #147)
+- macOS: Minor UI issues here and there [thanks, everyone]
+
+
+## [1.22.83] - 2021-02-25
+
+### Fixed
+
+- Filter out invalid low-order ASCII characters from pasted/loaded data (fixes #148) [thanks, Mirko]
+
+
+## [1.22.82] - 2021-02-20
+
+### Added
+
+- Appearance settings page
+- Icons from KeePass (Nuvola) and KeePassXC (Icons8)
+- "Copy to Clipboard" button to diagnostic viewer [thanks, Eugene]
+- "Change Passcode" button in settings
+
+### Improved
+
+- Instructions in Passcode Input dialog
+- Clarified license terms for KeePassium (Roundicons) icons
+- Text size moved from zoom gesture to Appearance settings (fixes #132)
+- Tech debt: adopting coordinators instead of massive view controllers (ongoing)
+- Tech debt: unified Diagnostics Viewer
+- Minor improvements for Mac Catalyst (#82)
+- Updated TPInAppReceipt to 3.0.1
+
+### Fixed
+
+- Database lock timeout was not always respected on iOS 14.4 [thanks, Don and Marinus]
+- Crash on iOS 14.4 when cancelling entry creation [thanks, Sandu]
+- Crash on iPad when there is no default email client [thanks, Florian]
+
+
 ## [1.21.81] - 2021-01-30
 
 ### Refined

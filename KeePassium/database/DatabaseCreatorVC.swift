@@ -12,7 +12,10 @@ import KeePassiumLib
 protocol DatabaseCreatorDelegate: class {
     func didPressCancel(in databaseCreatorVC: DatabaseCreatorVC)
     func didPressContinue(in databaseCreatorVC: DatabaseCreatorVC)
-    func didPressPickKeyFile(in databaseCreatorVC: DatabaseCreatorVC, popoverSource: UIView)
+    func didPressErrorDetails(in databaseCreatorVC: DatabaseCreatorVC)
+    func didPressPickKeyFile(
+        in databaseCreatorVC: DatabaseCreatorVC,
+        at popoverAnchor: PopoverAnchor)
     func didPressPickHardwareKey(
         in databaseCreatorVC: DatabaseCreatorVC,
         at popoverAnchor: PopoverAnchor)
@@ -155,8 +158,7 @@ class DatabaseCreatorVC: UIViewController {
     }
     
     @IBAction func didPressErrorDetails(_ sender: Any) {
-        let diagInfoVC = ViewDiagnosticsVC.make()
-        present(diagInfoVC, animated: true, completion: nil)
+        delegate?.didPressErrorDetails(in: self)
     }
     
     @IBAction func didPressContinue(_ sender: Any) {
@@ -200,7 +202,8 @@ extension DatabaseCreatorVC: UITextFieldDelegate {
         if textField === keyFileField {
             setError(message: nil, animated: true)
             passwordField.becomeFirstResponder()
-            delegate?.didPressPickKeyFile(in: self, popoverSource: textField)
+            let popoverAnchor = PopoverAnchor(sourceView: textField, sourceRect: textField.bounds)
+            delegate?.didPressPickKeyFile(in: self, at: popoverAnchor)
             return false
         }
         return true
@@ -211,41 +214,5 @@ extension DatabaseCreatorVC: UITextFieldDelegate {
             didPressContinue(textField)
         }
         return true
-    }
-}
-
-extension DatabaseCreatorVC: ProgressViewHost {
-    
-    func showProgressView(title: String, allowCancelling: Bool) {
-        if progressOverlay != nil {
-            progressOverlay?.title = title
-            progressOverlay?.isCancellable = allowCancelling
-            return
-        }
-        navigationItem.hidesBackButton = true
-        navigationItem.rightBarButtonItem?.isEnabled = false
-        continueButton.isEnabled = false
-        progressOverlay = ProgressOverlay.addTo(
-            containerView,
-            title: title,
-            animated: true)
-        progressOverlay?.isCancellable = allowCancelling
-    }
-    
-    func updateProgressView(with progress: ProgressEx) {
-        progressOverlay?.update(with: progress)
-    }
-    
-    func hideProgressView() {
-        guard progressOverlay != nil else { return }
-        navigationItem.hidesBackButton = false
-        navigationItem.rightBarButtonItem?.isEnabled = true
-        continueButton.isEnabled = true
-        progressOverlay?.dismiss(animated: true) {
-            [weak self] (finished) in
-            guard let _self = self else { return }
-            _self.progressOverlay?.removeFromSuperview()
-            _self.progressOverlay = nil
-        }
     }
 }

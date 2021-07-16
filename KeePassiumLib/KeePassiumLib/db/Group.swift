@@ -190,11 +190,11 @@ public class Group: DatabaseItem, Eraseable {
         return nil
     }
 
-    public func createEntry() -> Entry {
+    public func createEntry(detached: Bool = false) -> Entry {
         fatalError("Pure virtual method")
     }
     
-    public func createGroup() -> Group {
+    public func createGroup(detached: Bool = false) -> Group {
         fatalError("Pure virtual method")
     }
     
@@ -214,6 +214,14 @@ public class Group: DatabaseItem, Eraseable {
             group.collectAllChildren(groups: &groups, entries: &entries)
         }
         entries.append(contentsOf: self.entries)
+    }
+    
+    public func applyToAllChildren(groupHandler: ((Group)->Void)?, entryHandler: ((Entry)->Void)?) {
+        groupHandler?(self)
+        entries.forEach { entryHandler?($0) }
+        groups.forEach {
+            $0.applyToAllChildren(groupHandler: groupHandler, entryHandler: entryHandler)
+        }
     }
     
     public func collectAllEntries(to entries: inout Array<Entry>) {

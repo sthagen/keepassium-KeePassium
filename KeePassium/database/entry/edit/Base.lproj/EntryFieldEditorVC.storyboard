@@ -1,0 +1,467 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="dyC-HY-kh4">
+    <device id="retina5_5" orientation="portrait" appearance="dark"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Edit Entry-->
+        <scene sceneID="dEd-KK-5Fq">
+            <objects>
+                <tableViewController storyboardIdentifier="EntryFieldEditorVC" id="dyC-HY-kh4" customClass="EntryFieldEditorVC" customModule="KeePassium" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="zyf-Cf-svH">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="900"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <color key="separatorColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                        <view key="tableFooterView" contentMode="scaleToFill" id="ad1-Rf-HyL">
+                            <rect key="frame" x="0.0" y="822" width="414" height="60"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <subviews>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="center" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="1Nq-zk-w7B" customClass="MultilineButton" customModule="KeePassium" customModuleProvider="target">
+                                    <rect key="frame" x="15.999999999999986" y="8" width="244.66666666666663" height="21"/>
+                                    <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
+                                    <inset key="titleEdgeInsets" minX="4" minY="0.0" maxX="-4" maxY="0.0"/>
+                                    <state key="normal" title="{Scan QR code to setup OTP}" image="qrcode" catalog="system">
+                                        <color key="titleColor" name="ActionTint"/>
+                                    </state>
+                                    <connections>
+                                        <action selector="didPressSetupTOTP:" destination="dyC-HY-kh4" eventType="touchUpInside" id="a6P-lO-UIq"/>
+                                    </connections>
+                                </button>
+                            </subviews>
+                            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                            <constraints>
+                                <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="1Nq-zk-w7B" secondAttribute="bottom" id="A5O-rV-uth"/>
+                                <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="1Nq-zk-w7B" secondAttribute="trailing" constant="20" symbolic="YES" id="Bey-aP-cPa"/>
+                                <constraint firstItem="1Nq-zk-w7B" firstAttribute="leading" secondItem="ad1-Rf-HyL" secondAttribute="leadingMargin" constant="8" id="Hji-Ty-Xw8"/>
+                                <constraint firstItem="1Nq-zk-w7B" firstAttribute="top" secondItem="ad1-Rf-HyL" secondAttribute="topMargin" id="RtH-1H-rzd"/>
+                            </constraints>
+                        </view>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="TitleCell" id="GLB-1c-KE8" customClass="EntryFieldEditorTitleCell" customModule="KeePassium" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="28" width="414" height="84"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="GLB-1c-KE8" id="9Es-ir-laV">
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="84"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <imageView contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="db-icons/db-icon-loading" translatesAutoresizingMaskIntoConstraints="NO" id="10U-0j-Qe5">
+                                            <rect key="frame" x="20" y="11" width="29" height="29"/>
+                                            <color key="tintColor" name="ActionTint"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" constant="29" id="NW4-Ih-278"/>
+                                                <constraint firstAttribute="height" constant="29" id="rL7-C7-WIc"/>
+                                            </constraints>
+                                            <userDefinedRuntimeAttributes>
+                                                <userDefinedRuntimeAttribute type="boolean" keyPath="isAccessibilityElement" value="NO"/>
+                                            </userDefinedRuntimeAttributes>
+                                        </imageView>
+                                        <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="{Entry Title}" borderStyle="roundedRect" placeholder="Entry Title" textAlignment="natural" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="mGc-If-zfn" customClass="ValidatingTextField" customModule="KeePassium" customModuleProvider="target">
+                                            <rect key="frame" x="57" y="11" width="337" height="33"/>
+                                            <color key="backgroundColor" systemColor="tableCellGroupedBackgroundColor"/>
+                                            <accessibility key="accessibilityConfiguration" label="Entry title"/>
+                                            <color key="textColor" name="PrimaryText"/>
+                                            <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
+                                            <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                        </textField>
+                                        <button opaque="NO" contentMode="scaleToFill" verticalCompressionResistancePriority="751" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="HcW-rc-pdR" customClass="MultilineButton" customModule="KeePassium" customModuleProvider="target">
+                                            <rect key="frame" x="20" y="48" width="92" height="36"/>
+                                            <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
+                                            <color key="tintColor" name="ActionTint"/>
+                                            <inset key="contentEdgeInsets" minX="0.0" minY="8" maxX="0.0" maxY="8"/>
+                                            <state key="normal" title="Change Icon">
+                                                <color key="titleColor" name="ActionTint"/>
+                                            </state>
+                                            <connections>
+                                                <action selector="didPressChangeIcon:" destination="GLB-1c-KE8" eventType="touchUpInside" id="Qoc-MH-Wkf"/>
+                                            </connections>
+                                        </button>
+                                    </subviews>
+                                    <gestureRecognizers/>
+                                    <constraints>
+                                        <constraint firstItem="HcW-rc-pdR" firstAttribute="top" relation="greaterThanOrEqual" secondItem="mGc-If-zfn" secondAttribute="bottom" constant="4" id="2zE-9x-4Ts"/>
+                                        <constraint firstItem="10U-0j-Qe5" firstAttribute="top" secondItem="9Es-ir-laV" secondAttribute="topMargin" id="3IL-3l-OR9"/>
+                                        <constraint firstItem="mGc-If-zfn" firstAttribute="trailing" secondItem="9Es-ir-laV" secondAttribute="trailingMargin" id="Cj7-de-yDR"/>
+                                        <constraint firstAttribute="trailingMargin" relation="greaterThanOrEqual" secondItem="HcW-rc-pdR" secondAttribute="trailing" id="OeJ-l6-SZj"/>
+                                        <constraint firstItem="HcW-rc-pdR" firstAttribute="top" secondItem="10U-0j-Qe5" secondAttribute="bottom" priority="750" constant="8" id="PbJ-Ff-fIB"/>
+                                        <constraint firstItem="mGc-If-zfn" firstAttribute="top" secondItem="9Es-ir-laV" secondAttribute="topMargin" id="QD8-TM-ifx"/>
+                                        <constraint firstItem="mGc-If-zfn" firstAttribute="leading" secondItem="10U-0j-Qe5" secondAttribute="trailing" constant="8" id="XW4-GU-QCO"/>
+                                        <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="HcW-rc-pdR" secondAttribute="bottom" id="kCc-Eu-jIg"/>
+                                        <constraint firstItem="10U-0j-Qe5" firstAttribute="leading" secondItem="9Es-ir-laV" secondAttribute="leadingMargin" id="ryr-MC-Yl3"/>
+                                        <constraint firstItem="HcW-rc-pdR" firstAttribute="leading" secondItem="10U-0j-Qe5" secondAttribute="leading" id="x99-82-rYb"/>
+                                    </constraints>
+                                </tableViewCellContentView>
+                                <gestureRecognizers/>
+                                <connections>
+                                    <outlet property="changeIconButton" destination="HcW-rc-pdR" id="4r3-89-bzE"/>
+                                    <outlet property="iconView" destination="10U-0j-Qe5" id="OyN-WA-JpH"/>
+                                    <outlet property="titleTextField" destination="mGc-If-zfn" id="Wgt-4Z-iil"/>
+                                </connections>
+                            </tableViewCell>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="SingleLineCell" id="fOA-rA-t9w" customClass="EntryFieldEditorSingleLineCell" customModule="KeePassium" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="112" width="414" height="84.666664123535156"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="fOA-rA-t9w" id="fv0-vc-xOU">
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="84.666664123535156"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zo6-9v-QQD" userLabel="Separator">
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="4"/>
+                                            <color key="backgroundColor" systemColor="groupTableViewBackgroundColor"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="4" id="p7c-1i-Stv"/>
+                                            </constraints>
+                                        </view>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="{Field Name}" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CN9-CU-AJF">
+                                            <rect key="frame" x="20" y="12.000000000000002" width="89" height="19.666666666666671"/>
+                                            <accessibility key="accessibilityConfiguration">
+                                                <bool key="isElement" value="NO"/>
+                                            </accessibility>
+                                            <fontDescription key="fontDescription" type="system" weight="thin" pointSize="16"/>
+                                            <color key="textColor" name="PrimaryText"/>
+                                            <nil key="highlightedColor"/>
+                                            <attributedString key="userComments">
+                                                <fragment content="#bc-ignore!"/>
+                                            </attributedString>
+                                        </label>
+                                        <textField opaque="NO" contentMode="scaleToFill" verticalCompressionResistancePriority="751" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="{Field Value}" borderStyle="roundedRect" textAlignment="natural" adjustsFontSizeToFit="NO" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="zr2-BH-wQ3" customClass="ValidatingTextField" customModule="KeePassium" customModuleProvider="target">
+                                            <rect key="frame" x="20" y="39.666666666666664" width="374" height="33.999999999999993"/>
+                                            <color key="backgroundColor" systemColor="tableCellGroupedBackgroundColor"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="22" id="JcH-Or-9Cf"/>
+                                            </constraints>
+                                            <color key="textColor" name="PrimaryText"/>
+                                            <fontDescription key="fontDescription" name="Menlo-Regular" family="Menlo" pointSize="16"/>
+                                            <textInputTraits key="textInputTraits" returnKeyType="done"/>
+                                            <attributedString key="userComments">
+                                                <fragment content="#bc-ignore!"/>
+                                            </attributedString>
+                                        </textField>
+                                        <button hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="249" horizontalCompressionResistancePriority="751" verticalCompressionResistancePriority="751" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="tailTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yxs-MK-Ca2">
+                                            <rect key="frame" x="334" y="4" width="60" height="35.666666666666664"/>
+                                            <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
+                                            <state key="normal" title="{Button}">
+                                                <color key="titleColor" name="ActionTint"/>
+                                            </state>
+                                            <attributedString key="userComments">
+                                                <fragment content="#bc-ignore!"/>
+                                            </attributedString>
+                                            <connections>
+                                                <action selector="didPressActionButton:" destination="fOA-rA-t9w" eventType="touchUpInside" id="c5P-cn-3LK"/>
+                                            </connections>
+                                        </button>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstItem="yxs-MK-Ca2" firstAttribute="firstBaseline" secondItem="CN9-CU-AJF" secondAttribute="firstBaseline" priority="750" id="A4M-vW-rRZ"/>
+                                        <constraint firstAttribute="trailing" secondItem="zo6-9v-QQD" secondAttribute="trailing" id="NKp-Gx-XFk"/>
+                                        <constraint firstItem="zr2-BH-wQ3" firstAttribute="top" secondItem="yxs-MK-Ca2" secondAttribute="bottom" id="PTj-t3-edN"/>
+                                        <constraint firstItem="yxs-MK-Ca2" firstAttribute="trailing" secondItem="zr2-BH-wQ3" secondAttribute="trailing" id="Pa6-83-ed7"/>
+                                        <constraint firstItem="zo6-9v-QQD" firstAttribute="leading" secondItem="fv0-vc-xOU" secondAttribute="leading" id="VMh-Ye-oOw"/>
+                                        <constraint firstItem="zr2-BH-wQ3" firstAttribute="leading" secondItem="fv0-vc-xOU" secondAttribute="leadingMargin" id="XB0-Mn-9Av"/>
+                                        <constraint firstAttribute="trailingMargin" secondItem="zr2-BH-wQ3" secondAttribute="trailing" id="YXl-RR-pqr"/>
+                                        <constraint firstItem="zr2-BH-wQ3" firstAttribute="top" secondItem="CN9-CU-AJF" secondAttribute="bottom" constant="8" id="b0A-5H-XPw"/>
+                                        <constraint firstItem="yxs-MK-Ca2" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="CN9-CU-AJF" secondAttribute="trailing" constant="8" id="cU9-nc-Tmi"/>
+                                        <constraint firstItem="yxs-MK-Ca2" firstAttribute="top" relation="greaterThanOrEqual" secondItem="zo6-9v-QQD" secondAttribute="bottom" id="dWV-ps-qIT"/>
+                                        <constraint firstAttribute="bottomMargin" relation="greaterThanOrEqual" secondItem="zr2-BH-wQ3" secondAttribute="bottom" id="r3g-HG-5oV"/>
+                                        <constraint firstItem="zo6-9v-QQD" firstAttribute="top" secondItem="fv0-vc-xOU" secondAttribute="top" id="y0D-zA-Rob"/>
+                                        <constraint firstItem="CN9-CU-AJF" firstAttribute="top" secondItem="zo6-9v-QQD" secondAttribute="bottom" constant="8" id="yW0-WQ-5Cv"/>
+                                        <constraint firstItem="CN9-CU-AJF" firstAttribute="leading" secondItem="fv0-vc-xOU" secondAttribute="leadingMargin" id="zSb-gY-Npx"/>
+                                    </constraints>
+                                </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="actionButton" destination="yxs-MK-Ca2" id="1UT-Qs-8ZH"/>
+                                    <outlet property="textField" destination="zr2-BH-wQ3" id="Bqm-QR-otS"/>
+                                    <outlet property="titleLabel" destination="CN9-CU-AJF" id="W1O-DL-4V6"/>
+                                </connections>
+                            </tableViewCell>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="SingleLineProtectedCell" id="Kw5-lo-PXD" customClass="EntryFieldEditorSingleLineProtectedCell" customModule="KeePassium" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="196.66666412353516" width="414" height="84.666664123535156"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Kw5-lo-PXD" id="n4E-7U-Owp">
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="84.666664123535156"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="903-Pj-kT9" userLabel="Separator">
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="4"/>
+                                            <color key="backgroundColor" systemColor="groupTableViewBackgroundColor"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="4" id="C9V-Uc-gIb"/>
+                                            </constraints>
+                                        </view>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="{Field Name}" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kN4-4o-MBS">
+                                            <rect key="frame" x="20" y="12.000000000000002" width="89" height="19.666666666666671"/>
+                                            <accessibility key="accessibilityConfiguration">
+                                                <bool key="isElement" value="NO"/>
+                                            </accessibility>
+                                            <fontDescription key="fontDescription" type="system" weight="thin" pointSize="16"/>
+                                            <color key="textColor" name="PrimaryText"/>
+                                            <nil key="highlightedColor"/>
+                                            <attributedString key="userComments">
+                                                <fragment content="#bc-ignore!"/>
+                                            </attributedString>
+                                        </label>
+                                        <textField opaque="NO" contentMode="scaleToFill" verticalCompressionResistancePriority="751" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="{Field Value}" borderStyle="roundedRect" textAlignment="natural" adjustsFontSizeToFit="NO" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Ro2-Xv-zrw" customClass="ProtectedTextField" customModule="KeePassium" customModuleProvider="target">
+                                            <rect key="frame" x="20" y="39.666666666666664" width="374" height="33.999999999999993"/>
+                                            <color key="backgroundColor" systemColor="tableCellGroupedBackgroundColor"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="22" id="8RP-zF-9wp"/>
+                                            </constraints>
+                                            <color key="textColor" name="PrimaryText"/>
+                                            <fontDescription key="fontDescription" name="Menlo-Regular" family="Menlo" pointSize="16"/>
+                                            <textInputTraits key="textInputTraits" returnKeyType="done"/>
+                                            <attributedString key="userComments">
+                                                <fragment content="#bc-ignore!"/>
+                                            </attributedString>
+                                        </textField>
+                                        <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="249" verticalCompressionResistancePriority="751" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="z2C-wo-jYf">
+                                            <rect key="frame" x="313" y="4" width="81" height="35.666666666666664"/>
+                                            <accessibility key="accessibilityConfiguration" identifier="randomize_button"/>
+                                            <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
+                                            <state key="normal" title="Randomize">
+                                                <color key="titleColor" name="ActionTint"/>
+                                            </state>
+                                            <attributedString key="userComments">
+                                                <fragment content="Action/button to generate new password"/>
+                                            </attributedString>
+                                            <userDefinedRuntimeAttributes>
+                                                <userDefinedRuntimeAttribute type="string" keyPath="accessibilityLabel" value="Randomize password" localized="YES"/>
+                                                <userDefinedRuntimeAttribute type="boolean" keyPath="isAccessibilityElement" value="YES"/>
+                                            </userDefinedRuntimeAttributes>
+                                            <connections>
+                                                <action selector="didPressRandomizeButton:" destination="Kw5-lo-PXD" eventType="touchUpInside" id="aQH-Hs-qJc"/>
+                                            </connections>
+                                        </button>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstItem="kN4-4o-MBS" firstAttribute="top" secondItem="903-Pj-kT9" secondAttribute="bottom" constant="8" id="5It-NO-unn"/>
+                                        <constraint firstItem="Ro2-Xv-zrw" firstAttribute="top" secondItem="kN4-4o-MBS" secondAttribute="bottom" constant="8" id="5ty-ot-h51"/>
+                                        <constraint firstAttribute="trailing" secondItem="903-Pj-kT9" secondAttribute="trailing" id="FNk-yy-fEq"/>
+                                        <constraint firstAttribute="bottomMargin" relation="greaterThanOrEqual" secondItem="Ro2-Xv-zrw" secondAttribute="bottom" id="KVh-Ug-Ohv"/>
+                                        <constraint firstItem="Ro2-Xv-zrw" firstAttribute="leading" secondItem="n4E-7U-Owp" secondAttribute="leadingMargin" id="KlV-6i-GV0"/>
+                                        <constraint firstItem="z2C-wo-jYf" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="kN4-4o-MBS" secondAttribute="trailing" constant="8" id="UvQ-au-DGe"/>
+                                        <constraint firstItem="903-Pj-kT9" firstAttribute="leading" secondItem="n4E-7U-Owp" secondAttribute="leading" id="a5E-LP-zcO"/>
+                                        <constraint firstItem="Ro2-Xv-zrw" firstAttribute="top" secondItem="z2C-wo-jYf" secondAttribute="bottom" id="cY0-TH-sNb"/>
+                                        <constraint firstItem="kN4-4o-MBS" firstAttribute="leading" secondItem="n4E-7U-Owp" secondAttribute="leadingMargin" id="ech-K4-SdJ"/>
+                                        <constraint firstItem="903-Pj-kT9" firstAttribute="top" secondItem="n4E-7U-Owp" secondAttribute="top" id="g8t-tA-8o5"/>
+                                        <constraint firstItem="z2C-wo-jYf" firstAttribute="firstBaseline" secondItem="kN4-4o-MBS" secondAttribute="firstBaseline" priority="750" id="kL3-yu-Ldw"/>
+                                        <constraint firstAttribute="trailingMargin" secondItem="Ro2-Xv-zrw" secondAttribute="trailing" id="maP-wj-csG"/>
+                                        <constraint firstItem="z2C-wo-jYf" firstAttribute="trailing" secondItem="Ro2-Xv-zrw" secondAttribute="trailing" id="ncY-vZ-zto"/>
+                                        <constraint firstItem="z2C-wo-jYf" firstAttribute="top" relation="greaterThanOrEqual" secondItem="903-Pj-kT9" secondAttribute="bottom" id="ndN-bi-5Hx"/>
+                                    </constraints>
+                                </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="randomizeButton" destination="z2C-wo-jYf" id="NEy-eb-wcL"/>
+                                    <outlet property="textField" destination="Ro2-Xv-zrw" id="c0e-CI-ITG"/>
+                                    <outlet property="titleLabel" destination="kN4-4o-MBS" id="h1b-82-aP7"/>
+                                </connections>
+                            </tableViewCell>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="MultiLineCell" id="5Ke-qE-K1F" customClass="EntryFieldEditorMultiLineCell" customModule="KeePassium" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="281.33332824707031" width="414" height="254.66667175292969"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="5Ke-qE-K1F" id="MDp-Cu-Sys">
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="254.66667175292969"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="998-Hc-DjE" userLabel="Separator">
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="4"/>
+                                            <color key="backgroundColor" systemColor="groupTableViewBackgroundColor"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="4" id="Yqm-Ad-P63"/>
+                                            </constraints>
+                                        </view>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" text="{Field Name}" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mYx-OE-79H">
+                                            <rect key="frame" x="20" y="12.000000000000002" width="374" height="19.666666666666671"/>
+                                            <accessibility key="accessibilityConfiguration">
+                                                <bool key="isElement" value="NO"/>
+                                            </accessibility>
+                                            <fontDescription key="fontDescription" type="system" weight="thin" pointSize="16"/>
+                                            <color key="textColor" name="PrimaryText"/>
+                                            <nil key="highlightedColor"/>
+                                            <attributedString key="userComments">
+                                                <fragment content="#bc-ignore!"/>
+                                            </attributedString>
+                                        </label>
+                                        <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="9e5-bz-qOo" customClass="ValidatingTextView" customModule="KeePassium" customModuleProvider="target">
+                                            <rect key="frame" x="20" y="39.666666666666657" width="374" height="200"/>
+                                            <color key="backgroundColor" systemColor="tableCellGroupedBackgroundColor"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" priority="750" constant="200" id="TKR-Wn-Ydd"/>
+                                            </constraints>
+                                            <string key="text">{Multi-line field value. Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.}</string>
+                                            <color key="textColor" name="PrimaryText"/>
+                                            <fontDescription key="fontDescription" name="Menlo-Regular" family="Menlo" pointSize="16"/>
+                                            <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                            <attributedString key="userComments">
+                                                <fragment content="#bc-ignore!"/>
+                                            </attributedString>
+                                        </textView>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstAttribute="bottomMargin" secondItem="9e5-bz-qOo" secondAttribute="bottom" constant="4" id="9Es-wf-O4H"/>
+                                        <constraint firstItem="9e5-bz-qOo" firstAttribute="trailing" secondItem="MDp-Cu-Sys" secondAttribute="trailingMargin" id="Bm8-RB-43q"/>
+                                        <constraint firstItem="998-Hc-DjE" firstAttribute="top" secondItem="MDp-Cu-Sys" secondAttribute="top" id="JdU-lx-010"/>
+                                        <constraint firstAttribute="trailing" secondItem="998-Hc-DjE" secondAttribute="trailing" id="VI8-cg-Yg0"/>
+                                        <constraint firstItem="9e5-bz-qOo" firstAttribute="top" secondItem="mYx-OE-79H" secondAttribute="bottom" constant="8" id="g4E-CE-Css"/>
+                                        <constraint firstItem="mYx-OE-79H" firstAttribute="leading" secondItem="MDp-Cu-Sys" secondAttribute="leadingMargin" id="lnd-KU-4EO"/>
+                                        <constraint firstItem="mYx-OE-79H" firstAttribute="top" secondItem="998-Hc-DjE" secondAttribute="bottom" constant="8" id="ppl-Te-dgq"/>
+                                        <constraint firstItem="9e5-bz-qOo" firstAttribute="leading" secondItem="MDp-Cu-Sys" secondAttribute="leadingMargin" id="qGo-YH-r5B"/>
+                                        <constraint firstItem="998-Hc-DjE" firstAttribute="leading" secondItem="MDp-Cu-Sys" secondAttribute="leading" id="vvx-dW-8ug"/>
+                                        <constraint firstAttribute="trailingMargin" secondItem="mYx-OE-79H" secondAttribute="trailing" id="yCP-ZK-r6h"/>
+                                    </constraints>
+                                </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="textView" destination="9e5-bz-qOo" id="hbl-RK-Mcw"/>
+                                    <outlet property="titleLabel" destination="mYx-OE-79H" id="wof-BP-yiC"/>
+                                </connections>
+                            </tableViewCell>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="CustomFieldCell" id="CcF-c8-r4M" customClass="EntryFieldEditorCustomFieldCell" customModule="KeePassium" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="536" width="414" height="258"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="CcF-c8-r4M" id="8k8-If-CEX">
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="258"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cDy-AV-pKE" userLabel="Separator">
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="4"/>
+                                            <color key="backgroundColor" systemColor="groupTableViewBackgroundColor"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="4" id="aNX-bx-azn"/>
+                                            </constraints>
+                                        </view>
+                                        <textField opaque="NO" contentMode="scaleToFill" verticalCompressionResistancePriority="751" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="{Field Name}" borderStyle="roundedRect" placeholder="Field Name" textAlignment="natural" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" minimumFontSize="16" translatesAutoresizingMaskIntoConstraints="NO" id="ecN-Xd-ff5" customClass="ValidatingTextField" customModule="KeePassium" customModuleProvider="target">
+                                            <rect key="frame" x="20" y="12" width="374" height="34"/>
+                                            <color key="backgroundColor" systemColor="tableCellGroupedBackgroundColor"/>
+                                            <accessibility key="accessibilityConfiguration" label="Custom field name"/>
+                                            <color key="textColor" name="PrimaryText"/>
+                                            <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
+                                            <textInputTraits key="textInputTraits"/>
+                                        </textField>
+                                        <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="7iU-ut-hd7" customClass="ValidatingTextView" customModule="KeePassium" customModuleProvider="target">
+                                            <rect key="frame" x="20" y="54" width="374" height="150"/>
+                                            <color key="backgroundColor" systemColor="tableCellGroupedBackgroundColor"/>
+                                            <accessibility key="accessibilityConfiguration" label="Custom field value"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" priority="750" constant="150" id="o4u-g8-4jQ"/>
+                                            </constraints>
+                                            <string key="text">{Multi-line field value. Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.}</string>
+                                            <color key="textColor" name="PrimaryText"/>
+                                            <fontDescription key="fontDescription" name="Menlo-Regular" family="Menlo" pointSize="16"/>
+                                            <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                        </textView>
+                                        <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" horizontalCompressionResistancePriority="751" verticalCompressionResistancePriority="751" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="eox-My-Hns">
+                                            <rect key="frame" x="345" y="212" width="51" height="31"/>
+                                            <accessibility key="accessibilityConfiguration" label="In-memory Protection"/>
+                                            <attributedString key="userComments">
+                                                <fragment content="Equivalent to KeePass' own `Enable in-memory protection' for custom entry fields."/>
+                                            </attributedString>
+                                        </switch>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="749" text="In-memory Protection" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0pb-xb-fuf">
+                                            <rect key="frame" x="20" y="217.33333333333334" width="317" height="20.333333333333343"/>
+                                            <accessibility key="accessibilityConfiguration">
+                                                <bool key="isElement" value="NO"/>
+                                            </accessibility>
+                                            <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
+                                            <color key="textColor" name="PrimaryText"/>
+                                            <nil key="highlightedColor"/>
+                                            <attributedString key="userComments">
+                                                <fragment content="Label for a switch, equivalent to KeePass' own `Enable in-memory protection` for custom entry fields."/>
+                                            </attributedString>
+                                        </label>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstAttribute="trailingMargin" secondItem="eox-My-Hns" secondAttribute="trailing" id="8UL-gi-tig"/>
+                                        <constraint firstItem="0pb-xb-fuf" firstAttribute="centerY" secondItem="eox-My-Hns" secondAttribute="centerY" id="93i-wP-ueg"/>
+                                        <constraint firstItem="eox-My-Hns" firstAttribute="leading" secondItem="0pb-xb-fuf" secondAttribute="trailing" constant="8" id="FGh-18-s7j"/>
+                                        <constraint firstAttribute="trailingMargin" secondItem="7iU-ut-hd7" secondAttribute="trailing" id="ILo-tq-FmI"/>
+                                        <constraint firstItem="0pb-xb-fuf" firstAttribute="top" relation="greaterThanOrEqual" secondItem="7iU-ut-hd7" secondAttribute="bottom" constant="8" id="KRB-6R-qwN"/>
+                                        <constraint firstItem="7iU-ut-hd7" firstAttribute="top" secondItem="ecN-Xd-ff5" secondAttribute="bottom" constant="8" id="QiZ-92-wp5"/>
+                                        <constraint firstAttribute="trailing" secondItem="cDy-AV-pKE" secondAttribute="trailing" id="USV-Kh-HP9"/>
+                                        <constraint firstItem="ecN-Xd-ff5" firstAttribute="top" secondItem="cDy-AV-pKE" secondAttribute="bottom" constant="8" id="Vd2-Qa-MzU"/>
+                                        <constraint firstItem="cDy-AV-pKE" firstAttribute="top" secondItem="8k8-If-CEX" secondAttribute="top" id="XQV-Rc-Jti"/>
+                                        <constraint firstAttribute="bottomMargin" relation="greaterThanOrEqual" secondItem="eox-My-Hns" secondAttribute="bottom" constant="4" id="bip-aF-SUF"/>
+                                        <constraint firstItem="eox-My-Hns" firstAttribute="top" relation="greaterThanOrEqual" secondItem="7iU-ut-hd7" secondAttribute="bottom" constant="8" id="cVd-5B-6xA"/>
+                                        <constraint firstAttribute="bottomMargin" relation="greaterThanOrEqual" secondItem="0pb-xb-fuf" secondAttribute="bottom" constant="8" id="fKq-Sl-UQS"/>
+                                        <constraint firstItem="cDy-AV-pKE" firstAttribute="leading" secondItem="8k8-If-CEX" secondAttribute="leading" id="lGf-yl-wzs"/>
+                                        <constraint firstItem="0pb-xb-fuf" firstAttribute="leading" secondItem="8k8-If-CEX" secondAttribute="leadingMargin" id="rGw-bn-DcK"/>
+                                        <constraint firstItem="ecN-Xd-ff5" firstAttribute="leading" secondItem="8k8-If-CEX" secondAttribute="leadingMargin" id="wLP-5q-MPz"/>
+                                        <constraint firstAttribute="trailingMargin" secondItem="ecN-Xd-ff5" secondAttribute="trailing" id="yaj-Pm-Vop"/>
+                                        <constraint firstItem="7iU-ut-hd7" firstAttribute="leading" secondItem="8k8-If-CEX" secondAttribute="leadingMargin" id="zUq-TC-Xaj"/>
+                                    </constraints>
+                                </tableViewCellContentView>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="accessibilityLabel" value="Custom field editor" localized="YES"/>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <outlet property="nameTextField" destination="ecN-Xd-ff5" id="CnH-83-W6v"/>
+                                    <outlet property="protectionSwitch" destination="eox-My-Hns" id="uu4-Aw-Frn"/>
+                                    <outlet property="valueTextView" destination="7iU-ut-hd7" id="SO3-fk-v0n"/>
+                                </connections>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="dyC-HY-kh4" id="O61-jZ-KAx"/>
+                            <outlet property="delegate" destination="dyC-HY-kh4" id="tQJ-WP-lgN"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" title="Edit Entry" id="l3s-Bv-fA1" userLabel="Edit Entry">
+                        <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="pJ7-8j-CZA">
+                            <connections>
+                                <action selector="didPressCancel:" destination="dyC-HY-kh4" id="bFu-Eh-1kr"/>
+                            </connections>
+                        </barButtonItem>
+                        <rightBarButtonItems>
+                            <barButtonItem style="done" systemItem="done" id="urr-zn-2MK">
+                                <connections>
+                                    <action selector="didPressDone:" destination="dyC-HY-kh4" id="TRF-qL-mGh"/>
+                                </connections>
+                            </barButtonItem>
+                            <barButtonItem systemItem="add" id="HGI-xq-zUf">
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="accessibilityLabel" value="Add Custom Field" localized="YES"/>
+                                    <userDefinedRuntimeAttribute type="boolean" keyPath="isAccessibilityElement" value="YES"/>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <action selector="didPressAddField:" destination="dyC-HY-kh4" id="bWR-w3-H61"/>
+                                </connections>
+                            </barButtonItem>
+                        </rightBarButtonItems>
+                    </navigationItem>
+                    <size key="freeformSize" width="414" height="900"/>
+                    <connections>
+                        <outlet property="addFieldButton" destination="HGI-xq-zUf" id="aPE-l1-Fw7"/>
+                        <outlet property="doneButton" destination="urr-zn-2MK" id="KNL-EB-lsB"/>
+                        <outlet property="scanOTPButton" destination="1Nq-zk-w7B" id="ii9-pd-TVP"/>
+                    </connections>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="WWU-SY-Plz" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="4146.376811594203" y="1254.6195652173915"/>
+        </scene>
+    </scenes>
+    <color key="tintColor" name="ActionTint"/>
+    <resources>
+        <image name="db-icons/db-icon-loading" width="29" height="29"/>
+        <image name="qrcode" catalog="system" width="128" height="114"/>
+        <namedColor name="ActionTint">
+            <color red="0.0" green="0.4779999852180481" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="PrimaryText">
+            <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </namedColor>
+        <systemColor name="groupTableViewBackgroundColor">
+            <color red="0.94901960784313721" green="0.94901960784313721" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="tableCellGroupedBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>

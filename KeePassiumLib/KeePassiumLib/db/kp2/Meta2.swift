@@ -103,7 +103,7 @@ final class Meta2: Eraseable {
     private(set) var lastSelectedGroupUUID: UUID
     private(set) var lastTopVisibleGroupUUID: UUID
     private(set) var customData: CustomData2
-    private(set) var customIcons: [UUID: CustomIcon2]
+    private(set) var customIcons: [CustomIcon2]
     
     init(database: Database2) {
         self.database = database
@@ -131,8 +131,8 @@ final class Meta2: Eraseable {
         historyMaxSize = Meta2.defaultHistoryMaxSize
         lastSelectedGroupUUID = UUID.ZERO
         lastTopVisibleGroupUUID = UUID.ZERO
-        customData = CustomData2()
-        customIcons = [:]
+        customData = CustomData2(database: database)
+        customIcons = []
     }
     deinit {
         erase()
@@ -164,7 +164,7 @@ final class Meta2: Eraseable {
         lastSelectedGroupUUID.erase()
         lastTopVisibleGroupUUID.erase()
         customData.erase()
-        customIcons.removeAll() 
+        customIcons.erase()
     }
     
     func loadDefaultValuesV4() {
@@ -174,14 +174,15 @@ final class Meta2: Eraseable {
     
     func load(
         xml: AEXMLElement,
+        formatVersion: Database2.FormatVersion,
         streamCipher: StreamCipher,
+        timeParser: Database2XMLTimeParser,
         warnings: DatabaseLoadingWarnings
     ) throws {
         assert(xml.name == Xml2.meta)
         Diag.verbose("Loading XML: meta")
         erase()
         
-        let formatVersion = database.header.formatVersion
         for tag in xml.children {
             switch tag.name {
             case Xml2.generator:
@@ -189,11 +190,11 @@ final class Meta2: Eraseable {
                 warnings.databaseGenerator = tag.value 
                 Diag.info("Database was last edited by: \(generator)")
             case Xml2.settingsChanged: 
-                guard formatVersion == .v4 else {
+                guard formatVersion >= .v4 else {
                     Diag.error("Found \(tag.name) tag in non-V4 database")
                     throw Xml2.ParsingError.unexpectedTag(actual: tag.name, expected: nil)
                 }
-                self.settingsChangedTime = database.xmlStringToDate(tag.value) ?? Date.now
+                self.settingsChangedTime = timeParser.xmlStringToDate(tag.value) ?? Date.now
             case Xml2.headerHash: 
                 guard formatVersion == .v3 else {
                     Diag.warning("Found \(tag.name) tag in non-V3 database. Ignoring")
@@ -203,23 +204,23 @@ final class Meta2: Eraseable {
             case Xml2.databaseName:
                 self.databaseName = tag.value ?? ""
             case Xml2.databaseNameChanged:
-                self.databaseNameChangedTime = database.xmlStringToDate(tag.value) ?? Date.now
+                self.databaseNameChangedTime = timeParser.xmlStringToDate(tag.value) ?? Date.now
             case Xml2.databaseDescription:
                 self.databaseDescription = tag.value ?? ""
             case Xml2.databaseDescriptionChanged:
                 self.databaseDescriptionChangedTime =
-                    database.xmlStringToDate(tag.value) ?? Date.now
+                    timeParser.xmlStringToDate(tag.value) ?? Date.now
             case Xml2.defaultUserName:
                 self.defaultUserName = tag.value ?? ""
             case Xml2.defaultUserNameChanged:
-                self.defaultUserNameChangedTime = database.xmlStringToDate(tag.value) ?? Date.now
+                self.defaultUserNameChangedTime = timeParser.xmlStringToDate(tag.value) ?? Date.now
             case Xml2.maintenanceHistoryDays:
                 self.maintenanceHistoryDays =
                     UInt32(tag.value) ?? Meta2.defaultMaintenanceHistoryDays
             case Xml2.color:
                 self.colorString = tag.value ?? ""
             case Xml2.masterKeyChanged:
-                self.masterKeyChangedTime = database.xmlStringToDate(tag.value) ?? Date.now
+                self.masterKeyChangedTime = timeParser.xmlStringToDate(tag.value) ?? Date.now
             case Xml2.masterKeyChangeRec:
                 self.masterKeyChangeRec = Int64(tag.value) ?? -1
             case Xml2.masterKeyChangeForce:
@@ -228,19 +229,19 @@ final class Meta2: Eraseable {
                 try memoryProtection.load(xml: tag)
                 Diag.verbose("Memory protection loaded OK")
             case Xml2.customIcons:
-                try loadCustomIcons(xml: tag)
+                try loadCustomIcons(xml: tag, timeParser: timeParser)
                 Diag.verbose("Custom icons loaded OK [count: \(customIcons.count)]")
             case Xml2.recycleBinEnabled:
                 self.isRecycleBinEnabled = Bool(string: tag.value)
             case Xml2.recycleBinUUID:
                 self.recycleBinGroupUUID = UUID(base64Encoded: tag.value) ?? UUID.ZERO
             case Xml2.recycleBinChanged:
-                self.recycleBinChangedTime = database.xmlStringToDate(tag.value) ?? Date.now
+                self.recycleBinChangedTime = timeParser.xmlStringToDate(tag.value) ?? Date.now
             case Xml2.entryTemplatesGroup:
                 self.entryTemplatesGroupUUID = UUID(base64Encoded: tag.value) ?? UUID.ZERO
             case Xml2.entryTemplatesGroupChanged:
                 self.entryTemplatesGroupChangedTime =
-                    database.xmlStringToDate(tag.value) ?? Date.now
+                    timeParser.xmlStringToDate(tag.value) ?? Date.now
             case Xml2.historyMaxItems:
                 self.historyMaxItems = Int32(tag.value) ?? -1
             case Xml2.historyMaxSize:
@@ -250,10 +251,15 @@ final class Meta2: Eraseable {
             case Xml2.lastTopVisibleGroup:
                 self.lastTopVisibleGroupUUID = UUID(base64Encoded: tag.value) ?? UUID.ZERO
             case Xml2.binaries:
-                try loadBinaries(xml: tag, streamCipher: streamCipher)
+                try loadBinaries(xml: tag, formatVersion: formatVersion, streamCipher: streamCipher)
                 Diag.verbose("Binaries loaded OK [count: \(database.binaries.count)]")
             case Xml2.customData:
-                try customData.load(xml: tag, streamCipher: streamCipher, xmlParentName: "Meta")
+                try customData.load(
+                    xml: tag,
+                    streamCipher: streamCipher,
+                    timeParser: timeParser,
+                    xmlParentName: "Meta"
+                ) 
                 Diag.verbose("Custom data loaded OK [count: \(customData.count)]")
             default:
                 Diag.error("Unexpected XML tag in Meta: \(tag.name)")
@@ -262,15 +268,15 @@ final class Meta2: Eraseable {
         }
     }
     
-    func loadCustomIcons(xml: AEXMLElement) throws {
+    func loadCustomIcons(xml: AEXMLElement, timeParser: Database2XMLTimeParser) throws {
         assert(xml.name == Xml2.customIcons)
         Diag.verbose("Loading XML: custom icons")
         for tag in xml.children {
             switch tag.name {
             case Xml2.icon:
                 let icon = CustomIcon2()
-                try icon.load(xml: tag) 
-                customIcons[icon.uuid] = icon
+                try icon.load(xml: tag, timeParser: timeParser) 
+                customIcons.append(icon)
                 Diag.verbose("Custom icon loaded OK")
             default:
                 Diag.error("Unexpected XML tag in Meta/CustomIcons: \(tag.name)")
@@ -281,10 +287,14 @@ final class Meta2: Eraseable {
         }
     }
     
-    func loadBinaries(xml: AEXMLElement, streamCipher: StreamCipher) throws {
+    func loadBinaries(
+        xml: AEXMLElement,
+        formatVersion: Database2.FormatVersion,
+        streamCipher: StreamCipher
+    ) throws {
         assert(xml.name == Xml2.binaries)
         Diag.verbose("Loading XML: meta binaries")
-        guard database.header.formatVersion == .v3 else {
+        guard formatVersion == .v3 else {
             if let tag = xml.children.first {
                 Diag.error("Unexpected XML content in V4 Meta/Binaries: \(tag.name)")
                 throw Xml2.ParsingError.unexpectedTag(actual: tag.name, expected: nil)
@@ -341,18 +351,21 @@ final class Meta2: Eraseable {
         self.recycleBinChangedTime = Date.now
     }
     
-    func toXml(streamCipher: StreamCipher) throws -> AEXMLElement {
+    func toXml(
+        streamCipher: StreamCipher,
+        formatVersion: Database2.FormatVersion,
+        timeFormatter: Database2XMLTimeFormatter
+    ) throws -> AEXMLElement {
         Diag.verbose("Generating XML: meta")
         let xmlMeta = AEXMLElement(name: Xml2.meta)
         xmlMeta.addChild(name: Xml2.generator, value: Meta2.generatorName)
         
-        let formatVersion = database.header.formatVersion
         switch formatVersion {
         case .v3:
             if let headerHash = headerHash {
                 xmlMeta.addChild(name: Xml2.headerHash, value: headerHash.base64EncodedString())
             }
-        case .v4:
+        case .v4, .v4_1:
             xmlMeta.addChild(
                 name: Xml2.settingsChanged,
                 value: settingsChangedTime.base64EncodedString())
@@ -362,19 +375,19 @@ final class Meta2: Eraseable {
             value: databaseName)
         xmlMeta.addChild(
             name: Xml2.databaseNameChanged,
-            value: database.xmlDateToString(databaseNameChangedTime))
+            value: timeFormatter.dateToXMLString(databaseNameChangedTime))
         xmlMeta.addChild(
             name: Xml2.databaseDescription,
             value: databaseDescription)
         xmlMeta.addChild(
             name: Xml2.databaseDescriptionChanged,
-            value: database.xmlDateToString(databaseDescriptionChangedTime))
+            value: timeFormatter.dateToXMLString(databaseDescriptionChangedTime))
         xmlMeta.addChild(
             name: Xml2.defaultUserName,
             value: defaultUserName)
         xmlMeta.addChild(
             name: Xml2.defaultUserNameChanged,
-            value: database.xmlDateToString(defaultUserNameChangedTime))
+            value: timeFormatter.dateToXMLString(defaultUserNameChangedTime))
         xmlMeta.addChild(
             name: Xml2.maintenanceHistoryDays,
             value: String(maintenanceHistoryDays))
@@ -383,7 +396,7 @@ final class Meta2: Eraseable {
             value: colorString)
         xmlMeta.addChild(
             name: Xml2.masterKeyChanged,
-            value: database.xmlDateToString(masterKeyChangedTime))
+            value: timeFormatter.dateToXMLString(masterKeyChangedTime))
         xmlMeta.addChild(
             name: Xml2.masterKeyChangeRec,
             value: String(masterKeyChangeRec))
@@ -399,13 +412,13 @@ final class Meta2: Eraseable {
             value: recycleBinGroupUUID.base64EncodedString())
         xmlMeta.addChild(
             name: Xml2.recycleBinChanged,
-            value: database.xmlDateToString(recycleBinChangedTime))
+            value: timeFormatter.dateToXMLString(recycleBinChangedTime))
         xmlMeta.addChild(
             name: Xml2.entryTemplatesGroup,
             value: entryTemplatesGroupUUID.base64EncodedString())
         xmlMeta.addChild(
             name: Xml2.entryTemplatesGroupChanged,
-            value: database.xmlDateToString(entryTemplatesGroupChangedTime))
+            value: timeFormatter.dateToXMLString(entryTemplatesGroupChangedTime))
         xmlMeta.addChild(
             name: Xml2.historyMaxItems,
             value: String(historyMaxItems))
@@ -419,9 +432,13 @@ final class Meta2: Eraseable {
             name: Xml2.lastTopVisibleGroup,
             value: lastTopVisibleGroupUUID.base64EncodedString())
         
-        if let xmlCustomIcons = customIconsToXml() {
+        if let xmlCustomIcons = customIconsToXml(
+            formatVersion: formatVersion,
+            timeFormatter: timeFormatter)
+        {
             xmlMeta.addChild(xmlCustomIcons)
         }
+        
         if formatVersion == .v3 {
             if let xmlBinaries = try binariesToXml(streamCipher: streamCipher)
             {
@@ -429,17 +446,22 @@ final class Meta2: Eraseable {
             }
             Diag.verbose("Binaries XML generated OK")
         }
-        xmlMeta.addChild(customData.toXml())
+        xmlMeta.addChild(customData.toXml(timeFormatter: timeFormatter))
         return xmlMeta
     }
 
-    internal func customIconsToXml() -> AEXMLElement? {
+    internal func customIconsToXml(
+        formatVersion: Database2.FormatVersion,
+        timeFormatter: Database2XMLTimeFormatter
+    ) -> AEXMLElement? {
         if customIcons.isEmpty {
             return nil
         } else {
             let xmlCustomIcons = AEXMLElement(name: Xml2.customIcons)
-            for customIcon in customIcons.values {
-                xmlCustomIcons.addChild(customIcon.toXml())
+            for customIcon in customIcons {
+                xmlCustomIcons.addChild(
+                    customIcon.toXml(formatVersion: formatVersion, timeFormatter: timeFormatter)
+                )
             }
             return xmlCustomIcons
         }
@@ -468,5 +490,13 @@ final class Meta2: Eraseable {
         masterKeyChangedTime = time
         recycleBinChangedTime = time
         entryTemplatesGroupChangedTime = time
+    }
+    
+    func addCustomIcon(_ icon: CustomIcon2) {
+        customIcons.append(icon)
+    }
+    
+    func deleteCustomIcon(uuid: UUID) {
+        customIcons.removeAll(where: { $0.uuid == uuid })
     }
 }

@@ -12,6 +12,8 @@ import LocalAuthentication
 
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
+    let helpURL = URL(string: "https://keepassium.com/faq")!
+
     var window: UIWindow?
     fileprivate var watchdog: Watchdog
     fileprivate var appCoverWindow: UIWindow?
@@ -57,6 +59,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         FileKeeper.shared.delegate = rootVC
 
         showAppCoverScreen()
+        
+        watchdog.didBecomeActive()
+        StoreReviewSuggester.registerEvent(.sessionStart)
         return true
     }
     
@@ -87,6 +92,28 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         return true
     }
+    
+    
+    override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
+        switch action {
+        case #selector(showHelp(_:)):
+            return true
+        default:
+            return super.canPerformAction(action, withSender: sender)
+        }
+    }
+    
+    @objc
+    func showHelp(_ sender: Any) {
+        UIApplication.shared.open(helpURL, options: [:], completionHandler: nil)
+    }
+
+    @available(iOS 13, *)
+    override func buildMenu(with builder: UIMenuBuilder) {
+        builder.remove(menu: .file)
+        builder.remove(menu: .edit)
+        builder.remove(menu: .format)
+    }
 }
 
 extension AppDelegate: WatchdogDelegate {
@@ -113,7 +140,7 @@ extension AppDelegate: WatchdogDelegate {
         guard appCoverWindow == nil else { return }
         
         let _appCoverWindow = UIWindow(frame: UIScreen.main.bounds)
-        _appCoverWindow.screen = UIScreen.main
+        _appCoverWindow.setScreen(UIScreen.main)
         _appCoverWindow.windowLevel = UIWindow.Level.alert
         self.appCoverWindow = _appCoverWindow
 
@@ -166,7 +193,7 @@ extension AppDelegate: WatchdogDelegate {
         passcodeInputVC.isBiometricsAllowed = canUseBiometrics
         
         let _appLockWindow = UIWindow(frame: UIScreen.main.bounds)
-        _appLockWindow.screen = UIScreen.main
+        _appLockWindow.setScreen(UIScreen.main)
         _appLockWindow.windowLevel = UIWindow.Level.alert
         UIView.performWithoutAnimation { [weak self] in
             _appLockWindow.rootViewController = passcodeInputVC
@@ -228,7 +255,7 @@ extension AppDelegate: WatchdogDelegate {
         guard biometricsBackgroundWindow == nil else { return }
         
         let window = UIWindow(frame: UIScreen.main.bounds)
-        window.screen = UIScreen.main
+        window.setScreen(UIScreen.main)
         window.windowLevel = UIWindow.Level.alert + 1 
         let coverVC = AppCoverVC.make()
         
@@ -260,6 +287,7 @@ extension AppDelegate: PasscodeInputDelegate {
             } else {
                 HapticFeedback.play(.wrongPassword)
                 sender.animateWrongPassccode()
+                StoreReviewSuggester.registerEvent(.trouble)
                 if Settings.current.isLockAllDatabasesOnFailedPasscode {
                     DatabaseSettingsManager.shared.eraseAllMasterKeys()
                     DatabaseManager.shared.closeDatabase(

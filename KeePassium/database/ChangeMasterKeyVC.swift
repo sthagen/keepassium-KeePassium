@@ -9,7 +9,8 @@
 import UIKit
 import KeePassiumLib
 
-class ChangeMasterKeyVC: UIViewController {
+class ChangeMasterKeyVC: UIViewController, DatabaseSaving {
+   
     @IBOutlet weak var keyboardAdjView: UIView!
     @IBOutlet weak var databaseNameLabel: UILabel!
     @IBOutlet weak var databaseIcon: UIImageView!
@@ -17,10 +18,15 @@ class ChangeMasterKeyVC: UIViewController {
     @IBOutlet weak var repeatPasswordField: ValidatingTextField!
     @IBOutlet weak var keyFileField: KeyFileTextField!
     @IBOutlet weak var passwordMismatchImage: UIImageView!
+    @IBOutlet weak var keyboardAdjConstraint: KeyboardLayoutConstraint!
     
     private var databaseRef: URLReference!
     private var keyFileRef: URLReference?
     private var yubiKey: YubiKey?
+    
+    internal var databaseExporterTemporaryURL: TemporaryFileURL?
+    
+    private var keyFilePickerCoordinator: KeyFilePickerCoordinator?
     
     static func make(dbRef: URLReference) -> UIViewController {
         let vc = ChangeMasterKeyVC.instantiateFromStoryboard()
@@ -28,6 +34,11 @@ class ChangeMasterKeyVC: UIViewController {
         let navVC = UINavigationController(rootViewController: vc)
         navVC.modalPresentationStyle = .formSheet
         return navVC
+    }
+    
+    deinit {
+        assert(keyFilePickerCoordinator == nil)
+        keyFilePickerCoordinator = nil
     }
     
     override func viewDidLoad() {
@@ -55,6 +66,7 @@ class ChangeMasterKeyVC: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        updateKeyboardLayoutConstraints()
         passwordField.becomeFirstResponder()
         refresh()
     }
@@ -62,6 +74,23 @@ class ChangeMasterKeyVC: UIViewController {
     func refresh() {
         let allValid = passwordField.isValid && repeatPasswordField.isValid && keyFileField.isValid
         navigationItem.rightBarButtonItem?.isEnabled = allValid
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        DispatchQueue.main.async { [weak self] in
+            self?.updateKeyboardLayoutConstraints()
+        }
+    }
+    
+    private func updateKeyboardLayoutConstraints() {
+        if let window = view.window {
+            let viewTop = view.convert(view.frame.origin, to: window).y
+            let viewHeight = view.frame.height
+            let windowHeight = window.frame.height
+            let viewBottomOffset = windowHeight - (viewTop + viewHeight)
+            keyboardAdjConstraint.viewOffset = viewBottomOffset
+        }
     }
     
     
@@ -121,14 +150,27 @@ class ChangeMasterKeyVC: UIViewController {
             },
             error: {
                 [weak self] (_ errorMessage: String) -> Void in
-                guard let _self = self else { return }
                 Diag.error("Failed to create new composite key [message: \(errorMessage)]")
-                let errorAlert = UIAlertController.make(
-                    title: LString.titleError,
-                    message: errorMessage)
-                _self.present(errorAlert, animated: true, completion: nil)
+                self?.showErrorAlert(errorMessage, title: LString.titleError)
             }
         )
+    }
+    
+    func showKeyFilePicker(at popoverAnchor: PopoverAnchor) {
+        guard keyFilePickerCoordinator == nil else {
+            assertionFailure()
+            Diag.warning("Key file picker is already shown")
+            return
+        }
+        
+        let modalRouter = NavigationRouter.createModal(style: .popover, at: popoverAnchor)
+        keyFilePickerCoordinator = KeyFilePickerCoordinator(router: modalRouter, addingMode: .import)
+        keyFilePickerCoordinator!.dismissHandler = { [weak self] coordinator in
+            self?.keyFilePickerCoordinator = nil
+        }
+        keyFilePickerCoordinator!.delegate = self
+        keyFilePickerCoordinator!.start()
+        present(modalRouter, animated: true, completion: nil)
     }
     
     
@@ -180,14 +222,14 @@ extension ChangeMasterKeyVC: UITextFieldDelegate {
         return true
     }
     
-    func textFieldDidBeginEditing(_ textField: UITextField) {
+    func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
         if textField === keyFileField {
             passwordField.becomeFirstResponder()
-            let keyFileChooserVC = ChooseKeyFileVC.make(
-                popoverSourceView: keyFileField,
-                delegate: self)
-            present(keyFileChooserVC, animated: true, completion: nil)
+            let popoverAnchor = PopoverAnchor(sourceView: keyFileField, sourceRect: keyFileField.bounds)
+            showKeyFilePicker(at: popoverAnchor)
+            return false 
         }
+        return true
     }
 }
 
@@ -221,12 +263,21 @@ extension ChangeMasterKeyVC: ValidatingTextFieldDelegate {
     }
 }
 
-extension ChangeMasterKeyVC: KeyFileChooserDelegate {
-    func onKeyFileSelected(urlRef: URLReference?) {
-        keyFileRef = urlRef
-        DatabaseSettingsManager.shared.updateSettings(for: databaseRef) { (dbSettings) in
-            dbSettings.maybeSetAssociatedKeyFile(keyFileRef)
+
+
+extension ChangeMasterKeyVC: KeyFilePickerCoordinatorDelegate {
+    func didPickKeyFile(in coordinator: KeyFilePickerCoordinator, keyFile: URLReference?) {
+        setKeyFile(keyFile)
+    }
+    
+    func didRemoveOrDeleteKeyFile(in coordinator: KeyFilePickerCoordinator, keyFile: URLReference) {
+        if self.keyFileRef == keyFile {
+            setKeyFile(nil)
         }
+    }
+
+    func setKeyFile(_ urlRef: URLReference?) {
+        self.keyFileRef = urlRef
         
         guard let keyFileRef = urlRef else {
             keyFileField.text = ""
@@ -254,9 +305,6 @@ extension ChangeMasterKeyVC: HardwareKeyPickerDelegate {
         self.yubiKey = yubiKey
         keyFileField.isYubiKeyActive = (yubiKey != nil)
 
-        DatabaseSettingsManager.shared.updateSettings(for: databaseRef) { (dbSettings) in
-            dbSettings.maybeSetAssociatedYubiKey(yubiKey)
-        }
         if let _yubiKey = yubiKey {
             Diag.info("Hardware key selected [key: \(_yubiKey)]")
         } else {
@@ -279,7 +327,7 @@ extension ChangeMasterKeyVC: DatabaseManagerObserver {
             let alert = UIAlertController.make(
                 title: LString.databaseStatusSavingDone,
                 message: LString.masterKeySuccessfullyChanged,
-                cancelButtonTitle: LString.actionOK)
+                dismissButtonTitle: LString.actionOK)
             parentVC?.present(alert, animated: true, completion: nil)
         })
     }
@@ -296,13 +344,17 @@ extension ChangeMasterKeyVC: DatabaseManagerObserver {
     
     func databaseManager(
         database urlRef: URLReference,
-        savingError message: String,
-        reason: String?)
+        savingError error: Error,
+        data: ByteArray?)
     {
-        let errorAlert = UIAlertController.make(title: message, message: reason)
-        present(errorAlert, animated: true, completion: nil)
-        
+        showDatabaseSavingError(
+            error,
+            fileName: urlRef.visibleFileName,
+            diagnosticsHandler: nil,
+            exportableData: data,
+            parent: self)
         DatabaseManager.shared.removeObserver(self)
         hideProgressOverlay()
     }
+    
 }

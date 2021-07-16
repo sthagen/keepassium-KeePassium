@@ -9,7 +9,6 @@
 import KeePassiumLib
 
 protocol HelpViewerDelegate: class {
-    func didPressCancel(in viewController: HelpViewerVC)
     func didPressShare(at popoverAnchor: PopoverAnchor, in viewController: HelpViewerVC)
 }
 
@@ -22,6 +21,7 @@ class HelpViewerVC: UIViewController {
             refresh()
         }
     }
+    private var contentSizeObservation: NSKeyValueObservation?
     
     
     public static func create() -> HelpViewerVC {
@@ -38,7 +38,15 @@ class HelpViewerVC: UIViewController {
         bodyTextView.textContainerInset.top = 16
         bodyTextView.textContainerInset.left = 8
         bodyTextView.textContainerInset.right = 8
-
+        
+        bodyTextView.linkTextAttributes = [
+            NSAttributedString.Key.foregroundColor: UIColor.actionTint
+        ]
+        
+        contentSizeObservation = bodyTextView.observe(\.contentSize, options: [.new]) {
+            [weak self] (textView, change) in
+            self?.preferredContentSize = textView.contentSize
+        }
         refresh()
     }
     
@@ -55,10 +63,6 @@ class HelpViewerVC: UIViewController {
             return
         }
         bodyTextView.attributedText = content.rendered()
-    }
-
-    @IBAction func didPressCancel(_ sender: Any) {
-        delegate?.didPressCancel(in: self)
     }
     
     @objc func didPressShareButton(_ sender: UIBarButtonItem) {

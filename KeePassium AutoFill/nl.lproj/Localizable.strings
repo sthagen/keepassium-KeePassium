@@ -10,11 +10,26 @@
 /* Action/button to switch from TouchID/FaceID prompt to manual input of the AppLock passcode. */
 "[AppLock/cancelBiometricAuth] Use Passcode" = "Gebruik toegangscode";
 
+/* Action/button to modify the existing AppLock passcode. */
+"[AppLock/changePasscode]" = "Toegangscode wijzigen";
+
+/* Call to action in the passcode input dialog. */
+"[AppLock/EnterPasscode/callToAction]" = "Ontgrendel KeePassium";
+
 /* Action: change keyboard type to enter alphanumeric passphrases */
 "[AppLock/Passcode/KeyboardType/switchAction] 123→ABC" = "123→ABC";
 
 /* Action: change keyboard type to enter PIN numbers */
 "[AppLock/Passcode/KeyboardType/switchAction] ABC→123" = "ABC→123";
+
+/* Notification that the modified AppLock passcode has been saved. */
+"[AppLock/passcodeUpdated/title]" = "Toegangscode bijgewerkt.";
+
+/* Action/button to save new or edited AppLock passcode. */
+"[AppLock/savePasscode]" = "Toegangscode opslaan";
+
+/* Call to action in the passcode input dialog. */
+"[AppLock/SetupPasscode/callToAction]" = "Bescherm KeePassium tegen ongeautoriseerde toegang";
 
 /* Message shown when AutoFill cannot automatically open the main app for upgrading to a premium version. */
 "[AutoFill/Premium/Upgrade/Manual/text] To upgrade, please manually open KeePassium from your home screen." = "Open KeePassium handmatig vanop je beginscherm om te upgraden.";
@@ -49,6 +64,9 @@
 /* Title of a form for creating a database */
 "[Database/Create/title] Create Database" = "Maak databank";
 
+/* Action: add/import an image as a custom icon */
+"[Database/CustomIcon/add]" = "Add Custom Icon";
+
 /* Title of an error message */
 "[Database/Delete] Failed to delete database file" = "Kan databankbestand niet verwijderen";
 
@@ -60,6 +78,12 @@
 
 /* Notification after changing database master key */
 "[Database/MasterKey/changed] Master key successfully changed" = "Hoofdsleutel is gewijzigd";
+
+/* A warning shown when changing database password. Is preceded with `Remember your database password`. */
+"[Database/MasterKey/RememberYourPassword/text]" = "Als u het ooit vergeet, hebt u geen toegang meer tot uw gegevens. Er is geen optie om het wachtwoord te resetten.";
+
+/* Imperative/recommendation: title of a warning when changing database password. */
+"[Database/MasterKey/RememberYourPassword/title]" = "Onthoud uw databasewachtwoord";
 
 /* Action/button */
 "[Database/Open/action] Open Database" = "Open databank";
@@ -153,6 +177,9 @@
 
 /* Action/button to cancel whatever is going on */
 "[Generic] Cancel" = "Annuleer";
+
+/* Action/button to write an email to support */
+"[Generic] Contact Support" = "Neem contact op met ons ondersteuningsteam";
 
 /* Action/button to write an email to support */
 "[Generic] Contact Us" = "Neem contact op";
@@ -272,7 +299,7 @@
 "[Group/New/defaultName] New Group" = "Nieuwe groep";
 
 /* A notification that hardware keys (e.g. YubiKey) cannot be used in AutoFill (the OS does not allow the AutoFill to use NFC/MFI). */
-"[HardwareKey/AutoFill/NotAvailable] Hardware keys are not available in AutoFill." = "Hardwarematige sleutels zijn niet beschikbaar in automatisch aanvullen.";
+"[HardwareKey/AutoFill/NotAvailable] Hardware keys are not available in AutoFill." = "Hardwarematige sleutels zijn niet beschikbaar in AutoFill.";
 
 /* A notification that NFC (Near Field Communication) interface is not supported by the current iOS version. */
 "[HardwareKey/NFC/OS too old]" = "NFC vereist iOS 13 of hoger.";
@@ -286,11 +313,26 @@
 /* Generic title of in-app help article */
 "[Help Viewer/title]" = "Hulp";
 
+/* Title of a list with custom (user-imported) icons for groups and entries */
+"[ItemIconPicker/CustomIcons]" = "Custom Icons";
+
+/* Title of a list with standard/default icons for groups and entries */
+"[ItemIconPicker/StandardIcons]" = "Standard Icons";
+
 /* Message to confirm deletion of a key file. */
 "[KeyFile/Delete/Confirm/text] Delete key file?\n Make sure you have a backup." = "Verwijder sleutelbestand?\n Zorg ervoor dat je een back-up hebt.";
 
 /* Message to confirm removal of a key file from the app. (This keeps the file, but removes its reference from the app.) */
 "[KeyFile/Remove/Confirm/text] Remove key file from the list?\n The file will remain intact and you can add it again later." = "Wil het sleutelbestand verwijderen van de lijst?\n De sleutel blijft bewaard en je kunt deze later weer toevoegen.";
+
+/* Error shown when scanned QR code cannot be used for OTP */
+"[OTP/Scan/InvalidData]" = "This QR code is not suitable for OTP setup.";
+
+/* Message to confirm user intentions */
+"[OTP/Scan/OverwriteWarning]" = "One-time password is already configured for this entry. Do you want to overwrite it?";
+
+/* Call for action. Acronym `OTP` should not be translated. */
+"[OTP/Setup]" = "Setup one-time password (OTP)";
 
 /* List of premium benefits/advantages */
 "[Premium/Benefits/Negative/header] " = "Wat je mist";

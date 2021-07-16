@@ -76,12 +76,16 @@ public class Group1: Group {
         return copy
     }
     
-    public func apply(to target: Group1, makeNewUUID: Bool) {
+    override public func apply(to target: Group, makeNewUUID: Bool) {
         super.apply(to: target, makeNewUUID: makeNewUUID)
-        
-        target.id = id
-        target.level = level
-        target.flags = flags
+        guard let targetGroup1 = target as? Group1 else {
+            Diag.warning("Tried to apply group state to unexpected group class")
+            assertionFailure()
+            return
+        }
+        targetGroup1.id = id
+        targetGroup1.level = level
+        targetGroup1.flags = flags
     }
     
     override public func add(group: Group) {
@@ -101,13 +105,11 @@ public class Group1: Group {
         (entry as! Entry1).groupID = -1
     }
     
-    override public func createEntry() -> Entry {
+    override public func createEntry(detached: Bool = false) -> Entry {
         let newEntry = Entry1(database: database)
         newEntry.uuid = UUID()
         
-        if self.iconID == Group.defaultIconID {
-            newEntry.iconID = Entry.defaultIconID
-        } else {
+        if self.iconID != Group.defaultIconID && self.iconID != Group.defaultOpenIconID {
             newEntry.iconID = self.iconID
         }
         
@@ -119,11 +121,13 @@ public class Group1: Group {
         newEntry.expiryTime = Date.kp1Never
         
         newEntry.groupID = self.id
-        self.add(entry: newEntry)
+        if !detached {
+            self.add(entry: newEntry)
+        }
         return newEntry
     }
     
-    override public func createGroup() -> Group {
+    override public func createGroup(detached: Bool = false) -> Group {
         let newGroup = Group1(database: database)
         newGroup.uuid = UUID()
         newGroup.flags = 0
@@ -139,7 +143,9 @@ public class Group1: Group {
         newGroup.expiryTime = Date.kp1Never
         
         newGroup.level = self.level + 1
-        self.add(group: newGroup)
+        if !detached {
+            self.add(group: newGroup)
+        }
         return newGroup
     }
     

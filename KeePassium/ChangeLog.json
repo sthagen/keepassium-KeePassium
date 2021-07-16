@@ -1,6 +1,168 @@
 {
     "sections": [
         {
+            "version": "1.24",
+            "releaseDate": "2021-05-06T00:00:00Z",
+            "items": [
+                {
+                    "title": "🧩 Added: Possibility to add and select custom icons for groups and entries (closes #84) [thanks, Igor]",
+                    "type": 1
+                },
+                {
+                    "title": "🧩 Added: Support for KDBX 4.1 format [thanks, Dominik]",
+                    "type": 1
+                },
+                {
+                    "title": "🧩 Added: Korean translation [thanks, somni]",
+                    "type": 1
+                },
+                {
+                    "title": "🧩 Added: Slovak translation [thanks, onegin1]",
+                    "type": 1
+                },
+                {
+                    "title": "🧩 Added: Thai translation [thanks, poonnawit]",
+                    "type": 1
+                },
+                {
+                    "title": "🧩 Added: Turkish translation [thanks, ofmelnik]",
+                    "type": 1
+                },
+                {
+                    "title": "🛠 Improved: Visibility of black custom icons in dark mode [thanks, Jon]",
+                    "type": 1
+                },
+                {
+                    "title": "🛠 Improved: Updated all translations [thanks, everyone]",
+                    "type": 1
+                },
+                {
+                    "title": "🛠 Improved: Tech debt: internal improvements to streamline further development",
+                    "type": 1
+                },
+                {
+                    "title": "🐞 Fixed: Editor changes were not detected in some rare cases",
+                    "type": 1
+                },
+                {
+                    "title": "🐞 Fixed: In .kdb databases, deleted Backup group would get broken until DB reload",
+                    "type": 1
+                },
+                {
+                    "title": "🐞 Fixed: Updating associated key components only after successful DB save [thanks, Doug]",
+                    "type": 1
+                },
+                {
+                    "title": "🐞 Fixed: \"Hide Passwords\" switch in Appearance settings did not work [thanks, Greg]",
+                    "type": 1
+                },
+                {
+                    "title": "🐞 Fixed: Minor UI issues",
+                    "type": 1
+                }
+            ]
+        },
+        {
+            "version": "1.23",
+            "releaseDate": "2021-03-29T00:00:00Z",
+            "items": [
+                {
+                    "title": "🛠 Refined: Added \"1 week\" database timeout option [thanks, as]",
+                    "type": 1
+                },
+                {
+                    "title": "🐞 Fixed: Processing of OTP parameters defined as otpauth URL [thanks, Marcel]",
+                    "type": 1
+                },
+                {
+                    "title": "🐞 Fixed: VoiceOver will announce toast notifications",
+                    "type": 1
+                }
+            ]
+        },
+        {
+            "version": "1.22",
+            "releaseDate": "2021-03-19T00:00:00Z",
+            "items": [
+                {
+                    "title": "🧩 Added: Setup one-time passwords (OTP) with QR codes [thanks, Igor]",
+                    "type": 1
+                },
+                {
+                    "title": "🧩 Added: Appearance settings page",
+                    "type": 1
+                },
+                {
+                    "title": "🧩 Added: Icons from KeePass (Nuvola) and KeePassXC (Icons8)",
+                    "type": 1
+                },
+                {
+                    "title": "🧩 Added: \"Copy to Clipboard\" button to diagnostic viewer [thanks, Eugene]",
+                    "type": 1
+                },
+                {
+                    "title": "🧩 Added: \"Change Passcode\" button in settings",
+                    "type": 1
+                },
+                {
+                    "title": "🛠 Refined: Better-looking context menus (iOS 13+)",
+                    "type": 1
+                },
+                {
+                    "title": "🛠 Refined: Text size moved from zoom gesture to Appearance settings (fixes #132)",
+                    "type": 1
+                },
+                {
+                    "title": "🛠 Refined: Better handling of database saving errors",
+                    "type": 1
+                },
+                {
+                    "title": "🛠 Refined: Less important messages are shown as subtle popups (toasts)",
+                    "type": 1
+                },
+                {
+                    "title": "🛠 Refined: Pressing Enter in AutoFill search will select the first result",
+                    "type": 1
+                },
+                {
+                    "title": "🛠 Refined: More balanced App Store review prompts",
+                    "type": 1
+                },
+                {
+                    "title": "🛠 Refined: Various improvements for macOS version (#82)",
+                    "type": 1
+                },
+                {
+                    "title": "🛠 Refined: Updated all translations [thanks, everyone]",
+                    "type": 1
+                },
+                {
+                    "title": "🐞 Fixed: Database lock timeout was not always respected on iOS 14.4 [thanks, Don and Marinus]",
+                    "type": 1
+                },
+                {
+                    "title": "🐞 Fixed: Crash on iOS 14.4 when cancelling entry creation [thanks, Sandu]",
+                    "type": 1
+                },
+                {
+                    "title": "🐞 Fixed: Crash on iPad when there is no default email client [thanks, Florian]",
+                    "type": 1
+                },
+                {
+                    "title": "🐞 Fixed: Filter out invalid low-order ASCII characters from pasted/loaded data (fixes #148) [thanks, Mirko]",
+                    "type": 1
+                },
+                {
+                    "title": "🐞 Fixed: macOS: AutoFill disappeared immediately on show (fixes #147) [thanks, everyone]",
+                    "type": 1
+                },
+                {
+                    "title": "🐞 Fixed: macOS: minor UI issues here and there",
+                    "type": 1
+                }
+            ]
+        },
+        {
             "version": "1.21",
             "releaseDate": "2021-01-30T00:00:00Z",
             "items": [

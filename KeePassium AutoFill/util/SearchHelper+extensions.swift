@@ -68,7 +68,7 @@ extension SearchHelper {
                 if let group2 = entry.parent as? Group2 {
                     return group2.isSearchingEnabled ?? true
                 } else {
-                    return true
+                    return !entry.isDeleted
                 }
             }
             .map { (entry) in
@@ -95,7 +95,7 @@ extension SearchHelper {
                 if let group2 = entry.parent as? Group2 {
                     return group2.isSearchingEnabled ?? true
                 } else {
-                    return true
+                    return !entry.isDeleted
                 }
             }
             .map { (entry) in
@@ -259,11 +259,11 @@ extension SearchResults {
         self.forEach{ groupedEntries in
             let filteredEntries = groupedEntries.entries.filter {
                 guard let entry2 = $0.entry as? Entry2,
-                    let valueString = entry2.customData[excludeFromAutoFillCustomDataKey] else
+                    let valueItem = entry2.customData[excludeFromAutoFillCustomDataKey] else
                 {
                     return true
                 }
-                let isHidden = Bool(string: valueString)
+                let isHidden = Bool(string: valueItem.value)
                 return !isHidden
             }
             if filteredEntries.count > 0 {

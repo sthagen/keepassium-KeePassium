@@ -35,7 +35,7 @@ class AppLockSetupCell: UITableViewCell {
 }
 
 
-class ChooseDatabaseVC: UITableViewController, DynamicFileList, Refreshable {
+class ChooseDatabaseVC: TableViewControllerWithContextActions, DynamicFileList, Refreshable {
     
     private enum CellID: String {
         case fileItem = "FileItemCell"
@@ -91,16 +91,12 @@ class ChooseDatabaseVC: UITableViewController, DynamicFileList, Refreshable {
         fileKeeperNotifications = FileKeeperNotifications(observer: self)
         settingsNotifications = SettingsNotifications(observer: self)
         
-        let refreshControl = UIRefreshControl()
-        refreshControl.addTarget(self, action: #selector(didPullToRefresh), for: .valueChanged)
-        self.refreshControl = refreshControl
-        
+        if !ProcessInfo.isRunningOnMac {
+            let refreshControl = UIRefreshControl()
+            refreshControl.addTarget(self, action: #selector(didPullToRefresh), for: .valueChanged)
+            self.refreshControl = refreshControl
+        }
         clearsSelectionOnViewWillAppear = false
-        
-        let longPressGestureRecognizer = UILongPressGestureRecognizer(
-            target: self,
-            action: #selector(didLongPressTableView))
-        tableView.addGestureRecognizer(longPressGestureRecognizer)
         
         updateDetailView(onlyInTwoPaneMode: false)
     }
@@ -248,50 +244,6 @@ class ChooseDatabaseVC: UITableViewController, DynamicFileList, Refreshable {
     }
     
     
-    private func getDeleteActionName(for urlRef: URLReference) -> String {
-        if urlRef.location == .external || urlRef.hasError {
-            return LString.actionRemoveFile
-        } else {
-            return LString.actionDeleteFile
-        }
-    }
-    
-    private func showActions(for indexPath: IndexPath) {
-        let cellType = getCellType(for: indexPath)
-        guard cellType == .fileItem else { return }
-        
-        let urlRef = databaseRefs[indexPath.row]
-        let exportAction = UIAlertAction(
-            title: LString.actionExport,
-            style: .default,
-            handler: { [weak self] alertAction in
-                self?.didPressExportDatabase(at: indexPath)
-            }
-        )
-        let deleteAction = UIAlertAction(
-            title: getDeleteActionName(for: urlRef),
-            style: .destructive,
-            handler: { [weak self] alertAction in
-                self?.didPressDeleteDatabase(at: indexPath)
-            }
-        )
-        let cancelAction = UIAlertAction(title: LString.actionCancel, style: .cancel, handler: nil)
-        
-        let menu = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-        menu.addAction(exportAction)
-        menu.addAction(deleteAction)
-        menu.addAction(cancelAction)
-        
-        let popoverAnchor = PopoverAnchor(tableView: tableView, at: indexPath)
-        if let popover = menu.popoverPresentationController {
-            popoverAnchor.apply(to: popover)
-            popover.permittedArrowDirections = [.left]
-        }
-        present(menu, animated: true)
-    }
-    
-    
-    
     @IBAction func didPressSortButton(_ sender: Any) {
         let vc = SettingsFileSortingVC.make(popoverFromBar: sender as? UIBarButtonItem)
         present(vc, animated: true, completion: nil)
@@ -317,15 +269,6 @@ class ChooseDatabaseVC: UITableViewController, DynamicFileList, Refreshable {
         present(passcodeInputVC, animated: true, completion: nil)
     }
     
-    @objc func didLongPressTableView(_ gestureRecognizer: UILongPressGestureRecognizer) {
-        let point = gestureRecognizer.location(in: tableView)
-        guard gestureRecognizer.state == .began,
-            let indexPath = tableView.indexPathForRow(at: point),
-            tableView(tableView, canEditRowAt: indexPath)
-            else { return }
-        showActions(for: indexPath)
-    }
-
     @IBAction func didPressAddDatabase(_ sender: Any) {
         let existingNonBackupDatabaseRefs = databaseRefs.filter {
             ($0.location != .internalBackup) && 
@@ -377,14 +320,16 @@ class ChooseDatabaseVC: UITableViewController, DynamicFileList, Refreshable {
     
     var databaseCreatorCoordinator: DatabaseCreatorCoordinator?
     func didPressCreateDatabase() {
-        let navVC = UINavigationController()
-        navVC.modalPresentationStyle = .formSheet
-        
         assert(databaseCreatorCoordinator == nil)
-        databaseCreatorCoordinator = DatabaseCreatorCoordinator(navigationController: navVC)
+        
+        let modalRouter = NavigationRouter.createModal(style: .formSheet)
+        databaseCreatorCoordinator = DatabaseCreatorCoordinator(router: modalRouter)
         databaseCreatorCoordinator!.delegate = self
+        databaseCreatorCoordinator?.dismissHandler = { [weak self] coordinator in
+            self?.databaseCreatorCoordinator = nil
+        }
         databaseCreatorCoordinator!.start()
-        present(navVC, animated: true)
+        present(modalRouter, animated: true, completion: nil)
     }
 
     func didPressExportDatabase(at indexPath: IndexPath) {
@@ -394,6 +339,8 @@ class ChooseDatabaseVC: UITableViewController, DynamicFileList, Refreshable {
     }
         
     func didPressDeleteDatabase(at indexPath: IndexPath) {
+        StoreReviewSuggester.registerEvent(.trouble)
+        
         let urlRef = databaseRefs[indexPath.row]
         if urlRef.hasError {
             removeDatabaseFile(urlRef: urlRef)
@@ -427,7 +374,7 @@ class ChooseDatabaseVC: UITableViewController, DynamicFileList, Refreshable {
         let confirmationAlert = UIAlertController.make(
             title: urlRef.visibleFileName,
             message: message,
-            cancelButtonTitle: LString.actionCancel)
+            dismissButtonTitle: LString.actionCancel)
         confirmationAlert.addAction(destructiveAction)
         present(confirmationAlert, animated: true, completion: nil)
     }
@@ -570,48 +517,45 @@ class ChooseDatabaseVC: UITableViewController, DynamicFileList, Refreshable {
         let popoverAnchor = PopoverAnchor(tableView: tableView, at: indexPath)
         let databaseInfoVC = FileInfoVC.make(urlRef: urlRef, fileType: .database, at: popoverAnchor)
         databaseInfoVC.canExport = true
-        databaseInfoVC.onDismiss = { [weak self, weak databaseInfoVC] in
+        databaseInfoVC.didDeleteCallback = { [weak self, weak databaseInfoVC] in
             self?.refresh()
             databaseInfoVC?.dismiss(animated: true, completion: nil)
         }
         present(databaseInfoVC, animated: true, completion: nil)
     }
     
-    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        let canEdit = getCellType(for: indexPath) == .fileItem
-        return canEdit
-    }
-    
-    override func tableView(
-        _ tableView: UITableView,
-        editActionsForRowAt indexPath: IndexPath
-        ) -> [UITableViewRowAction]?
-    {
-        guard indexPath.row < databaseRefs.count else {
-            return nil
-        }
-        let shareAction = UITableViewRowAction(
-            style: .default,
-            title: LString.actionExport)
-        {
-            [unowned self] (_,_) in
-            self.setEditing(false, animated: true)
-            self.didPressExportDatabase(at: indexPath)
-        }
-        shareAction.backgroundColor = UIColor.actionTint
-        
+       
+    override func getContextActionsForRow(
+        at indexPath: IndexPath,
+        forSwipe: Bool
+    ) -> [ContextualAction] {
+        let cellType = getCellType(for: indexPath)
+        let isEditableRow = cellType == .fileItem
+        guard isEditableRow else { return [] }
+
         let urlRef = databaseRefs[indexPath.row]
-        let deleteAction = UITableViewRowAction(
-            style: .destructive,
-            title: getDeleteActionName(for: urlRef))
-        {
-            [unowned self] (_,_) in
-            self.setEditing(false, animated: true)
-            self.didPressDeleteDatabase(at: indexPath)
-        }
-        deleteAction.backgroundColor = UIColor.destructiveTint
+        let exportAction = ContextualAction(
+            title: LString.actionExport,
+            imageName: .squareAndArrowUp,
+            style: .default,
+            color: UIColor.actionTint,
+            handler: { [weak self, indexPath] in
+                self?.didPressExportDatabase(at: indexPath)
+            }
+        )
         
-        return [deleteAction, shareAction]
+        let destructiveActionTitle = DestructiveFileAction.get(for: urlRef.location).title
+        let destructiveAction = ContextualAction(
+            title: destructiveActionTitle,
+            imageName: .trash,
+            style: .destructive,
+            color: UIColor.destructiveTint,
+            handler: { [weak self, indexPath] in
+                self?.didPressDeleteDatabase(at: indexPath)
+            }
+        )
+        
+        return [exportAction, destructiveAction]
     }
 }
 

@@ -42,12 +42,20 @@ class UnlockDatabaseVC: UIViewController, Refreshable {
     var isAutoUnlockEnabled = true
     fileprivate var isAutomaticUnlock = false
 
+    private var diagnosticsViewerCoordinator: DiagnosticsViewerCoordinator?
+    private var keyFilePickerCoordinator: KeyFilePickerCoordinator?
+    
     private var isViewAppeared = false
     
     static func make(databaseRef: URLReference) -> UnlockDatabaseVC {
         let vc = UnlockDatabaseVC.instantiateFromStoryboard()
         vc.databaseRef = databaseRef
         return vc
+    }
+    
+    deinit {
+        diagnosticsViewerCoordinator = nil
+        keyFilePickerCoordinator = nil
     }
     
     override func viewDidLoad() {
@@ -176,7 +184,7 @@ class UnlockDatabaseVC: UIViewController, Refreshable {
             if let availableKeyFileRef = associatedKeyFileRef
                 .find(in: allAvailableKeyFiles, fallbackToNamesake: true)
             {
-                setKeyFile(urlRef: availableKeyFileRef)
+                setKeyFile(availableKeyFileRef)
             }
         }
         if let associatedYubiKey = dbSettings?.associatedYubiKey {
@@ -274,6 +282,7 @@ class UnlockDatabaseVC: UIViewController, Refreshable {
                 }
             }
         )
+        StoreReviewSuggester.registerEvent(.trouble)
     }
     
     func hideErrorMessage(animated: Bool) {
@@ -327,6 +336,17 @@ class UnlockDatabaseVC: UIViewController, Refreshable {
             watchdogTimeoutLabel.alpha = 0.0
         }
     }
+    
+    func showDiagnostics() {
+        assert(diagnosticsViewerCoordinator == nil)
+        let modalRouter = NavigationRouter.createModal(style: .formSheet)
+        diagnosticsViewerCoordinator = DiagnosticsViewerCoordinator(router: modalRouter)
+        diagnosticsViewerCoordinator!.dismissHandler = { [weak self] coordinator in
+            self?.diagnosticsViewerCoordinator = nil
+        }
+        diagnosticsViewerCoordinator!.start()
+        present(modalRouter, animated: true, completion: nil)
+    }
 
     private var progressOverlay: ProgressOverlay?
     fileprivate func showProgressOverlay(animated: Bool) {
@@ -337,9 +357,7 @@ class UnlockDatabaseVC: UIViewController, Refreshable {
             animated: animated)
         progressOverlay?.isCancellable = true
         progressOverlay?.unresponsiveCancelHandler = { [weak self] in
-            guard let self = self else { return }
-            let diagInfoVC = ViewDiagnosticsVC.make()
-            self.present(diagInfoVC, animated: true, completion: nil)
+            self?.showDiagnostics()
         }
         
         if let leftNavController = splitViewController?.viewControllers.first as? UINavigationController,
@@ -379,14 +397,30 @@ class UnlockDatabaseVC: UIViewController, Refreshable {
     func selectKeyFileAction(_ sender: Any) {
         Diag.verbose("Selecting key file")
         hideErrorMessage(animated: true)
-        let keyFileChooser = ChooseKeyFileVC.make(popoverSourceView: keyFileField, delegate: self)
-        present(keyFileChooser, animated: true, completion: nil)
+
+        guard keyFilePickerCoordinator == nil else {
+            assertionFailure()
+            Diag.debug("Key file picker already shown")
+            return
+        }
+
+        let popoverAnchor = PopoverAnchor(
+            sourceView: keyFileField,
+            sourceRect: keyFileField.bounds
+        )
+        let modalRouter = NavigationRouter.createModal(style: .pageSheet, at: popoverAnchor)
+        keyFilePickerCoordinator = KeyFilePickerCoordinator(router: modalRouter, addingMode: .import)
+        keyFilePickerCoordinator!.dismissHandler = { [weak self] coordinator in
+            self?.keyFilePickerCoordinator = nil
+        }
+        keyFilePickerCoordinator!.delegate = self
+        keyFilePickerCoordinator!.start()
+        present(modalRouter, animated: true, completion: nil)
     }
     
     
     @IBAction func didPressErrorDetails(_ sender: Any) {
-        let diagInfoVC = ViewDiagnosticsVC.make()
-        present(diagInfoVC, animated: true, completion: nil)
+        showDiagnostics()
     }
     
     @IBAction func didPressUnlock(_ sender: Any) {
@@ -498,9 +532,20 @@ extension UnlockDatabaseVC: HardwareKeyPickerDelegate {
     }
 }
 
-extension UnlockDatabaseVC: KeyFileChooserDelegate {
-    func setKeyFile(urlRef: URLReference?) {
-        self.keyFileRef = urlRef
+
+extension UnlockDatabaseVC: KeyFilePickerCoordinatorDelegate {
+    func didRemoveOrDeleteKeyFile(in coordinator: KeyFilePickerCoordinator, keyFile: URLReference) {
+        if self.keyFileRef == keyFile {
+            setKeyFile(nil)
+        }
+    }
+    
+    func didPickKeyFile(in coordinator: KeyFilePickerCoordinator, keyFile: URLReference?) {
+        setKeyFile(keyFile)
+    }
+    
+    func setKeyFile(_ fileRef: URLReference?) {
+        self.keyFileRef = fileRef
         DatabaseSettingsManager.shared.updateSettings(for: databaseRef) { (dbSettings) in
             dbSettings.maybeSetAssociatedKeyFile(keyFileRef)
         }
@@ -524,10 +569,6 @@ extension UnlockDatabaseVC: KeyFileChooserDelegate {
             Diag.info("Key file set successfully")
             keyFileField.text = keyFileRef.visibleFileName
         }
-    }
-    
-    func onKeyFileSelected(urlRef: URLReference?) {
-        setKeyFile(urlRef: urlRef)
     }
 }
 
@@ -556,9 +597,6 @@ extension UnlockDatabaseVC: UITextFieldDelegate {
             return false
         }
         return true
-    }
-    
-    func textFieldDidBeginEditing(_ textField: UITextField) {
     }
 }
 

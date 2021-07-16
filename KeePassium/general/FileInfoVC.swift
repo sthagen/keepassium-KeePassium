@@ -54,7 +54,7 @@ class FileInfoVC: UITableViewController {
     @IBOutlet weak var exportButton: UIButton!
     @IBOutlet weak var deleteButton: UIButton!
     
-    public var onDismiss: (()->())?
+    public var didDeleteCallback: (()->Void)?
     
     public var canExport: Bool = false {
         didSet {
@@ -126,6 +126,8 @@ class FileInfoVC: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        tableView.sectionFooterHeight = 0
         
         let refreshControl = UIRefreshControl()
         refreshControl.addTarget(self, action: #selector(refresh), for: .valueChanged)
@@ -311,20 +313,9 @@ class FileInfoVC: UITableViewController {
     
     override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         if section == 0 {
-            return 0.1
-        } else {
-            return super.tableView(tableView, heightForHeaderInSection: section)
+            return CGFloat.leastNonzeroMagnitude
         }
-    }
-    
-    override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        if section == 0 && tableView.numberOfSections == 1 {
-            return 0.1
-        }
-        if section == 1 {
-            return 0.1
-        }
-        return super.tableView(tableView, heightForHeaderInSection: section)
+        return UITableView.automaticDimension
     }
     
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
@@ -381,7 +372,7 @@ class FileInfoVC: UITableViewController {
             parent: self,
             completion: { [weak self] (success) in
                 if success {
-                    self?.onDismiss?()
+                    self?.didDeleteCallback?()
                 } else {
                 }
             }

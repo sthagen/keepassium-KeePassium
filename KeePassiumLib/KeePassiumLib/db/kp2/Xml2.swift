@@ -129,6 +129,7 @@ internal struct Xml2 {
     static let value = "Value"
     static let protected = "Protected"
     static let ref = "Ref"
+    static let qualityCheck = "QualityCheck"
     
     static let isExpanded = "IsExpanded"
     static let defaultAutoTypeSequence = "DefaultAutoTypeSequence" 
@@ -137,6 +138,7 @@ internal struct Xml2 {
     static let lastTopVisibleEntry = "LastTopVisibleEntry"
     static let usageCount = "UsageCount"
     static let locationChanged = "LocationChanged"
+    static let previousParentGroup = "PreviousParentGroup"
     static let foregroundColor = "ForegroundColor"
     static let backgroundColor = "BackgroundColor"
     static let overrideURL = "OverrideURL"

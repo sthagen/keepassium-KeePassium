@@ -2,19 +2,19 @@
 name: Refinement request
 about: Could something work/look better? Suggest it here!
 title: ''
-labels: refinment
+labels: refinement
 assignees: ''
 
 ---
 
-**Is there something that can be improved? Please describe.**
+**What can be improved?**
 A clear and concise description of what currently is lacking. Ex. I'm always frustrated when [...]
 
-**Describe the solution you'd like**
-A clear and concise description of what you want to happen.
+**The solution you'd like**
+How the shortcoming can be improved.
 
-**Describe alternatives you've considered**
-A clear and concise description of any alternative solutions you've considered.
+**Alternatives you've considered**
+Are there any alternative solutions you've considered?
 
 **Additional context**
 Add any other context or screenshots about the refinement request here.

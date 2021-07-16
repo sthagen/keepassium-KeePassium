@@ -13,7 +13,8 @@ import LocalAuthentication
 
 class MainCoordinator: NSObject, Coordinator {
     var childCoordinators = [Coordinator]()
-
+    var dismissHandler: CoordinatorDismissHandler? 
+    
     unowned var rootController: CredentialProviderViewController
     var pageController: UIPageViewController
     var navigationController: UINavigationController
@@ -21,8 +22,8 @@ class MainCoordinator: NSObject, Coordinator {
     var serviceIdentifiers = [ASCredentialServiceIdentifier]()
     fileprivate var isLoadingUsingStoredDatabaseKey = false
     
+    fileprivate weak var databaseUnlockerVC: DatabaseUnlockerVC?
     fileprivate weak var addDatabasePicker: UIDocumentPickerViewController?
-    fileprivate weak var addKeyFilePicker: UIDocumentPickerViewController?
     
     fileprivate var watchdog: Watchdog
     fileprivate var passcodeInputController: PasscodeInputVC?
@@ -83,11 +84,24 @@ class MainCoordinator: NSObject, Coordinator {
         premiumManager.reloadReceipt()
         premiumManager.usageMonitor.startInterval()
 
-        rootController.present(pageController, animated: false, completion: nil)
+        let pageView = pageController.view!
+        rootController.view.addSubview(pageView)
+        pageView.translatesAutoresizingMaskIntoConstraints = false
+        rootController.view.addConstraints([
+            pageView.leadingAnchor.constraint(equalTo: pageView.superview!.leadingAnchor),
+            pageView.trailingAnchor.constraint(equalTo: pageView.superview!.trailingAnchor),
+            pageView.topAnchor.constraint(equalTo: pageView.superview!.topAnchor),
+            pageView.bottomAnchor.constraint(equalTo: pageView.superview!.bottomAnchor)
+        ])
+        rootController.addChild(pageController)
+        pageController.didMove(toParent: rootController)
+
         startMainFlow()
     }
 
     fileprivate func startMainFlow() {
+        StoreReviewSuggester.registerEvent(.sessionStart)
+        
         let isPreviouslyCrashed = !Settings.current.isAutoFillFinishedOK
         if isPreviouslyCrashed {
             showCrashReport()
@@ -144,7 +158,6 @@ class MainCoordinator: NSObject, Coordinator {
     private func refreshFileList() {
         guard let topVC = navigationController.topViewController else { return }
         (topVC as? DatabaseChooserVC)?.refresh()
-        (topVC as? KeyFileChooserVC)?.refresh()
     }
     
     
@@ -195,6 +208,8 @@ class MainCoordinator: NSObject, Coordinator {
     
     
     func showCrashReport() {
+        StoreReviewSuggester.registerEvent(.trouble)
+        
         let vc = CrashReportVC.instantiateFromStoryboard()
         vc.delegate = self
         navigationController.pushViewController(vc, animated: false)
@@ -246,14 +261,14 @@ class MainCoordinator: NSObject, Coordinator {
             try FileKeeper.shared.deleteFile(urlRef, fileType: .database, ignoreErrors: false)
         } catch {
             Diag.error("Failed to delete database file [message: \(error.localizedDescription)]")
-            let alert = UIAlertController.make(
+            navigationController.showErrorAlert(
+                error,
                 title: NSLocalizedString(
                     "[Database/Delete] Failed to delete database file",
                     value: "Failed to delete database file",
-                    comment: "Title of an error message"),
-                message: error.localizedDescription,
-                cancelButtonTitle: LString.actionDismiss)
-            navigationController.present(alert, animated: true, completion: nil)
+                    comment: "Title of an error message"
+                )
+            )
         }
         DatabaseSettingsManager.shared.removeSettings(for: urlRef, onlyIfUnused: true)
         refreshFileList()
@@ -262,9 +277,9 @@ class MainCoordinator: NSObject, Coordinator {
     func showDatabaseFileInfo(in databaseChooser: DatabaseChooserVC, for fileRef: URLReference) {
         let databaseInfoVC = FileInfoVC.make(urlRef: fileRef, fileType: .database, at: nil)
         databaseInfoVC.canExport = true
-        databaseInfoVC.onDismiss = { [weak self, weak databaseChooser] in
+        databaseInfoVC.didDeleteCallback = { [weak self, weak databaseChooser] in
             databaseChooser?.refresh()
-            self?.navigationController.popViewController(animated: true)
+            self?.navigationController.popViewController(animated: true) 
         }
         navigationController.pushViewController(databaseInfoVC, animated: true)
     }
@@ -275,10 +290,10 @@ class MainCoordinator: NSObject, Coordinator {
         
         let vc = DatabaseUnlockerVC.instantiateFromStoryboard()
         vc.delegate = self
-        vc.coordinator = self
         vc.databaseRef = database
         vc.shouldAutofocus = (storedDatabaseKey == nil)
         navigationController.pushViewController(vc, animated: animated)
+        databaseUnlockerVC = vc
         completion?()
         if let storedDatabaseKey = storedDatabaseKey {
             tryToUnlockDatabase(
@@ -290,32 +305,29 @@ class MainCoordinator: NSObject, Coordinator {
         }
     }
     
-    func addKeyFile(popoverAnchor: PopoverAnchor) {
-        let picker = UIDocumentPickerViewController(documentTypes: FileType.keyFileUTIs, in: .open)
-        picker.delegate = self
-        if let popover = picker.popoverPresentationController {
-            popoverAnchor.apply(to: popover)
+    func selectKeyFile(at popoverAnchor: PopoverAnchor) {
+        let modalRouter = NavigationRouter.createModal(style: .popover, at: popoverAnchor)
+        let keyFilePickerCoordinator = KeyFilePickerCoordinator(
+            router: modalRouter,
+            addingMode: .openInPlace
+        )
+        addChildCoordinator(keyFilePickerCoordinator)
+        keyFilePickerCoordinator.dismissHandler = { [weak self] coordinator in
+            self?.removeChildCoordinator(coordinator)
         }
-        navigationController.topViewController?.present(picker, animated: true, completion: nil)
-        
-        addKeyFilePicker = picker
-    }
-    
-    func removeKeyFile(_ urlRef: URLReference) {
-        FileKeeper.shared.removeExternalReference(urlRef, fileType: .keyFile)
-        refreshFileList()
-    }
-    
-    func selectKeyFile() {
-        let vc = KeyFileChooserVC.instantiateFromStoryboard()
-        vc.delegate = self
-        navigationController.pushViewController(vc, animated: true)
+        keyFilePickerCoordinator.delegate = self
+        keyFilePickerCoordinator.start()
+        navigationController.present(modalRouter, animated: true, completion: nil)
     }
     
     func showDiagnostics() {
-        let vc = DiagnosticsViewerVC.instantiateFromStoryboard()
-        vc.delegate = self
-        navigationController.pushViewController(vc, animated: true)
+        let router = NavigationRouter(navigationController)
+        let diagnosticsViewerCoordinator = DiagnosticsViewerCoordinator(router: router)
+        diagnosticsViewerCoordinator.dismissHandler = { [weak self] (coordinator) in
+            self?.removeChildCoordinator(coordinator)
+        }
+        addChildCoordinator(diagnosticsViewerCoordinator)
+        diagnosticsViewerCoordinator.start()
     }
     
     func showDatabaseContent(database: Database, databaseRef: URLReference) {
@@ -350,26 +362,16 @@ class MainCoordinator: NSObject, Coordinator {
     }
     
     func showUpgradeOptions(from viewController: UIViewController) {
-        guard openURL(AppGroup.upgradeToPremiumURL) else {
-            Diag.warning("Failed to open main app")
-            showManualUpgradeMessage()
-            return
+        let urlOpener = URLOpener(rootController)
+        urlOpener.open(url: AppGroup.upgradeToPremiumURL) {
+            [self] (success) in
+            if !success {
+                Diag.warning("Failed to open main app")
+                showManualUpgradeMessage()
+            }
         }
     }
 
-    @objc func openURL(_ url: URL) -> Bool {
-        var responder: UIResponder? = rootController
-        while responder != nil {
-            guard let application = responder as? UIApplication else {
-                responder = responder?.next
-                continue
-            }
-            let result = application.perform(#selector(openURL(_:)), with: url)
-            return result != nil
-        }
-        return false
-    }
-    
     func showManualUpgradeMessage() {
         let manualUpgradeAlert = UIAlertController.make(
             title: NSLocalizedString(
@@ -380,7 +382,7 @@ class MainCoordinator: NSObject, Coordinator {
                 "[AutoFill/Premium/Upgrade/Manual/text] To upgrade, please manually open KeePassium from your home screen.",
                 value: "To upgrade, please manually open KeePassium from your home screen.",
                 comment: "Message shown when AutoFill cannot automatically open the main app for upgrading to a premium version."),
-            cancelButtonTitle: LString.actionOK)
+            dismissButtonTitle: LString.actionOK)
         navigationController.present(manualUpgradeAlert, animated: true, completion: nil)
     }
 }
@@ -445,7 +447,10 @@ extension MainCoordinator: DatabaseUnlockerDelegate {
             yubiKey: yubiKey)
     }
     
-    func didPressSelectHardwareKey(in databaseUnlocker: DatabaseUnlockerVC, at popoverAnchor: PopoverAnchor) {
+    func didPressSelectHardwareKey(
+        in databaseUnlocker: DatabaseUnlockerVC,
+        at popoverAnchor: PopoverAnchor)
+    {
         let hardwareKeyPicker = HardwareKeyPicker.create(delegate: self)
         hardwareKeyPicker.modalPresentationStyle = .popover
         if let popover = hardwareKeyPicker.popoverPresentationController {
@@ -456,6 +461,20 @@ extension MainCoordinator: DatabaseUnlockerDelegate {
         navigationController.present(hardwareKeyPicker, animated: true, completion: nil)
     }
     
+    func didPressSelectKeyFile(
+        in databaseUnlocker: DatabaseUnlockerVC,
+        at popoverAnchor: PopoverAnchor)
+    {
+        selectKeyFile(at: popoverAnchor)
+    }
+    
+    func didPressShowDiagnostics(
+        in databaseUnlocker: DatabaseUnlockerVC,
+        at popoverAnchor: PopoverAnchor)
+    {
+        showDiagnostics()
+    }
+
     func didPressNewsItem(in databaseUnlocker: DatabaseUnlockerVC, newsItem: NewsItem) {
         newsItem.show(in: databaseUnlocker)
     }
@@ -474,32 +493,25 @@ extension MainCoordinator: HardwareKeyPickerDelegate {
     }
 }
 
-extension MainCoordinator: KeyFileChooserDelegate {
-    
-    func didSelectFile(in keyFileChooser: KeyFileChooserVC, urlRef: URLReference?) {
+extension MainCoordinator: KeyFilePickerCoordinatorDelegate {
+    func didPickKeyFile(in coordinator: KeyFilePickerCoordinator, keyFile: URLReference?) {
         watchdog.restart()
-        navigationController.popViewController(animated: true) 
-        if let databaseUnlockerVC = navigationController.topViewController as? DatabaseUnlockerVC {
-            databaseUnlockerVC.setKeyFile(urlRef: urlRef)
-        } else {
+        guard let databaseUnlockerVC = databaseUnlockerVC else {
             assertionFailure()
+            return
         }
+        databaseUnlockerVC.setKeyFile(keyFile)
     }
     
-    func didPressFileInfo(in keyFileChooser: KeyFileChooserVC, for urlRef: URLReference) {
+    func didRemoveOrDeleteKeyFile(in coordinator: KeyFilePickerCoordinator, keyFile: URLReference) {
         watchdog.restart()
-        let keyFileInfoVC = FileInfoVC.make(urlRef: urlRef, fileType: .keyFile, at: nil)
-        keyFileInfoVC.canExport = false
-        keyFileInfoVC.onDismiss = { [weak self, weak keyFileChooser] in
-            keyFileChooser?.refresh()
-            self?.navigationController.popViewController(animated: true)
+        guard let databaseUnlockerVC = databaseUnlockerVC else {
+            assertionFailure()
+            return
         }
-        navigationController.pushViewController(keyFileInfoVC, animated: true)
-    }
-    
-    func didPressAddKeyFile(in keyFileChooser: KeyFileChooserVC, popoverAnchor: PopoverAnchor) {
-        watchdog.restart()
-        addKeyFile(popoverAnchor: popoverAnchor)
+        if databaseUnlockerVC.keyFileRef == keyFile {
+            databaseUnlockerVC.setKeyFile(nil)
+        }
     }
 }
 
@@ -599,8 +611,8 @@ extension MainCoordinator: UIDocumentPickerDelegate {
         guard let url = urls.first else { return }
         if controller === addDatabasePicker {
             addDatabaseURL(url)
-        } else if controller === addKeyFilePicker {
-            addKeyFileURL(url)
+        } else {
+            assertionFailure()
         }
     }
     
@@ -619,27 +631,6 @@ extension MainCoordinator: UIDocumentPickerDelegate {
                 }
             )
         }
-    }
-
-    private func addKeyFileURL(_ url: URL) {
-        if FileType.isDatabaseFile(url: url) {
-            let errorAlert = UIAlertController.make(
-                title: LString.titleWarning,
-                message: LString.dontUseDatabaseAsKeyFile,
-                cancelButtonTitle: LString.actionOK)
-            navigationController.present(errorAlert, animated: true, completion: nil)
-            return
-        }
-
-        FileKeeper.shared.prepareToAddFile(url: url, fileType: .keyFile, mode: .openInPlace)
-        FileKeeper.shared.processPendingOperations(
-            success: { [weak self] (urlRef) in
-                self?.refreshFileList()
-            },
-            error: { [weak self] (error) in
-                self?.navigationController.showErrorAlert(error)
-            }
-        )
     }
 }
 
@@ -663,7 +654,6 @@ extension MainCoordinator: LongPressAwareNavigationControllerDelegate {
     func didLongPressLeftSide(in navigationController: LongPressAwareNavigationController) {
         guard let topVC = navigationController.topViewController else { return }
         guard topVC is DatabaseChooserVC
-            || topVC is KeyFileChooserVC
             || topVC is DatabaseUnlockerVC
             || topVC is EntryFinderVC
             || topVC is FirstSetupVC else { return }
@@ -709,20 +699,6 @@ extension MainCoordinator: EntryFinderDelegate {
                 }
             }
         )
-    }
-}
-
-extension MainCoordinator: DiagnosticsViewerDelegate {
-    func didPressCopy(in diagnosticsViewer: DiagnosticsViewerVC, text: String) {
-        Clipboard.general.insert(text: text, timeout: nil)
-        let infoAlert = UIAlertController.make(
-            title: nil,
-            message: NSLocalizedString(
-                "[Diagnostics] Diagnostic log has been copied to clipboard.",
-                value: "Diagnostic log has been copied to clipboard.",
-                comment: "Notification/confirmation message"),
-            cancelButtonTitle: LString.actionOK)
-        navigationController.present(infoAlert, animated: true, completion: nil)
     }
 }
 
@@ -844,6 +820,7 @@ extension MainCoordinator: PasscodeInputDelegate {
             } else {
                 HapticFeedback.play(.wrongPassword)
                 sender.animateWrongPassccode()
+                StoreReviewSuggester.registerEvent(.trouble)
                 if Settings.current.isLockAllDatabasesOnFailedPasscode {
                     DatabaseSettingsManager.shared.eraseAllMasterKeys()
                     DatabaseManager.shared.closeDatabase(

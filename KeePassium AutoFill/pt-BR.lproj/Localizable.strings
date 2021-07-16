@@ -10,11 +10,26 @@
 /* Action/button to switch from TouchID/FaceID prompt to manual input of the AppLock passcode. */
 "[AppLock/cancelBiometricAuth] Use Passcode" = "Digitar o código";
 
+/* Action/button to modify the existing AppLock passcode. */
+"[AppLock/changePasscode]" = "Mudar senha do aplicativo";
+
+/* Call to action in the passcode input dialog. */
+"[AppLock/EnterPasscode/callToAction]" = "Desbloquear KeePassium";
+
 /* Action: change keyboard type to enter alphanumeric passphrases */
 "[AppLock/Passcode/KeyboardType/switchAction] 123→ABC" = "123→ABC";
 
 /* Action: change keyboard type to enter PIN numbers */
 "[AppLock/Passcode/KeyboardType/switchAction] ABC→123" = "ABC→123";
+
+/* Notification that the modified AppLock passcode has been saved. */
+"[AppLock/passcodeUpdated/title]" = "Senha do aplicativo atualizada com sucesso.";
+
+/* Action/button to save new or edited AppLock passcode. */
+"[AppLock/savePasscode]" = "Salvar senha do app";
+
+/* Call to action in the passcode input dialog. */
+"[AppLock/SetupPasscode/callToAction]" = "Proteja KeePassium contra acesso não autorizado";
 
 /* Message shown when AutoFill cannot automatically open the main app for upgrading to a premium version. */
 "[AutoFill/Premium/Upgrade/Manual/text] To upgrade, please manually open KeePassium from your home screen." = "Para continuar, por favor, abra o KeePassium manualmente a partir da tela inicial.";
@@ -26,7 +41,7 @@
 "[AutoFill/Search/callerID]" = "ID do chamador: %@";
 
 /* No comment provided by engineer. */
-"[AutoFill/Setup/footer]" = "O preenchimento automático precisa de sua autorização para acessar os arquivos que você já tem no aplicativo principal do KeePassium.\n\nPor quê? Por trás das cenas, o sistema trata o preenchimento automático como um aplicativo separado, independente do KeePassium principal. Por segurança, um aplicativo não pode acessar arquivos externos, a menos que você vincule explicitamente esses arquivos a ele. Assim, o sistema garante que o aplicativo só possa acessar os poucos arquivos que você autorizou.\n\nComo resultado, tanto o preenchimento automático quanto o aplicativo principal do KeePassium precisam ser autorizados separadamente para cada arquivo externo. Felizmente, você só precisa fazer isso uma vez para cada arquivo.";
+"[AutoFill/Setup/footer]" = "O Preenchimento Automático precisa ser autorizado a acessar os arquivos que você já tem no aplicativo principal do KeePassium.\n\nPor quê? Por trás das cenas, o sistema trata o Preenchimento Automático como um aplicativo separado, independente do KeePassium principal. Por segurança, um aplicativo não pode acessar arquivos externos, a menos que você vincule explicitamente esses arquivos a ele. Assim, o sistema garante que o aplicativo só possa acessar os poucos arquivos que você autorizou.\n\nComo resultado, tanto o Preenchimento Automático quanto o aplicativo principal do KeePassium precisam ser autorizados separadamente para cada arquivo externo. Felizmente, você só precisa fazer isso uma vez para cada arquivo.";
 
 /* Name of biometric authentication method. Trademarked, do not translate unless Apple traslated it to your language. */
 "[BiometricAuthType] Face ID" = "Face ID";
@@ -47,7 +62,10 @@
 "[Database/Create/action] Create Database" = "Criar banco de dados";
 
 /* Title of a form for creating a database */
-"[Database/Create/title] Create Database" = "Criar Banco de Dados";
+"[Database/Create/title] Create Database" = "Criar banco de dados";
+
+/* Action: add/import an image as a custom icon */
+"[Database/CustomIcon/add]" = "Adicionar ícone personalizado";
 
 /* Title of an error message */
 "[Database/Delete] Failed to delete database file" = "Não foi possível apagar o arquivo de banco de dados";
@@ -60,6 +78,12 @@
 
 /* Notification after changing database master key */
 "[Database/MasterKey/changed] Master key successfully changed" = "Chave-mestra alterada com sucesso";
+
+/* A warning shown when changing database password. Is preceded with `Remember your database password`. */
+"[Database/MasterKey/RememberYourPassword/text]" = "Caso a esqueça, não conseguirá acessar seus dados. Não há modo de redefinir a senha.";
+
+/* Imperative/recommendation: title of a warning when changing database password. */
+"[Database/MasterKey/RememberYourPassword/title]" = "Lembre-se da sua senha-mestra";
 
 /* Action/button */
 "[Database/Open/action] Open Database" = "Abrir banco de dados";
@@ -95,7 +119,7 @@
 "[Entry/Attachments/title] Attached Files" = "Anexos";
 
 /* Action/button to create a new entry in the current group */
-"[Entry/Create/action] Create Entry" = "Nova entrada";
+"[Entry/Create/action] Create Entry" = "Nova Entrada";
 
 /* Default name of a newly created entry field */
 "[Entry/Edit/CreateField/defaultName] Field Name" = "Nome do campo";
@@ -153,6 +177,9 @@
 
 /* Action/button to cancel whatever is going on */
 "[Generic] Cancel" = "Cancelar";
+
+/* Action/button to write an email to support */
+"[Generic] Contact Support" = "Contate o suporte";
 
 /* Action/button to write an email to support */
 "[Generic] Contact Us" = "Contate-nos";
@@ -260,7 +287,7 @@
 "[Group/a11y/description]" = "%@, Grupo";
 
 /* Action/button to create a new sub-group in the current group */
-"[Group/Create/action] Create Group" = "Novo grupo";
+"[Group/Create/action] Create Group" = "Novo Grupo";
 
 /* Title of a form for creating a group */
 "[Group/Create/title] Create Group" = "Novo Grupo";
@@ -286,11 +313,26 @@
 /* Generic title of in-app help article */
 "[Help Viewer/title]" = "Ajuda";
 
+/* Title of a list with custom (user-imported) icons for groups and entries */
+"[ItemIconPicker/CustomIcons]" = "Ícones personalizados";
+
+/* Title of a list with standard/default icons for groups and entries */
+"[ItemIconPicker/StandardIcons]" = "Ícones padrão";
+
 /* Message to confirm deletion of a key file. */
 "[KeyFile/Delete/Confirm/text] Delete key file?\n Make sure you have a backup." = "Apagar o arquivo de chave?\n Certifique-se de ter uma cópia de segurança.";
 
 /* Message to confirm removal of a key file from the app. (This keeps the file, but removes its reference from the app.) */
 "[KeyFile/Remove/Confirm/text] Remove key file from the list?\n The file will remain intact and you can add it again later." = "Esquecer esse arquivo de chave?\n O arquivo permanecerá intacto e você poderá adicioná-lo de novo depois.";
+
+/* Error shown when scanned QR code cannot be used for OTP */
+"[OTP/Scan/InvalidData]" = "Este não é um código QR para configurar códigos de uso único.";
+
+/* Message to confirm user intentions */
+"[OTP/Scan/OverwriteWarning]" = "Já há um código de uso único configurado nesta entrada. Substituí-lo?";
+
+/* Call for action. Acronym `OTP` should not be translated. */
+"[OTP/Setup]" = "Configurar código de uso único (OTP)";
 
 /* List of premium benefits/advantages */
 "[Premium/Benefits/Negative/header] " = "Você está perdendo";
@@ -347,13 +389,13 @@
 "[Premium/Price Plan/Conditions/future premium features]" = "Recursos premium futuros";
 
 /* What's included in a price plan. Please leave `perpetual fallback license` in English. */
-"[Premium/Price Plan/Conditions/perpetual fallback]" = "Rent-to-own license (Perpetual fallback license)";
+"[Premium/Price Plan/Conditions/perpetual fallback]" = "Licença Alugue e Tenha (Perpetual fallback license)";
 
 /* What's included in a subscription plan. By subscribing for a certain period, the user receives a permanent license for a version of the app. More info: https://keepassium.com/articles/perpetual-fallback-license/ */
-"[Premium/Price Plan/Conditions/subscription as purchase]" = "Subscription as a purchase";
+"[Premium/Price Plan/Conditions/subscription as purchase]" = "Assinatura como compra";
 
 /* What's included in a price plan */
-"[Premium/Price Plan/Conditions/updates and bug fixes]" = "Updates and bug fixes";
+"[Premium/Price Plan/Conditions/updates and bug fixes]" = "Atualizações e correções de erros";
 
 /* Price of the free pricing plan */
 "[Premium/Price Plan/Free/price]" = "Grátis";
@@ -365,7 +407,7 @@
 "[Premium/Price Plan/popular]" = "Popular";
 
 /* Subscription conditions */
-"[Premium/Subscription/Legal/text]" = "\nPayment will be charged to your Apple ID account at the confirmation of purchase.\n\nSubscription automatically renews unless it is canceled at least 24 hours before the end of the current period. Your account will be charged for renewal within 24 hours prior to the end of the current period.\n\nYou can manage and cancel your subscriptions by going to your account settings on the App Store after purchase.\n";
+"[Premium/Subscription/Legal/text]" = "\nO valor será cobrado de seu Apple ID imediatamente ao confirmar a compra dentro do aplicativo.\n\nAssinaturas possuem renovação automática, a menos que canceladas até 24 horas antes do fim do período vigente. A renovação da assinatura será cobrada durante as últimas 24 horas do período de assinatura vigente.\n\nApós a compra, você pode gerenciar e cancelar suas assinaturas nas configurações de sua conta na App Store.\n";
 
 /* Trial conditions. For example `30 days free, then $1 per month` */
 "[Premium/Trial/trial then price]" = "%1$@ grátis, depois %2$@";
@@ -377,10 +419,10 @@
 "[Premium/Upgrade/action] Upgrade to Premium" = "Atualizar para Premium";
 
 /* Message shown after buying a lifetime version. */
-"[Premium/Upgrade/cancelOngoingSubscription]" = "Please check if you need to cancel your old subscription.";
+"[Premium/Upgrade/cancelOngoingSubscription]" = "Por favor, verifique se você precisa cancelar sua assinatura anterior.";
 
 /* Message shown when in-app purchase is deferred until approval (parental or corporate). */
-"[Premium/Upgrade/Deferred/text] Thank you! You can use KeePassium while purchase is awaiting approval." = "Thank you! You can use KeePassium while purchase is awaiting approval.";
+"[Premium/Upgrade/Deferred/text] Thank you! You can use KeePassium while purchase is awaiting approval." = "Obrigado! Você pode usar KeePassium enquanto a compra aguarda aprovação.";
 
 /* Product price for monthly premium subscription. [localizedPrice: String] */
 "[Premium/Upgrade/price] %@ / month" = "%@/mês";
@@ -413,7 +455,7 @@
 "[Premium/Upgrade/RestoreFailed/title] Sorry" = "Desculpe";
 
 /* Message shown after buying or subscribing. */
-"[Premium/Upgrade/Success/thankYou]" = "Thank you for the purchase!";
+"[Premium/Upgrade/Success/thankYou]" = "Obrigado por sua compra!";
 
 /* Title of a premium feature: ability to change the app icon */
 "[PremiumFeature/CustomAppIcons/title]" = "Ícones Personalizados";
@@ -467,13 +509,13 @@
 "[YubiKey] Use YubiKey Slot %d" = "Usar a posição %d da YubiKey";
 
 /* Action/button to add database to the app */
-"Add Database" = "Adicionar banco de dados";
+"Add Database" = "Adicionar Banco de Dados";
 
 /* Title of a window where the user selects a file to be opened/added to the app */
 "Choose Database" = "Escolher banco de dados";
 
 /* Action/button */
-"Import Database" = "Importar banco de dados";
+"Import Database" = "Importar Banco de Dados";
 
 /* Warning message when the user tries to use a database as a key file */
 "KeePass database should not be used as key file. Please pick a different file." = "Um banco de dados do KeePass não pode ser usado como arquivo de chave. Por favor, escolha um arquivo diferente.";

@@ -1,14 +1,13 @@
 ---
 name: Feature request
-about: Suggest an idea for Keepassium
+about: Suggest an idea for KeePassium
 title: ''
 labels: enhancement
 assignees: ''
 
 ---
 
-**Describe a feature you'd like**
-A clear and concise description of what you want to be added.
+**Describe the feature you'd like**
+A description of what you want to be added.
 
-**Additional context**
-Add any other context or screenshots about the feature request here, or what make you request said feature.
+And *why* you need it — that is, how it would make your life better.

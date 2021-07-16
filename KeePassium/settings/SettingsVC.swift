@@ -19,7 +19,8 @@ class SettingsVC: UITableViewController, Refreshable {
     
     @IBOutlet weak var searchCell: UITableViewCell!
     @IBOutlet weak var autoUnlockStartupDatabaseSwitch: UISwitch!
-    @IBOutlet weak var appIconCell: UITableViewCell!
+    @IBOutlet weak var appearanceCell: UITableViewCell!
+    
     @IBOutlet weak var diagnosticLogCell: UITableViewCell!
     @IBOutlet weak var contactSupportCell: UITableViewCell!
     @IBOutlet weak var rateTheAppCell: UITableViewCell!
@@ -32,6 +33,7 @@ class SettingsVC: UITableViewController, Refreshable {
     
     private var settingsNotifications: SettingsNotifications!
     
+    private var router: NavigationRouter! 
     private var isPremiumSectionHidden = false
     
     private enum CellIndexPath {
@@ -52,6 +54,7 @@ class SettingsVC: UITableViewController, Refreshable {
             popover.barButtonItem = barButtonSource
         }
         navVC.presentationController?.delegate = vc
+        vc.router = NavigationRouter(navVC)
         return navVC
     }
 
@@ -91,14 +94,14 @@ class SettingsVC: UITableViewController, Refreshable {
     }
     
     deinit {
-        appIconSwitcherCoordinator = nil
+        diagnosticsViewerCoordinator = nil
         appHistoryCoordinator = nil
         premiumCoordinator = nil
     }
     
     func dismissPopover(animated: Bool) {
         self.dismiss(animated: animated) { [self] in 
-            self.appIconSwitcherCoordinator = nil
+            self.diagnosticsViewerCoordinator = nil
             self.appHistoryCoordinator = nil
             self.premiumCoordinator = nil
         }
@@ -205,8 +208,8 @@ class SettingsVC: UITableViewController, Refreshable {
         case searchCell:
             let searchSettingsVC = SettingsSearchVC.instantiateFromStoryboard()
             show(searchSettingsVC, sender: self)
-        case appIconCell:
-            showAppIconSettings()
+        case appearanceCell:
+            showAppearanceSettings()
         case dataBackupCell:
             let dataBackupSettingsVC = SettingsBackupVC.instantiateFromStoryboard()
             show(dataBackupSettingsVC, sender: self)
@@ -219,10 +222,10 @@ class SettingsVC: UITableViewController, Refreshable {
         case appHistoryCell:
             didPressShowAppHistory()
         case diagnosticLogCell:
-            let viewer = ViewDiagnosticsVC.make()
-            show(viewer, sender: self)
+            didPressShowDiagnostics()
         case contactSupportCell:
-            SupportEmailComposer.show(subject: .supportRequest, parent: self)
+            let popoverAnchor = PopoverAnchor(tableView: tableView, at: indexPath)
+            SupportEmailComposer.show(subject: .supportRequest, parent: self, popoverAnchor: popoverAnchor)
         case rateTheAppCell:
             AppStoreHelper.writeReview()
         case aboutAppCell:
@@ -271,28 +274,15 @@ class SettingsVC: UITableViewController, Refreshable {
     }
     
     
-    var appIconSwitcherCoordinator: AppIconSwitcherCoordinator?
-    private func showAppIconSettings() {
-        assert(appIconSwitcherCoordinator == nil)
-        
-        guard let navigationController = navigationController else {
-            fatalError()
-        }
-        let router = NavigationRouter(navigationController)
-        appIconSwitcherCoordinator = AppIconSwitcherCoordinator(router: router)
-        appIconSwitcherCoordinator!.dismissHandler = { [weak self] (coordinator) in
-            self?.appIconSwitcherCoordinator = nil
-        }
-        appIconSwitcherCoordinator!.start()
+    private func showAppearanceSettings() {
+        let appearanceVC = SettingsAppearanceVC.instantiateFromStoryboard()
+        appearanceVC.router = router
+        router.push(appearanceVC, animated: true, onPop: nil)
     }
     
     var appHistoryCoordinator: AppHistoryCoordinator?
     func didPressShowAppHistory() {
         assert(appHistoryCoordinator == nil)
-        guard let navigationController = navigationController else {
-            fatalError()
-        }
-        let router = NavigationRouter(navigationController)
         appHistoryCoordinator = AppHistoryCoordinator(router: router)
         appHistoryCoordinator!.dismissHandler = { [weak self] coordinator in
             self?.appHistoryCoordinator = nil
@@ -300,13 +290,28 @@ class SettingsVC: UITableViewController, Refreshable {
         appHistoryCoordinator!.start()
     }
     
+    var diagnosticsViewerCoordinator: DiagnosticsViewerCoordinator?
+    func didPressShowDiagnostics() {
+        assert(diagnosticsViewerCoordinator == nil)
+        diagnosticsViewerCoordinator = DiagnosticsViewerCoordinator(router: router)
+        diagnosticsViewerCoordinator!.dismissHandler = { [weak self] coordinator in
+            self?.diagnosticsViewerCoordinator = nil
+        }
+        diagnosticsViewerCoordinator!.start()
+    }
+    
     
     private var premiumCoordinator: PremiumCoordinator? 
     func didPressUpgradeToPremium() {
         assert(premiumCoordinator == nil)
-        premiumCoordinator = PremiumCoordinator(presentingViewController: self)
-        premiumCoordinator!.delegate = self
+        let modalRouter = NavigationRouter.createModal(
+            style: PremiumCoordinator.desiredModalPresentationStyle)
+        premiumCoordinator = PremiumCoordinator(router: modalRouter)
+        premiumCoordinator!.dismissHandler = { [weak self] (coordinator) in
+            self?.premiumCoordinator = nil
+        }
         premiumCoordinator!.start()
+        present(modalRouter, animated: true, completion: nil)
     }
     
     func didPressManageSubscription() {
@@ -459,12 +464,6 @@ extension SettingsVC: SettingsObserver {
     func settingsDidChange(key: Settings.Keys) {
         guard key != .recentUserActivityTimestamp else { return }
         refresh()
-    }
-}
-
-extension SettingsVC: PremiumCoordinatorDelegate {
-    func didFinish(_ premiumCoordinator: PremiumCoordinator) {
-        self.premiumCoordinator = nil
     }
 }
 

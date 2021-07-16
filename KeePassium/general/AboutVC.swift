@@ -22,7 +22,9 @@ class AboutVC: UITableViewController {
         30: "https://feathericons.com",
         40: "http://ionicons.com",
         50: "https://designmodo.com/linecons-free/",
-        55: "https://icons8.com/paid-license-99",
+        53: "https://icons8.com/paid-license-99",
+        55: "https://en.wikipedia.org/wiki/Nuvola",
+        57: "https://github.com/keepassxreboot/keepassxc/pull/4699",
         60: "http://subtlepatterns.com",
         70: "http://vicons.superatic.com",
         80: "https://github.com/tadija/AEXML",
@@ -35,6 +37,7 @@ class AboutVC: UITableViewController {
         130: "https://github.com/1024jp/GzipSwift",
         140: "https://github.com/norio-nomura/Base32",
         150: "https://github.com/MengTo/Spring/blob/master/Spring/KeyboardLayoutConstraint.swift",
+        160: "https://github.com/scalessec/Toast-Swift",
     ]
     
     static func make() -> UIViewController {
@@ -73,7 +76,8 @@ class AboutVC: UITableViewController {
         guard let selectedCell = tableView.cellForRow(at: indexPath) else { return }
         switch selectedCell {
         case contactSupportCell:
-            SupportEmailComposer.show(subject: .supportRequest, parent: self)
+            let popoverAnchor = PopoverAnchor(tableView: tableView, at: indexPath)
+            SupportEmailComposer.show(subject: .supportRequest, parent: self, popoverAnchor: popoverAnchor)
         case writeReviewCell:
             AppStoreHelper.writeReview()
         case resetTextScaleCell:

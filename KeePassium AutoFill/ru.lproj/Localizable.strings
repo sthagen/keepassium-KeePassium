@@ -10,11 +10,26 @@
 /* Action/button to switch from TouchID/FaceID prompt to manual input of the AppLock passcode. */
 "[AppLock/cancelBiometricAuth] Use Passcode" = "Использовать код доступа";
 
+/* Action/button to modify the existing AppLock passcode. */
+"[AppLock/changePasscode]" = "Изменить код доступа";
+
+/* Call to action in the passcode input dialog. */
+"[AppLock/EnterPasscode/callToAction]" = "Открыть KeePassium";
+
 /* Action: change keyboard type to enter alphanumeric passphrases */
 "[AppLock/Passcode/KeyboardType/switchAction] 123→ABC" = "123→АБВ";
 
 /* Action: change keyboard type to enter PIN numbers */
 "[AppLock/Passcode/KeyboardType/switchAction] ABC→123" = "АБВ→123";
+
+/* Notification that the modified AppLock passcode has been saved. */
+"[AppLock/passcodeUpdated/title]" = "Код доступа успешно обновлён.";
+
+/* Action/button to save new or edited AppLock passcode. */
+"[AppLock/savePasscode]" = "Сохранить код доступа";
+
+/* Call to action in the passcode input dialog. */
+"[AppLock/SetupPasscode/callToAction]" = "Защитить KeePassium от несанкционированного доступа";
 
 /* Message shown when AutoFill cannot automatically open the main app for upgrading to a premium version. */
 "[AutoFill/Premium/Upgrade/Manual/text] To upgrade, please manually open KeePassium from your home screen." = "Чтобы включить премиум-доступ, откройте основное приложение KeePassium.";
@@ -49,6 +64,9 @@
 /* Title of a form for creating a database */
 "[Database/Create/title] Create Database" = "Создать базу паролей";
 
+/* Action: add/import an image as a custom icon */
+"[Database/CustomIcon/add]" = "Добавить свой значок";
+
 /* Title of an error message */
 "[Database/Delete] Failed to delete database file" = "Не удалось удалить базу паролей";
 
@@ -60,6 +78,12 @@
 
 /* Notification after changing database master key */
 "[Database/MasterKey/changed] Master key successfully changed" = "Мастер-ключ успешно изменён";
+
+/* A warning shown when changing database password. Is preceded with `Remember your database password`. */
+"[Database/MasterKey/RememberYourPassword/text]" = "Если вы забудете его, то не сможете получить доступ к своим данным. Восстановить этот пароль невозможно.";
+
+/* Imperative/recommendation: title of a warning when changing database password. */
+"[Database/MasterKey/RememberYourPassword/title]" = "Запомните пароль от базы";
 
 /* Action/button */
 "[Database/Open/action] Open Database" = "Открыть базу паролей";
@@ -153,6 +177,9 @@
 
 /* Action/button to cancel whatever is going on */
 "[Generic] Cancel" = "Отменить";
+
+/* Action/button to write an email to support */
+"[Generic] Contact Support" = "Напишите нам";
 
 /* Action/button to write an email to support */
 "[Generic] Contact Us" = "Связаться с нами";
@@ -286,11 +313,26 @@
 /* Generic title of in-app help article */
 "[Help Viewer/title]" = "Справка";
 
+/* Title of a list with custom (user-imported) icons for groups and entries */
+"[ItemIconPicker/CustomIcons]" = "Свои значки";
+
+/* Title of a list with standard/default icons for groups and entries */
+"[ItemIconPicker/StandardIcons]" = "Стандартные значки";
+
 /* Message to confirm deletion of a key file. */
 "[KeyFile/Delete/Confirm/text] Delete key file?\n Make sure you have a backup." = "Удалить ключевой файл?\nУбедитесь, что у вас есть резервная копия.";
 
 /* Message to confirm removal of a key file from the app. (This keeps the file, but removes its reference from the app.) */
 "[KeyFile/Remove/Confirm/text] Remove key file from the list?\n The file will remain intact and you can add it again later." = "Убрать ключевой файл из списка?\nФайл останется нетронутым, вы сможете добавить его позже.";
+
+/* Error shown when scanned QR code cannot be used for OTP */
+"[OTP/Scan/InvalidData]" = "Этот QR-код не подходит для настройки одноразового пароля (OTP).";
+
+/* Message to confirm user intentions */
+"[OTP/Scan/OverwriteWarning]" = "Одноразовый пароль уже настроен для этой записи. Заменить его?";
+
+/* Call for action. Acronym `OTP` should not be translated. */
+"[OTP/Setup]" = "Настроить одноразовый пароль (OTP)";
 
 /* List of premium benefits/advantages */
 "[Premium/Benefits/Negative/header] " = "Что Вы упускаете";
@@ -365,7 +407,7 @@
 "[Premium/Price Plan/popular]" = "Популярный";
 
 /* Subscription conditions */
-"[Premium/Subscription/Legal/text]" = "\nОплата будет снята с Вашего аккаунта Apple ID после подтверждения покупки. \n\nПодписка автоматически возобновляется, если не отменена минимум за 24 часа до конца текущего периода. Плата за продление подписки будет снята с Вашего счёта в течение суток до окончания текущего периода. \n\nВы можете изменить или отменить подписки, зайдя в настройки своего аккаунта в App Store после покупки.\n";
+"[Premium/Subscription/Legal/text]" = "\nОплата будет снята с вашего аккаунта Apple ID после подтверждения покупки. \n\nПодписка автоматически возобновляется, если не отменена хотя бы за 24 часа до конца текущего периода. Плата за продление подписки будет снята с вашего счёта в течение суток до окончания текущего периода. \n\nВы можете изменить или отменить подписки, зайдя в настройки своего аккаунта в App Store после покупки.\n";
 
 /* Trial conditions. For example `30 days free, then $1 per month` */
 "[Premium/Trial/trial then price]" = "%1$@ бесплатно, затем %2$@";
@@ -416,7 +458,7 @@
 "[Premium/Upgrade/Success/thankYou]" = "Спасибо за покупку!";
 
 /* Title of a premium feature: ability to change the app icon */
-"[PremiumFeature/CustomAppIcons/title]" = "Другая иконка приложения";
+"[PremiumFeature/CustomAppIcons/title]" = "Другой значок приложения";
 
 /* A generic description of a premium feature */
 "[PremiumFeature/Generic/description]" = "Перейдите на полную версию KeePassium и пользуйтесь всеми возможностями программы.";

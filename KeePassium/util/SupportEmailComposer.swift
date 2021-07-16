@@ -24,17 +24,30 @@ class SupportEmailComposer: NSObject {
     typealias CompletionHandler = ((Bool)->Void)
     private let completionHandler: CompletionHandler?
     private weak var parent: UIViewController?
+    private var popoverAnchor: PopoverAnchor?
     private var subject = ""
     private var content = ""
     
-    private init(subject: String, content: String, parent: UIViewController, completionHandler: CompletionHandler?) {
-        self.completionHandler = completionHandler
+    private init(
+        subject: String,
+        content: String,
+        parent: UIViewController,
+        popoverAnchor: PopoverAnchor?=nil,
+        completionHandler: CompletionHandler?
+    ) {
         self.subject = subject
         self.content = content
         self.parent = parent
+        self.popoverAnchor = popoverAnchor
+        self.completionHandler = completionHandler
     }
     
-    static func show(subject: Subject, parent: UIViewController, completion: CompletionHandler?=nil) {
+    static func show(
+        subject: Subject,
+        parent: UIViewController,
+        popoverAnchor: PopoverAnchor,
+        completion: CompletionHandler?=nil
+    ) {
         let subjectText = "\(AppInfo.name) - \(subject.rawValue)" 
             .addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)! 
         
@@ -53,6 +66,7 @@ class SupportEmailComposer: NSObject {
             subject: subjectText,
             content: contentText,
             parent: parent,
+            popoverAnchor: popoverAnchor,
             completionHandler: completion)
         
         instance.openSystemEmailComposer()
@@ -86,6 +100,15 @@ class SupportEmailComposer: NSObject {
             Diag.error("Failed to create mailto URL")
             return
         }
+        
+        let urlOpener: URLOpener
+        #if MAIN_APP
+        urlOpener = URLOpener(UIApplication.shared)
+        #else
+        urlOpener = URLOpener(parent)
+        #endif
+        
+        
         let app = UIApplication.shared
         guard app.canOpenURL(url) else {
             showExportSheet(for: url, completion: self.completionHandler)
@@ -107,6 +130,7 @@ class SupportEmailComposer: NSObject {
         }
         
         let exportSheet = UIActivityViewController(activityItems: [url], applicationActivities: nil)
+        popoverAnchor?.apply(to: exportSheet.popoverPresentationController)
         parent.present(exportSheet, animated: true) {
             completion?(true)
         }

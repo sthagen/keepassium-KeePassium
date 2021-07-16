@@ -10,11 +10,26 @@
 /* Action/button to switch from TouchID/FaceID prompt to manual input of the AppLock passcode. */
 "[AppLock/cancelBiometricAuth] Use Passcode" = "Använd PIN-kod";
 
+/* Action/button to modify the existing AppLock passcode. */
+"[AppLock/changePasscode]" = "Ändra pinkod";
+
+/* Call to action in the passcode input dialog. */
+"[AppLock/EnterPasscode/callToAction]" = "Lås upp KeePassium";
+
 /* Action: change keyboard type to enter alphanumeric passphrases */
 "[AppLock/Passcode/KeyboardType/switchAction] 123→ABC" = "123→ABC";
 
 /* Action: change keyboard type to enter PIN numbers */
 "[AppLock/Passcode/KeyboardType/switchAction] ABC→123" = "ABC→123";
+
+/* Notification that the modified AppLock passcode has been saved. */
+"[AppLock/passcodeUpdated/title]" = "Pinkoden uppdaterades.";
+
+/* Action/button to save new or edited AppLock passcode. */
+"[AppLock/savePasscode]" = "Spara pinkod";
+
+/* Call to action in the passcode input dialog. */
+"[AppLock/SetupPasscode/callToAction]" = "Skydda KeePassium från obehörig åtkomst";
 
 /* Message shown when AutoFill cannot automatically open the main app for upgrading to a premium version. */
 "[AutoFill/Premium/Upgrade/Manual/text] To upgrade, please manually open KeePassium from your home screen." = "För att uppgradera öppna KeePassium från din hemskärm.";
@@ -49,6 +64,9 @@
 /* Title of a form for creating a database */
 "[Database/Create/title] Create Database" = "Skapa databas";
 
+/* Action: add/import an image as a custom icon */
+"[Database/CustomIcon/add]" = "Add Custom Icon";
+
 /* Title of an error message */
 "[Database/Delete] Failed to delete database file" = "Misslyckades att radera databasfilen";
 
@@ -60,6 +78,12 @@
 
 /* Notification after changing database master key */
 "[Database/MasterKey/changed] Master key successfully changed" = "Huvudnyckel ändrades";
+
+/* A warning shown when changing database password. Is preceded with `Remember your database password`. */
+"[Database/MasterKey/RememberYourPassword/text]" = "Om du glömmer det kommer du inte att kunna komma åt din data igen. Det finns ingen möjlighet att återställa lösenordet.";
+
+/* Imperative/recommendation: title of a warning when changing database password. */
+"[Database/MasterKey/RememberYourPassword/title]" = "Kom ihåg lösenordet för databasen";
 
 /* Action/button */
 "[Database/Open/action] Open Database" = "Öppna databas";
@@ -153,6 +177,9 @@
 
 /* Action/button to cancel whatever is going on */
 "[Generic] Cancel" = "Avbryt";
+
+/* Action/button to write an email to support */
+"[Generic] Contact Support" = "Kontakta Support";
 
 /* Action/button to write an email to support */
 "[Generic] Contact Us" = "Kontakta oss";
@@ -286,11 +313,26 @@
 /* Generic title of in-app help article */
 "[Help Viewer/title]" = "Hjälp";
 
+/* Title of a list with custom (user-imported) icons for groups and entries */
+"[ItemIconPicker/CustomIcons]" = "Custom Icons";
+
+/* Title of a list with standard/default icons for groups and entries */
+"[ItemIconPicker/StandardIcons]" = "Standard Icons";
+
 /* Message to confirm deletion of a key file. */
 "[KeyFile/Delete/Confirm/text] Delete key file?\n Make sure you have a backup." = "Radera nyckelfil?\nSe till att du har en säkerhetskopia.";
 
 /* Message to confirm removal of a key file from the app. (This keeps the file, but removes its reference from the app.) */
 "[KeyFile/Remove/Confirm/text] Remove key file from the list?\n The file will remain intact and you can add it again later." = "Ta bort nyckelfil från listan?\n Filen kommer vara kvar oförändrad och du kan lägga till den igen senare.";
+
+/* Error shown when scanned QR code cannot be used for OTP */
+"[OTP/Scan/InvalidData]" = "This QR code is not suitable for OTP setup.";
+
+/* Message to confirm user intentions */
+"[OTP/Scan/OverwriteWarning]" = "One-time password is already configured for this entry. Do you want to overwrite it?";
+
+/* Call for action. Acronym `OTP` should not be translated. */
+"[OTP/Setup]" = "Setup one-time password (OTP)";
 
 /* List of premium benefits/advantages */
 "[Premium/Benefits/Negative/header] " = "Vad du går miste om";

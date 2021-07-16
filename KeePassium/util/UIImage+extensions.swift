@@ -58,33 +58,107 @@ enum ImageAsset: String {
     case yubikeyMFIKey = "yubikey-mfi-key"
 }
 
+enum SystemImageName: String {
+    case docOnDoc = "doc.on.doc"
+    case ellipsisCircle = "ellipsis.circle"
+    case folder = "folder"
+    case pencil = "pencil"
+    case qrcode = "qrcode"
+    case squareAndPencil = "square.and.pencil"
+    case squareAndArrowUp = "square.and.arrow.up"
+    case trash = "trash"
+}
+
 extension UIImage {
     convenience init(asset: ImageAsset) {
         self.init(named: asset.rawValue)! 
     }
     
-    static func kpIcon(forID iconID: IconID) -> UIImage? {
-        return UIImage(named: String(format: "db-icons/kpbIcon%02d", iconID.rawValue))
+    static func get(_ systemImageName: SystemImageName) -> UIImage? {
+        if #available(iOS 13, *) {
+            return UIImage(systemName: systemImageName.rawValue)
+        } else {
+            return UIImage(named: systemImageName.rawValue)
+        }
     }
     
-    static func kpIcon(forEntry entry: Entry) -> UIImage? {
+    static func kpIcon(forEntry entry: Entry, iconSet: DatabaseIconSet?=nil) -> UIImage? {
         if let entry2 = entry as? Entry2,
             let db2 = entry2.database as? Database2,
-            let customIcon2 = db2.customIcons[entry2.customIconUUID],
-            let image = UIImage(data: customIcon2.data.asData) {
-            return image
+            let customIcon2 = db2.customIcons.first(where: { $0.uuid == entry2.customIconUUID }),
+            let image = UIImage(data: customIcon2.data.asData)
+        {
+            return image.withGradientUnderlay()
         }
-        return kpIcon(forID: entry.iconID)
+        let _iconSet = iconSet ?? Settings.current.databaseIconSet
+        return _iconSet.getIcon(entry.iconID)
     }
     
-    static func kpIcon(forGroup group: Group) -> UIImage? {
+    static func kpIcon(forGroup group: Group, iconSet: DatabaseIconSet?=nil) -> UIImage? {
         if let group2 = group as? Group2,
             let db2 = group2.database as? Database2,
-            let customIcon2 = db2.customIcons[group2.customIconUUID],
-            let image = UIImage(data: customIcon2.data.asData) {
-            return image
+            let customIcon2 = db2.customIcons.first(where: { $0.uuid == group2.customIconUUID }),
+            let image = UIImage(data: customIcon2.data.asData)
+        {
+            return image.withGradientUnderlay()
         }
-        return kpIcon(forID: group.iconID)
+        let _iconSet = iconSet ?? Settings.current.databaseIconSet
+        return _iconSet.getIcon(group.iconID)
     }
     
+    func downscalingToSquare(maxSide: CGFloat) -> UIImage? {
+        let targetSide: CGFloat
+        if size.width > maxSide && size.height > maxSide {
+            targetSide = maxSide
+        } else {
+            targetSide = min(size.width, size.height)
+        }
+        
+        let targetSize = CGSize(width: targetSide, height: targetSide)
+        UIGraphicsBeginImageContextWithOptions(targetSize, false, self.scale)
+        self.draw(in: CGRect(x: 0, y: 0, width: targetSide, height: targetSide))
+        let resized = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        
+        return resized
+    }
+    
+    func withGradientUnderlay() -> UIImage? {
+        guard #available(iOS 13, *) else {
+            return self
+        }
+        
+        UIGraphicsBeginImageContextWithOptions(self.size, false, self.scale)
+        guard let context = UIGraphicsGetCurrentContext() else {
+            return nil
+        }
+
+        let colors = [
+            CGColor(gray: 1.0, alpha: 0.2),
+            CGColor(gray: 1.0, alpha: 0.05),
+            CGColor(gray: 1.0, alpha: 0.0),
+        ]
+        guard let gradient = CGGradient(
+                colorsSpace: CGColorSpaceCreateDeviceGray(),
+                colors: colors as CFArray,
+                locations: [0.0, 0.9, 1.0])
+        else {
+            return nil
+        }
+        let center = CGPoint(x: size.width / 2, y: size.height / 2)
+        let radius = max(size.width, size.height) / 2
+        context.drawRadialGradient(
+            gradient,
+            startCenter: center,
+            startRadius: 0.0,
+            endCenter: center,
+            endRadius: radius,
+            options: CGGradientDrawingOptions.drawsBeforeStartLocation
+        )
+
+        self.draw(in: CGRect(x: 0, y: 0, width: size.width, height: size.height))
+        let composed = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return composed
+    }
 }

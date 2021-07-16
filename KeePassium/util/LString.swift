@@ -115,6 +115,11 @@ public enum LString {
         value: "Contact Us",
         comment: "Action/button to write an email to support"
     )
+    public static let actionContactSupport = NSLocalizedString(
+        "[Generic] Contact Support",
+        value: "Contact Support",
+        comment: "Action/button to write an email to support"
+    )
     public static let actionLearnMore = NSLocalizedString(
         "[Generic] Learn more",
         value: "Learn more…",
@@ -131,17 +136,7 @@ public enum LString {
         value: "Remove",
         comment: "Action/button to remove a file from the app (the file remains, but the app forgets about it)"
     )
-
-    public static let actionUnlock = NSLocalizedString(
-        "[AppLock] Unlock",
-        value: "Unlock",
-        comment: "Action/button to unlock the App Lock with passcode"
-    )
-    public static let actionUsePasscode = NSLocalizedString(
-        "[AppLock/cancelBiometricAuth] Use Passcode",
-        value: "Use Passcode",
-        comment: "Action/button to switch from TouchID/FaceID prompt to manual input of the AppLock passcode."
-    )
+    
     public static let actionUpgradeToPremium = NSLocalizedString(
         "[Premium/Upgrade/action] Upgrade to Premium",
         value: "Upgrade to Premium",
@@ -196,6 +191,43 @@ public enum LString {
         "[Generic/File/title] File already exists",
         value: "File already exists",
         comment: "Message shown when trying to copy into an existing file."
+    )
+    
+    
+    public static let actionUnlock = NSLocalizedString(
+        "[AppLock] Unlock",
+        value: "Unlock",
+        comment: "Action/button to unlock the App Lock with passcode"
+    )
+    public static let actionUsePasscode = NSLocalizedString(
+        "[AppLock/cancelBiometricAuth] Use Passcode",
+        value: "Use Passcode",
+        comment: "Action/button to switch from TouchID/FaceID prompt to manual input of the AppLock passcode."
+    )
+    public static let actionChangePasscode = NSLocalizedString(
+        "[AppLock/changePasscode]",
+        value: "Change Passcode",
+        comment: "Action/button to modify the existing AppLock passcode."
+    )
+    public static let titleNewPasscodeSaved = NSLocalizedString(
+        "[AppLock/passcodeUpdated/title]",
+        value: "Passcode updated successfully.",
+        comment: "Notification that the modified AppLock passcode has been saved."
+    )
+    public static let actionSavePasscode = NSLocalizedString(
+        "[AppLock/savePasscode]",
+        value: "Save Passcode",
+        comment: "Action/button to save new or edited AppLock passcode."
+    )
+    public static let titleSetupAppPasscode = NSLocalizedString(
+        "[AppLock/SetupPasscode/callToAction]",
+        value: "Protect KeePassium from unauthorized access",
+        comment: "Call to action in the passcode input dialog."
+    )
+    public static let titleUnlockTheApp = NSLocalizedString(
+        "[AppLock/EnterPasscode/callToAction]",
+        value: "Unlock KeePassium",
+        comment: "Call to action in the passcode input dialog."
     )
     
     public static let actionCopyToClipboardTemplate = NSLocalizedString(
@@ -272,6 +304,16 @@ public enum LString {
         "[Database/Create/title] Create Database",
         value: "Create Database",
         comment: "Title of a form for creating a database"
+    )
+    public static let titleRememberYourPassword = NSLocalizedString(
+        "[Database/MasterKey/RememberYourPassword/title]",
+        value: "Remember your database password",
+        comment: "Imperative/recommendation: title of a warning when changing database password."
+    )
+    public static let warningRememberYourPassword = NSLocalizedString(
+        "[Database/MasterKey/RememberYourPassword/text]",
+        value: "If you ever forget it, you won't be able to access your data. There is no password reset option.",
+        comment: "A warning shown when changing database password. Is preceded with `Remember your database password`."
     )
     public static let warningNonDatabaseExtension = NSLocalizedString(
         "[Database/Add] Selected file \"%@\" does not look like a database.",
@@ -419,7 +461,44 @@ public enum LString {
         "[YubiKey] Touch the key",
         value: "Touch the key",
         comment: "Call for action: touch the sides of YubiKey 5Ci to continue")
+
     
+    public static let otpSetupOTPAction = NSLocalizedString(
+        "[OTP/Setup]",
+        value: "Setup one-time password (OTP)",
+        comment: "Call for action. Acronym `OTP` should not be translated."
+    )
+
+    public static let otpQRCodeNotValid = NSLocalizedString(
+        "[OTP/Scan/InvalidData]",
+        value: "This QR code is not suitable for OTP setup.",
+        comment: "Error shown when scanned QR code cannot be used for OTP"
+    )
+
+    public static let otpQRCodeOverwriteWarning = NSLocalizedString(
+        "[OTP/Scan/OverwriteWarning]",
+        value: "One-time password is already configured for this entry. Do you want to overwrite it?",
+        comment: "Message to confirm user intentions"
+    )
+
+    
+    public static let itemIconPickerStandardIcons = NSLocalizedString(
+        "[ItemIconPicker/StandardIcons]",
+        value: "Standard Icons",
+        comment: "Title of a list with standard/default icons for groups and entries"
+    )
+
+    public static let itemIconPickerCustomIcons = NSLocalizedString(
+        "[ItemIconPicker/CustomIcons]",
+        value: "Custom Icons",
+        comment: "Title of a list with custom (user-imported) icons for groups and entries"
+    )
+
+    public static let actionAddCustomIcon = NSLocalizedString(
+        "[Database/CustomIcon/add]",
+        value: "Add Custom Icon",
+        comment: "Action: add/import an image as a custom icon"
+    )
     
     public static func directionAwareConcatenate(_ parts: [String]) -> String {
         if UIApplication.shared.userInterfaceLayoutDirection == .rightToLeft {

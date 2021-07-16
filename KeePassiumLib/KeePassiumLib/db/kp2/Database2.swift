@@ -8,11 +8,29 @@
 
 import Foundation
 
+protocol Database2XMLTimeFormatter {
+    func dateToXMLString(_ date: Date) -> String
+}
+protocol Database2XMLTimeParser {
+    func xmlStringToDate(_ string: String?) -> Date?
+}
+
 public class Database2: Database {
-    
-    public enum FormatVersion {
+    public enum FormatVersion: Comparable, CustomStringConvertible {
         case v3
         case v4
+        case v4_1
+        
+        public var description: String {
+            switch self {
+            case .v3:
+                return "v3"
+            case .v4:
+                return "v4"
+            case .v4_1:
+                return "v4.1"
+            }
+        }
     }
     
     public enum FormatError: LocalizedError {
@@ -100,7 +118,7 @@ public class Database2: Database {
     private(set) var header: Header2!
     private(set) var meta: Meta2!
     public var binaries: [Binary2.ID: Binary2] = [:]
-    public var customIcons: [UUID: CustomIcon2] { return meta.customIcons }
+    public var customIcons: [CustomIcon2] { return meta.customIcons }
     public var defaultUserName: String { return meta.defaultUserName }
     private var cipherKey = SecureByteArray()
     private var hmacKey = SecureByteArray()
@@ -160,7 +178,7 @@ public class Database2: Database {
         compositeKey: CompositeKey,
         warnings: DatabaseLoadingWarnings
     ) throws {
-        Diag.info("Loading KP2 database")
+        Diag.info("Loading KDBX database")
         progress.completedUnitCount = 0
         progress.totalUnitCount = ProgressSteps.all
         progress.localizedDescription = LString.Progress.database2LoadingDatabase
@@ -184,7 +202,7 @@ public class Database2: Database {
                 decryptedData = try decryptBlocksV3(
                     data: dbWithoutHeader,
                     cipher: header.dataCipher)
-            case .v4:
+            case .v4, .v4_1:
                 decryptedData = try decryptBlocksV4(
                     data: dbWithoutHeader,
                     cipher: header.dataCipher)
@@ -206,15 +224,15 @@ public class Database2: Database {
             switch header.formatVersion {
             case .v3:
                 xmlData = decryptedData
-            case .v4:
+            case .v4, .v4_1:
                 let innerHeaderSize = try header.readInner(data: decryptedData) 
                 xmlData = decryptedData.suffix(from: innerHeaderSize)
                 Diag.debug("Inner header read OK")
             }
             
             try removeGarbageAfterXML(data: xmlData) 
-            
-            try load(xmlData: xmlData, warnings: warnings) 
+
+            try load(xmlData: xmlData, timeParser: self, warnings: warnings)
             
             if let backupGroup = getBackupGroup(createIfMissing: false) {
                 backupGroup.deepSetDeleted(true)
@@ -226,7 +244,8 @@ public class Database2: Database {
             var allCurrentEntries = [Entry]()
             root?.collectAllEntries(to: &allCurrentEntries) 
 
-            var allEntriesPlusHistory = [Entry](reserveCapacity: allCurrentEntries.count * 4)
+            var allEntriesPlusHistory = [Entry]()
+            allEntriesPlusHistory.reserveCapacity(allCurrentEntries.count * 4) 
             allCurrentEntries.forEach { entry in
                 allEntriesPlusHistory.append(entry)
                 guard let entry2 = entry as? Entry2 else { assertionFailure(); return }
@@ -273,25 +292,6 @@ public class Database2: Database {
         }
         
         self.compositeKey = compositeKey
-    }
-    
-    func xmlStringToDate(_ string: String?) -> Date? {
-        let trimmedString = string?.trimmingCharacters(in: .whitespacesAndNewlines)
-        switch header.formatVersion {
-        case .v3:
-            return Date(iso8601string: trimmedString)
-        case .v4:
-            return Date(base64Encoded: trimmedString)
-        }
-    }
-    
-    func xmlDateToString(_ date: Date) -> String {
-        switch header.formatVersion {
-        case .v3:
-            return date.iso8601String()
-        case .v4:
-            return date.base64EncodedString()
-        }
     }
     
     func decryptBlocksV4(data: ByteArray, cipher: DataCipher) throws -> ByteArray {
@@ -470,7 +470,11 @@ public class Database2: Database {
         data.trim(toCount: _closingTagIndex + finalTagSize)
     }
 
-    func load(xmlData: ByteArray, warnings: DatabaseLoadingWarnings) throws {
+    func load(
+        xmlData: ByteArray,
+        timeParser: Database2XMLTimeParser,
+        warnings: DatabaseLoadingWarnings
+    ) throws {
         var parsingOptions = AEXMLOptions()
         parsingOptions.documentHeader.standalone = "yes"
         parsingOptions.parserSettings.shouldTrimWhitespace = false
@@ -493,15 +497,26 @@ public class Database2: Database {
             for tag in xmlDoc.root.children {
                 switch tag.name {
                 case Xml2.meta:
-                    try meta.load(xml: tag, streamCipher: header.streamCipher, warnings: warnings)
+                    try meta.load(
+                        xml: tag,
+                        formatVersion: header.formatVersion,
+                        streamCipher: header.streamCipher,
+                        timeParser: self,
+                        warnings: warnings
+                    ) 
                     
                     if meta.headerHash != nil && (header.hash != meta.headerHash!) {
-                        Diag.error("KP2v3 meta meta hash mismatch")
+                        Diag.error("kdbx3 meta meta hash mismatch")
                         throw Header2.HeaderError.hashMismatch
                     }
                     Diag.verbose("Meta loaded OK")
                 case Xml2.root:
-                    try loadRoot(xml: tag, root: rootGroup, warnings: warnings)
+                    try loadRoot(
+                        xml: tag,
+                        root: rootGroup,
+                        timeParser: timeParser,
+                        warnings: warnings
+                    ) 
                     Diag.verbose("XML root loaded OK")
                 default:
                     throw Xml2.ParsingError.unexpectedTag(actual: tag.name, expected: "KeePassFile/*")
@@ -527,30 +542,39 @@ public class Database2: Database {
     internal func loadRoot(
         xml: AEXMLElement,
         root: Group2,
+        timeParser: Database2XMLTimeParser,
         warnings: DatabaseLoadingWarnings
-        ) throws
-    {
+    ) throws {
         assert(xml.name == Xml2.root)
         Diag.debug("Loading XML root")
         for tag in xml.children {
             switch tag.name {
             case Xml2.group:
-                try root.load(xml: tag, streamCipher: header.streamCipher, warnings: warnings)
+                try root.load(
+                    xml: tag,
+                    formatVersion: header.formatVersion,
+                    streamCipher: header.streamCipher,
+                    timeParser: timeParser,
+                    warnings: warnings
+                ) 
             case Xml2.deletedObjects:
-                try loadDeletedObjects(xml: tag)
+                try loadDeletedObjects(xml: tag, timeParser: timeParser)
             default:
                 throw Xml2.ParsingError.unexpectedTag(actual: tag.name, expected: "Root/*")
             }
         }
     }
     
-    private func loadDeletedObjects(xml: AEXMLElement) throws {
+    private func loadDeletedObjects(
+        xml: AEXMLElement,
+        timeParser: Database2XMLTimeParser
+    ) throws {
         assert(xml.name == Xml2.deletedObjects)
         for tag in xml.children {
             switch tag.name {
             case Xml2.deletedObject:
                 let deletedObject = DeletedObject2(database: self)
-                try deletedObject.load(xml: tag)
+                try deletedObject.load(xml: tag, timeParser: timeParser)
                 deletedObjects.append(deletedObject)
             default:
                 throw Xml2.ParsingError.unexpectedTag(actual: tag.name, expected: "DeletedObjects/*")
@@ -599,7 +623,7 @@ public class Database2: Database {
             
             let challengeResponse = try compositeKey.getResponse(challenge: secureMasterSeed) 
             joinedKey = SecureByteArray.concat(secureMasterSeed, challengeResponse, transformedKey)
-        case .v4:
+        case .v4, .v4_1:
             
             let challenge = try header.kdf.getChallenge(header.kdfParams) 
             let secureChallenge = SecureByteArray(challenge)
@@ -873,7 +897,7 @@ public class Database2: Database {
     }
     
     override public func save() throws -> ByteArray {
-        Diag.info("Saving KP2 database")
+        Diag.info("Saving KDBX database")
         assert(root != nil, "Load or create a DB before saving.")
         
         progress.totalUnitCount = ProgressSteps.all
@@ -912,14 +936,14 @@ public class Database2: Database {
         header.write(to: outStream) 
 
         meta.headerHash = header.hash
-        let xmlString = try self.toXml().xml 
+        let xmlString = try self.toXml(timeFormatter: self).xml 
         let xmlData = ByteArray(utf8String: xmlString)
         Diag.debug("XML generation OK")
 
         switch formatVersion {
         case .v3:
             try encryptBlocksV3(to: outStream, xmlData: xmlData) 
-        case .v4:
+        case .v4, .v4_1:
             try encryptBlocksV4(to: outStream, xmlData: xmlData) 
         }
         Diag.debug("Content encryption OK")
@@ -937,7 +961,7 @@ public class Database2: Database {
     }
     
     internal func encryptBlocksV4(to outStream: ByteArray.OutputStream, xmlData: ByteArray) throws {
-        Diag.debug("Encrypting KP2v4 blocks")
+        Diag.debug("Encrypting kdbx4 blocks")
         outStream.write(data: header.hash)
         outStream.write(data: header.getHMAC(key: hmacKey))
 
@@ -1000,7 +1024,7 @@ public class Database2: Database {
     }
     
     internal func writeAsBlocksV4(to blockStream: ByteArray.OutputStream, data: ByteArray) throws {
-        Diag.debug("Writing KP2v4 blocks")
+        Diag.debug("Writing kdbx4 blocks")
         let defaultBlockSize  = 1024 * 1024 
         var blockStart: Int = 0
         var blockIndex: UInt64 = 0
@@ -1040,7 +1064,7 @@ public class Database2: Database {
     }
     
     internal func encryptBlocksV3(to outStream: ByteArray.OutputStream, xmlData: ByteArray) throws {
-        Diag.debug("Encrypting KP2v3 blocks")
+        Diag.debug("Encrypting kdbx3 blocks")
         let dataToSplit: ByteArray
         if header.isCompressed {
             do {
@@ -1096,7 +1120,7 @@ public class Database2: Database {
     }
     
     internal func splitToBlocksV3(to stream: ByteArray.OutputStream, data inData: ByteArray) throws {
-        Diag.verbose("Will split to KP2v3 blocks")
+        Diag.verbose("Will split to kdbx3 blocks")
         let defaultBlockSize = 1024 * 1024 
         var blockStart: Int = 0
         var blockID: UInt32 = 0
@@ -1126,7 +1150,7 @@ public class Database2: Database {
         writingProgress.completedUnitCount = writingProgress.totalUnitCount
     }
     
-    func toXml() throws -> AEXMLDocument {
+    func toXml(timeFormatter: Database2XMLTimeFormatter) throws -> AEXMLDocument {
         Diag.debug("Will generate XML")
         var options = AEXMLOptions()
         options.documentHeader.encoding = "utf-8"
@@ -1135,17 +1159,28 @@ public class Database2: Database {
         
         let xmlMain = AEXMLElement(name: Xml2.keePassFile)
         let xmlDoc = AEXMLDocument(root: xmlMain, options: options)
-        xmlMain.addChild(try meta.toXml(streamCipher: header.streamCipher))
+        xmlMain.addChild(
+            try meta.toXml(
+                streamCipher: header.streamCipher,
+                formatVersion: header.formatVersion,
+                timeFormatter: timeFormatter
+            )
+        ) 
         Diag.verbose("XML generation: Meta OK")
         
         let xmlRoot = xmlMain.addChild(name: Xml2.root)
         let root2 = root! as! Group2
-        xmlRoot.addChild(try root2.toXml(streamCipher: header.streamCipher))
+        let rootXML = try root2.toXml(
+            formatVersion: header.formatVersion,
+            streamCipher: header.streamCipher,
+            timeFormatter: timeFormatter
+        ) 
+        xmlRoot.addChild(rootXML)
         Diag.verbose("XML generation: Root group OK")
         
         let xmlDeletedObjects = xmlRoot.addChild(name: Xml2.deletedObjects)
         for deletedObject in deletedObjects {
-            xmlDeletedObjects.addChild(deletedObject.toXml())
+            xmlDeletedObjects.addChild(deletedObject.toXml(timeFormatter: timeFormatter))
         }
         return xmlDoc
     }
@@ -1243,4 +1278,89 @@ public class Database2: Database {
 
         return Attachment2(name: name, isCompressed: false, data: data)
     }
+
+
+    @discardableResult
+    public func addCustomIcon(pngData: ByteArray) -> CustomIcon2 {
+        let candidateHash = pngData.sha256
+        if let existingIcon = customIcons.first(where: { $0.data.sha256 == candidateHash }) {
+            return existingIcon
+        }
+        
+        let newCustomIcon = CustomIcon2(uuid: UUID(), data: pngData)
+        meta.addCustomIcon(newCustomIcon)
+        Diag.debug("Custom icon added OK")
+        return newCustomIcon
+    }
+    
+    @discardableResult
+    public func deleteCustomIcon(uuid: UUID) -> Bool {
+        guard customIcons.contains(where: { $0.uuid == uuid }) else {
+            Diag.warning("Tried to delete non-existent custom icon")
+            return false
+        }
+        meta.deleteCustomIcon(uuid: uuid)
+        deletedObjects.append(DeletedObject2(database: self, uuid: uuid))
+        removeUnusedCustomIconRefs()
+        Diag.debug("Custom icon deleted OK")
+        return true
+    }
+    
+    private func removeUnusedCustomIconRefs() {
+        let knownIconUUIDs = Set<UUID>(customIcons.map { $0.uuid })
+        root?.applyToAllChildren(
+            groupHandler: { group in
+                (group as! Group2).enforceCustomIconUUID(isValid: knownIconUUIDs)
+            },
+            entryHandler: { entry in
+                (entry as! Entry2).enforceCustomIconUUID(isValid: knownIconUUIDs)
+            }
+        )
+    }
 }
+
+extension Database2: Database2XMLTimeParser {
+    func xmlStringToDate(_ string: String?) -> Date? {
+        let trimmedString = string?.trimmingCharacters(in: .whitespacesAndNewlines)
+        switch header.formatVersion {
+        case .v3:
+            return Date(iso8601string: trimmedString)
+        case .v4, .v4_1:
+            return Date(base64Encoded: trimmedString)
+        }
+    }
+}
+
+extension Database2: Database2XMLTimeFormatter {
+    func dateToXMLString(_ date: Date) -> String {
+        switch header.formatVersion {
+        case .v3:
+            return date.iso8601String()
+        case .v4, .v4_1:
+            return date.base64EncodedString()
+        }
+    }
+}
+
+private extension Group2 {
+    func enforceCustomIconUUID(isValid validValues: Set<UUID>) {
+        guard customIconUUID != UUID.ZERO else { return }
+        if !validValues.contains(self.customIconUUID) {
+            customIconUUID = UUID.ZERO
+        }
+    }
+}
+
+private extension Entry2 {
+    func enforceCustomIconUUID(isValid validValues: Set<UUID>) {
+        guard customIconUUID != UUID.ZERO else { return }
+        if !validValues.contains(customIconUUID) {
+            customIconUUID = UUID.ZERO
+        }
+        history.forEach { historyEntry in
+            historyEntry.enforceCustomIconUUID(isValid: validValues)
+        }
+    }
+}
+
+

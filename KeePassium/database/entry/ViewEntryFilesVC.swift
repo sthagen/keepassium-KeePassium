@@ -9,7 +9,7 @@
 import UIKit
 import KeePassiumLib
 
-class ViewEntryFilesVC: UITableViewController, Refreshable {
+class ViewEntryFilesVC: UITableViewController, DatabaseSaving, Refreshable {
     private enum CellID {
         static let fileItem = "FileItemCell"
         static let noFiles = "NoFilesCell"
@@ -23,6 +23,10 @@ class ViewEntryFilesVC: UITableViewController, Refreshable {
     private var progressViewHost: ProgressViewHost?
     private var exportController: UIDocumentInteractionController!
 
+    internal var databaseExporterTemporaryURL: TemporaryFileURL?
+    
+    private var diagnosticsViewerCoordinator: DiagnosticsViewerCoordinator?
+    
     static func make(
         with entry: Entry?,
         historyMode: Bool,
@@ -60,6 +64,10 @@ class ViewEntryFilesVC: UITableViewController, Refreshable {
         refresh()
     }
     
+    deinit {
+        diagnosticsViewerCoordinator = nil
+    }
+    
     func refresh() {
         tableView.reloadData()
         if tableView.isEditing {
@@ -69,6 +77,17 @@ class ViewEntryFilesVC: UITableViewController, Refreshable {
             editButton.title = LString.actionEdit
             editButton.style = .plain
         }
+    }
+    
+    private func showDiagnostics() {
+        assert(diagnosticsViewerCoordinator == nil)
+        let modalRouter = NavigationRouter.createModal(style: .pageSheet)
+        diagnosticsViewerCoordinator = DiagnosticsViewerCoordinator(router: modalRouter)
+        diagnosticsViewerCoordinator!.dismissHandler = { [weak self] coordinator in
+            self?.diagnosticsViewerCoordinator = nil
+        }
+        diagnosticsViewerCoordinator!.start()
+        present(modalRouter, animated: true, completion: nil)
     }
     
 
@@ -179,18 +198,23 @@ class ViewEntryFilesVC: UITableViewController, Refreshable {
     
     override func tableView(
         _ tableView: UITableView,
-        editActionsForRowAt indexPath: IndexPath
-        ) -> [UITableViewRowAction]?
-    {
-        let deleteAction = UITableViewRowAction(
+        trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath
+    ) -> UISwipeActionsConfiguration? {
+        let deleteAction = UIContextualAction(
             style: .destructive,
             title: LString.actionDeleteFile,
-            handler: { [weak self] (rowAction, indexPath) in
+            handler: { [weak self] (action, sourceView, completion) in
                 self?.didPressDeleteAttachment(at: indexPath)
+                if #available(iOS 13, *) {
+                    completion(true)
+                } else {
+                    completion(false) 
+                }
             }
         )
+        deleteAction.image = UIImage.get(.trash)
         
-        return [deleteAction]
+        return UISwipeActionsConfiguration(actions: [deleteAction])
     }
     
     override func tableView(
@@ -383,24 +407,18 @@ extension ViewEntryFilesVC: DatabaseManagerObserver {
 
     func databaseManager(
         database urlRef: URLReference,
-        savingError message: String,
-        reason: String?)
+        savingError error: Error,
+        data: ByteArray?)
     {
         DatabaseManager.shared.removeObserver(self)
         progressViewHost?.hideProgressView()
-        
-        let errorAlert = UIAlertController.make(
-            title: message,
-            message: reason,
-            cancelButtonTitle: LString.actionDismiss)
-        let showDetailsAction = UIAlertAction(title: LString.actionShowDetails, style: .default)
-        {
-            [weak self] _ in
-            let diagnosticsVC = ViewDiagnosticsVC.instantiateFromStoryboard()
-            self?.present(diagnosticsVC, animated: true, completion: nil)
-        }
-        errorAlert.addAction(showDetailsAction)
-        present(errorAlert, animated: true, completion: nil)
+        showDatabaseSavingError(
+            error,
+            fileName: urlRef.visibleFileName,
+            diagnosticsHandler: { [weak self] in self?.showDiagnostics()},
+            exportableData: data,
+            parent: self
+        )
     }
 }
 

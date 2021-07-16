@@ -10,9 +10,7 @@ import KeePassiumLib
 
 class HelpViewerCoordinator: NSObject, Coordinator {
     var childCoordinators = [Coordinator]()
-    
-    typealias DismissHandler = (HelpViewerCoordinator) -> Void
-    var dismissHandler: DismissHandler?
+    var dismissHandler: CoordinatorDismissHandler?
     
     var article: HelpArticle?
     
@@ -28,21 +26,37 @@ class HelpViewerCoordinator: NSObject, Coordinator {
         helpViewerVC.delegate = self
     }
     
+    deinit {
+        assert(childCoordinators.isEmpty)
+        removeAllChildCoordinators()
+    }
+    
     func start() {
         assert(article != nil)
         helpViewerVC.content = article
+        
+        if router.navigationController.topViewController == nil {
+            let leftButton = UIBarButtonItem(
+                barButtonSystemItem: .cancel,
+                target: self,
+                action: #selector(didPressDismissButton))
+            helpViewerVC.navigationItem.leftBarButtonItem = leftButton
+        }
+        
         router.push(helpViewerVC, animated: true, onPop: {
-            [self] (viewController) in 
+            [weak self] (viewController) in
+            guard let self = self else { return }
+            self.removeAllChildCoordinators()
             self.dismissHandler?(self)
         })
+    }
+    
+    @objc private func didPressDismissButton() {
+        router.dismiss(animated: true)
     }
 }
 
 extension HelpViewerCoordinator: HelpViewerDelegate {
-    func didPressCancel(in viewController: HelpViewerVC) {
-        router.pop(animated: true)
-    }
-    
     func didPressShare(at popoverAnchor: PopoverAnchor, in viewController: HelpViewerVC) {
         guard let text = viewController.bodyTextView.attributedText else {
             assertionFailure()

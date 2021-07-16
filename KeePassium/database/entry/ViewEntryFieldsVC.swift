@@ -89,6 +89,8 @@ class ViewEntryFieldsVC: UITableViewController, Refreshable {
     private var isHistoryMode = false
     private var sortedFields: [ViewableField] = []
     private var entryChangeNotifications: EntryChangeNotifications!
+    
+    private var entryFieldEditorCoordinator: EntryFieldEditorCoordinator?
 
     static func make(with entry: Entry?, historyMode: Bool) -> ViewEntryFieldsVC {
         let viewEntryFieldsVC = ViewEntryFieldsVC.instantiateFromStoryboard()
@@ -106,26 +108,20 @@ class ViewEntryFieldsVC: UITableViewController, Refreshable {
 
         copiedCellView.delegate = self
         
-        editButton.image = UIImage(asset: .editItemToolbar)
-        editButton.title = NSLocalizedString(
-            "[Entry/View] Edit Entry",
-            value: "Edit Entry",
-            comment: "Action to start editing an entry")
+        editButton.title = LString.actionEdit
         editButton.target = self
-        editButton.action = #selector(onEditAction)
+        editButton.action = #selector(didPressEdit)
         editButton.accessibilityIdentifier = "edit_entry_button" 
 
-        let zoomGestureRecognizer = UIPinchGestureRecognizer(
-            target: self,
-            action: #selector(didPinchToZoom(_:))
-        )
-        tableView.addGestureRecognizer(zoomGestureRecognizer)
-        
         entryChangeNotifications = EntryChangeNotifications(observer: self)
         entry?.touch(.accessed)
         refresh()
     }
 
+    deinit {
+        entryFieldEditorCoordinator = nil
+    }
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         editButton.isEnabled = !(entry?.isDeleted ?? true)
@@ -155,22 +151,34 @@ class ViewEntryFieldsVC: UITableViewController, Refreshable {
     }
     
     
-    @objc func onEditAction() {
-        guard let entry = entry else { return }
-        let editEntryFieldsVC = EditEntryVC.make(entry: entry, popoverSource: nil, delegate: nil)
-        present(editEntryFieldsVC, animated: true, completion: nil)
+    @objc func didPressEdit() {
+        assert(entryFieldEditorCoordinator == nil)
+        guard let entry = entry,
+              let parent = entry.parent,
+              let database = parent.database
+        else {
+            Diag.warning("Entry, parent group or database are undefined")
+            assertionFailure()
+            return
+        }
+        
+        let modalRouter = NavigationRouter.createModal(style: .formSheet, at: nil)
+        let entryFieldEditorCoordinator = EntryFieldEditorCoordinator(
+            router: modalRouter,
+            database: database,
+            parent: parent,
+            target: entry
+        )
+        entryFieldEditorCoordinator.dismissHandler = { [weak self] coordinator in
+            self?.entryFieldEditorCoordinator = nil
+        }
+        entryFieldEditorCoordinator.delegate = self
+        entryFieldEditorCoordinator.start()
+        modalRouter.dismissAttemptDelegate = entryFieldEditorCoordinator
+        self.entryFieldEditorCoordinator = entryFieldEditorCoordinator
+        present(modalRouter, animated: true, completion: nil)
     }
     
-    @objc private func didPinchToZoom(_ gestureRecognizer : UIPinchGestureRecognizer) {
-        if gestureRecognizer.state == .began {
-            gestureRecognizer.scale = Settings.current.textScale
-        }
-        if gestureRecognizer.state == .changed {
-            Settings.current.textScale = gestureRecognizer.scale
-            tableView.reloadData()
-        }
-    }
-
 
     override func numberOfSections(in tableView: UITableView) -> Int {
         return 1
@@ -280,5 +288,11 @@ extension ViewEntryFieldsVC: FieldCopiedViewDelegate {
         let popoverAnchor = PopoverAnchor(sourceView: view, sourceRect: view.bounds)
         popoverAnchor.apply(to: activityController.popoverPresentationController)
         present(activityController, animated: true)
+    }
+}
+
+extension ViewEntryFieldsVC: EntryFieldEditorCoordinatorDelegate {
+    func didUpdateEntry(_ entry: Entry, in coordinator: EntryFieldEditorCoordinator) {
+        refresh()
     }
 }

@@ -10,38 +10,33 @@ import UIKit
 import KeePassiumLib
 import StoreKit
 
-protocol PremiumCoordinatorDelegate: class {
-    func didFinish(_ premiumCoordinator: PremiumCoordinator)
-}
-
 class PremiumCoordinator: NSObject, Coordinator {
-    var childCoordinators = [Coordinator]()
-    weak var delegate: PremiumCoordinatorDelegate?
+    public static let desiredModalPresentationStyle = UIModalPresentationStyle.pageSheet
     
-    let presentingViewController: UIViewController
+    var childCoordinators = [Coordinator]()
+    var dismissHandler: CoordinatorDismissHandler?
+    private let router: NavigationRouter
     
     private let premiumManager: PremiumManager
-    private let navigationController: UINavigationController
     private let planPicker: PricingPlanPickerVC
     
     private var availablePricingPlans = [PricingPlan]()
     private var isProductsRefreshed: Bool = false
     private var hadSubscriptionBeforePurchase = false
     
-    init(presentingViewController: UIViewController) {
+    init(router: NavigationRouter) {
+        self.router = router
         self.premiumManager = PremiumManager.shared
-        self.presentingViewController = presentingViewController
+
         planPicker = PricingPlanPickerVC.create()
-        navigationController = UINavigationController(rootViewController: planPicker)
         super.init()
 
-        navigationController.modalPresentationStyle = .pageSheet
-        navigationController.presentationController?.delegate = self
-        if #available(iOS 13, *) {
-            navigationController.isModalInPresentation = true
-        }
-
         planPicker.delegate = self
+    }
+    
+    deinit {
+        assert(childCoordinators.isEmpty)
+        removeAllChildCoordinators()
     }
     
     func start() {
@@ -50,9 +45,14 @@ class PremiumCoordinator: NSObject, Coordinator {
 
     func start(tryRestoringPurchasesFirst: Bool) {
         premiumManager.delegate = self
-        self.presentingViewController.present(navigationController, animated: true, completion: nil)
-        
-        UIApplication.shared.isNetworkActivityIndicatorVisible = true
+        router.push(planPicker, animated: true, onPop: {
+            [weak self] (viewController) in
+            guard let self = self else { return }
+            self.removeAllChildCoordinators()
+            self.dismissHandler?(self)
+        })
+
+        (UIApplication.shared as! KPApplication).showNetworkActivityIndicator()
         
         planPicker.isPurchaseEnabled = false
         
@@ -63,10 +63,6 @@ class PremiumCoordinator: NSObject, Coordinator {
         }
     }
     
-    deinit {
-        childCoordinators.removeAll()
-    }
-    
     fileprivate func restorePurchases() {
         premiumManager.restorePurchases()
     }
@@ -74,7 +70,7 @@ class PremiumCoordinator: NSObject, Coordinator {
     fileprivate func refreshAvailableProducts() {
         premiumManager.requestAvailableProducts() {
             [weak self] (products, error) in
-            UIApplication.shared.isNetworkActivityIndicatorVisible = false
+            (UIApplication.shared as! KPApplication).hideNetworkActivityIndicator()
             guard let self = self else { return }
             
             self.planPicker.isPurchaseEnabled = true
@@ -103,14 +99,6 @@ class PremiumCoordinator: NSObject, Coordinator {
     func setPurchasing(_ isPurchasing: Bool) {
         planPicker.setPurchasing(isPurchasing)
     }
-    
-    func finish(animated: Bool, completion: (() -> Void)?) {
-        self.childCoordinators.removeAll()
-        navigationController.dismiss(animated: animated) { [weak self] in
-            guard let self = self else { return }
-            self.delegate?.didFinish(self)
-        }
-    }
 }
 
 extension PremiumCoordinator: PricingPlanPickerDelegate {
@@ -125,7 +113,7 @@ extension PremiumCoordinator: PricingPlanPickerDelegate {
     
     func didPressCancel(in viewController: PricingPlanPickerVC) {
         premiumManager.delegate = nil
-        finish(animated: true, completion: nil)
+        router.pop(viewController: planPicker, animated: true)
     }
     
     func didPressRestorePurchases(in viewController: PricingPlanPickerVC) {
@@ -144,16 +132,23 @@ extension PremiumCoordinator: PricingPlanPickerDelegate {
             return
         }
         
-        let router = NavigationRouter.createPopover(at: popoverAnchor)
-        let helpViewerCoordinator = HelpViewerCoordinator(router: router)
-        helpViewerCoordinator.dismissHandler = { [self] (coordinator) in
-            self.childCoordinators.removeLast()
-            assert(self.childCoordinators.isEmpty)
+        let helpRouter: NavigationRouter
+        if router.isHorizontallyCompact {
+            helpRouter = router
+        } else {
+            helpRouter = NavigationRouter.createModal(style: .popover, at: popoverAnchor)
+        }
+        
+        let helpViewerCoordinator = HelpViewerCoordinator(router: helpRouter)
+        helpViewerCoordinator.dismissHandler = { [weak self] (coordinator) in
+            self?.removeChildCoordinator(coordinator)
         }
         helpViewerCoordinator.article = HelpArticle.load(helpReference.articleKey)
+        addChildCoordinator(helpViewerCoordinator)
         helpViewerCoordinator.start()
-        childCoordinators.append(helpViewerCoordinator)
-        planPicker.present(router.navigationController, animated: true, completion: nil)
+        if helpRouter !== router {
+            router.present(helpRouter, animated: true, completion: nil)
+        }
     }
 }
 
@@ -166,11 +161,11 @@ extension PremiumCoordinator: PremiumManagerDelegate {
     
     func purchaseSucceeded(_ product: InAppProduct, in premiumManager: PremiumManager) {
         setPurchasing(false)
-        if hadSubscriptionBeforePurchase {
+        if hadSubscriptionBeforePurchase && !product.isSubscription {
             let existingSubscriptionAlert = UIAlertController.make(
                 title: LString.titlePurchaseSuccess,
                 message: LString.messageCancelOldSubscriptions,
-                cancelButtonTitle: LString.actionDismiss)
+                dismissButtonTitle: LString.actionDismiss)
             let manageSubscriptionAction = UIAlertAction(
                 title: LString.actionManageSubscriptions,
                 style: .default)
@@ -181,10 +176,10 @@ extension PremiumCoordinator: PremiumManagerDelegate {
             existingSubscriptionAlert.addAction(manageSubscriptionAction)
             planPicker.present(existingSubscriptionAlert, animated: true, completion: nil)
         } else {
-            let usage = premiumManager.usageMonitor.getAppUsageDuration(.perMonth)
-            if usage > 10 * 60.0 {
-                SKStoreReviewController.requestReview()
-            }
+            StoreReviewSuggester.maybeShowAppReview(
+                appVersion: AppInfo.version,
+                occasion: .didPurchasePremium
+            )
         }
     }
     
@@ -206,26 +201,27 @@ extension PremiumCoordinator: PremiumManagerDelegate {
         setPurchasing(false)
         switch premiumManager.status {
         case .subscribed:
-            let successAlert = UIAlertController(
-                title: LString.titlePurchaseRestored,
-                message: LString.purchaseRestored,
-                preferredStyle: .alert)
-            let okAction = UIAlertAction(title: LString.actionOK, style: .default) {
-                [weak self] _ in
-                self?.finish(animated: true, completion: nil)
-            }
-            successAlert.addAction(okAction)
-            planPicker.present(successAlert, animated: true, completion: nil)
+            showRestoreConfirmation()
         default:
             if !isProductsRefreshed {
                 refreshAvailableProducts()
             }
-            let notRestoredAlert = UIAlertController.make(
-                title: LString.titleRestorePurchaseError,
-                message: LString.errorNoPreviousPurchaseToRestore,
-                cancelButtonTitle: LString.actionOK)
-            planPicker.present(notRestoredAlert, animated: true, completion: nil)
+            planPicker.showNotification(LString.errorNoPreviousPurchaseToRestore)
         }
+    }
+    
+    private func showRestoreConfirmation() {
+        let successAlert = UIAlertController(
+            title: LString.titlePurchaseRestored,
+            message: LString.purchaseRestored,
+            preferredStyle: .alert)
+        let okAction = UIAlertAction(title: LString.actionOK, style: .default) {
+            [weak self] _ in
+            guard let self = self else { return }
+            self.router.pop(viewController: self.planPicker, animated: true)
+        }
+        successAlert.addAction(okAction)
+        planPicker.present(successAlert, animated: true, completion: nil)
     }
 }
 
