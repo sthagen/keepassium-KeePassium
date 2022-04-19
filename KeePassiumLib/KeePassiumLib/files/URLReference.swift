@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2019 Andrei Popleteev <info@keepassium.com>
+//  Copyright © 2018–2022 Andrei Popleteev <info@keepassium.com>
 // 
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -72,43 +72,48 @@ public class URLReference:
         }
     }
     
-    public static let defaultTimeout: TimeInterval = 15.0
+    public static let defaultTimeout: TimeInterval = 10.0
     
     public var visibleFileName: String { return url?.lastPathComponent ?? "?" }
     
     public private(set) var error: FileAccessError?
     public var hasError: Bool { return error != nil}
     
-    public var hasPermissionError257: Bool {
-        guard let nsError = error?.underlyingError as NSError? else { return false }
-        return (nsError.domain == NSCocoaErrorDomain) && (nsError.code == 257)
-    }
-    
-    public var hasFileMissingError: Bool {
+    public var needsReinstatement: Bool {
         guard location == .external,
               let underlyingError = error?.underlyingError,
-              let nsError = underlyingError as NSError? else { return false }
+              let nsError = underlyingError as NSError?
+        else {
+            return false
+        }
         
-        #if targetEnvironment(macCatalyst)
-            switch nsError.domain {
-            case NSCocoaErrorDomain:
-                return nsError.code == CocoaError.Code.fileNoSuchFile.rawValue
+        switch nsError.domain {
+        case NSCocoaErrorDomain:
+            switch CocoaError.Code.init(rawValue: nsError.code) {
+            case .fileNoSuchFile:
+                return true
+            case .fileReadNoPermission:
+                return true
+            case .fileReadCorruptFile:
+                return true
             default:
                 return false
             }
-        #else
-            switch nsError.domain {
-            case NSCocoaErrorDomain:
-                return nsError.code == CocoaError.Code.fileNoSuchFile.rawValue
-            case NSFileProviderErrorDomain:
-                return nsError.code == NSFileProviderError.noSuchItem.rawValue
-            default:
-                return false
-            }
+        #if !targetEnvironment(macCatalyst)
+        case NSFileProviderErrorDomain:
+            return nsError.code == NSFileProviderError.noSuchItem.rawValue
         #endif
+        default:
+            return false
+        }
     }
     
     private let data: Data
+    
+    private lazy var dataSHA256: ByteArray = {
+        return ByteArray(data: data).sha256
+    }()
+    
     public let location: Location
     
     internal var bookmarkedURL: URL?
@@ -161,24 +166,37 @@ public class URLReference:
         }
         cachedURL = url
         bookmarkedURL = url
+        data = try URLReference.makeBookmarkData(for: url, location: location) 
         self.location = location
-        if location.isInternal {
-            data = Data() 
-        } else {
-            data = try url.bookmarkData(
-                options: URLReference.getBookmarkCreationOptions(),
-                includingResourceValuesForKeys: nil,
-                relativeTo: nil) 
-        }
         processReference()
     }
-
-    private static func getBookmarkCreationOptions() -> URL.BookmarkCreationOptions {
+    
+    private static func makeBookmarkData(for url: URL, location: Location) throws -> Data {
+        let result: Data
+        
+        let options: URL.BookmarkCreationOptions
         if ProcessInfo.isRunningOnMac {
-            return []
+            options = []
         } else {
-            return [.minimalBookmark]
+            options = [.minimalBookmark]
         }
+        
+        if FileKeeper.platformSupportsSharedReferences {
+            result = try url.bookmarkData(
+                options: options,
+                includingResourceValuesForKeys: nil,
+                relativeTo: nil) 
+        } else {
+            if location.isInternal {
+                result = Data() 
+            } else {
+                result = try url.bookmarkData(
+                    options: options,
+                    includingResourceValuesForKeys: nil,
+                    relativeTo: nil) 
+            }
+        }
+        return result
     }
     
     public static func == (lhs: URLReference, rhs: URLReference) -> Bool {
@@ -188,7 +206,12 @@ public class URLReference:
             Diag.debug("Original URL of the file is nil.")
             return false
         }
-        return lhsOriginalURL == rhsOriginalURL
+        guard lhsOriginalURL == rhsOriginalURL else {
+            return false
+        }
+        let lhsDataHash = lhs.dataSHA256
+        let rhsDataHash = rhs.dataSHA256
+        return lhsDataHash == rhsDataHash
     }
     
     public func hash(into hasher: inout Hasher) {
@@ -227,34 +250,14 @@ public class URLReference:
     public static func create(
         for url: URL,
         location: URLReference.Location,
-        completion callback: @escaping CreateCallback)
-    {
-        let isAccessed = url.startAccessingSecurityScopedResource()
-        defer {
-            if isAccessed {
-                url.stopAccessingSecurityScopedResource()
-            }
-        }
-
-        if tryCreate(for: url, location: location, callbackOnError: false, callback: callback) {
-            print("URL bookmarked on stage 1")
-            return
-        }
-
-        let tmpDoc = BaseDocument(fileURL: url, fileProvider: nil)
-        tmpDoc.open(withTimeout: URLReference.defaultTimeout) { (result) in
-            defer {
-                tmpDoc.close(completionHandler: nil)
-            }
-            switch result {
-            case .success(_):
-                tryCreate(for: url, location: location, callbackOnError: true, callback: callback)
-            case .failure(let fileAccessError):
-                DispatchQueue.main.async {
-                    callback(.failure(fileAccessError))
-                }
-            }
-        }
+        completion: @escaping CreateCallback
+    ) {
+        FileDataProvider.bookmarkFile(
+            at: url,
+            location: location,
+            completionQueue: .main,
+            completion: completion
+        )
     }
     
     @discardableResult
@@ -286,10 +289,23 @@ public class URLReference:
     
     public func resolveAsync(
         timeout: TimeInterval = URLReference.defaultTimeout,
-        callback: @escaping ResolveCallback)
-    {
+        callbackQueue: OperationQueue = .main,
+        callback: @escaping ResolveCallback
+    ) {
+        resolveAsync(
+            byTime: .now() + timeout,
+            callbackQueue: callbackQueue,
+            callback: callback
+        )
+    }
+    
+    public func resolveAsync(
+        byTime: DispatchTime,
+        callbackQueue: OperationQueue = .main,
+        callback: @escaping ResolveCallback
+    ) {
         execute(
-            withTimeout: URLReference.defaultTimeout,
+            byTime: byTime,
             on: URLReference.backgroundQueue,
             slowSyncOperation: { () -> Result<URL, Error> in
                 do {
@@ -304,7 +320,7 @@ public class URLReference:
                 switch result {
                 case .success(let url):
                     self.error = nil
-                    self.dispatchMain {
+                    callbackQueue.addOperation {
                         callback(.success(url))
                     }
                 case .failure(let error):
@@ -313,14 +329,14 @@ public class URLReference:
                         fileProvider: self.fileProvider
                     )
                     self.error = fileAccessError
-                    self.dispatchMain {
+                    callbackQueue.addOperation {
                         callback(.failure(fileAccessError))
                     }
                 }
             },
             onTimeout: { [self] in
                 self.error = FileAccessError.timeout(fileProvider: self.fileProvider)
-                self.dispatchMain {
+                callbackQueue.addOperation {
                     callback(.failure(FileAccessError.timeout(fileProvider: self.fileProvider)))
                 }
             }
@@ -364,94 +380,65 @@ public class URLReference:
     
     public func refreshInfo(
         timeout: TimeInterval = URLReference.defaultTimeout,
-        completion callback: @escaping InfoCallback)
-    {
+        completionQueue: OperationQueue = .main,
+        completion: @escaping InfoCallback
+    ) {
+        let byTime = DispatchTime.now() + timeout
         registerInfoRefreshRequest(.added)
-        resolveAsync(timeout: timeout) {
-            [self] (result) in 
+        resolveAsync(byTime: byTime, callbackQueue: completionQueue) {
+            [weak self] result in
+            guard let self = self else { return }
+
+            assert(completionQueue.isCurrent)
             switch result {
             case .success(let url):
-                URLReference.backgroundQueue.async { 
-                    self.refreshInfo(for: url, completion: callback)
-                }
-            case .failure(let error):
-                self.registerInfoRefreshRequest(.completed)
-                self.error = error
-                callback(.failure(error))
-            }
-        }
-    }
-    
-    private func refreshInfo(for url: URL, completion callback: @escaping InfoCallback) {
-        assert(!Thread.isMainThread)
-
-        let isAccessed = url.startAccessingSecurityScopedResource()
-        
-        let tmpDoc = BaseDocument(fileURL: url, fileProvider: fileProvider)
-        tmpDoc.open(withTimeout: URLReference.defaultTimeout) { [self] (result) in
-            defer {
-                if isAccessed {
-                    url.stopAccessingSecurityScopedResource()
-                }
-                tmpDoc.close(completionHandler: nil)
-            }
-            self.registerInfoRefreshRequest(.completed)
-            switch result {
-            case .success(_):
-                self.readFileInfo(url: url, completion: callback)
+                self.refreshInfo(
+                    for: url,
+                    byTime: byTime,
+                    completionQueue: completionQueue,
+                    completion: completion
+                )
             case .failure(let fileAccessError):
-                DispatchQueue.main.async { 
-                    self.error = fileAccessError
-                    callback(.failure(fileAccessError))
-                }
+                self.registerInfoRefreshRequest(.completed)
+                self.error = fileAccessError
+                completion(.failure(fileAccessError))
             }
         }
     }
     
-    private func readFileInfo(url: URL, completion callback: @escaping InfoCallback) {
-        assert(!Thread.isMainThread)
-        let attributeKeys: Set<URLResourceKey> = [
-            .fileSizeKey,
-            .creationDateKey,
-            .contentModificationDateKey,
-            .isExcludedFromBackupKey,
-            .ubiquitousItemDownloadingStatusKey,
-        ]
-
-        var urlWithFreshAttributes = url
-        urlWithFreshAttributes.removeAllCachedResourceValues()
-        
-        let attributes: URLResourceValues
-        do {
-            attributes = try urlWithFreshAttributes.resourceValues(forKeys: attributeKeys)
-        } catch {
-            Diag.error("Failed to get file info [reason: \(error.localizedDescription)]")
-            let fileAccessError = FileAccessError.systemError(error)
-            DispatchQueue.main.async { 
-                self.error = fileAccessError
-                callback(.failure(fileAccessError))
+    private func refreshInfo(
+        for url: URL,
+        byTime: DispatchTime,
+        completionQueue: OperationQueue,
+        completion: @escaping InfoCallback
+    ) {
+        FileDataProvider.readFileInfo(
+            at: url,
+            fileProvider: nil,
+            canUseCache: false,
+            byTime: byTime,
+            completionQueue: completionQueue,
+            completion: { [weak self] result in
+                guard let self = self else { return }
+                self.registerInfoRefreshRequest(.completed)
+                switch result {
+                case .success(let fileInfo):
+                    self.cachedInfo = fileInfo
+                case .failure(let fileAccessError):
+                    self.error = fileAccessError
+                }
+                completion(result)
             }
-            return
-        }
-        
-        let latestInfo = FileInfo(
-            fileName: urlWithFreshAttributes.lastPathComponent,
-            fileSize: Int64(attributes.fileSize ?? -1),
-            creationDate: attributes.creationDate,
-            modificationDate: attributes.contentModificationDate,
-            isExcludedFromBackup: attributes.isExcludedFromBackup ?? false,
-            isInTrash: url.isInTrashDirectory)
-        self.cachedInfo = latestInfo
-        DispatchQueue.main.async {
-            self.error = nil
-            callback(.success(latestInfo))
-        }
+        )
     }
     
     
     public func resolveSync() throws -> URL {
-        if location.isInternal, let cachedURL = self.cachedURL {
-            return cachedURL
+        if FileKeeper.platformSupportsSharedReferences {
+        } else {
+            if location.isInternal, let cachedURL = self.cachedURL {
+                return cachedURL
+            }
         }
         
         var isStale = false
@@ -465,9 +452,6 @@ public class URLReference:
     }
     
     public func getDescriptor() -> Descriptor? {
-        if let resolvedFileName = resolvedURL?.lastPathComponent {
-            return resolvedFileName
-        }
         if let cachedFileName = cachedURL?.lastPathComponent {
             return cachedFileName
         }
@@ -619,8 +603,12 @@ public class URLReference:
                 self.fileProvider = .localStorage
                 return
             }
-            assertionFailure()
-            self.fileProvider = nil
+            if FileKeeper.platformSupportsSharedReferences {
+                self.fileProvider = .localStorage
+            } else {
+                assertionFailure()
+                self.fileProvider = nil
+            }
         }
     }
 }

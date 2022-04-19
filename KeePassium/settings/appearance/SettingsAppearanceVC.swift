@@ -1,30 +1,28 @@
+//  KeePassium Password Manager
+//  Copyright © 2018–2022 Andrei Popleteev <info@keepassium.com>
 //
-//  SettingsAppearanceVC.swift
-//  KeePassium
-//
-//  Created by Andrei on 29/11/2020.
-//  Copyright © 2020 Andrei Popleteev. All rights reserved.
-//
+//  This program is free software: you can redistribute it and/or modify it
+//  under the terms of the GNU General Public License version 3 as published
+//  by the Free Software Foundation: https://www.gnu.org/licenses/).
+//  For commercial licensing, please contact the author.
 
 import KeePassiumLib
 
-class SettingsAppearanceVC: UITableViewController {
+protocol SettingsAppearanceViewControllerDelegate: AnyObject {
+    func didPressAppIconSettings(in viewController: SettingsAppearanceVC)
+    func didPressDatabaseIconsSettings(in viewController: SettingsAppearanceVC)
+}
+
+final class SettingsAppearanceVC: UITableViewController {
     
-    @IBOutlet weak var appIconCell: UITableViewCell!
-    @IBOutlet weak var databaseIconsCell: UITableViewCell!
+    @IBOutlet private weak var appIconCell: UITableViewCell!
+    @IBOutlet private weak var databaseIconsCell: UITableViewCell!
     
-    @IBOutlet weak var textScaleLabel: UILabel!
-    @IBOutlet weak var entryTextScaleSlider: UISlider!
-    @IBOutlet weak var hideProtectedFieldsSwitch: UISwitch!
+    @IBOutlet private weak var textScaleLabel: UILabel!
+    @IBOutlet private weak var entryTextScaleSlider: UISlider!
+    @IBOutlet private weak var hideProtectedFieldsSwitch: UISwitch!
     
-    weak var router: NavigationRouter?
-    private var appIconSwitcherCoordinator: AppIconSwitcherCoordinator?
-    private var databaseIconSwitcherCoordinator: DatabaseIconSetSwitcherCoordinator?
-    
-    deinit {
-        appIconSwitcherCoordinator = nil
-        databaseIconSwitcherCoordinator = nil
-    }
+    weak var delegate: SettingsAppearanceViewControllerDelegate?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -34,12 +32,8 @@ class SettingsAppearanceVC: UITableViewController {
         entryTextScaleSlider.minimumValue = Float(textScaleRange.lowerBound)
         entryTextScaleSlider.maximumValue = Float(textScaleRange.upperBound)
         
-        let textSizeString = NSLocalizedString(
-            "[Appearance/TextSize/title]",
-            value: "Text Size",
-            comment: "Title of a setting option: font size")
-        textScaleLabel.text = textSizeString
-        entryTextScaleSlider.accessibilityLabel = textSizeString
+        textScaleLabel.text = LString.titleTextSize
+        entryTextScaleSlider.accessibilityLabel = LString.titleTextSize
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -56,12 +50,37 @@ class SettingsAppearanceVC: UITableViewController {
         entryTextScaleSlider.value = Float(textScale)
         tableView.performBatchUpdates(
             { [weak textScaleLabel] in
-                textScaleLabel?.font = UIFont.monospaceFont(ofSize: 17 * textScale, forTextStyle: .body)
+                textScaleLabel?.font = UIFont
+                    .monospaceFont(forTextStyle: .body)
+                    .withRelativeSize(textScale)
             },
             completion: nil
         )
         
         databaseIconsCell.imageView?.image = settings.databaseIconSet.getIcon(.key)
+    }
+    
+    
+    override func tableView(
+        _ tableView: UITableView,
+        willDisplay cell: UITableViewCell,
+        forRowAt indexPath: IndexPath)
+    {
+        if indexPath.section == 0,
+           indexPath.row == 0
+        {
+            cell.isHidden = !UIApplication.shared.supportsAlternateIcons
+        }
+    }
+    
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        if indexPath.section == 0,
+           indexPath.row == 0,
+           !UIApplication.shared.supportsAlternateIcons
+        {
+            return 0 
+        }
+        return super.tableView(tableView, heightForRowAt: indexPath)
     }
     
     
@@ -74,9 +93,9 @@ class SettingsAppearanceVC: UITableViewController {
         }
         switch cell {
         case appIconCell:
-            showAppIconSettings()
+            delegate?.didPressAppIconSettings(in: self)
         case databaseIconsCell:
-            showDatabaseIconSwitcher()
+            delegate?.didPressDatabaseIconsSettings(in: self)
         default:
             break
         }
@@ -95,25 +114,5 @@ class SettingsAppearanceVC: UITableViewController {
     @IBAction func didToggleHideProtectedFieldsSwitch(_ sender: UISwitch) {
         Settings.current.isHideProtectedFields = hideProtectedFieldsSwitch.isOn
         refresh()
-    }
-    
-    private func showAppIconSettings() {
-        assert(appIconSwitcherCoordinator == nil)
-        guard let router = router else { assertionFailure(); return }
-        appIconSwitcherCoordinator = AppIconSwitcherCoordinator(router: router)
-        appIconSwitcherCoordinator!.dismissHandler = { [weak self] (coordinator) in
-            self?.appIconSwitcherCoordinator = nil
-        }
-        appIconSwitcherCoordinator!.start()
-    }
-    
-    private func showDatabaseIconSwitcher() {
-        assert(databaseIconSwitcherCoordinator == nil)
-        guard let router = router else { assertionFailure(); return }
-        databaseIconSwitcherCoordinator = DatabaseIconSetSwitcherCoordinator(router: router)
-        databaseIconSwitcherCoordinator!.dismissHandler = { [weak self] (coordinator) in
-            self?.databaseIconSwitcherCoordinator = nil
-        }
-        databaseIconSwitcherCoordinator!.start()
     }
 }

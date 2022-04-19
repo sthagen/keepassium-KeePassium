@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2019 Andrei Popleteev <info@keepassium.com>
+//  Copyright © 2018–2022 Andrei Popleteev <info@keepassium.com>
 // 
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -25,7 +25,7 @@ final class TwofishDataCipher: DataCipher {
         self.isPaddingLikelyMessedUp = isPaddingLikelyMessedUp
     }
 
-    func encrypt(plainText data: ByteArray, key: ByteArray, iv: ByteArray) throws -> ByteArray {
+    func encrypt(plainText data: ByteArray, key: SecureBytes, iv: SecureBytes) throws -> ByteArray {
         assert(key.count == self.keySize)
         assert(iv.count == self.initialVectorSize)
         
@@ -42,7 +42,7 @@ final class TwofishDataCipher: DataCipher {
         return dataClone
     }
     
-    func decrypt(cipherText encData: ByteArray, key: ByteArray, iv: ByteArray) throws -> ByteArray {
+    func decrypt(cipherText encData: ByteArray, key: SecureBytes, iv: SecureBytes) throws -> ByteArray {
         assert(key.count == self.keySize)
         assert(iv.count == self.initialVectorSize)
         progress.localizedDescription = NSLocalizedString(

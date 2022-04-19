@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2021 Andrei Popleteev <info@keepassium.com>
+//  Copyright © 2018–2022 Andrei Popleteev <info@keepassium.com>
 //
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -10,15 +10,22 @@ import KeePassiumLib
 
 protocol EntryFieldEditorCoordinatorDelegate: AnyObject {
     func didUpdateEntry(_ entry: Entry, in coordinator: EntryFieldEditorCoordinator)
+    
+    func didRelocateDatabase(_ databaseFile: DatabaseFile, to url: URL)
 }
 
-final class EntryFieldEditorCoordinator: Coordinator, DatabaseSaving {
+final class EntryFieldEditorCoordinator: Coordinator {
     private typealias RollbackRoutine = () -> Void
     
     var childCoordinators = [Coordinator]()
     var dismissHandler: CoordinatorDismissHandler?
     weak var delegate: EntryFieldEditorCoordinatorDelegate?
     
+    public var isCreating: Bool {
+        originalEntry == nil
+    }
+    
+    private let databaseFile: DatabaseFile
     private let database: Database
     private let parent: Group 
     private let originalEntry: Entry? 
@@ -42,11 +49,14 @@ final class EntryFieldEditorCoordinator: Coordinator, DatabaseSaving {
         }
     }
     
-    internal var databaseExporterTemporaryURL: TemporaryFileURL?
-        
-    init(router: NavigationRouter, database: Database, parent: Group, target: Entry?) {
+    var databaseSaver: DatabaseSaver?
+    var fileExportHelper: FileExportHelper?
+    var savingProgressHost: ProgressViewHost? { return router }
+    
+    init(router: NavigationRouter, databaseFile: DatabaseFile, parent: Group, target: Entry?) {
         self.router = router
-        self.database = database
+        self.databaseFile = databaseFile
+        self.database = databaseFile.database
         self.parent = parent
         self.originalEntry = target
         
@@ -79,8 +89,7 @@ final class EntryFieldEditorCoordinator: Coordinator, DatabaseSaving {
     }
     
     func start() {
-        router.push(fieldEditorVC, animated: true, onPop: {
-            [weak self] viewController in
+        router.push(fieldEditorVC, animated: true, onPop: { [weak self] in
             guard let self = self else { return }
             self.removeAllChildCoordinators()
             self.dismissHandler?(self)
@@ -118,10 +127,7 @@ final class EntryFieldEditorCoordinator: Coordinator, DatabaseSaving {
                 self.parent.remove(entry: self.entry)
             }
         }
-        
-        let databaseManager = DatabaseManager.shared
-        databaseManager.addObserver(self)
-        databaseManager.startSavingDatabase()
+        saveDatabase(databaseFile)
     }
     
     private func setOTPCode(data: String) {
@@ -148,35 +154,37 @@ final class EntryFieldEditorCoordinator: Coordinator, DatabaseSaving {
         router.push(vc, animated: true, onPop: nil)
     }
     
-    private func showUserNameGenerator(
-        at popoverAnchor: PopoverAnchor,
-        completion: @escaping (String?)->Void
-    ) {
-        let namePicker = UIAlertController(
+    @available(iOS 14, *)
+    private func makeUserNameGeneratorMenu(for field: EditableField) -> UIMenu {
+        let applyUserName: UIActionHandler = { (action) in
+            field.value = action.title
+            self.isModified = true
+            self.refresh()
+        }
+        
+        let frequentUserNames = UserNameHelper.getUserNameSuggestions(from: database, count: 4)
+        let frequentNamesMenuItems = frequentUserNames.map { (userName) -> UIAction in
+            UIAction(title: userName, image: nil, handler: applyUserName)
+        }
+        let frequentNamesMenu = UIMenu.make(
+            reverse: false, 
+            options: .displayInline,
+            children: frequentNamesMenuItems
+        )
+        
+        let randomUserNames = UserNameHelper.getRandomUserNames(count: 3)
+        let randomNamesMenuItems = randomUserNames.map { (userName) -> UIAction in
+            UIAction(
+                title: userName,
+                image: UIImage(systemName: "wand.and.stars"),
+                handler: applyUserName
+            )
+        }
+        let randomNamesMenu = UIMenu.make(options: .displayInline, children: randomNamesMenuItems)
+
+        return UIMenu.make(
             title: LString.fieldUserName,
-            message: nil,
-            preferredStyle: .actionSheet)
-        let userNames = UserNameHelper.getUserNameSuggestions(from: database, count: 4)
-        userNames.forEach { userName in
-            namePicker.addAction(title: userName, style: .default) { _ in
-                completion(userName)
-            }
-        }
-        
-        let randomUserName = UserNameHelper.getRandomUserName()
-        let randomTitle = LString.directionAwareConcatenate(["🎲", " ", randomUserName])
-        namePicker.addAction(title: randomTitle, style: .default) { _ in
-            completion(randomUserName)
-        }
-        
-        namePicker.addAction(title: LString.actionCancel, style: .cancel, handler: nil)
-        
-        namePicker.modalPresentationStyle = .popover
-        if let popover = namePicker.popoverPresentationController {
-            popoverAnchor.apply(to: popover)
-            popover.permittedArrowDirections = [.up, .down]
-        }
-        router.present(namePicker, animated: true, completion: nil)
+            children: [frequentNamesMenu, randomNamesMenu])
     }
     
     private func showDiagnostics() {
@@ -189,7 +197,10 @@ final class EntryFieldEditorCoordinator: Coordinator, DatabaseSaving {
     }
     
     func showIconPicker(at popoverAnchor: PopoverAnchor) {
-        let iconPickerCoordinator = ItemIconPickerCoordinator(router: router, database: database)
+        let iconPickerCoordinator = ItemIconPickerCoordinator(
+            router: router,
+            databaseFile: databaseFile
+        )
         iconPickerCoordinator.item = entry
         iconPickerCoordinator.dismissHandler = { [weak self] (coordinator) in
             self?.removeChildCoordinator(coordinator)
@@ -297,20 +308,11 @@ extension EntryFieldEditorCoordinator: EntryFieldEditorDelegate {
         }
     }
     
-    func didPressUserNameGenerator(
+    func getUserNameGeneratorMenu(
         for field: EditableField,
-        at popoverAnchor: PopoverAnchor,
         in viewController: EntryFieldEditorVC
-    ) {
-        showUserNameGenerator(at: popoverAnchor, completion: {
-            [weak self, weak field] (userName) in
-            guard let self = self,
-                  let field = field,
-                  userName != nil else { return }
-            field.value = userName
-            self.isModified = true
-            self.refresh()
-        })
+    ) -> UIMenu? {
+        return makeUserNameGeneratorMenu(for: field)
     }
     
     func didPressPickIcon(at popoverAnchor: PopoverAnchor, in viewController: EntryFieldEditorVC) {
@@ -319,8 +321,11 @@ extension EntryFieldEditorCoordinator: EntryFieldEditorDelegate {
 }
 
 extension EntryFieldEditorCoordinator: ItemIconPickerCoordinatorDelegate {
+    func didRelocateDatabase(_ databaseFile: DatabaseFile, to url: URL) {
+        delegate?.didRelocateDatabase(databaseFile, to: url)
+    }
+    
     func didSelectIcon(standardIcon: IconID, in coordinator: ItemIconPickerCoordinator) {
-        guard standardIcon != entry.iconID else { return }
         entry.iconID = standardIcon
         if let entry2 = entry as? Entry2 {
             entry2.customIconUUID = .ZERO
@@ -352,54 +357,37 @@ extension EntryFieldEditorCoordinator: ItemIconPickerCoordinatorDelegate {
     }
 }
 
-extension EntryFieldEditorCoordinator: DatabaseManagerObserver {
-    func databaseManager(willSaveDatabase urlRef: URLReference) {
-        router.showProgressView(title: LString.databaseStatusSaving, allowCancelling: true)
-    }
-    
-    func databaseManager(progressDidChange progress: ProgressEx) {
-        router.updateProgressView(with: progress)
-    }
-    
-    func databaseManager(database urlRef: URLReference, isCancelled: Bool) {
-        DatabaseManager.shared.removeObserver(self)
-        router.hideProgressView()
+extension EntryFieldEditorCoordinator: DatabaseSaving {
+    func didCancelSaving(databaseFile: DatabaseFile) {
         rollbackPreSaveActions?()
         rollbackPreSaveActions = nil
     }
     
-    func databaseManager(didSaveDatabase urlRef: URLReference) {
-        DatabaseManager.shared.removeObserver(self)
+    func didSave(databaseFile: DatabaseFile) {
         isModified = false
 
         let changedEntry = originalEntry ?? entry
         delegate?.didUpdateEntry(changedEntry, in: self)
         EntryChangeNotifications.post(entryDidChange: changedEntry)
 
-        router.hideProgressView()
         router.pop(animated: true)
     }
     
-    func databaseManager(
-        database urlRef: URLReference,
-        savingError error: Error,
-        data: ByteArray?)
-    {
-        DatabaseManager.shared.removeObserver(self)
-        router.hideProgressView()
-        
+    func didFailSaving(databaseFile: DatabaseFile) {
         rollbackPreSaveActions?()
         rollbackPreSaveActions = nil
-        
-        showDatabaseSavingError(
-            error,
-            fileName: urlRef.visibleFileName,
-            diagnosticsHandler: { [weak self] in
-                self?.showDiagnostics()
-            },
-            exportableData: data,
-            parent: fieldEditorVC
-        )
+    }
+    
+    func didRelocate(databaseFile: DatabaseFile, to newURL: URL) {
+        delegate?.didRelocateDatabase(databaseFile, to: newURL)
+    }
+    
+    func getDatabaseSavingErrorParent() -> UIViewController {
+        return fieldEditorVC
+    }
+    
+    func getDiagnosticsHandler() -> (() -> Void)? {
+        return showDiagnostics
     }
 }
 

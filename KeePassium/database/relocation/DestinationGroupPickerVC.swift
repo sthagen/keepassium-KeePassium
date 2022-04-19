@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2019 Andrei Popleteev <info@keepassium.com>
+//  Copyright © 2018–2022 Andrei Popleteev <info@keepassium.com>
 //
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -9,10 +9,14 @@
 import Foundation
 import KeePassiumLib
 
-protocol DestinationGroupPickerDelegate: class {
+protocol DestinationGroupPickerDelegate: AnyObject {
     func didPressCancel(in groupPicker: DestinationGroupPickerVC)
     func shouldSelectGroup(_ group: Group, in groupPicker: DestinationGroupPickerVC) -> Bool
     func didSelectGroup(_ group: Group, in groupPicker: DestinationGroupPickerVC)
+    func didPressSwitchDatabase(
+        at popoverAnchor: PopoverAnchor,
+        in groupPicker: DestinationGroupPickerVC
+    )
 }
 
 class DestinationGroupPickerCell: UITableViewCell {
@@ -105,17 +109,23 @@ class DestinationGroupPickerVC: UITableViewController, Refreshable {
             } else {
                 rootNode = nil
             }
+            selectedGroup = rootGroup
             refresh()
         }
     }
     
     private var rootNode: Node?
     private var flatNodes = [Node]()
+    private var canSwitchDatabase = true
+
     
-    
-    public static func create(mode: ItemRelocationMode) -> DestinationGroupPickerVC {
+    public static func create(
+        mode: ItemRelocationMode,
+        canSwitchDatabase: Bool = true
+    ) -> DestinationGroupPickerVC {
         let vc = DestinationGroupPickerVC.instantiateFromStoryboard()
         vc.mode = mode
+        vc.canSwitchDatabase = canSwitchDatabase
         return vc
     }
     
@@ -127,6 +137,23 @@ class DestinationGroupPickerVC: UITableViewController, Refreshable {
         case .copy:
             doneButton.title = LString.actionCopy
         }
+        
+        let switchDatabaseButton = UIBarButtonItem(
+            title: LString.actionSwitchDatabase,
+            style: .plain,
+            target: self,
+            action: #selector(didPressSwitchDatabase(_:))
+        )
+        switchDatabaseButton.isEnabled = canSwitchDatabase
+        
+        setToolbarItems(
+            [
+                UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil),
+                switchDatabaseButton,
+                UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+            ],
+            animated: false
+        )
     }
     
     func refresh() {
@@ -210,10 +237,7 @@ class DestinationGroupPickerVC: UITableViewController, Refreshable {
     
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         guard section == 0 else { return nil }
-        return NSLocalizedString(
-            "[General/DestinationGroup/title] Choose a Destination",
-            value: "Choose a Destination",
-            comment: "Title of the dialog for picking the destination group for move/copy operations")
+        return LString.callToActionChooseDestinationGroup
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -316,5 +340,11 @@ class DestinationGroupPickerVC: UITableViewController, Refreshable {
             return
         }
         delegate?.didSelectGroup(selectedGroup, in: self)
+    }
+    
+    @objc
+    private func didPressSwitchDatabase(_ sender: UIBarButtonItem) {
+        let popoverAnchor = PopoverAnchor(barButtonItem: sender)
+        delegate?.didPressSwitchDatabase(at: popoverAnchor, in: self)
     }
 }

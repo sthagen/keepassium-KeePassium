@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2019 Andrei Popleteev <info@keepassium.com>
+//  Copyright © 2018–2022 Andrei Popleteev <info@keepassium.com>
 // 
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -17,9 +17,7 @@ class ViewableFieldCellFactory {
         field: ViewableField
     ) -> ViewableFieldCell {
         
-        let shouldHideField =
-            (field.isProtected || (field.internalName == EntryField.password))
-            && Settings.current.isHideProtectedFields
+        let isPasswordField = field.internalName == EntryField.password
         let isOpenableURL = field.resolvedValue?.isOpenableURL ?? false
         
         let cell: ViewableFieldCell
@@ -28,7 +26,7 @@ class ViewableFieldCellFactory {
                 withIdentifier: TOTPFieldCell.storyboardID,
                 for: indexPath)
                 as! TOTPFieldCell
-        } else if shouldHideField {
+        } else if field.isProtected || isPasswordField {
             cell = tableView.dequeueReusableCell(
                 withIdentifier: ProtectedFieldCell.storyboardID,
                 for: indexPath)
@@ -56,7 +54,7 @@ class ViewableFieldCellFactory {
 }
 
 
-protocol ViewableFieldCellDelegate: class {
+protocol ViewableFieldCellDelegate: AnyObject {
     func cellHeightDidChange(_ cell: ViewableFieldCell)
     
     func cellDidExpand(_ cell: ViewableFieldCell)
@@ -74,7 +72,7 @@ extension ViewableFieldCellDelegate {
 }
 
 
-protocol ViewableFieldCellBase: class {
+protocol ViewableFieldCellBase: AnyObject {
     var nameLabel: UILabel! { get }
     var valueText: UITextView! { get }
     var valueScrollView: UIScrollView! { get }
@@ -107,13 +105,24 @@ class ViewableFieldCell: UITableViewCell, ViewableFieldCellBase {
             action: #selector(didTapValueTextView))
         scrollTapGestureRecognizer.numberOfTapsRequired = 1
         valueScrollView.addGestureRecognizer(scrollTapGestureRecognizer)
+        
+        valueScrollView.alwaysBounceVertical = false
+        valueScrollView.alwaysBounceHorizontal = false
+        if ProcessInfo.isCatalystApp {
+            valueScrollView.isScrollEnabled = false
+            valueScrollView.showsVerticalScrollIndicator = false
+        }
     }
     
     func setupCell() {
         let textScale = Settings.current.textScale
-        nameLabel.font = UIFont.systemFont(ofSize: 15 * textScale, forTextStyle: .subheadline, weight: .thin)
+        nameLabel.font = UIFont
+            .preferredFont(forTextStyle: .subheadline)
+            .withRelativeSize(textScale)
         nameLabel.adjustsFontForContentSizeCategory = true
-        valueText.font = UIFont.monospaceFont(ofSize: 17 * textScale, forTextStyle: .body)
+        valueText.font = UIFont
+            .monospaceFont(forTextStyle: .body)
+            .withRelativeSize(textScale)
         valueText.adjustsFontForContentSizeCategory = true
         
         nameLabel.text = field?.visibleName
@@ -359,11 +368,38 @@ class ExpandableFieldCell: ViewableFieldCell {
 }
 
 
-class TOTPFieldCell: ViewableFieldCell {
+protocol DynamicFieldCell: ViewableFieldCell, Refreshable {
+    func startRefreshing()
+    func stopRefreshing()
+    
+}
+
+
+class TOTPFieldCell: ViewableFieldCell, DynamicFieldCell {
     override class var storyboardID: String { "TOTPFieldCell" }
     private let refreshInterval = 1.0
     
     @IBOutlet weak var progressView: UIProgressView!
+    
+    private var refreshTimer: Timer?
+    
+    deinit {
+        stopRefreshing()
+    }
+    
+    func startRefreshing() {
+        assert(refreshTimer == nil, "Already refreshing")
+        refresh()
+        refreshTimer = Timer.scheduledTimer(withTimeInterval: refreshInterval, repeats: true) {
+            [weak self] _ in
+            self?.refresh()
+        }
+    }
+    
+    func stopRefreshing() {
+        refreshTimer?.invalidate()
+        refreshTimer = nil
+    }
     
     override func getUserVisibleValue() -> String? {
         guard var value = field?.value else { return nil }
@@ -383,26 +419,17 @@ class TOTPFieldCell: ViewableFieldCell {
         accessoryView = nil
         accessoryType = .none
         progressView.isHidden = false
-        refreshProgress()
-        scheduleRefresh()
+        refresh()
     }
     
-    private func scheduleRefresh() {
-        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + refreshInterval) {
-            [weak self] in
-            guard let self = self else { return }
-            self.valueText.text = self.getUserVisibleValue()
-            self.refreshProgress()
-            self.scheduleRefresh()
-        }
-    }
-    
-    private func refreshProgress() {
+    func refresh() {
         guard let totpViewableField = field as? TOTPViewableField else {
             assertionFailure()
             return
         }
         let progress = 1 - (totpViewableField.elapsedTimeFraction ?? 0.0)
-        progressView.setProgress(progress, animated: true)
+        progressView.setProgress(Float(progress), animated: true)
+
+        valueText.text = getUserVisibleValue()
     }
 }

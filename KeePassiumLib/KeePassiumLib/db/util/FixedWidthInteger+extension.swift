@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2019 Andrei Popleteev <info@keepassium.com>
+//  Copyright © 2018–2022 Andrei Popleteev <info@keepassium.com>
 // 
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -37,8 +37,7 @@ extension FixedWidthInteger {
     }
     
     var bytes: [UInt8] {
-        var value = self
-        return withUnsafeBytes(of: &value) { Array($0) }
+        return withUnsafeBytes(of: self) { Array($0) }
     }
     var asHexString: String {
         let size = MemoryLayout<Self>.size

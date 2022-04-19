@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2019 Andrei Popleteev <info@keepassium.com>
+//  Copyright © 2018–2022 Andrei Popleteev <info@keepassium.com>
 // 
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -120,8 +120,8 @@ public class Database2: Database {
     public var binaries: [Binary2.ID: Binary2] = [:]
     public var customIcons: [CustomIcon2] { return meta.customIcons }
     public var defaultUserName: String { return meta.defaultUserName }
-    private var cipherKey = SecureByteArray()
-    private var hmacKey = SecureByteArray()
+    private var cipherKey = SecureBytes.empty()
+    private var hmacKey = SecureBytes.empty()
     private var deletedObjects: ContiguousArray<DeletedObject2> = []
     
     override public var keyHelper: KeyHelper { return _keyHelper }
@@ -145,6 +145,7 @@ public class Database2: Database {
         hmacKey.erase()
         deletedObjects.removeAll()
         super.erase()
+        Diag.debug("DB memory cleaned up")
     }
     
     internal static func makeNewV4() -> Database2 {
@@ -266,19 +267,23 @@ public class Database2: Database {
             Diag.verbose("== DB2 progress CP5: \(progress.completedUnitCount)")
         } catch let error as Header2.HeaderError {
             Diag.error("Header error [reason: \(error.localizedDescription)]")
-            throw DatabaseError.loadError(reason: error.localizedDescription)
+            throw DatabaseError.loadError(
+                reason: .headerError(reason: error.localizedDescription)
+            )
         } catch let error as CryptoError {
             Diag.error("Crypto error [reason: \(error.localizedDescription)]")
-            throw DatabaseError.loadError(reason: error.localizedDescription)
+            throw DatabaseError.loadError(reason: .cryptoError(error))
         } catch let error as KeyFileError {
             Diag.error("Key file error [reason: \(error.localizedDescription)]")
-            throw DatabaseError.loadError(reason: error.localizedDescription)
+            throw DatabaseError.loadError(reason: .keyFileError(error))
         } catch let error as ChallengeResponseError {
             Diag.error("Challenge-response error [reason: \(error.localizedDescription)]")
-            throw DatabaseError.loadError(reason: error.localizedDescription)
+            throw DatabaseError.loadError(reason: .challengeResponseError(error))
         } catch let error as FormatError {
             Diag.error("Format error [reason: \(error.localizedDescription)]")
-            throw DatabaseError.loadError(reason: error.localizedDescription)
+            throw DatabaseError.loadError(
+                reason: .formatError(reason: error.localizedDescription)
+            )
         } catch let error as GzipError {
             Diag.error("Gzip error [kind: \(error.kind), message: \(error.message)]")
             let reason = String.localizedStringWithFormat(
@@ -288,7 +293,7 @@ public class Database2: Database {
                     value: "Error unpacking database: %@",
                     comment: "Error message about Gzip compression algorithm. [errorMessage: String]"),
                 error.localizedDescription)
-            throw DatabaseError.loadError(reason: reason)
+            throw DatabaseError.loadError(reason: .gzipError(reason: reason))
         }
         
         self.compositeKey = compositeKey
@@ -324,11 +329,15 @@ public class Database2: Database {
         readingProgress.totalUnitCount = Int64(blockBytesCount)
         readingProgress.localizedDescription = LString.Progress.database2ReadingContent
         progress.addChild(readingProgress, withPendingUnitCount: ProgressSteps.readingBlocks)
+        
         var blockIndex: UInt64 = 0
         while true {
             guard let storedBlockHMAC = inStream.read(count: SHA256_SIZE) else {
                 throw FormatError.prematureDataEnd
             }
+            #if DEBUG
+            print("Stored block HMAC: \(storedBlockHMAC.asHexString)")
+            #endif
             guard let blockSize = inStream.readInt32() else {
                 throw FormatError.prematureDataEnd
             }
@@ -358,10 +367,24 @@ public class Database2: Database {
         
         Diag.verbose("Will decrypt \(allBlocksData.count) bytes")
         progress.addChild(cipher.initProgress(), withPendingUnitCount: ProgressSteps.decryption)
+
+        #if DEBUG
+        hmacKey.withDecryptedByteArray {
+            print("hmacKey plain: \($0.asHexString)")
+        }
+        print("hmacKey enc: \(hmacKey.description)")
+
+        cipherKey.withDecryptedByteArray {
+            print("cipherKey plain: \($0.asHexString)")
+        }
+        print("cipherKey enc: \(cipherKey.description)")
+        #endif
+        
         let decryptedData = try cipher.decrypt(
             cipherText: allBlocksData,
             key: cipherKey,
-            iv: header.initialVector) 
+            iv: SecureBytes.from(header.initialVector)
+        ) 
         Diag.verbose("Decrypted \(decryptedData.count) bytes")
 
         return decryptedData
@@ -373,7 +396,7 @@ public class Database2: Database {
         let decryptedData = try cipher.decrypt(
             cipherText: data,
             key: cipherKey,
-            iv: header.initialVector) 
+            iv: SecureBytes.from(header.initialVector)) 
         Diag.verbose("Decrypted \(decryptedData.count) bytes")
         
         let decryptedStream = decryptedData.asInputStream()
@@ -529,6 +552,11 @@ public class Database2: Database {
             Diag.debug("XML content loaded OK")
         } catch let error as Header2.HeaderError {
             Diag.error("Header error [reason: \(error.localizedDescription)]")
+            if Diag.isDeepDebugMode() {
+                header.protectedStreamKey?.withDecryptedByteArray {
+                    Diag.debug("Inner encryption key: `\($0.asHexString)`")
+                }
+            }
             throw FormatError.parsingError(reason: error.localizedDescription)
         } catch let error as Xml2.ParsingError {
             Diag.error("XML parsing error [reason: \(error.localizedDescription)]")
@@ -597,7 +625,7 @@ public class Database2: Database {
         }
 
         progress.addChild(header.kdf.initProgress(), withPendingUnitCount: ProgressSteps.keyDerivation)
-        var combinedComponents: SecureByteArray
+        var combinedComponents: SecureBytes
         if compositeKey.state == .processedComponents {
             combinedComponents = try keyHelper.combineComponents(
                 passwordData: compositeKey.passwordData!, 
@@ -610,8 +638,8 @@ public class Database2: Database {
             preconditionFailure("Unexpected key state")
         }
         
-        let secureMasterSeed = SecureByteArray(header.masterSeed)
-        let joinedKey: SecureByteArray
+        let secureMasterSeed = SecureBytes.from(header.masterSeed)
+        let joinedKey: SecureBytes
         switch header.formatVersion {
         case .v3:
             
@@ -622,25 +650,25 @@ public class Database2: Database {
                 params: header.kdfParams)
             
             let challengeResponse = try compositeKey.getResponse(challenge: secureMasterSeed) 
-            joinedKey = SecureByteArray.concat(secureMasterSeed, challengeResponse, transformedKey)
+            joinedKey = SecureBytes.concat(secureMasterSeed, challengeResponse, transformedKey)
         case .v4, .v4_1:
             
             let challenge = try header.kdf.getChallenge(header.kdfParams) 
-            let secureChallenge = SecureByteArray(challenge)
+            let secureChallenge = SecureBytes.from(challenge)
 
             let challengeResponse = try compositeKey.getResponse(challenge: secureChallenge) 
-            combinedComponents = SecureByteArray.concat(combinedComponents, challengeResponse)
+            combinedComponents = SecureBytes.concat(combinedComponents, challengeResponse)
             
             let keyToTransform = keyHelper.getKey(fromCombinedComponents: combinedComponents)
             
             let transformedKey = try header.kdf.transform(
                 key: keyToTransform,
                 params: header.kdfParams)
-            joinedKey = SecureByteArray.concat(secureMasterSeed, transformedKey)
+            joinedKey = SecureBytes.concat(secureMasterSeed, transformedKey)
         }
         self.cipherKey = cipher.resizeKey(key: joinedKey)
-        let one = SecureByteArray(bytes: [1])
-        self.hmacKey = SecureByteArray.concat(joinedKey, one).sha512
+        let one = SecureBytes.from([1])
+        self.hmacKey = SecureBytes.concat(joinedKey, one).sha512
         compositeKey.setFinalKeys(hmacKey, cipherKey)
     }
     
@@ -718,16 +746,7 @@ public class Database2: Database {
         let missingBinaries = usedIDs.subtracting(knownIDs)
         
         if unusedBinaries.count > 0 {
-            let lastUsedAppName = warnings.databaseGenerator ?? ""
-            let warningMessage = String.localizedStringWithFormat(
-                NSLocalizedString(
-                    "[Database2/Loading/Warning/unusedAttachments]",
-                    bundle: Bundle.framework,
-                    value: "The database contains some attachments that are not used in any entry. Most likely, they have been forgotten by the last used app (%@). However, this can also be a sign of data corruption. \nPlease make sure to have a backup of your database before changing anything.",
-                    comment: "A warning about unused attachments after loading the database. [lastUsedAppName: String]"),
-                lastUsedAppName)
-            warnings.messages.append(warningMessage)
-            warnings.isGeneratorImportant = true
+            warnings.addIssue(.unusedAttachments)
             
             let unusedIDs = unusedBinaries
                 .map { String($0) }
@@ -741,21 +760,8 @@ public class Database2: Database {
             allEntries.forEach { (entry) in
                 mapAttachmentNamesByID(of: entry as! Entry2, nameByID: &attachmentNameByID)
             }
-            let attachmentNames = missingBinaries
-                .compactMap { attachmentNameByID[$0] } 
-                .map { "\"\($0)\"" } 
-                .joined(separator: "\n ") 
-            
-            let lastUsedAppName = warnings.databaseGenerator ?? ""
-            let warningMessage = String.localizedStringWithFormat(
-                NSLocalizedString(
-                    "[Database2/Loading/Warning/missingBinaries]",
-                    bundle: Bundle.framework,
-                    value: "Attachments of some entries are missing data. This is a sign of database corruption, most likely by the last used app (%@). KeePassium will preserve the empty attachments, but cannot restore them. You should restore your database from a backup copy. \n\nMissing attachments: %@",
-                    comment: "A warning about missing attachments after loading the database. [lastUsedAppName: String, attachmentNames: String]"),
-                lastUsedAppName,
-                attachmentNames)
-            warnings.messages.append(warningMessage)
+            let attachmentNames = missingBinaries.compactMap { attachmentNameByID[$0] }
+            warnings.addIssue(.missingBinaries(attachmentNames: attachmentNames))
 
             let missingIDs = missingBinaries
                 .map { String($0) }
@@ -791,21 +797,11 @@ public class Database2: Database {
         if affectedEntries.isEmpty {
             return
         }
-        let listOfEntryNames = affectedEntries
-            .compactMap { $0.getGroupPath() + "/" + $0.resolvedTitle } 
-            .map { "\"\($0)\"" } 
-            .joined(separator: "\n ") 
         
-        let warningMessage = String.localizedStringWithFormat(
-            NSLocalizedString(
-                "[Database2/Loading/Warning/namelessAttachments]",
-                bundle: Bundle.framework,
-                value: "Some entries have attachments without a name. This is a sign of previous database corruption.\n\n Please review attached files in the following entries (and their history):\n%@",
-                comment: "A warning about nameless attachments, shown after loading the database. [listOfEntryNames: String]"),
-            listOfEntryNames)
-        Diag.warning(warningMessage)
-        warnings.messages.append(warningMessage)
-        warnings.isGeneratorImportant = true
+        let entryNames = affectedEntries.compactMap {$0.getGroupPath() + "/" + $0.resolvedTitle }
+        let issue = DatabaseLoadingWarnings.IssueType.namelessAttachments(entryNames: entryNames)
+        warnings.addIssue(issue)
+        Diag.warning(warnings.getDescription(for: issue))
     }
     
     private func checkCustomFieldsIntegrity(allEntries: [Entry], warnings: DatabaseLoadingWarnings) {
@@ -818,17 +814,8 @@ public class Database2: Database {
         guard problematicEntries.count > 0 else { return }
         
         let entryPaths = problematicEntries
-            .map { entry in "'\(entry.resolvedTitle)' in '\(entry.getGroupPath())'" }
-            .joined(separator: "\n")
-        let warningMessage = String.localizedStringWithFormat(
-            NSLocalizedString(
-                "[Database2/Loading/Warning/namelessCustomFields]",
-                bundle: Bundle.framework,
-                value: "Some entries have custom field(s) with empty names. This can be a sign of data corruption. Please check these entries:\n\n%@",
-                comment: "A warning about misformatted custom fields after loading the database. [entryPaths: String]"),
-            entryPaths)
-        warnings.messages.append(warningMessage)
-        warnings.isGeneratorImportant = true
+            .map { "'\($0.resolvedTitle)' in '\($0.getGroupPath())'" }
+        warnings.addIssue(.namelessCustomFields(entryPaths: entryPaths))
     }
         
     private func updateBinaries(root: Group2) {
@@ -884,11 +871,12 @@ public class Database2: Database {
                     isProtected: binaryInOldPool.isProtected
                 )
             } else {
+                
                 newBinary = Binary2(
                     id: newID,
                     data: att2.data,
                     isCompressed: att2.isCompressed,
-                    isProtected: true
+                    isProtected: !att2.isCompressed
                 )
             }
             newPoolInverse[newBinary.data] = newBinary
@@ -992,7 +980,7 @@ public class Database2: Database {
             let encData = try header.dataCipher.encrypt(
                 plainText: dataToEncrypt,
                 key: cipherKey,
-                iv: header.initialVector) 
+                iv: SecureBytes.from(header.initialVector)) 
             Diag.verbose("Encrypted \(encData.count) bytes")
             
             try writeAsBlocksV4(to: outStream, data: encData) 
@@ -1102,7 +1090,7 @@ public class Database2: Database {
             let encryptedData = try header.dataCipher.encrypt(
                 plainText: blocksData,
                 key: cipherKey,
-                iv: header.initialVector) 
+                iv: SecureBytes.from(header.initialVector)) 
             outStream.write(data: encryptedData)
             Diag.verbose("Encryption OK")
         } catch let error as CryptoError {
@@ -1282,8 +1270,7 @@ public class Database2: Database {
 
     @discardableResult
     public func addCustomIcon(pngData: ByteArray) -> CustomIcon2 {
-        let candidateHash = pngData.sha256
-        if let existingIcon = customIcons.first(where: { $0.data.sha256 == candidateHash }) {
+        if let existingIcon = findCustomIcon(pngDataSha256: pngData.sha256) {
             return existingIcon
         }
         
@@ -1293,6 +1280,14 @@ public class Database2: Database {
         return newCustomIcon
     }
     
+    public func findCustomIcon(pngDataSha256: ByteArray) -> CustomIcon2? {
+        return customIcons.first(where: { $0.data.sha256 == pngDataSha256 })
+    }
+
+    public func getCustomIcon(with uuid: UUID) -> CustomIcon2? {
+        return customIcons.first(where: { $0.uuid == uuid })
+    }
+
     @discardableResult
     public func deleteCustomIcon(uuid: UUID) -> Bool {
         guard customIcons.contains(where: { $0.uuid == uuid }) else {
@@ -1363,4 +1358,29 @@ private extension Entry2 {
     }
 }
 
-
+extension LString.Warning {
+    public static let unusedAttachmentsTemplate = NSLocalizedString(
+        "[Database2/Loading/Warning/unusedAttachments]",
+        bundle: Bundle.framework,
+        value: "The database contains some attachments that are not used in any entry. Most likely, they have been forgotten by the last used app (%@). However, this can also be a sign of data corruption. \nPlease make sure to have a backup of your database before changing anything.",
+        comment: "A warning about unused attachments after loading the database. [lastUsedAppName: String]"
+    )
+    public static let missingBinariesTemplate = NSLocalizedString(
+        "[Database2/Loading/Warning/missingBinaries]",
+        bundle: Bundle.framework,
+        value: "Attachments of some entries are missing data. This is a sign of database corruption, most likely by the last used app (%@). KeePassium will preserve the empty attachments, but cannot restore them. You should restore your database from a backup copy. \n\nMissing attachments: %@",
+        comment: "A warning about missing attachments after loading the database. [lastUsedAppName: String, attachmentNames: String]"
+    )
+    public static let namelessCustomFieldsTemplate = NSLocalizedString(
+        "[Database2/Loading/Warning/namelessCustomFields]",
+        bundle: Bundle.framework,
+        value: "Some entries have custom field(s) with empty names. This can be a sign of data corruption. Please check these entries:\n\n%@",
+        comment: "A warning about misformatted custom fields after loading the database. [entryPaths: String]"
+    )
+    public static let namelessAttachmentsTemplate = NSLocalizedString(
+        "[Database2/Loading/Warning/namelessAttachments]",
+        bundle: Bundle.framework,
+        value: "Some entries have attachments without a name. This is a sign of previous database corruption.\n\n Please review attached files in the following entries (and their history):\n%@",
+        comment: "A warning about nameless attachments, shown after loading the database. [listOfEntryNames: String]"
+    )
+}

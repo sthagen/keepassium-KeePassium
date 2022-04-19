@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2020 Andrei Popleteev <info@keepassium.com>
+//  Copyright © 2018–2022 Andrei Popleteev <info@keepassium.com>
 //
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -15,7 +15,8 @@ extension FileProvider {
             return getLocalStorageIcon()
         case .box:
             return UIImage(named: "fp-box-listitem")
-        case .boxcryptor:
+        case .boxcryptor,
+             .boxcryptorLegacy2020:
             return UIImage(named: "fp-boxcryptor-listitem")
         case .dropbox:
             return UIImage(named: "fp-dropbox-listitem")
@@ -42,6 +43,7 @@ extension FileProvider {
         case .amerigo:        fallthrough
         case .amerigoFree:    fallthrough
         case .feFileExplorer: fallthrough
+        case .megaNz:         fallthrough
         case .qnapQFile:      fallthrough
         case .readdleDocuments: fallthrough
         case .resilioSync:    fallthrough

@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2019 Andrei Popleteev <info@keepassium.com>
+//  Copyright © 2018–2022 Andrei Popleteev <info@keepassium.com>
 // 
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -34,6 +34,22 @@ extension Array where Element: Eraseable {
     }
 }
 
+public extension Array where Element == UInt8 {
+    mutating func erase() {
+        withUnsafeBufferPointer {
+            let mutatablePointer = UnsafeMutableRawPointer(mutating: $0.baseAddress!)
+            memset_s(mutatablePointer, $0.count, 0, $0.count)
+        }
+        removeAll()
+    }
+}
+
+extension Data: EraseableStruct {
+    mutating public func erase() {
+        resetBytes(in: 0..<count)
+        removeAll()
+    }
+}
 
 extension Dictionary where Key: Eraseable, Value: Eraseable {
     mutating func erase() {

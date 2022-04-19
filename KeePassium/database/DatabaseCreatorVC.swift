@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2019 Andrei Popleteev <info@keepassium.com>
+//  Copyright © 2018–2022 Andrei Popleteev <info@keepassium.com>
 // 
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -9,7 +9,7 @@
 import UIKit
 import KeePassiumLib
 
-protocol DatabaseCreatorDelegate: class {
+protocol DatabaseCreatorDelegate: AnyObject {
     func didPressCancel(in databaseCreatorVC: DatabaseCreatorVC)
     func didPressContinue(in databaseCreatorVC: DatabaseCreatorVC)
     func didPressErrorDetails(in databaseCreatorVC: DatabaseCreatorVC)
@@ -19,6 +19,7 @@ protocol DatabaseCreatorDelegate: class {
     func didPressPickHardwareKey(
         in databaseCreatorVC: DatabaseCreatorVC,
         at popoverAnchor: PopoverAnchor)
+    func shouldDismissPopovers(in databaseCreatorVC: DatabaseCreatorVC)
 }
 
 class DatabaseCreatorVC: UIViewController {
@@ -32,15 +33,20 @@ class DatabaseCreatorVC: UIViewController {
     }
     public var yubiKey: YubiKey? {
         didSet {
-            keyFileField?.isYubiKeyActive = (yubiKey != nil)
+            if yubiKey != nil {
+                hardwareKeyField.text = YubiKey.getTitle(for: yubiKey)
+            } else {
+                hardwareKeyField.text = nil // use the "No Hardware Key" placeholder
+            }
         }
     }
 
     @IBOutlet weak var fileNameField: ValidatingTextField!
     @IBOutlet weak var passwordField: ProtectedTextField!
-    @IBOutlet weak var keyFileField: KeyFileTextField!
+    @IBOutlet weak var keyFileField: ValidatingTextField!
+    @IBOutlet weak var hardwareKeyField: ValidatingTextField!
     @IBOutlet weak var continueButton: UIButton!
-    @IBOutlet var errorMessagePanel: UIView!
+    @IBOutlet weak var errorMessagePanel: UIView!
     @IBOutlet weak var errorLabel: UILabel!
     @IBOutlet weak var keyboardLayoutConstraint: KeyboardLayoutConstraint!
     @IBOutlet weak var scrollView: UIScrollView!
@@ -61,8 +67,6 @@ class DatabaseCreatorVC: UIViewController {
         
         navigationItem.title = LString.titleCreateDatabase
         
-        setError(message: nil, animated: false)
-        
         view.backgroundColor = UIColor(patternImage: UIImage(asset: .backgroundPattern))
         view.layer.isOpaque = false
 
@@ -71,16 +75,13 @@ class DatabaseCreatorVC: UIViewController {
         passwordField.validityDelegate = self
         passwordField.delegate = self
         keyFileField.delegate = self
+        hardwareKeyField.delegate = self
         
-        keyFileField.yubikeyHandler = {
-            [weak self] (field) in
-            guard let self = self else { return }
-            let popoverAnchor = PopoverAnchor(
-                sourceView: self.keyFileField,
-                sourceRect: self.keyFileField.bounds)
-            self.delegate?.didPressPickHardwareKey(in: self, at: popoverAnchor)
-        }
-        keyFileField.isYubiKeyActive = (yubiKey != nil)
+        hardwareKeyField.placeholder = LString.noHardwareKey
+        
+        passwordField.accessibilityLabel = LString.fieldPassword
+        keyFileField.accessibilityLabel = LString.fieldKeyFile
+        hardwareKeyField.accessibilityLabel = LString.fieldHardwareKey
         
         passwordField.becomeFirstResponder()
     }
@@ -126,30 +127,36 @@ class DatabaseCreatorVC: UIViewController {
             keyFileField.text = keyFileRef.visibleFileName
             keyFileField.textColor = .primaryText
         }
-        setError(message: nil, animated: true)
+        hideErrorMessage(animated: true)
     }
     
-    func setError(message: String?, animated: Bool) {
-        errorLabel.text = message
-        let isToShow = message?.isNotEmpty ?? false
-        let isToHide = !isToShow
+    func showErrorMessage(_ message: String, haptics: HapticFeedback.Kind?, animated: Bool) {
+        Diag.error(message)
+        UIAccessibility.post(notification: .announcement, argument: message)
         
-        if isToShow {
-            self.scrollView.setContentOffset(CGPoint(x: 0, y: 0), animated: animated)
-        }
-
-        guard errorMessagePanel.isHidden != isToHide else {
-            return
-        }
-        if animated {
-            UIView.animate(withDuration: 0.3) {
-                self.errorMessagePanel.isHidden = isToHide
-                self.errorMessagePanel.superview?.layoutIfNeeded()
+        var toastStyle = ToastStyle()
+        toastStyle.backgroundColor = .warningMessage
+        toastStyle.imageSize = CGSize(width: 29, height: 29)
+        toastStyle.displayShadow = false
+        let toastAction = ToastAction(
+            title: LString.actionShowDetails,
+            handler: { [weak self] in
+                self?.didPressErrorDetails()
             }
-        } else {
-            errorMessagePanel.isHidden = isToHide
-            errorMessagePanel.superview?.layoutIfNeeded()
-        }
+        )
+        let toastView = view.toastViewForMessage(
+            message,
+            title: nil,
+            image: UIImage.get(.exclamationMarkTriangle),
+            action: toastAction,
+            style: toastStyle
+        )
+        view.showToast(toastView, duration: 5, position: .top, action: toastAction, completion: nil)
+        StoreReviewSuggester.registerEvent(.trouble)
+    }
+    
+    func hideErrorMessage(animated: Bool) {
+        view.hideToast()
     }
     
     
@@ -157,7 +164,8 @@ class DatabaseCreatorVC: UIViewController {
         delegate?.didPressCancel(in: self)
     }
     
-    @IBAction func didPressErrorDetails(_ sender: Any) {
+    private func didPressErrorDetails() {
+        hideErrorMessage(animated: true)
         delegate?.didPressErrorDetails(in: self)
     }
     
@@ -166,11 +174,12 @@ class DatabaseCreatorVC: UIViewController {
         let hasKeyFile = keyFile != nil
         let hasYubiKey = yubiKey != nil
         guard hasPassword || hasKeyFile || hasYubiKey else {
-            setError(
-                message: NSLocalizedString(
+            showErrorMessage(
+                NSLocalizedString(
                     "[Database/Create] Please enter a password or choose a key file.",
                     value: "Please enter a password or choose a key file.",
                     comment: "Hint shown when both password and key file are empty."),
+                haptics: .wrongPassword,
                 animated: true)
             return
         }
@@ -192,18 +201,64 @@ extension DatabaseCreatorVC: ValidatingTextFieldDelegate {
     }
     func validatingTextField(_ sender: ValidatingTextField, textDidChange text: String) {
         if sender === passwordField {
-            setError(message: nil, animated: true)
+            hideErrorMessage(animated: true)
         }
     }
 }
 
 extension DatabaseCreatorVC: UITextFieldDelegate {
     func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
-        if textField === keyFileField {
-            setError(message: nil, animated: true)
-            passwordField.becomeFirstResponder()
-            let popoverAnchor = PopoverAnchor(sourceView: textField, sourceRect: textField.bounds)
+        guard UIDevice.current.userInterfaceIdiom == .phone else {
+            return true
+        }
+        let popoverAnchor = PopoverAnchor(sourceView: textField, sourceRect: textField.bounds)
+        switch textField {
+        case keyFileField:
+            hideErrorMessage(animated: true)
             delegate?.didPressPickKeyFile(in: self, at: popoverAnchor)
+            return false 
+        case hardwareKeyField:
+            hideErrorMessage(animated: true)
+            delegate?.didPressPickHardwareKey(in: self, at: popoverAnchor)
+            return false 
+        default:
+            break
+        }
+        return true
+    }
+    
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        guard UIDevice.current.userInterfaceIdiom != .phone else {
+            return
+        }
+        let isMac = ProcessInfo.isRunningOnMac
+        let popoverAnchor = PopoverAnchor(sourceView: textField, sourceRect: textField.bounds)
+        switch textField {
+        case keyFileField:
+            hideErrorMessage(animated: true)
+            delegate?.didPressPickKeyFile(in: self, at: popoverAnchor)
+            if isMac {
+                passwordField.becomeFirstResponder()
+            }
+        case hardwareKeyField:
+            hideErrorMessage(animated: true)
+            delegate?.didPressPickHardwareKey(in: self, at: popoverAnchor)
+            if isMac {
+                passwordField.becomeFirstResponder()
+            }
+        default:
+            if !isMac {
+                delegate?.shouldDismissPopovers(in: self)
+            }
+        }
+    }
+    
+    func textField(
+        _ textField: UITextField,
+        shouldChangeCharactersIn range: NSRange,
+        replacementString string: String
+    ) -> Bool {
+        if textField === keyFileField || textField === hardwareKeyField {
             return false
         }
         return true

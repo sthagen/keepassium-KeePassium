@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2020 Andrei Popleteev <info@keepassium.com>
+//  Copyright © 2018–2022 Andrei Popleteev <info@keepassium.com>
 //
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -13,11 +13,13 @@ public enum FileProvider: Hashable {
         "it.ideasolutions.amerigo.FileExtension": .amerigo,
         "it.ideasolutions.amerigo-free.FileExtension": .amerigoFree,
         "net.box.BoxNet.documentPickerFileProvider": .box,
-        "com.boxcryptor.ios.BoxcryptorDocumentProviderFileProvider": .boxcryptor,
+        "com.boxcryptor.ios.files": .boxcryptor,
+        "com.boxcryptor.ios.BoxcryptorDocumentProviderFileProvider": .boxcryptorLegacy2020,
         "com.getdropbox.Dropbox.FileProvider": .dropbox,
         "com.skyjos.fileexplorer.fileprovider": .feFileExplorer,
         "com.google.Drive.FileProviderExtension": .googleDrive,
         "com.apple.CloudDocs.MobileDocumentsFileProvider": .iCloudDrive,
+        "mega.ios.MEGAPickerFileProvider": .megaNz,
         "it.twsweb.Nextcloud.File-Provider-Extension": .nextcloud,
         "com.microsoft.skydrive.onedrivefileprovider": .oneDrive,
         "com.owncloud.ios-app.ownCloud-File-Provider": .ownCloud,
@@ -42,10 +44,12 @@ public enum FileProvider: Hashable {
     case amerigoFree
     case box
     case boxcryptor
+    case boxcryptorLegacy2020
     case dropbox
     case feFileExplorer
     case googleDrive
     case iCloudDrive
+    case megaNz
     case nextcloud
     case oneDrive
     case ownCloud
@@ -100,7 +104,8 @@ public enum FileProvider: Hashable {
                 bundle: Bundle.framework,
                 value: "Box",
                 comment: "Localized name of the storage service: Box (https://box.com)")
-        case .boxcryptor:
+        case .boxcryptor,
+             .boxcryptorLegacy2020:
             return NSLocalizedString(
                 "[FileProvider/Boxcryptor/name]",
                 bundle: Bundle.framework,
@@ -130,6 +135,12 @@ public enum FileProvider: Hashable {
                 bundle: Bundle.framework,
                 value: "iCloud Drive",
                 comment: "Localized name of the storage service iCloud Drive (https://icloud.com/iclouddrive)")
+        case .megaNz:
+            return NSLocalizedString(
+                "[FileProvider/Mega.nz/name]",
+                bundle: Bundle.framework,
+                value: "MEGA.nz",
+                comment: "Localized name of the storage service: MEGA (https://mega.nz)")
         case .nextcloud:
             return NSLocalizedString(
                 "[FileProvider/Nextcloud/name]",

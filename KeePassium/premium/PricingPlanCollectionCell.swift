@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2020 Andrei Popleteev <info@keepassium.com>
+//  Copyright © 2018–2022 Andrei Popleteev <info@keepassium.com>
 //
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -21,7 +21,7 @@ class PricingPlanTitleCell: UITableViewCell {
     @IBOutlet weak var subpriceLabel: UILabel!
 }
 
-protocol PricingPlanConditionCellDelegate: class {
+protocol PricingPlanConditionCellDelegate: AnyObject {
     func didPressDetailButton(in cell: PricingPlanConditionCell)
 }
 class PricingPlanConditionCell: UITableViewCell {
@@ -63,7 +63,7 @@ class PricingPlanBenefitCell: UITableViewCell {
 }
 
 
-protocol PricingPlanCollectionCellDelegate: class {
+protocol PricingPlanCollectionCellDelegate: AnyObject {
     func didPressPurchaseButton(in cell: PricingPlanCollectionCell, with pricePlan: PricingPlan)
     func didPressHelpButton(in cell: PricingPlanConditionCell, with pricePlan: PricingPlan)
 }

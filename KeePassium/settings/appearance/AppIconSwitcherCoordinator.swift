@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2020 Andrei Popleteev <info@keepassium.com>
+//  Copyright © 2018–2022 Andrei Popleteev <info@keepassium.com>
 //
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -14,7 +14,6 @@ class AppIconSwitcherCoordinator: Coordinator {
     
     private let router: NavigationRouter
     private let picker: AppIconPicker
-    private let premiumUpgradeHelper = PremiumUpgradeHelper()
     
     init(router: NavigationRouter) {
         self.router = router
@@ -28,20 +27,15 @@ class AppIconSwitcherCoordinator: Coordinator {
     }
     
     func start() {
-        router.push(picker, animated: true, onPop: {
-            [weak self] (viewController) in
+        router.push(picker, animated: true, onPop: { [weak self] in
             guard let self = self else { return }
             self.removeAllChildCoordinators()
             self.dismissHandler?(self)
         })
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(refreshPremiumStatus),
-            name: PremiumManager.statusUpdateNotification,
-            object: nil)
+        startObservingPremiumStatus(#selector(premiumStatusDidChange))
     }
     
-    @objc private func refreshPremiumStatus() {
+    @objc private func premiumStatusDidChange() {
         picker.refresh()
     }
 }
@@ -50,7 +44,7 @@ extension AppIconSwitcherCoordinator: AppIconPickerDelegate {
     func didSelectIcon(_ appIcon: AppIcon, in appIconPicker: AppIconPicker) {
         assert(UIApplication.shared.supportsAlternateIcons)
         if AppIcon.isPremium(appIcon) {
-            premiumUpgradeHelper.performActionOrOfferUpgrade(.canChangeAppIcon, in: picker) {
+            performPremiumActionOrOfferUpgrade(for: .canChangeAppIcon, in: picker) {
                 [weak self] in
                 self?.setAppIcon(appIcon)
             }

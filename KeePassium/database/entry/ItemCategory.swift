@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2019 Andrei Popleteev <info@keepassium.com>
+//  Copyright © 2018–2022 Andrei Popleteev <info@keepassium.com>
 // 
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -23,13 +23,7 @@ enum ItemCategory: String {
             EntryField.url,
             EntryField.notes]
     }
-    var name: String {
-        return NSLocalizedString(
-            "[ItemCategory] Default (KeePass)",
-            value: "Default (KeePass)",
-            comment: "Name of an entry/group category (visual style): default one, like in KeePass"
-        )
-    }
+    var name: String { LString.itemCategoryDefault }
     
     func getFieldRanks() -> [String: Int] {
         return [

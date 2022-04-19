@@ -1,14 +1,11 @@
 /* Class = "UILabel"; text = "Database File Name"; ObjectID = "2iK-ct-ygq"; */
 "2iK-ct-ygq.text" = "Nome do banco de dados";
 
-/* Class = "UIButton"; accessibilityLabel = "Show Diagnostics"; ObjectID = "bNa-R0-f67"; */
-"bNa-R0-f67.accessibilityLabel" = "Mostrar diagnósticos";
-
 /* Class = "UINavigationItem"; title = "{Create Database}"; ObjectID = "dhd-je-Doc"; Note = "#bc-ignore!"; */
 "dhd-je-Doc.title" = "{Create Database}";
 
 /* Class = "UIButton"; normalTitle = "Save Database"; ObjectID = "h6C-CG-RVI"; Note = "Action: save the new database (will show a file picker dialog)."; */
-"h6C-CG-RVI.normalTitle" = "Salvar Banco de Dados";
+"h6C-CG-RVI.normalTitle" = "Salvar banco de dados";
 
 /* Class = "UITextField"; placeholder = "No Key File"; ObjectID = "pvt-FS-0Yx"; Note = "Placeholder: don't use key file (should match the No Key File option in key file picker)."; */
 "pvt-FS-0Yx.placeholder" = "Sem arquivo de chave";
@@ -19,8 +16,8 @@
 /* Class = "UILabel"; text = "Master Key"; ObjectID = "VjQ-di-Ilx"; Note = "Common title for the password/key file fields."; */
 "VjQ-di-Ilx.text" = "Chave-mestra";
 
-/* Class = "UILabel"; text = "{Error message}"; ObjectID = "wb0-s2-V8n"; Note = "#bc-ignore!"; */
-"wb0-s2-V8n.text" = "{Error message}";
+/* Class = "UITextField"; placeholder = "{No Hardware Key}"; ObjectID = "wiB-ZM-ePr"; */
+"wiB-ZM-ePr.placeholder" = "{No Hardware Key}";
 
 /* Class = "UITextField"; placeholder = "e.g. MyPasswords"; ObjectID = "XNL-lc-2Ti"; Note = "Default name for a new database."; */
 "XNL-lc-2Ti.placeholder" = "ex.: MinhasSenhas";

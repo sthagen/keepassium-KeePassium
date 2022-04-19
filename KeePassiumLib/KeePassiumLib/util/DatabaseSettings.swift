@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2019 Andrei Popleteev <info@keepassium.com>
+//  Copyright © 2018–2022 Andrei Popleteev <info@keepassium.com>
 //
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -8,17 +8,8 @@
 
 import Foundation
 
-public class DatabaseSettings: Eraseable, Codable {
-
-    public enum AccessMode: Int, Codable {
-        static let `default`: AccessMode = .readWrite 
-        
-        case readWrite = 0
-    }
-
-    public let databaseRef: URLReference
-    
-    public var accessMode: AccessMode
+final public class DatabaseSettings: Eraseable {
+    public var isReadOnlyFile: Bool = false
     
     public var isRememberMasterKey: Bool?
     public var isRememberFinalKey: Bool?
@@ -30,22 +21,14 @@ public class DatabaseSettings: Eraseable, Codable {
     
     public var isRememberHardwareKey: Bool?
     public private(set) var associatedYubiKey: YubiKey?
-
-    private enum CodingKeys: String, CodingKey {
-        case databaseRef
-        case accessMode
-        case isRememberMasterKey
-        case isRememberFinalKey
-        case masterKey
-        case isRememberKeyFile
-        case associatedKeyFile
-        case isRememberHardwareKey
-        case associatedYubiKey
-    }
     
-    init(for databaseRef: URLReference) {
-        self.databaseRef = databaseRef
-        accessMode = AccessMode.default
+    public var isQuickTypeEnabled: Bool?
+    
+    public var fallbackStrategy: UnreachableFileFallbackStrategy?
+    public var fallbackTimeout: TimeInterval?
+
+    init() {
+        isReadOnlyFile = false
     }
     
     deinit {
@@ -53,7 +36,7 @@ public class DatabaseSettings: Eraseable, Codable {
     }
     
     public func erase() {
-        self.accessMode = AccessMode.default
+        self.isReadOnlyFile = false
         
         isRememberMasterKey = nil
         isRememberFinalKey = nil
@@ -61,19 +44,14 @@ public class DatabaseSettings: Eraseable, Codable {
         
         isRememberKeyFile = nil
         associatedKeyFile = nil
-    }
-    
-    internal func serialize() -> Data {
-        let encoder = JSONEncoder()
-        let encodedData = try! encoder.encode(self)
-        return encodedData
-    }
-    
-    internal static func deserialize(from data: Data?) -> DatabaseSettings? {
-        guard let data = data else { return nil }
-        let decoder = JSONDecoder()
-        let result = try? decoder.decode(DatabaseSettings.self, from: data)
-        return result
+        
+        isRememberHardwareKey = nil
+        associatedYubiKey = nil
+        
+        isQuickTypeEnabled = nil
+        
+        fallbackStrategy = nil
+        fallbackTimeout = nil
     }
 
     public func setMasterKey(_ key: CompositeKey) {
@@ -82,6 +60,10 @@ public class DatabaseSettings: Eraseable, Codable {
         if !isKeepFinalKey {
             masterKey?.eraseFinalKeys()
         }
+    }
+    
+    public func maybeSetMasterKey(of database: Database) {
+        maybeSetMasterKey(database.compositeKey)
     }
     
     public func maybeSetMasterKey(_ key: CompositeKey) {
@@ -118,3 +100,89 @@ public class DatabaseSettings: Eraseable, Codable {
     }
 }
 
+
+extension DatabaseSettings: Codable {
+    
+    private enum CodingKeys: String, CodingKey {
+        case isReadOnlyFile
+        case isRememberMasterKey
+        case isRememberFinalKey
+        case masterKey
+        case isRememberKeyFile
+        case associatedKeyFile
+        case isRememberHardwareKey
+        case associatedYubiKey
+        case isQuickTypeEnabled
+        case fallbackStrategy
+        case fallbackTimeout
+    }
+    
+    internal func serialize() -> Data {
+        let encoder = JSONEncoder()
+        let encodedData = try! encoder.encode(self)
+        return encodedData
+    }
+    
+    internal static func deserialize(from data: Data?) -> DatabaseSettings? {
+        guard let data = data else { return nil }
+        let decoder = JSONDecoder()
+        do {
+            let result = try decoder.decode(DatabaseSettings.self, from: data)
+            return result
+        } catch {
+            Diag.error("Failed to parse DB settings, ignoring [message: \(error.localizedDescription)]")
+            return nil
+        }
+    }
+    
+    public convenience init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.init()
+        self.isReadOnlyFile = try container.decodeIfPresent(Bool.self, forKey: .isReadOnlyFile) ?? false
+        self.isRememberMasterKey = try container.decodeIfPresent(Bool.self, forKey: .isRememberMasterKey)
+        self.isRememberFinalKey = try container.decodeIfPresent(Bool.self, forKey: .isRememberFinalKey)
+        self.masterKey = try container.decodeIfPresent(CompositeKey.self, forKey: .masterKey)
+        self.isRememberKeyFile =  try container.decodeIfPresent(Bool.self, forKey: .isRememberKeyFile)
+        self.associatedKeyFile = try container.decodeIfPresent(URLReference.self, forKey: .associatedKeyFile)
+        self.isRememberHardwareKey =  try container.decodeIfPresent(Bool.self, forKey: .isRememberHardwareKey)
+        self.associatedYubiKey = try container.decodeIfPresent(YubiKey.self, forKey: .associatedYubiKey)
+        self.isQuickTypeEnabled = try container.decodeIfPresent(Bool.self, forKey: .isQuickTypeEnabled)
+        self.fallbackStrategy = try container.decodeIfPresent(UnreachableFileFallbackStrategy.self, forKey: .fallbackStrategy)
+        self.fallbackTimeout = try container.decodeIfPresent(TimeInterval.self, forKey: .fallbackTimeout)
+    }
+    
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(isReadOnlyFile, forKey: .isReadOnlyFile)
+        if let _isRememberMasterKey = isRememberMasterKey {
+            try container.encode(_isRememberMasterKey, forKey: .isRememberMasterKey)
+        }
+        if let _isRememberFinalKey = isRememberFinalKey {
+            try container.encode(_isRememberFinalKey, forKey: .isRememberFinalKey)
+        }
+        if let _masterKey = masterKey {
+            try container.encode(_masterKey, forKey: .masterKey)
+        }
+        if let _isRememberKeyFile = isRememberKeyFile {
+            try container.encode(_isRememberKeyFile, forKey: .isRememberKeyFile)
+        }
+        if let _associatedKeyFile = associatedKeyFile {
+            try container.encode(_associatedKeyFile, forKey: .associatedKeyFile)
+        }
+        if let _isRememberHardwareKey = isRememberHardwareKey {
+            try container.encode(_isRememberHardwareKey, forKey: .isRememberHardwareKey)
+        }
+        if let _associatedYubiKey = associatedYubiKey {
+            try container.encode(_associatedYubiKey, forKey: .associatedYubiKey)
+        }
+        if let _isQuickTypeEnabled = isQuickTypeEnabled {
+            try container.encode(_isQuickTypeEnabled, forKey: .isQuickTypeEnabled)
+        }
+        if let _fallbackStrategy = fallbackStrategy {
+            try container.encode(_fallbackStrategy, forKey: .fallbackStrategy)
+        }
+        if let _fallbackTimeout = fallbackTimeout {
+            try container.encode(_fallbackTimeout, forKey: .fallbackTimeout)
+        }
+    }
+}

@@ -1,68 +1,67 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2019 Andrei Popleteev <info@keepassium.com>
+//  Copyright © 2018–2022 Andrei Popleteev <info@keepassium.com>
 // 
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
 //  by the Free Software Foundation: https://www.gnu.org/licenses/).
 //  For commercial licensing, please contact the author.
 
-import UIKit
 import KeePassiumLib
-import LocalAuthentication
+
+@available(iOS 13, *)
+enum MenuIdentifier {
+    static let databaseFileMenu = UIMenu.Identifier("com.keepassium.menu.databaseFileMenu")
+    static let databaseItemsMenu = UIMenu.Identifier("com.keepassium.menu.databaseItemsMenu")
+}
 
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
-    let helpURL = URL(string: "https://keepassium.com/faq")!
+    let helpURL = URL(string: "https://keepassium.com/apphelp/")!
 
     var window: UIWindow?
-    fileprivate var watchdog: Watchdog
-    fileprivate var appCoverWindow: UIWindow?
-    fileprivate var appLockWindow: UIWindow?
-    fileprivate var biometricsBackgroundWindow: UIWindow?
-    fileprivate var isBiometricAuthShown = false
     
-    fileprivate let biometricAuthReuseDuration = TimeInterval(1.5)
-    fileprivate var lastSuccessfulBiometricAuthTime: Date = .distantPast
-    
-    
-    override init() {
-        watchdog = Watchdog.shared 
-        super.init()
-        watchdog.delegate = self
-    }
+    private var mainCoordinator: MainCoordinator!
     
     func application(
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
-        ) -> Bool
-    {
+    ) -> Bool {
+        initAppGlobals(application)
+
+        let window = UIWindow(frame: UIScreen.main.bounds)
+        if #available(iOS 13, *) {
+            let args = ProcessInfo.processInfo.arguments
+            if args.contains("darkMode") {
+                window.overrideUserInterfaceStyle = .dark
+            }
+        }
+
+        let incomingURL: URL? = launchOptions?[.url] as? URL
+        let hasIncomingURL = incomingURL != nil
+        
+        if UIDevice.current.userInterfaceIdiom == .pad {
+            window.makeKeyAndVisible()
+            mainCoordinator = MainCoordinator(window: window)
+            mainCoordinator.start(hasIncomingURL: hasIncomingURL)
+        } else {
+            mainCoordinator = MainCoordinator(window: window)
+            mainCoordinator.start(hasIncomingURL: hasIncomingURL)
+            window.makeKeyAndVisible()
+        }
+        
+        self.window = window
+        return true
+    }
+    
+    private func initAppGlobals(_ application: UIApplication) {
         #if PREPAID_VERSION
         BusinessModel.type = .prepaid
         #else
         BusinessModel.type = .freemium
         #endif
         AppGroup.applicationShared = application
+        
         SettingsMigrator.processAppLaunch(with: Settings.current)
-        SystemIssueDetector.scanForIssues()
-        Diag.info(AppInfo.description)
-        PremiumManager.shared.startObservingTransactions()
-        
-        if #available(iOS 13, *) {
-            let args = ProcessInfo.processInfo.arguments
-            if args.contains("darkMode") {
-                window?.overrideUserInterfaceStyle = .dark
-            }
-        }
-
-        let rootVC = window?.rootViewController as? FileKeeperDelegate
-        assert(rootVC != nil, "FileKeeper needs a delegate")
-        FileKeeper.shared.delegate = rootVC
-
-        showAppCoverScreen()
-        
-        watchdog.didBecomeActive()
-        StoreReviewSuggester.registerEvent(.sessionStart)
-        return true
     }
     
     func applicationWillTerminate(_ application: UIApplication) {
@@ -73,239 +72,161 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         _ application: UIApplication,
         open inputURL: URL,
         options: [UIApplication.OpenURLOptionsKey : Any] = [:]
-        ) -> Bool
-    {
-        AppGroup.applicationShared = application
+    ) -> Bool {
         let isOpenInPlace = (options[.openInPlace] as? Bool) ?? false
-
-        Diag.info("Opened with URL: \(inputURL.redacted) [inPlace: \(isOpenInPlace)]")
-        
-        DatabaseManager.shared.closeDatabase(clearStoredKey: false, ignoreErrors: true) {
-            (fileAccessError) in
-            if inputURL.scheme != AppGroup.appURLScheme {
-                FileKeeper.shared.prepareToAddFile(
-                    url: inputURL,
-                    fileType: nil, 
-                    mode: isOpenInPlace ? .openInPlace : .import)
-            }
-        }
-        
+        mainCoordinator.processIncomingURL(inputURL, openInPlace: isOpenInPlace)
         return true
     }
-    
-    
+}
+
+extension AppDelegate {
     override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
         switch action {
-        case #selector(showHelp(_:)):
+        case #selector(createDatabase):
+            return mainCoordinator.canPerform(action: .createDatabase)
+        case #selector(openDatabase):
+            return mainCoordinator.canPerform(action: .openDatabase)
+        case #selector(showAboutScreen):
+            return mainCoordinator.canPerform(action: .showAboutScreen)
+        case #selector(showSettingsScreen):
+            return mainCoordinator.canPerform(action: .showAppSettings)
+        case #selector(lockDatabase):
+            return mainCoordinator.canPerform(action: .lockDatabase)
+        case #selector(createEntry):
+            return mainCoordinator.canPerform(action: .createEntry)
+        case #selector(createGroup):
+            return mainCoordinator.canPerform(action: .createGroup)
+        case #selector(showAppHelp):
             return true
         default:
             return super.canPerformAction(action, withSender: sender)
         }
     }
-    
-    @objc
-    func showHelp(_ sender: Any) {
-        UIApplication.shared.open(helpURL, options: [:], completionHandler: nil)
-    }
 
     @available(iOS 13, *)
     override func buildMenu(with builder: UIMenuBuilder) {
-        builder.remove(menu: .file)
-        builder.remove(menu: .edit)
         builder.remove(menu: .format)
+        builder.remove(menu: .openRecent)
+
+        let aboutAppMenuTitle = builder.menu(for: .about)?.children.first?.title
+            ?? String.localizedStringWithFormat(LString.menuAboutAppTemplate, AppInfo.name)
+        let aboutAppMenuAction = UICommand(
+            title: aboutAppMenuTitle,
+            action: #selector(showAboutScreen))
+        let aboutAppMenu = UIMenu(
+            title: "",
+            identifier: .about,
+            options: .displayInline,
+            children: [aboutAppMenuAction]
+        )
+        builder.remove(menu: .about)
+        builder.insertChild(aboutAppMenu, atStartOfMenu: .application)
+
+        let preferencesMenuItem = UIKeyCommand(
+            title: builder.menu(for: .preferences)?.children.first?.title ?? LString.menuPreferences,
+            action: #selector(showSettingsScreen),
+            input: ",",
+            modifierFlags: [.command])
+        let preferencesMenu = UIMenu(
+            identifier: .preferences,
+            options: .displayInline,
+            children: [preferencesMenuItem]
+        )
+        builder.remove(menu: .preferences)
+        builder.insertSibling(preferencesMenu, afterMenu: .about)
+
+        let createDatabaseMenuItem = UIKeyCommand(
+            title: LString.actionCreateDatabase,
+            action: #selector(createDatabase),
+            input: "n",
+            modifierFlags: [.command, .shift])
+        let openDatabaseMenuItem = UIKeyCommand(
+            title: LString.actionOpenDatabase,
+            action: #selector(openDatabase),
+            input: "o",
+            modifierFlags: [.command])
+        let lockDatabaseMenuItem = UIKeyCommand(
+            title: LString.actionLockDatabase,
+            action: #selector(lockDatabase),
+            input: "l",
+            modifierFlags: [.command]
+        )
+        let databaseFileMenu = UIMenu(
+            identifier: MenuIdentifier.databaseFileMenu,
+            options: [.displayInline],
+            children: [createDatabaseMenuItem, openDatabaseMenuItem, lockDatabaseMenuItem]
+        )
+
+        let createEntryMenuItem = UIKeyCommand(
+            title: LString.actionCreateEntry,
+            action: #selector(createEntry),
+            input: "n",
+            modifierFlags: [.command])
+        let createGroupMenuItem = UIKeyCommand(
+            title: LString.actionCreateGroup,
+            action: #selector(createGroup),
+            input: "g",
+            modifierFlags: [.command])
+        let databaseItemsMenu = UIMenu(
+            identifier: MenuIdentifier.databaseItemsMenu,
+            options: [.displayInline],
+            children: [createEntryMenuItem, createGroupMenuItem]
+        )
+        
+        builder.insertChild(databaseFileMenu, atStartOfMenu: .file)
+        builder.insertSibling(databaseItemsMenu, beforeMenu: databaseFileMenu.identifier)
+    }
+    
+    @objc
+    private func showAppHelp() {
+        UIApplication.shared.open(helpURL, options: [:], completionHandler: nil)
+    }
+    
+    @objc
+    private func showAboutScreen() {
+        mainCoordinator.perform(action: .showAboutScreen)
+    }
+    
+    @objc
+    private func showSettingsScreen() {
+        mainCoordinator.perform(action: .showAppSettings)
+    }
+    
+    @objc
+    private func createDatabase() {
+        mainCoordinator.perform(action: .createDatabase)
+    }
+    
+    @objc
+    private func openDatabase() {
+        mainCoordinator.perform(action: .openDatabase)
+    }
+    
+    @objc
+    private func lockDatabase() {
+        mainCoordinator.perform(action: .lockDatabase)
+    }
+    
+    @objc
+    private func createEntry() {
+        mainCoordinator.perform(action: .createEntry)
+    }
+
+    @objc
+    private func createGroup() {
+        mainCoordinator.perform(action: .createGroup)
     }
 }
 
-extension AppDelegate: WatchdogDelegate {
-    var isAppCoverVisible: Bool {
-        return appCoverWindow != nil
-    }
-    var isAppLockVisible: Bool {
-        return appLockWindow != nil || isBiometricAuthShown
-    }
-    func showAppCover(_ sender: Watchdog) {
-        showAppCoverScreen()
-    }
-    func hideAppCover(_ sender: Watchdog) {
-        hideAppCoverScreen()
-    }
-    func showAppLock(_ sender: Watchdog) {
-        showAppLockScreen()
-    }
-    func hideAppLock(_ sender: Watchdog) {
-        hideAppLockScreen()
-    }
-    
-    private func showAppCoverScreen()  {
-        guard appCoverWindow == nil else { return }
-        
-        let _appCoverWindow = UIWindow(frame: UIScreen.main.bounds)
-        _appCoverWindow.setScreen(UIScreen.main)
-        _appCoverWindow.windowLevel = UIWindow.Level.alert
-        self.appCoverWindow = _appCoverWindow
-
-        let coverVC = AppCoverVC.make()
-        DispatchQueue.main.async { [_appCoverWindow, coverVC] in
-            UIView.performWithoutAnimation {
-                _appCoverWindow.rootViewController = coverVC
-                _appCoverWindow.makeKeyAndVisible()
-            }
-            print("App cover shown")
-            coverVC.view.accessibilityViewIsModal = true
-            coverVC.view.snapshotView(afterScreenUpdates: true)
-        }
-    }
-    
-    private func hideAppCoverScreen() {
-        guard let appCoverWindow = appCoverWindow else { return }
-        appCoverWindow.isHidden = true
-        self.appCoverWindow = nil
-        print("App cover hidden")
-    }
-    
-    private var canUseBiometrics: Bool {
-        return isBiometricsAvailable() && Settings.current.premiumIsBiometricAppLockEnabled
-    }
-    
-    private func showAppLockScreen() {
-        guard !isAppLockVisible else { return }
-        if canUseBiometrics {
-            performBiometricUnlock()
-        } else {
-            showPasscodeRequest()
-        }
-    }
-    
-    private func hideAppLockScreen() {
-        guard isAppLockVisible else { return }
-        self.window?.makeKeyAndVisible()
-        appLockWindow?.resignKey()
-        appLockWindow?.isHidden = true
-        appLockWindow = nil
-        print("appLockWindow hidden")
-    }
-    
-    private func showPasscodeRequest() {
-        let passcodeInputVC = PasscodeInputVC.instantiateFromStoryboard()
-        passcodeInputVC.delegate = self
-        passcodeInputVC.mode = .verification
-        passcodeInputVC.isCancelAllowed = false 
-        passcodeInputVC.isBiometricsAllowed = canUseBiometrics
-        
-        let _appLockWindow = UIWindow(frame: UIScreen.main.bounds)
-        _appLockWindow.setScreen(UIScreen.main)
-        _appLockWindow.windowLevel = UIWindow.Level.alert
-        UIView.performWithoutAnimation { [weak self] in
-            _appLockWindow.rootViewController = passcodeInputVC
-            _appLockWindow.makeKeyAndVisible()
-            self?.window?.isHidden = true
-        }
-        passcodeInputVC.view.accessibilityViewIsModal = true
-        passcodeInputVC.view.snapshotView(afterScreenUpdates: true)
-        
-        self.appLockWindow = _appLockWindow
-        print("passcode request shown")
-    }
-    
-    private func isBiometricsAvailable() -> Bool {
-        let context = LAContext()
-        let policy = LAPolicy.deviceOwnerAuthenticationWithBiometrics
-        return context.canEvaluatePolicy(policy, error: nil)
-    }
-    
-    private func performBiometricUnlock() {
-        assert(isBiometricsAvailable())
-        guard Settings.current.premiumIsBiometricAppLockEnabled else { return }
-        guard !isBiometricAuthShown else { return }
-        
-        let timeSinceLastSuccess = abs(Date.now.timeIntervalSince(lastSuccessfulBiometricAuthTime))
-        if timeSinceLastSuccess < biometricAuthReuseDuration {
-            print("Skipping repeated biometric prompt")
-            watchdog.unlockApp()
-            return
-        }
-        
-        let context = LAContext()
-        let policy = LAPolicy.deviceOwnerAuthenticationWithBiometrics
-        context.localizedFallbackTitle = "" // hide "Enter (System) Password" fallback; nil won't work
-        context.localizedCancelTitle = LString.actionUsePasscode
-        print("Showing biometrics request")
-        
-        showBiometricsBackground()
-        lastSuccessfulBiometricAuthTime = .distantPast
-        context.evaluatePolicy(policy, localizedReason: LString.titleTouchID) {
-            [weak self] (authSuccessful, authError) in
-            DispatchQueue.main.async { [weak self] in
-                if authSuccessful {
-                    self?.lastSuccessfulBiometricAuthTime = Date.now
-                    self?.watchdog.unlockApp()
-                } else {
-                    Diag.warning("TouchID failed [message: \(authError?.localizedDescription ?? "nil")]")
-                    self?.lastSuccessfulBiometricAuthTime = .distantPast
-                    self?.showPasscodeRequest()
-                }
-                self?.hideBiometricsBackground()
-                self?.isBiometricAuthShown = false
-            }
-        }
-        isBiometricAuthShown = true
-    }
-    
-    private func showBiometricsBackground()  {
-        guard biometricsBackgroundWindow == nil else { return }
-        
-        let window = UIWindow(frame: UIScreen.main.bounds)
-        window.setScreen(UIScreen.main)
-        window.windowLevel = UIWindow.Level.alert + 1 
-        let coverVC = AppCoverVC.make()
-        
-        UIView.performWithoutAnimation {
-            window.rootViewController = coverVC
-            window.makeKeyAndVisible()
-        }
-        print("Biometrics background shown")
-        self.biometricsBackgroundWindow = window
-        
-        coverVC.view.snapshotView(afterScreenUpdates: true)
-    }
-    
-    private func hideBiometricsBackground() {
-        guard let window = biometricsBackgroundWindow else { return }
-        window.isHidden = true
-        self.biometricsBackgroundWindow = nil
-        print("Biometrics background hidden")
-    }
-    
-}
-
-extension AppDelegate: PasscodeInputDelegate {
-    func passcodeInput(_ sender: PasscodeInputVC, didEnterPasscode passcode: String) {
-        do {
-            if try Keychain.shared.isAppPasscodeMatch(passcode) { 
-                HapticFeedback.play(.appUnlocked)
-                watchdog.unlockApp()
-            } else {
-                HapticFeedback.play(.wrongPassword)
-                sender.animateWrongPassccode()
-                StoreReviewSuggester.registerEvent(.trouble)
-                if Settings.current.isLockAllDatabasesOnFailedPasscode {
-                    DatabaseSettingsManager.shared.eraseAllMasterKeys()
-                    DatabaseManager.shared.closeDatabase(
-                        clearStoredKey: true,
-                        ignoreErrors: true,
-                        completion: nil)
-                }
-            }
-        } catch {
-            let alert = UIAlertController.make(
-                title: LString.titleKeychainError,
-                message: error.localizedDescription)
-            sender.present(alert, animated: true, completion: nil)
-        }
-    }
-    
-    func passcodeInputDidRequestBiometrics(_ sender: PasscodeInputVC) {
-        assert(canUseBiometrics)
-        performBiometricUnlock()
-    }
+extension LString {
+    public static let menuAboutAppTemplate = NSLocalizedString(
+        "[Menu/About/title]",
+        value: "About %@",
+        comment: "Menu title. For example: `About KeePassium`. [appName: String]"
+    )
+    public static let menuPreferences = NSLocalizedString(
+        "[Menu/Preferences/title]",
+        value: "Preferences…",
+        comment: "Menu title: app settings"
+    )
 }

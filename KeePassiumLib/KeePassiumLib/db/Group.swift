@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2019 Andrei Popleteev <info@keepassium.com>
+//  Copyright © 2018–2022 Andrei Popleteev <info@keepassium.com>
 // 
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -188,6 +188,15 @@ public class Group: DatabaseItem, Eraseable {
             }
         }
         return nil
+    }
+    
+    public func findEntry(byUUID uuid: UUID) -> Entry? {
+        for group in groups {
+            if let result = group.findEntry(byUUID: uuid) {
+                return result
+            }
+        }
+        return entries.first(where: { $0.uuid == uuid })
     }
 
     public func createEntry(detached: Bool = false) -> Entry {

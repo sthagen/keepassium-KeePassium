@@ -1,12 +1,11 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2019 Andrei Popleteev <info@keepassium.com>
+//  Copyright © 2018–2022 Andrei Popleteev <info@keepassium.com>
 // 
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
 //  by the Free Software Foundation: https://www.gnu.org/licenses/).
 //  For commercial licensing, please contact the author.
 
-import UIKit
 import KeePassiumLib
 
 class FileInfoCell: UITableViewCell {
@@ -28,12 +27,12 @@ class FileInfoCell: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        nameLabel?.font = UIFont.systemFont(forTextStyle: .subheadline, weight: .thin)
-        valueLabel?.font = UIFont.monospaceFont(forTextStyle: .body)
+        nameLabel?.font = UIFont.preferredFont(forTextStyle: .subheadline)
+        valueLabel?.font = UIFont.preferredFont(forTextStyle: .body)
     }
 }
 
-protocol FileInfoSwitchCellDelegate: class {
+protocol FileInfoSwitchCellDelegate: AnyObject {
     func didToggleSwitch(in cell: FileInfoSwitchCell, theSwitch: UISwitch)
 }
 class FileInfoSwitchCell: UITableViewCell {
@@ -73,33 +72,6 @@ class FileInfoVC: UITableViewController {
     }
 
     private var dismissablePopoverDelegate = DismissablePopover()
-    
-    private enum FieldTitle {
-        static let fileName = NSLocalizedString(
-            "[FileInfo/Field/title] File Name",
-            value: "File Name",
-            comment: "Field title")
-        static let error = NSLocalizedString(
-            "[FileInfo/Field/valueError] Error",
-            value: "Error",
-            comment: "Title of a field with an error message")
-        static let fileLocation = NSLocalizedString(
-            "[FileInfo/Field/title] File Location",
-            value: "File Location",
-            comment: "Field title")
-        static let fileSize = NSLocalizedString(
-            "[FileInfo/Field/title] File Size",
-            value: "File Size",
-            comment: "Field title")
-        static let creationDate = NSLocalizedString(
-            "[FileInfo/Field/title] Creation Date",
-            value: "Creation Date",
-            comment: "Field title")
-        static let modificationDate = NSLocalizedString(
-            "[FileInfo/Field/title] Last Modification Date",
-            value: "Last Modification Date",
-            comment: "Field title")
-    }
     
     public static func make(
         urlRef: URLReference,
@@ -183,9 +155,15 @@ class FileInfoVC: UITableViewController {
     }
 
     func setupButtons() {
-        exportButton?.isHidden = !canExport
+        guard isViewLoaded else { return }
+        exportButton.isHidden = !canExport
+        if ProcessInfo.isRunningOnMac {
+            exportButton.setTitle(LString.actionRevealInFinder, for: .normal)
+        } else {
+            exportButton.setTitle(LString.actionExport, for: .normal)
+        }
         let destructiveAction = DestructiveFileAction.get(for: urlRef.location)
-        deleteButton?.setTitle(destructiveAction.title, for: .normal)
+        deleteButton.setTitle(destructiveAction.title, for: .normal)
     }
     
     
@@ -204,7 +182,7 @@ class FileInfoVC: UITableViewController {
                 self.updateDynamicFields(from: fileInfo)
             case .failure(let accessError):
                 self.fields.append((
-                    FieldTitle.error,
+                    LString.fileInfoFieldError,
                     accessError.localizedDescription
                 ))
             }
@@ -237,11 +215,17 @@ class FileInfoVC: UITableViewController {
             fields.append(("", ""))
             fields.append(("", ""))
         }
-        fields[0] = ((FieldTitle.fileName, urlRef.visibleFileName))
-        fields[1] = ((FieldTitle.fileLocation, getFileLocationDescription()))
+        fields[0] = ((LString.fileInfoFieldFileName, urlRef.visibleFileName))
+        fields[1] = ((LString.fileInfoFieldFileLocation, getFileLocationDescription()))
     }
     
     private func getFileLocationDescription() -> String {
+        if ProcessInfo.isRunningOnMac,
+            let url = try? urlRef.resolveSync()
+        {
+            return url.path
+        }
+        
         guard let fileProvider = urlRef.fileProvider else {
             return urlRef.location.description
         }
@@ -265,13 +249,13 @@ class FileInfoVC: UITableViewController {
     private func updateDynamicFields(from fileInfo: FileInfo) {
         if let fileSize = fileInfo.fileSize {
             fields.append((
-                FieldTitle.fileSize,
+                LString.fileInfoFieldFileSize,
                 ByteCountFormatter.string(fromByteCount: fileSize, countStyle: .file)
             ))
         }
         if let creationDate = fileInfo.creationDate {
             fields.append((
-                FieldTitle.creationDate,
+                LString.fileInfoFieldCreationDate,
                 DateFormatter.localizedString(
                     from: creationDate,
                     dateStyle: .medium,
@@ -280,7 +264,7 @@ class FileInfoVC: UITableViewController {
         }
         if let modificationDate = fileInfo.modificationDate {
             fields.append((
-                FieldTitle.modificationDate,
+                LString.fileInfoFieldModificationDate,
                 DateFormatter.localizedString(
                     from: modificationDate,
                     dateStyle: .medium,
@@ -358,8 +342,12 @@ class FileInfoVC: UITableViewController {
 
     
     @IBAction func didPressExport(_ sender: UIButton) {
-        let popoverAnchor = PopoverAnchor(sourceView: sender, sourceRect: sender.bounds)
-        FileExportHelper.showFileExportSheet(urlRef, at: popoverAnchor, parent: self)
+        if ProcessInfo.isRunningOnMac {
+            FileExportHelper.revealInFinder(urlRef)
+        } else {
+            let popoverAnchor = PopoverAnchor(sourceView: sender, sourceRect: sender.bounds)
+            FileExportHelper.showFileExportSheet(urlRef, at: popoverAnchor, parent: self)
+        }
     }
     
     @IBAction func didPressDelete(_ sender: UIButton) {

@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2019 Andrei Popleteev <info@keepassium.com>
+//  Copyright © 2018–2022 Andrei Popleteev <info@keepassium.com>
 // 
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -7,7 +7,7 @@
 //  For commercial licensing, please contact the author.
 
 import LocalAuthentication
-import UIKit
+import KeePassiumLib
 
 extension LAContext {
     public static func getBiometryType() -> LABiometryType {
@@ -16,21 +16,22 @@ extension LAContext {
         context.canEvaluatePolicy(policy, error: nil)
         return context.biometryType
     }
+    
+    public static func isBiometricsAvailable() -> Bool {
+        let context = LAContext()
+        let policy = LAPolicy.deviceOwnerAuthenticationWithBiometrics
+        let canUseBiometrics = context.canEvaluatePolicy(policy, error: nil)
+        return canUseBiometrics
+    }
 }
 
 extension LABiometryType {
     var name: String? {
         switch self {
         case .touchID:
-            return NSLocalizedString(
-                "[BiometricAuthType] Touch ID",
-                value: "Touch ID",
-                comment: "Name of biometric authentication method. Trademarked, do not translate unless Apple traslated it to your language.")
+            return LString.biometricsTypeTouchID
         case .faceID:
-            return NSLocalizedString(
-                "[BiometricAuthType] Face ID",
-                value: "Face ID",
-                comment: "Name of biometric authentication method. Trademarked, do not translate unless Apple traslated it to your language.")
+            return LString.biometricsTypeFaceID
         default:
             return nil
         }

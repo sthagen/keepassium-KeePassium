@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2019 Andrei Popleteev <info@keepassium.com>
+//  Copyright © 2018–2022 Andrei Popleteev <info@keepassium.com>
 //
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -57,19 +57,13 @@ class SettingsBackupVC: UITableViewController {
         if backupFileCount > 0 {
             deleteAllBackupsButton.isEnabled = true
             let buttonTitle = String.localizedStringWithFormat(
-                NSLocalizedString(
-                    "[Settings/Backup] Delete ALL Backup Files (%d)",
-                    value: "Delete ALL Backup Files (%d)",
-                    comment: "Action to delete all backup files from the app. `ALL` is in capitals as a highlight. [backupFileCount: Int]"),
+                LString.actionDeleteAllBackupFilesTemplate,
                 backupFileCount)
             deleteAllBackupsButton.setTitle(buttonTitle, for: .normal)
         } else {
             deleteAllBackupsButton.isEnabled = false
             deleteAllBackupsButton.setTitle(
-                NSLocalizedString(
-                    "[Settings/Backup] No Backup Files Found",
-                    value: "No Backup Files Found",
-                    comment: "Status message: there are no backup files to delete"),
+                LString.noBackupFilesFound,
                 for: .normal)
         }
     }
@@ -114,10 +108,7 @@ class SettingsBackupVC: UITableViewController {
     
     @IBAction func didPressDeleteAllBackupFiles(_ sender: Any) {
         let confirmationAlert = UIAlertController.make(
-            title: NSLocalizedString(
-                "[Settings/Backup/Delete/title] Delete all backup files?",
-                value: "Delete all backup files?",
-                comment: "Confirmation dialog message to delete all backup files"),
+            title: LString.confirmDeleteAllBackupFiles,
             message: nil,
             dismissButtonTitle: LString.actionCancel)
         let deleteAction = UIAlertAction(
@@ -136,9 +127,13 @@ class SettingsBackupVC: UITableViewController {
         DispatchQueue.main.async { [self] in 
             FileKeeper.shared.deleteBackupFiles(
                 olderThan: -TimeInterval.infinity,
-                keepLatest: false) 
-            self.backupDeletionSpinner.isHidden = true
-            self.refresh()
+                keepLatest: false, 
+                completionQueue: .main,
+                completion: { [weak self] in
+                    self?.backupDeletionSpinner.isHidden = true
+                    self?.refresh()
+                }
+            )
         }
     }
     

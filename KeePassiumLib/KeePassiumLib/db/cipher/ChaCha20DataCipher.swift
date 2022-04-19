@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2019 Andrei Popleteev <info@keepassium.com>
+//  Copyright © 2018–2022 Andrei Popleteev <info@keepassium.com>
 // 
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -21,7 +21,7 @@ final class ChaCha20DataCipher: DataCipher {
     init() {
     }
     
-    func encrypt(plainText: ByteArray, key: ByteArray, iv: ByteArray) throws -> ByteArray {
+    func encrypt(plainText: ByteArray, key: SecureBytes, iv: SecureBytes) throws -> ByteArray {
         progress.localizedDescription = NSLocalizedString(
             "[Cipher/Progress] Encrypting",
             bundle: Bundle.framework,
@@ -32,7 +32,7 @@ final class ChaCha20DataCipher: DataCipher {
         return try chacha20.encrypt(data: plainText, progress: progress) 
     }
     
-    func decrypt(cipherText: ByteArray, key: ByteArray, iv: ByteArray) throws -> ByteArray {
+    func decrypt(cipherText: ByteArray, key: SecureBytes, iv: SecureBytes) throws -> ByteArray {
         progress.localizedDescription = NSLocalizedString(
             "[Cipher/Progress] Decrypting",
             bundle: Bundle.framework,

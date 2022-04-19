@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2019 Andrei Popleteev <info@keepassium.com>
+//  Copyright © 2018–2022 Andrei Popleteev <info@keepassium.com>
 // 
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -8,17 +8,7 @@
 
 import Foundation
 
-public extension URL {
-    
-    var domain2: String? {
-        guard let names = host?.split(separator: ".") else { return nil }
-        let nameCount = names.count
-        if nameCount >= 2 {
-            return String(names[nameCount - 2])
-        }
-        return nil
-    }
-    
+public extension URL {    
     var isDirectory: Bool {
         let res = try? resourceValues(forKeys: [.isDirectoryKey])
         return res?.isDirectory ?? false
@@ -62,4 +52,70 @@ public extension URL {
         let isDirectory = self.isDirectory
         return self.deletingLastPathComponent().appendingPathComponent("_redacted_", isDirectory: isDirectory)
     }
+    
+    func readFileInfo(
+        canUseCache: Bool,
+        completionQueue: OperationQueue = .main,
+        completion: @escaping ((Result<FileInfo, FileAccessError>) -> Void)
+    ) {
+        assert(!Thread.isMainThread)
+        assert(self.isFileURL)
+        let attributeKeys: Set<URLResourceKey> = [
+            .fileSizeKey,
+            .creationDateKey,
+            .contentModificationDateKey,
+            .isExcludedFromBackupKey,
+            .ubiquitousItemDownloadingStatusKey,
+        ]
+
+        var targetURL = self
+        if !canUseCache {
+            targetURL.removeAllCachedResourceValues()
+        }
+        
+        let attributes: URLResourceValues
+        do {
+            attributes = try targetURL.resourceValues(forKeys: attributeKeys)
+        } catch {
+            Diag.error("Failed to get file info [reason: \(error.localizedDescription)]")
+            let fileAccessError = FileAccessError.systemError(error)
+            completionQueue.addOperation {
+                completion(.failure(fileAccessError))
+            }
+            return
+        }
+        
+        let latestInfo = FileInfo(
+            fileName: targetURL.lastPathComponent,
+            fileSize: Int64(attributes.fileSize ?? -1),
+            creationDate: attributes.creationDate,
+            modificationDate: attributes.contentModificationDate,
+            isExcludedFromBackup: attributes.isExcludedFromBackup ?? false,
+            isInTrash: self.isInTrashDirectory)
+        completionQueue.addOperation {
+            completion(.success(latestInfo))
+        }
+    }
 }
+
+public extension URL {
+    static func from(malformedString: String, defaultScheme: String = "https") -> URL? {
+        guard var urlComponents = URLComponents(string: malformedString),
+              let urlHost = urlComponents.host,
+              urlHost.isNotEmpty
+        else {
+            return nil
+        }
+        
+        if let urlScheme = urlComponents.scheme {
+            if urlScheme == "otpauth" || urlScheme == "mailto" {
+                return nil
+            }
+            return urlComponents.url
+        } else {
+            urlComponents.scheme = defaultScheme
+            return urlComponents.url
+        }
+    }
+}
+

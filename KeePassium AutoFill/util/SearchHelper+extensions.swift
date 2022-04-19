@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2019 Andrei Popleteev <info@keepassium.com>
+//  Copyright © 2018–2022 Andrei Popleteev <info@keepassium.com>
 //
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -17,10 +17,16 @@ struct FuzzySearchResults {
     
     var isEmpty: Bool { return exactMatch.isEmpty && partialMatch.isEmpty }
     
-    var hasPerfectMatch: Bool {
-        guard partialMatch.isEmpty && (exactMatch.count == 1) else { return false }
-        let firstGroup = exactMatch.first!
-        return firstGroup.entries.count == 1
+    var perfectMatch: Entry? {
+        guard partialMatch.isEmpty else { return nil }
+        guard exactMatch.count == 1,
+              let theOnlyGroup = exactMatch.first,
+              theOnlyGroup.entries.count == 1,
+              let theOnlyScoredEntry = theOnlyGroup.entries.first
+        else {
+            return nil
+        }
+        return theOnlyScoredEntry.entry
     }
 }
 
@@ -29,8 +35,7 @@ extension SearchHelper {
     func find(
         database: Database,
         serviceIdentifiers: [ASCredentialServiceIdentifier]
-        ) -> FuzzySearchResults
-    {
+    ) -> FuzzySearchResults {
         var relevantEntries = [ScoredEntry]()
         for si in serviceIdentifiers {
             switch si.type {
@@ -48,16 +53,14 @@ extension SearchHelper {
         let exactMatchEntries = relevantEntries.filter { $0.similarityScore >= 0.99 }
         let partialMatchEntries = relevantEntries.filter { $0.similarityScore < 0.99 }
         let exactMatch = arrangeByGroups(scoredEntries: exactMatchEntries)
-            .excludingNonAutoFillableEntries()
         let partialMatch = arrangeByGroups(scoredEntries: partialMatchEntries)
-            .excludingNonAutoFillableEntries()
         
         let searchResults = FuzzySearchResults(exactMatch: exactMatch, partialMatch: partialMatch)
         return searchResults
     }
     
     private func performSearch(in database: Database, url: String) -> [ScoredEntry] {
-        guard let url = URL.guessFrom(malformedString: url) else { return [] }
+        guard let url = URL.from(malformedString: url) else { return [] }
         
         var allEntries = [Entry]()
         guard let rootGroup = database.root else { return [] }
@@ -65,11 +68,10 @@ extension SearchHelper {
         
         let relevantEntries = allEntries
             .filter { (entry) in
-                if let group2 = entry.parent as? Group2 {
-                    return group2.isSearchingEnabled ?? true
-                } else {
-                    return !entry.isDeleted
-                }
+                (entry.parent as? Group2)?.isSearchingEnabled ?? true
+            }
+            .filter { (entry) in
+                !(entry.isDeleted || entry.isHiddenFromSearch)
             }
             .map { (entry) in
                 return ScoredEntry(
@@ -92,11 +94,10 @@ extension SearchHelper {
         
         let relevantEntries = allEntries
             .filter { (entry) in
-                if let group2 = entry.parent as? Group2 {
-                    return group2.isSearchingEnabled ?? true
-                } else {
-                    return !entry.isDeleted
-                }
+                (entry.parent as? Group2)?.isSearchingEnabled ?? true
+            }
+            .filter { (entry) in
+                !(entry.isDeleted || entry.isHiddenFromSearch)
             }
             .map { (entry) in
                 return ScoredEntry(
@@ -129,14 +130,14 @@ extension SearchHelper {
     }
     
     private func getSimilarity(domain: String, entry: Entry, options: String.CompareOptions) -> Double {
-        let urlScore = howSimilar(domain: domain, with: URL.guessFrom(malformedString: entry.resolvedURL))
+        let urlScore = howSimilar(domain: domain, with: URL.from(malformedString: entry.resolvedURL))
         let titleScore = entry.resolvedTitle.localizedContains(domain, options: options) ? 0.8 : 0.0
         let notesScore = entry.resolvedNotes.localizedContains(domain, options: options) ? 0.5 : 0.0
         
         if let entry2 = entry as? Entry2 {
             let altURLScore = howSimilar(
                 domain: domain,
-                with: URL.guessFrom(malformedString: entry2.overrideURL))
+                with: URL.from(malformedString: entry2.overrideURL))
             let maxScoreSoFar = max(urlScore, titleScore, notesScore, altURLScore)
             if maxScoreSoFar >= 0.5 {
                 return maxScoreSoFar
@@ -171,7 +172,7 @@ extension SearchHelper {
             let pathSimilarity = commonPrefixCount / maxPathCount 
             return 0.7 + 0.3 * pathSimilarity 
         } else {
-            if url1.domain2 == url2.domain2 {
+            if url1.guessServiceName() == url2.guessServiceName() {
                 return 0.5
             }
         }
@@ -180,96 +181,100 @@ extension SearchHelper {
     
     private func getSimilarity(url: URL, entry: Entry) -> Double {
         
-        let urlScore = howSimilar(url, with: URL.guessFrom(malformedString: entry.resolvedURL))
-        let titleScore: Double
-        let notesScore: Double
+        let urlScore = howSimilar(url, with: URL.from(malformedString: entry.resolvedURL))
         
-        if let urlHost = url.host, let urlDomain2 = url.domain2 {
+        let guessedServiceName = url.guessServiceName()
+        
+        var titleScore = 0.0
+        var notesScore = 0.0
+        
+        if let urlHost = url.host {
             if entry.resolvedTitle.localizedCaseInsensitiveContains(urlHost) {
                 titleScore = 0.8
-            } else if entry.resolvedTitle.localizedCaseInsensitiveContains(urlDomain2) {
-                titleScore = 0.5
-            } else {
-                titleScore = 0.0
             }
             if entry.resolvedNotes.localizedCaseInsensitiveContains(urlHost) {
                 notesScore = 0.5
-            } else if entry.resolvedNotes.localizedCaseInsensitiveContains(urlDomain2) {
-                notesScore = 0.3
-            } else {
-                notesScore = 0.0
             }
-        } else {
-            titleScore = 0.0
-            notesScore = 0.0
+        }
+        if let serviceName = guessedServiceName {
+            if entry.resolvedTitle.localizedCaseInsensitiveContains(serviceName) {
+                titleScore = max(titleScore, 0.5)
+            }
+            if entry.resolvedNotes.localizedCaseInsensitiveContains(serviceName) {
+                notesScore = max(notesScore, 0.3)
+            }
         }
         
-        if let entry2 = entry as? Entry2 {
-            let altURLScore = howSimilar(
-                url,
-                with: URL.guessFrom(malformedString: entry2.overrideURL))
-            let maxScoreSoFar = max(urlScore, titleScore, notesScore, altURLScore)
-            if maxScoreSoFar >= 0.5 {
-                return maxScoreSoFar
-            }
-            
-            let urlString = url.absoluteString
-            guard let urlHost = url.host,
-                let urlDomain2 = url.domain2 else { return maxScoreSoFar }
-            let extraFieldScores: [Double] = entry2.fields
-                .filter { !$0.isStandardField }
-                .map { (field) in
-                    if field.value.localizedCaseInsensitiveContains(urlString) {
-                        return 1.0
-                    } else if field.value.localizedCaseInsensitiveContains(urlHost) {
-                        return 0.5
-                    } else if field.value.localizedCaseInsensitiveContains(urlDomain2) {
-                        return 0.3
-                    } else {
-                        return 0.0
-                    }
-            }
-            return max(maxScoreSoFar, extraFieldScores.max() ?? 0.0)
-        } else {
+        guard let entry2 = entry as? Entry2 else {
             return max(urlScore, titleScore, notesScore)
         }
+        
+        let altURLScore = howSimilar(
+            url,
+            with: URL.from(malformedString: entry2.overrideURL))
+        let maxScoreSoFar = max(urlScore, titleScore, notesScore, altURLScore)
+        if maxScoreSoFar >= 0.5 {
+            return maxScoreSoFar
+        }
+        
+        let customFieldValues = entry2.fields
+            .filter { !$0.isStandardField }
+            .map { $0.resolvedValue }
+        
+        let urlString = url.absoluteString
+        for fieldValue in customFieldValues {
+            if fieldValue.localizedCaseInsensitiveContains(urlString) {
+                return 1.0
+            }
+        }
+        
+        guard let urlHost = url.host else {
+            return maxScoreSoFar
+        }
+        for fieldValue in customFieldValues {
+            if fieldValue.localizedCaseInsensitiveContains(urlHost) {
+                return 0.5
+            }
+        }
+        
+        guard let serviceName = guessedServiceName else {
+            return maxScoreSoFar
+        }
+        for fieldValue in customFieldValues {
+            if fieldValue.localizedCaseInsensitiveContains(serviceName) {
+                return 0.3
+            }
+        }
+        return maxScoreSoFar
     }
 }
+
 
 fileprivate extension URL {
-    static func guessFrom(malformedString string: String?) -> URL? {
-        guard let string = string else { return nil }
-        
-        if let wellFormedURL = URL(string: string), let _ = wellFormedURL.scheme {
-            return wellFormedURL
+    private static let genericSLDs = Set<String>(
+        ["co", "com", "edu", "ac", "org", "net", "gov", "mil"]
+    )
+    
+    func guessServiceName() -> String? {
+        guard let domains = host?.split(separator: ".") else {
+            return nil
         }
-        guard let fakeSchemeURL = URL(string: "https://" + string),
-            let _ = fakeSchemeURL.host else {
-                return nil
+        let domainLevels = domains.count
+        guard domainLevels > 1 else {
+            return nil
         }
-        return fakeSchemeURL
-    }
-}
-
-extension SearchResults {
-    func excludingNonAutoFillableEntries() -> SearchResults {
-        let excludeFromAutoFillCustomDataKey = "BrowserHideEntry"
-        
-        var result = SearchResults()
-        self.forEach{ groupedEntries in
-            let filteredEntries = groupedEntries.entries.filter {
-                guard let entry2 = $0.entry as? Entry2,
-                    let valueItem = entry2.customData[excludeFromAutoFillCustomDataKey] else
-                {
-                    return true
-                }
-                let isHidden = Bool(string: valueItem.value)
-                return !isHidden
-            }
-            if filteredEntries.count > 0 {
-                result.append(GroupedEntries(group: groupedEntries.group, entries: filteredEntries))
+        let secondLevelDomain = String(domains[domainLevels - 2])
+        if !URL.genericSLDs.contains(secondLevelDomain) {
+            return secondLevelDomain
+        }
+        if domainLevels > 2 {
+            let thirdLevelDomain = String(domains[domainLevels - 3])
+            if thirdLevelDomain.count > 3 {
+                return thirdLevelDomain
+            } else {
+                return domains.suffix(3).joined(separator: ".")
             }
         }
-        return result
+        return domains.suffix(2).joined(separator: ".")
     }
 }

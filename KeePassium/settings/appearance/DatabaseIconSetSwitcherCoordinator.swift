@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2021 Andrei Popleteev <info@keepassium.com>
+//  Copyright © 2018–2022 Andrei Popleteev <info@keepassium.com>
 //
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -28,8 +28,7 @@ class DatabaseIconSetSwitcherCoordinator: Coordinator {
     
     func start() {
         picker.selectedItem = Settings.current.databaseIconSet
-        router.push(picker, animated: true, onPop: {
-            [weak self] (viewController) in
+        router.push(picker, animated: true, onPop: { [weak self] in
             guard let self = self else { return }
             self.removeAllChildCoordinators()
             self.dismissHandler?(self)

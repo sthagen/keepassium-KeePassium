@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2020 Andrei Popleteev <info@keepassium.com>
+//  Copyright © 2018–2022 Andrei Popleteev <info@keepassium.com>
 //
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -22,6 +22,15 @@ public enum FileAccessError: LocalizedError {
     case targetFileIsReadOnly(fileProvider: FileProvider)
     
     case systemError(_ originalError: Error?)
+    
+    public var isTimeout: Bool {
+        switch self {
+        case .timeout(_):
+            return true
+        default:
+            return false
+        }
+    }
     
     public var errorDescription: String? {
         switch self {

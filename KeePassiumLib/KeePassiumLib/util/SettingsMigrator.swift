@@ -1,12 +1,11 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2019 Andrei Popleteev <info@keepassium.com>
+//  Copyright © 2018–2022 Andrei Popleteev <info@keepassium.com>
 // 
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
 //  by the Free Software Foundation: https://www.gnu.org/licenses/).
 //  For commercial licensing, please contact the author.
 
-import Foundation
 
 open class SettingsMigrator {
     
@@ -15,21 +14,12 @@ open class SettingsMigrator {
             Diag.info("Processing first launch.")
             settings.settingsVersion = Settings.latestVersion
             
-            cleanupKeychain()
+            Keychain.shared.removeAll()
         } else {
             let latestVersion = Settings.latestVersion
             while settings.settingsVersion < latestVersion {
                 upgrade(settings)
             }
-        }
-    }
-
-    
-    private static func cleanupKeychain() {
-        do {
-            try Keychain.shared.removeAll() 
-        } catch {
-            Diag.error("Failed to clean up keychain [message: \(error.localizedDescription)]")
         }
     }
     
@@ -40,11 +30,19 @@ open class SettingsMigrator {
             assert(settings.isFirstLaunch)
             settings.settingsVersion = Settings.latestVersion
         case 3:
+            upgradeVersion3toVersion4(settings)
+            break
+        case 4: 
             break
         default:
             break
         }
     }
     
-    
+    private static func upgradeVersion3toVersion4(_ settings: Settings) {
+        if settings.isBiometricAppLockEnabled {
+            Keychain.shared.prepareBiometricAuth(true)
+        }
+        settings.settingsVersion = 4
+    }
 }

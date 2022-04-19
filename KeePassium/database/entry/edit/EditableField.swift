@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2019 Andrei Popleteev <info@keepassium.com>
+//  Copyright © 2018–2022 Andrei Popleteev <info@keepassium.com>
 // 
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -41,6 +41,23 @@ class EditableField: BasicViewableField {
         get { return field?.isProtected ?? false }
         set {
             if let field = field { field.isProtected = newValue }
+        }
+    }
+    
+    public var textContentType: UITextContentType? {
+        switch internalName {
+        case EntryField.userName:
+            return .username
+        case EntryField.password:
+            if Settings.current.acceptAutoFillInput {
+                return .password
+            } else {
+                return nil
+            }
+        case EntryField.url:
+            return .URL
+        default:
+            return nil
         }
     }
     

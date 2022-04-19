@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2021 Andrei Popleteev <info@keepassium.com>
+//  Copyright © 2018–2022 Andrei Popleteev <info@keepassium.com>
 //
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -12,17 +12,17 @@ extension ProcessInfo {
         return isiPadAppOnMac || isCatalystApp
     }
     
-    private static var isiPadAppOnMac: Bool {
+    public static var isiPadAppOnMac: Bool {
         guard #available(iOS 14, *) else {
             return false
         }
         return ProcessInfo.processInfo.isiOSAppOnMac
     }
     
-    private static var isCatalystApp: Bool {
+    public static var isCatalystApp: Bool {
         guard #available(iOS 13, *) else {
             return false
         }
-        return ProcessInfo.processInfo.isMacCatalystApp
+        return ProcessInfo.processInfo.isMacCatalystApp && !isiPadAppOnMac
     }
 }

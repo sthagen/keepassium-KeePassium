@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2019 Andrei Popleteev <info@keepassium.com>
+//  Copyright © 2018–2022 Andrei Popleteev <info@keepassium.com>
 // 
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -13,8 +13,10 @@ import KeePassiumLib
 class ProgressOverlay: UIView {
     typealias UnresponsiveCancelHandler = () -> ()
     
-    public var title: String? { 
-        didSet { statusLabel.text = title }
+    public var title: String? {
+        didSet {
+            statusLabel.text = title
+        }
     }
     
     public var isCancellable: Bool {
@@ -64,9 +66,15 @@ class ProgressOverlay: UIView {
         if animated {
             overlay.alpha = 0.0
             parent.addSubview(overlay)
-            UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseIn, animations: {
-                overlay.alpha = 1.0
-            }, completion: nil)
+            UIView.animate(
+                withDuration: 0.3,
+                delay: 0,
+                options: [.curveEaseIn, .allowAnimatedContent],
+                animations: {
+                    overlay.alpha = 1.0
+                },
+                completion: nil
+            )
         } else {
             parent.addSubview(overlay)
         }
@@ -76,6 +84,10 @@ class ProgressOverlay: UIView {
         overlay.leadingAnchor.constraint(equalTo: parent.leadingAnchor, constant: 0).isActive = true
         overlay.trailingAnchor.constraint(equalTo: parent.trailingAnchor, constant: 0).isActive = true
         parent.layoutSubviews()
+        
+        overlay.accessibilityViewIsModal = true
+        UIAccessibility.post(notification: .screenChanged , argument: overlay.statusLabel)
+        
         return overlay
     }
     
@@ -91,14 +103,20 @@ class ProgressOverlay: UIView {
     
     
     func dismiss(animated: Bool, completion: ((Bool) -> Void)? = nil) {
-        UIView.animate(
-            withDuration: 0.3,
-            delay: 0,
-            options: [.curveEaseOut, .beginFromCurrentState],
-            animations: {
-                self.alpha = 0.0
-            },
-            completion: completion)
+        if animated {
+            UIView.animate(
+                withDuration: 0.3,
+                delay: 0,
+                options: [.curveEaseOut, .beginFromCurrentState, .allowAnimatedContent],
+                animations: {
+                    self.alpha = 0.0
+                },
+                completion: completion)
+        } else {
+            self.alpha = 0.0
+            completion?(true)
+        }
+        UIAccessibility.post(notification: .screenChanged, argument: nil)
     }
     
     private func setupViews() {
@@ -112,6 +130,7 @@ class ProgressOverlay: UIView {
         spinner.hidesWhenStopped = false
         spinner.isHidden = false
         spinner.alpha = 0.0
+        spinner.isAccessibilityElement = false
         addSubview(spinner)
 
         statusLabel = UILabel()
@@ -119,16 +138,19 @@ class ProgressOverlay: UIView {
         statusLabel.numberOfLines = 0
         statusLabel.lineBreakMode = .byWordWrapping
         statusLabel.font = UIFont.preferredFont(forTextStyle: .callout)
+        statusLabel.accessibilityTraits.insert(.updatesFrequently)
         addSubview(statusLabel)
 
         percentLabel = UILabel()
         percentLabel.text = ""
         percentLabel.numberOfLines = 1
         percentLabel.font = UIFont.preferredFont(forTextStyle: .caption1)
+        statusLabel.accessibilityTraits.insert(.updatesFrequently)
         addSubview(percentLabel)
 
         progressView = UIProgressView()
         progressView.progress = 0.0
+        progressView.accessibilityTraits.insert(.updatesFrequently)
         addSubview(progressView)
         
         cancelButton = UIButton(type: .system)
@@ -194,7 +216,7 @@ class ProgressOverlay: UIView {
     internal func update(with progress: ProgressEx) {
         statusLabel.text = progress.localizedDescription
         percentLabel.text = String(format: "%.0f%%", 100.0 * progress.fractionCompleted)
-        progressView.setProgress(Float(progress.fractionCompleted), animated: true)
+        progressView.setProgress(Float(progress.fractionCompleted), animated: false)
         cancelButton.isEnabled = cancelButton.isEnabled && progress.isCancellable && !progress.isCancelled
         isAnimating = progress.isIndeterminate
         self.progress = progress

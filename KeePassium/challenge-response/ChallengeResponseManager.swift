@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2019 Andrei Popleteev <info@keepassium.com>
+//  Copyright © 2018–2022 Andrei Popleteev <info@keepassium.com>
 //
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -7,6 +7,7 @@
 //  For commercial licensing, please contact the author.
 
 import KeePassiumLib
+import YubiKit
 
 fileprivate let YUBIKEY_SUCCESS: UInt16 = 0x9000
 fileprivate let YUBIKEY_MFI_TOUCH_TIMEOUT: UInt16 = 0x6985
@@ -22,7 +23,7 @@ class ChallengeResponseManager {
     
     private var mfiKeyActionSheetView: MFIKeyActionSheetView? 
     
-    private var challenge: SecureByteArray?
+    private var challenge: SecureBytes?
     private var responseHandler: ResponseHandler?
     private var currentKey: YubiKey?
     private var isResponseSent = false
@@ -125,8 +126,6 @@ class ChallengeResponseManager {
     private func nfcSessionStateDidChange() {
         let keySession = YubiKitManager.shared.nfcSession as! YKFNFCSession
         switch keySession.iso7816SessionState {
-        case .opening:
-            print("NFC session -> opening")
         case .open:
             print("NFC session -> open")
             queue.async { [weak self] in
@@ -149,10 +148,10 @@ class ChallengeResponseManager {
     
     public func perform(
         with yubiKey: YubiKey,
-        challenge: SecureByteArray,
+        challenge: SecureBytes,
         responseHandler: @escaping ResponseHandler)
     {
-        self.challenge = challenge.secureClone()
+        self.challenge = challenge.clone()
         self.responseHandler = responseHandler
         
         isResponseSent = false
@@ -164,7 +163,7 @@ class ChallengeResponseManager {
         }
     }
     
-    private func returnResponse(_ response: SecureByteArray) {
+    private func returnResponse(_ response: SecureBytes) {
         queue.async { [weak self] in
             guard let self = self else { return }
             self.responseHandler?(response, nil)
@@ -176,7 +175,7 @@ class ChallengeResponseManager {
     private func returnError(_ error: ChallengeResponseError) {
         queue.async { [weak self] in
             guard let self = self else { return }
-            self.responseHandler?(SecureByteArray(), error)
+            self.responseHandler?(SecureBytes.empty(), error)
             self.isResponseSent = true
             self.cancel()
         }
@@ -185,7 +184,7 @@ class ChallengeResponseManager {
     
     private func startMFISession(
         with yubiKey: YubiKey,
-        challenge: SecureByteArray,
+        challenge: SecureBytes,
         responseHandler: @escaping ResponseHandler)
     {
         guard supportsMFI else {
@@ -206,7 +205,7 @@ class ChallengeResponseManager {
     
     private func startNFCSession(
         with yubiKey: YubiKey,
-        challenge: SecureByteArray,
+        challenge: SecureBytes,
         responseHandler: @escaping ResponseHandler)
     {
         guard #available(iOS 13, *), supportsNFC else {
@@ -349,14 +348,22 @@ class ChallengeResponseManager {
             }
         }
 
-        guard var challengeBytes = challenge?.bytesCopy(),
-            challengeBytes.count <= 64
-            else { fatalError() }
+        guard var challengeBytes = challenge?.withDecryptedBytes({ $0.clone() }),
+              challengeBytes.count <= 64
+        else {
+            fatalError()
+        }
+        defer {
+            challengeBytes.erase()
+        }
         
         let paddingLength = 64 - challengeBytes.count
         let pkcs7padding: [UInt8] = Array(repeating: UInt8(paddingLength), count: paddingLength)
         challengeBytes.append(contentsOf: pkcs7padding)
-        let challengeData = Data(challengeBytes)
+        var challengeData = Data(challengeBytes)
+        defer {
+            challengeData.erase()
+        }
             
         let slotID = getSlotID(for: slot)
         guard let chalRespAPDU =
@@ -381,7 +388,7 @@ class ChallengeResponseManager {
                     self.returnError(.keyNotConfigured)
                     return
                 }
-                let response = SecureByteArray(data: responseData)
+                let response = SecureBytes.from(responseData)
                 self.returnResponse(response)
             } else {
                 let message = "YubiKey challenge failed with code \(String(format: "%04X", statusCode))"

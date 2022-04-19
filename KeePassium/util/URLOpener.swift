@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2021 Andrei Popleteev <info@keepassium.com>
+//  Copyright © 2018–2022 Andrei Popleteev <info@keepassium.com>
 //
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -34,8 +34,6 @@ class URLOpener: NSObject {
         url: URL,
         completionHandler: ((Bool)->Void)?=nil
     ) {
-        assert(!AppGroup.isMainApp, "Use UIApplication.openURL() instead")
-        
         #if MAIN_APP
         application?.open(url, options: [:], completionHandler: completionHandler)
         #else

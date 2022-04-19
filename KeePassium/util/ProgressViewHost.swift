@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2019 Andrei Popleteev <info@keepassium.com>
+//  Copyright © 2018–2022 Andrei Popleteev <info@keepassium.com>
 // 
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -9,8 +9,8 @@
 import Foundation
 import KeePassiumLib
 
-public protocol ProgressViewHost: class {
-    func showProgressView(title: String, allowCancelling: Bool)
+public protocol ProgressViewHost: AnyObject {
+    func showProgressView(title: String, allowCancelling: Bool, animated: Bool)
     func updateProgressView(with progress: ProgressEx)
-    func hideProgressView()
+    func hideProgressView(animated: Bool)
 }

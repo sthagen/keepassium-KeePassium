@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2019 Andrei Popleteev <info@keepassium.com>
+//  Copyright © 2018–2022 Andrei Popleteev <info@keepassium.com>
 // 
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -9,7 +9,7 @@
 import UIKit
 import KeePassiumLib
 
-protocol GroupEditorDelegate: class {
+protocol GroupEditorDelegate: AnyObject {
     func didPressCancel(in groupEditor: GroupEditorVC)
     func didPressDone(in groupEditor: GroupEditorVC)
     func didPressChangeIcon(at popoverAnchor: PopoverAnchor, in groupEditor: GroupEditorVC)

@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2019 Andrei Popleteev <info@keepassium.com>
+//  Copyright © 2018–2022 Andrei Popleteev <info@keepassium.com>
 // 
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -87,18 +87,14 @@ class PasswordGeneratorVC: UITableViewController, Refreshable {
             return
         }
         
-        do {
-            password = try PasswordGenerator.generate(
-                length: settings.passwordGeneratorLength,
-                parameters: params)
-            passwordLabel.attributedText = PasswordStringHelper.decorate(
-                password,
-                font: passwordLabel.font
-            )
-        } catch {
-            Diag.error("RNG error [message: \(error.localizedDescription)]")
-            showErrorAlert(error)
-        }
+        password = PasswordGenerator.generate(
+            length: settings.passwordGeneratorLength,
+            parameters: params
+        )
+        passwordLabel.attributedText = PasswordStringHelper.decorate(
+            password,
+            font: passwordLabel.font
+        )
     }
     
     

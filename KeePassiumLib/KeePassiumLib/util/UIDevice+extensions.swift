@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2020 Andrei Popleteev <info@keepassium.com>
+//  Copyright © 2018–2022 Andrei Popleteev <info@keepassium.com>
 //
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -14,13 +14,14 @@ extension UIDevice {
         #if targetEnvironment(macCatalyst)
         return false
         #else
-        if #available(iOS 11.0, *) {
-            guard let keyWindow = AppGroup.applicationShared?.keyWindow else {
-                return false
-            }
-            return keyWindow.safeAreaInsets.bottom.isZero
+        let windows = AppGroup.applicationShared?
+            .connectedScenes
+            .compactMap { $0 as? UIWindowScene }
+            .flatMap { $0.windows }
+        guard let keyWindow = windows?.first(where: { $0.isKeyWindow }) else {
+            return false
         }
-        return true
+        return keyWindow.safeAreaInsets.bottom.isZero
         #endif
     }
 }

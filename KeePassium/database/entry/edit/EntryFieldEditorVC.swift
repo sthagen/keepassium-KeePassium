@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2019 Andrei Popleteev <info@keepassium.com>
+//  Copyright © 2018–2022 Andrei Popleteev <info@keepassium.com>
 // 
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -9,7 +9,7 @@
 import UIKit
 import KeePassiumLib
 
-protocol EntryFieldEditorDelegate: class {
+protocol EntryFieldEditorDelegate: AnyObject {
     func didPressCancel(in viewController: EntryFieldEditorVC)
     func didPressDone(in viewController: EntryFieldEditorVC)
 
@@ -20,12 +20,11 @@ protocol EntryFieldEditorDelegate: class {
 
     func isTOTPSetupAvailable(_ viewController: EntryFieldEditorVC) -> Bool
     func didPressScanQRCode(in viewController: EntryFieldEditorVC)
-
-    func didPressUserNameGenerator(
+    
+    func getUserNameGeneratorMenu(
         for field: EditableField,
-        at popoverAnchor: PopoverAnchor,
-        in viewController: EntryFieldEditorVC
-    )
+        in viewController: EntryFieldEditorVC) -> UIMenu?
+    
     func didPressPasswordGenerator(
         for field: EditableField,
         at popoverAnchor: PopoverAnchor,
@@ -82,12 +81,16 @@ final class EntryFieldEditorVC: UITableViewController, Refreshable {
     }
 
     func refresh() {
+        refreshControls()
+        tableView.reloadData()
+    }
+    
+    private func refreshControls() {
         addFieldButton.isEnabled = allowsCustomFields
         fields.sort {
             itemCategory.compare($0.internalName, $1.internalName)
         }
         revalidate()
-        tableView.reloadData()
     }
     
     func revalidate() {
@@ -180,7 +183,7 @@ final class EntryFieldEditorVC: UITableViewController, Refreshable {
                 self?.selectCustomFieldName(at: newIndexPath)
             }
         )
-        refresh()
+        refreshControls()
     }
     
     func didPressDeleteField(at indexPath: IndexPath) {
@@ -200,7 +203,7 @@ final class EntryFieldEditorVC: UITableViewController, Refreshable {
         tableView.beginUpdates()
         tableView.deleteRows(at: [indexPath], with: .fade)
         tableView.endUpdates()
-        refresh()
+        refreshControls()
     }
     
 
@@ -282,6 +285,16 @@ extension EntryFieldEditorVC: ValidatingTextFieldDelegate {
 }
 
 extension EntryFieldEditorVC: EditableFieldCellDelegate {
+
+    func getButtonMenu(for field: EditableField, in cell: EditableFieldCell) -> UIMenu? {
+        switch field.internalName {
+        case EntryField.userName:
+            return delegate?.getUserNameGeneratorMenu(for: field, in: self)
+        default:
+            return nil
+        }
+    }
+    
     func didPressButton(
         for field: EditableField,
         at popoverAnchor: PopoverAnchor,
@@ -293,11 +306,7 @@ extension EntryFieldEditorVC: EditableFieldCellDelegate {
         case is EntryFieldEditorSingleLineProtectedCell:
             didPressRandomize(field: field, at: popoverAnchor)
         default:
-            if field.internalName == EntryField.userName {
-                didPressChooseUserName(field: field, at: popoverAnchor)
-            } else {
-                assertionFailure("Button pressed in an unknown field")
-            }
+            assertionFailure("Button pressed in an unknown field")
         }
     }
     
@@ -316,10 +325,6 @@ extension EntryFieldEditorVC: EditableFieldCellDelegate {
     
     func didPressRandomize(field: EditableField, at popoverAnchor: PopoverAnchor) {
         delegate?.didPressPasswordGenerator(for: field, at: popoverAnchor, in: self)
-    }
-    
-    func didPressChooseUserName(field: EditableField, at popoverAnchor: PopoverAnchor) {
-        delegate?.didPressUserNameGenerator(for: field, at: popoverAnchor, in: self)
     }
     
     func isFieldValid(field: EditableField) -> Bool {

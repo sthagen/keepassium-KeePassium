@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2019 Andrei Popleteev <info@keepassium.com>
+//  Copyright © 2018–2022 Andrei Popleteev <info@keepassium.com>
 //
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -56,7 +56,8 @@ public class UsageMonitor {
             return false
         case .lapsed, 
              .freeLightUse,
-             .freeHeavyUse:
+             .freeHeavyUse,
+             .fallback:
             return true
         }
     }
@@ -123,20 +124,36 @@ public class UsageMonitor {
         guard let historyData = UserDefaults.appGroupShared.data(forKey: appUseDurationKey) else {
             return DailyAppUsageHistory()
         }
-        guard let history = NSKeyedUnarchiver.unarchiveObject(with: historyData)
-            as? DailyAppUsageHistory else
-        {
-            assertionFailure()
-            Diag.warning("Failed to parse history data, ignoring.")
+
+        do {
+            let historyDict = try NSKeyedUnarchiver.unarchivedObject(
+                ofClasses: [NSDictionary.self, NSNumber.self],
+                from: historyData
+            )
+            guard let history = historyDict as? DailyAppUsageHistory else {
+                assertionFailure()
+                Diag.warning("Failed to parse history data, ignoring.")
+                return DailyAppUsageHistory()
+            }
+            return history
+        } catch {
+            Diag.warning("Failed to read history data: \(error.localizedDescription)")
             return DailyAppUsageHistory()
         }
-        return history
     }
     
     private func saveHistoryData(_ history: DailyAppUsageHistory) {
-        let historyData = NSKeyedArchiver.archivedData(withRootObject: history)
-        UserDefaults.appGroupShared.set(historyData, forKey: appUseDurationKey)
-        cachedUsageDurationNeedUpdate = true
+        do {
+            let historyData = try NSKeyedArchiver.archivedData(
+                withRootObject: history,
+                requiringSecureCoding: false
+            )
+            UserDefaults.appGroupShared.set(historyData, forKey: appUseDurationKey)
+            cachedUsageDurationNeedUpdate = true
+        } catch {
+            Diag.warning("Failed to encode history data: \(error.localizedDescription)")
+            return
+        }
     }
     
     private func cleanupObsoleteData() {

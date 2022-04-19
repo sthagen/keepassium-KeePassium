@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2019 Andrei Popleteev <info@keepassium.com>
+//  Copyright © 2018–2022 Andrei Popleteev <info@keepassium.com>
 // 
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -12,7 +12,7 @@ import KeePassiumLib
 fileprivate let singlelineFields: [String] =
     [EntryField.title, EntryField.userName, EntryField.password, EntryField.url]
 
-protocol ViewableField: class {
+protocol ViewableField: AnyObject {
     var field: EntryField? { get set }
 
     var internalName: String { get }
@@ -109,7 +109,7 @@ class TOTPViewableField: DynamicViewableField {
         return value
     }
     
-    var elapsedTimeFraction: Float? {
+    var elapsedTimeFraction: Double? {
         return totpGenerator?.elapsedTimeFraction
     }
     
@@ -162,7 +162,9 @@ class ViewableEntryFieldFactory {
     }
     
     static private func makeOne(field: EntryField) -> ViewableField {
-        let isHidden = field.isProtected || field.name == EntryField.password
+        let isHidden =
+            (field.isProtected || field.name == EntryField.password)
+            && Settings.current.isHideProtectedFields
         let result = BasicViewableField(field: field, isValueHidden: isHidden)
         
         if field.name == EntryField.notes {

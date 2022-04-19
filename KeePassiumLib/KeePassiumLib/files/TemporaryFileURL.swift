@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2019 Andrei Popleteev <info@keepassium.com>
+//  Copyright © 2018–2022 Andrei Popleteev <info@keepassium.com>
 // 
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -22,7 +22,7 @@ public class TemporaryFileURL {
             try fileManager.createDirectory(
                 at: tmpFileDir,
                 withIntermediateDirectories: true,
-                attributes: nil)
+                attributes: nil) 
         } catch {
             Diag.error("Failed to create temporary file [error: \(error.localizedDescription)]")
             throw error

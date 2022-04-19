@@ -1,0 +1,12 @@
+/* An identifier of the app that called AutoFill. The term is intentionally similar to https://ru.wikipedia.org/wiki/Caller_ID. [callerID: String] */
+"[AutoFill/Search/callerID]" = "Caller ID: %@";
+
+/* No comment provided by engineer. */
+"[AutoFill/Setup/footer]" = "Автозаповнення не може автоматично відкривати файли, котрі вже додані в основну програму.\n\nЧому? З точки зору системи, Автозаповнення - це окремий додаток, незалежне від основного. З метою безпеки, додаток не може просто так відкривати файли в інших додатках, якщо тільки користувач сам не зв'яже ці файли з даним додатком. Таким чином, система гарантує, що додатки можуть працювати тільки з кількома спеціально обраними файлами.\n\nВ результаті і Автозаповнення, і основний додаток повинні отримати \"окремі запрошення\" для роботи з кожним зовнішнім файлом. На щастя, ця процедура потрібна тільки один раз.";
+
+/* Action/button to make password visible as plain-text */
+"[ProtectedTextField] Show Password" = "Показати пароль";
+
+/* Call to action, invites the user to enable the Quick AutoFill feature */
+"[QuickAutoFill/Activate/callToAction]" = "Увімкніть швидке автозаповнення";
+

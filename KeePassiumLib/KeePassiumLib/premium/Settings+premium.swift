@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2019 Andrei Popleteev <info@keepassium.com>
+//  Copyright © 2018–2022 Andrei Popleteev <info@keepassium.com>
 //
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -10,25 +10,20 @@ import Foundation
 
 public extension Settings {
     
-    private static let heavyUseDatabaseLockTimeout = DatabaseLockTimeout.after5minutes
     private static let lightUseDatabaseLockTimeout = DatabaseLockTimeout.after1hour
     
     var premiumDatabaseLockTimeout: Settings.DatabaseLockTimeout {
         let actualTimeout = Settings.current.databaseLockTimeout
         switch PremiumManager.shared.status {
         case .initialGracePeriod,
-             .freeLightUse:
+             .freeLightUse,
+             .freeHeavyUse:
             return min(actualTimeout, Settings.lightUseDatabaseLockTimeout)
-        case .freeHeavyUse:
-            return min(actualTimeout, Settings.heavyUseDatabaseLockTimeout)
         case .subscribed,
-             .lapsed:
+             .lapsed,
+             .fallback:
             return actualTimeout
         }
-    }
-    
-    var premiumIsBiometricAppLockEnabled: Bool {
-        return isBiometricAppLockEnabled
     }
     
     var premiumIsKeepKeyFileAssociations: Bool {
@@ -44,15 +39,24 @@ public extension Settings {
         }
     }
     
+    var premiumIsQuickTypeEnabled: Bool {
+        let actualValue = Settings.current.isQuickTypeEnabled
+        if PremiumManager.shared.isAvailable(feature: .canUseQuickTypeAutoFill) {
+            return actualValue
+        } else {
+            return false
+        }
+    }
+    
     func isAvailable(timeout: Settings.DatabaseLockTimeout, for status: PremiumManager.Status) -> Bool {
         switch status {
         case .initialGracePeriod,
-             .freeLightUse:
+             .freeLightUse,
+             .freeHeavyUse:
             return timeout <= Settings.lightUseDatabaseLockTimeout
-        case .freeHeavyUse:
-            return timeout <= Settings.heavyUseDatabaseLockTimeout && timeout != .never
         case .subscribed,
-             .lapsed:
+             .lapsed,
+             .fallback:
             return true
         }
     }
@@ -60,12 +64,12 @@ public extension Settings {
     func isShownAvailable(timeout: Settings.DatabaseLockTimeout, for status: PremiumManager.Status) -> Bool {
         switch status {
         case .initialGracePeriod,
-             .freeLightUse:
+             .freeLightUse,
+             .freeHeavyUse:
             return timeout <= Settings.lightUseDatabaseLockTimeout && timeout != .never
-        case .freeHeavyUse:
-            return timeout <= Settings.heavyUseDatabaseLockTimeout && timeout != .never
         case .subscribed,
-             .lapsed:
+             .lapsed,
+             .fallback:
             return true
         }
     }

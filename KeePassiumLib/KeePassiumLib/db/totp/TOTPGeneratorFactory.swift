@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2019 Andrei Popleteev <info@keepassium.com>
+//  Copyright © 2018–2022 Andrei Popleteev <info@keepassium.com>
 //
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -32,7 +32,8 @@ public class TOTPGeneratorFactory {
     }
     
     private static func parseSingleFieldFormat(_ paramString: String) -> TOTPGenerator? {
-        guard let uriComponents = URLComponents(string: paramString) else {
+        let trimmedParamString = paramString.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard let uriComponents = URLComponents(string: trimmedParamString) else {
             Diag.warning("Unexpected OTP field format")
             return nil
         }

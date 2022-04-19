@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2020 Andrei Popleteev <info@keepassium.com>
+//  Copyright © 2018–2022 Andrei Popleteev <info@keepassium.com>
 //
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -8,7 +8,7 @@
 
 import KeePassiumLib
 
-protocol AppIconPickerDelegate: class {
+protocol AppIconPickerDelegate: AnyObject {
     func didSelectIcon(_ appIcon: AppIcon, in appIconPicker: AppIconPicker)
 }
 

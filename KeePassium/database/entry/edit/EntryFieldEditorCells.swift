@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2019 Andrei Popleteev <info@keepassium.com>
+//  Copyright © 2018–2022 Andrei Popleteev <info@keepassium.com>
 // 
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -16,9 +16,7 @@ class EditableFieldCellFactory {
         from tableView: UITableView,
         for indexPath: IndexPath,
         field: EditableField
-        ) -> EditableFieldCell & UITableViewCell
-    {
-        
+    ) -> EditableFieldCell & UITableViewCell {
         let cellStoryboardID: String
         if field.isFixed {
             if field.isMultiline {
@@ -39,32 +37,44 @@ class EditableFieldCellFactory {
             as! EditableFieldCell & UITableViewCell
         cell.field = field
         
-        if field.internalName == EntryField.userName,
-            let userNameCell = cell as? EntryFieldEditorSingleLineCell
-        {
-            userNameCell.actionButton.setTitle(
-                NSLocalizedString(
-                    "[EditEntry/UserName/choose]",
-                    value: "Choose",
-                    comment: "Action: choose a username from a list"),
-                for: .normal)
-            userNameCell.actionButton.isHidden = false
+        if let singleLineCell = cell as? EntryFieldEditorSingleLineCell {
+            decorate(singleLineCell, field: field)
         }
-        
         return cell
+    }
+    
+    private static func decorate(_ cell: EntryFieldEditorSingleLineCell, field: EditableField) {
+        cell.textField.keyboardType = .default
+        cell.actionButton.isHidden = true
+        cell.textField.autocorrectionType = .default
+        
+        switch field.internalName {
+        case EntryField.userName:
+            cell.actionButton.setTitle(LString.actionChooseUserName, for: .normal)
+            cell.actionButton.isHidden = false
+            cell.textField.keyboardType = .emailAddress
+        case EntryField.url:
+            cell.textField.keyboardType = .URL
+            cell.textField.autocorrectionType = .no
+        default:
+            break
+        }
     }
 }
 
-internal protocol EditableFieldCellDelegate: class {
+internal protocol EditableFieldCellDelegate: AnyObject {
     func didChangeField(_ field: EditableField, in cell: EditableFieldCell)
     func didPressReturn(for field: EditableField, in cell: EditableFieldCell)
     func didPressButton(
         for field: EditableField,
         at popoverAnchor: PopoverAnchor,
         in cell: EditableFieldCell)
+    
+    @available(iOS 14, *)
+    func getButtonMenu(for field: EditableField, in cell: EditableFieldCell) -> UIMenu?
 }
 
-internal protocol EditableFieldCell: class {
+internal protocol EditableFieldCell: AnyObject {
     var delegate: EditableFieldCellDelegate? { get set }
     var field: EditableField? { get set }
     func validate()
@@ -160,7 +170,9 @@ class EntryFieldEditorSingleLineCell:
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var actionButton: UIButton!
     
-    weak var delegate: EditableFieldCellDelegate?
+    weak var delegate: EditableFieldCellDelegate? {
+        didSet { refreshMenu() }
+    }
     weak var field: EditableField? {
         didSet {
             titleLabel.text = field?.visibleName
@@ -168,11 +180,13 @@ class EntryFieldEditorSingleLineCell:
             textField.isSecureTextEntry =
                 (field?.isProtected ?? false) && Settings.current.isHideProtectedFields
             textField.accessibilityLabel = field?.visibleName
+            textField.textContentType = field?.textContentType
+            refreshMenu()
         }
     }
     override func awakeFromNib() {
         super.awakeFromNib()
-        titleLabel.font = UIFont.systemFont(forTextStyle: .subheadline, weight: .thin)
+        titleLabel.font = UIFont.preferredFont(forTextStyle: .subheadline)
         titleLabel.adjustsFontForContentSizeCategory = true
         textField.font = UIFont.monospaceFont(forTextStyle: .body)
         textField.adjustsFontForContentSizeCategory = true
@@ -181,6 +195,19 @@ class EntryFieldEditorSingleLineCell:
         textField.delegate = self
     }
 
+    private func refreshMenu() {
+        guard #available(iOS 14, *) else { return }
+        
+        if let field = field,
+           let buttonMenu = delegate?.getButtonMenu(for: field, in: self)
+        {
+            actionButton.menu = buttonMenu
+            actionButton.showsMenuAsPrimaryAction = true
+        } else {
+            actionButton.showsMenuAsPrimaryAction = false
+        }
+    }
+    
     override func becomeFirstResponder() -> Bool {
         super.becomeFirstResponder()
         return textField.becomeFirstResponder()
@@ -239,7 +266,7 @@ class EntryFieldEditorSingleLineProtectedCell:
     override func awakeFromNib() {
         super.awakeFromNib()
         
-        titleLabel.font = UIFont.systemFont(forTextStyle: .subheadline, weight: .thin)
+        titleLabel.font = UIFont.preferredFont(forTextStyle: .subheadline)
         titleLabel.adjustsFontForContentSizeCategory = true
         textField.font = UIFont.monospaceFont(forTextStyle: .body)
         textField.adjustsFontForContentSizeCategory = true
@@ -302,7 +329,7 @@ class EntryFieldEditorMultiLineCell: UITableViewCell, EditableFieldCell, Validat
     override func awakeFromNib() {
         super.awakeFromNib()
         
-        titleLabel.font = UIFont.systemFont(forTextStyle: .subheadline, weight: .thin)
+        titleLabel.font = UIFont.preferredFont(forTextStyle: .subheadline)
         titleLabel.adjustsFontForContentSizeCategory = true
         textView.font = UIFont.monospaceFont(forTextStyle: .body)
         textView.adjustsFontForContentSizeCategory = true
@@ -356,6 +383,8 @@ class EntryFieldEditorCustomFieldCell:
     override func awakeFromNib() {
         super.awakeFromNib()
         
+        nameTextField.font = UIFont.preferredFont(forTextStyle: .subheadline)
+        nameTextField.adjustsFontForContentSizeCategory = true
         valueTextView.font = UIFont.monospaceFont(forTextStyle: .body)
         valueTextView.adjustsFontForContentSizeCategory = true
         
@@ -411,4 +440,3 @@ class EntryFieldEditorCustomFieldCell:
         delegate?.didChangeField(field, in: self)
     }
 }
-

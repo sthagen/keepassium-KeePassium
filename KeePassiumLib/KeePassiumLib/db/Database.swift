@@ -1,51 +1,10 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2019 Andrei Popleteev <info@keepassium.com>
+//  Copyright © 2018–2022 Andrei Popleteev <info@keepassium.com>
 // 
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
 //  by the Free Software Foundation: https://www.gnu.org/licenses/).
 //  For commercial licensing, please contact the author.
-
-import Foundation
-
-public enum DatabaseError: LocalizedError {
-    case loadError(reason: String)
-    case invalidKey
-    case saveError(reason: String)
-    
-    public var errorDescription: String? {
-        switch self {
-        case .loadError:
-            return NSLocalizedString(
-                "[DatabaseError] Cannot open database",
-                bundle: Bundle.framework,
-                value: "Cannot open database",
-                comment: "Error message while opening a database")
-        case .invalidKey:
-            return NSLocalizedString(
-                "[DatabaseError] Invalid password or key file",
-                bundle: Bundle.framework,
-                value: "Invalid password or key file",
-                comment: "Error message: user provided a wrong master key for decryption.")
-        case .saveError:
-            return NSLocalizedString(
-                "[DatabaseError] Cannot save database",
-                bundle: Bundle.framework,
-                value: "Cannot save database",
-                comment: "Error message while saving a database")
-        }
-    }
-    public var failureReason: String? {
-        switch self {
-        case .loadError(let reason):
-            return reason
-        case .saveError(let reason):
-            return reason
-        default:
-            return nil
-        }
-    }
-}
 
 public struct SearchQuery {
     public let includeSubgroups: Bool
@@ -76,23 +35,7 @@ public struct SearchQuery {
     }
 }
 
-public class DatabaseLoadingWarnings {
-    public internal(set) var databaseGenerator: String?
-    public internal(set) var messages: [String]
-    
-    public var isEmpty: Bool { return messages.isEmpty }
-    
-    public var isGeneratorImportant = false
-    
-    internal init() {
-        databaseGenerator = nil
-        messages = []
-    }
-}
-
-open class Database: Eraseable {
-    var filePath: String?
-    
+open class Database: Eraseable {    
     public internal(set) var root: Group?
 
     public internal(set) var progress = ProgressEx()
@@ -118,7 +61,6 @@ open class Database: Eraseable {
     public func erase() {
         root?.erase()
         root = nil
-        filePath?.erase()
         compositeKey.erase()
     }
 

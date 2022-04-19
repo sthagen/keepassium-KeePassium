@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2020 Andrei Popleteev <info@keepassium.com>
+//  Copyright © 2018–2022 Andrei Popleteev <info@keepassium.com>
 //
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -43,8 +43,7 @@ class HelpViewerCoordinator: NSObject, Coordinator {
             helpViewerVC.navigationItem.leftBarButtonItem = leftButton
         }
         
-        router.push(helpViewerVC, animated: true, onPop: {
-            [weak self] (viewController) in
+        router.push(helpViewerVC, animated: true, onPop: { [weak self] in
             guard let self = self else { return }
             self.removeAllChildCoordinators()
             self.dismissHandler?(self)

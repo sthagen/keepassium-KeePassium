@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2019 Andrei Popleteev <info@keepassium.com>
+//  Copyright © 2018–2022 Andrei Popleteev <info@keepassium.com>
 // 
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -10,15 +10,13 @@ import UIKit
 
 typealias CoordinatorDismissHandler = (Coordinator) -> Void
 
-protocol Coordinator: class {
+protocol Coordinator: AnyObject {
     var childCoordinators: [Coordinator] { get set }
 
     var dismissHandler: CoordinatorDismissHandler? { get set }
     
     func addChildCoordinator(_ coordinator: Coordinator)
     func removeChildCoordinator(_ coordinator: Coordinator)
-    
-    func start()
 }
 
 extension Coordinator {

@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2019 Andrei Popleteev <info@keepassium.com>
+//  Copyright © 2018–2022 Andrei Popleteev <info@keepassium.com>
 //
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -41,9 +41,8 @@ extension URLReference {
         guard let _fileProvider = fileProvider else {
             return UIImage(asset: .fileProviderGenericListitem)
         }
-        if _fileProvider == .localStorage,
-            let _fileInfo = self.getCachedInfoSync(canFetch: false),
-            _fileInfo.isInTrash
+        if let _fileInfo = self.getCachedInfoSync(canFetch: false),
+           _fileInfo.isInTrash
         {
             return UIImage(asset: .databaseTrashedListitem)
         }

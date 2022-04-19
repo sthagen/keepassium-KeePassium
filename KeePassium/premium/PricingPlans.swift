@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2020 Andrei Popleteev <info@keepassium.com>
+//  Copyright © 2018–2022 Andrei Popleteev <info@keepassium.com>
 //
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -76,70 +76,39 @@ struct PricingPlanBenefit {
         
     static let multipleDatabases = PricingPlanBenefit(
         image: .premiumBenefitMultiDB,
-        title: NSLocalizedString(
-            "[Premium/Benefits/MultiDB/title]",
-            value: "Sync with the team",
-            comment: "Title of a premium feature"),
-        description: NSLocalizedString(
-            "[Premium/Benefits/MultiDB/details]",
-            value: "Add multiple databases and quickly switch between them.",
-            comment: "Explanation of the premium feature")
+        title: LString.premiumBenefitMultipleDatabasesTitle,
+        description: LString.premiumBenefitMultipleDatabasesDescription
     )
     static let longDatabaseTimeout = PricingPlanBenefit(
         image: .premiumBenefitDBTimeout,
-        title:  NSLocalizedString(
-            "[Premium/Benefits/DatabaseTimeout/title]",
-            value: "Save your time",
-            comment: "Title of a premium feature"),
-        description: NSLocalizedString(
-            "[Premium/Benefits/DatabaseTimeout/details]",
-            value: "Tired of typing your master password? Keep your database open longer and unlock it with one tap.",
-            comment: "Explanation of the premium feature")
+        title:  LString.premiumBenefitLongDatabaseTimeoutsTitle,
+        description: LString.premiumBenefitLongDatabaseTimeoutsDescription
     )
     static let yubikeyChallengeResponse = PricingPlanBenefit(
         image: .premiumBenefitHardwareKeys,
-        title: NSLocalizedString(
-            "[Premium/Benefits/HardwareKeys/title]",
-            value: "Use hardware keys",
-            comment: "Title of a premium feature"),
-        description: NSLocalizedString(
-            "[Premium/Benefits/HardwareKeys/details]",
-            value: "Protect your secrets with a hardware key, such as YubiKey.",
-            comment: "Explanation of the premium feature")
+        title: LString.premiumBenefitHardwareKeysTitle,
+        description: LString.premiumBenefitHardwareKeysDescription
     )
     static let attachmentPreview = PricingPlanBenefit(
         image: .premiumBenefitPreview,
-        title: NSLocalizedString(
-            "[Premium/Benefits/AttachmentPreview/title]",
-            value: "Preview without a trace",
-            comment: "Title of a premium feature"),
-        description: NSLocalizedString(
-            "[Premium/Benefits/AttachmentPreview/details]",
-            value: "Preview attached files directly in KeePassium and leave no traces in other apps. (Works with images, documents, archives and more.)",
-            comment: "Explanation of the premium feature")
+        title: LString.premiumBenefitPreviewAttachmentsTitle,
+        description: LString.premiumBenefitPreviewAttachmentsDescription
     )
     static let customAppIcons = PricingPlanBenefit(
         image: .premiumBenefitCustomAppIcons,
-        title: NSLocalizedString(
-            "[Premium/Benefits/CustomAppIcon/title]",
-            value: "Change app icon",
-            comment: "Title of a premium feature"),
-        description: NSLocalizedString(
-            "[Premium/Benefits/CustomAppIcon/details]",
-            value: "Make KeePassium look unique, familiar, or disguise it as a calculator — the choice is yours.",
-            comment: "Explanation of a premium feature")
+        title: LString.premiumBenefitChangeAppIconTitle,
+        description: LString.premiumBenefitChangeAppIconDescription
     )
     
     static let viewFieldReferences = PricingPlanBenefit(
         image: .premiumBenefitFieldReferences,
-        title: NSLocalizedString(
-            "[Premium/Benefits/ViewFieldReferences/title]",
-            value: "Show field references",
-            comment: "Title of a premium feature"),
-        description: NSLocalizedString(
-            "[Premium/Benefits/ViewFieldReferences/details]",
-            value: "Use field references to show information from other entries, instead of creating multiple copies of the same information.",
-            comment: "Explanation of a premium feature")
+        title: LString.premiumBenefitFieldReferecesTitle,
+        description: LString.premiumBenefitFieldReferencesDescription
+    )
+    static let quickAutoFill = PricingPlanBenefit(
+        image: .premiumBenefitQuickAutoFill,
+        title: LString.premiumBenefitQuickAutoFillTitle,
+        description: LString.premiumBenefitQuickAutoFillDescription
     )
 }
 
@@ -150,6 +119,7 @@ class PricingPlanFactory {
             Diag.error("IAP with unrecognized product ID [id: \(product.productIdentifier)]")
             return nil
         }
+        assert(iapProduct.kind == .premium, "Wrong IAP product kind encountered")
         
         switch iapProduct {
         case .betaForever:
@@ -161,6 +131,14 @@ class PricingPlanFactory {
             return PricingPlanPremiumMonthly(product)
         case .yearlySubscription:
             return PricingPlanPremiumYearly(product)
+        case .version88,
+             .version96,
+             .version99:
+            return PricingPlanVersionPurchase(product)
+        case .donationSmall,
+             .donationMedium,
+             .donationLarge:
+            return nil
         }
     }
 }
@@ -213,12 +191,13 @@ class FreePricingPlan: PricingPlan {
             PricingPlanCondition(kind: .allPremiumFeatures, isIncluded: false, moreInfo: .none),
         ]
         self.benefits = [
+            PricingPlanBenefit.quickAutoFill,
             PricingPlanBenefit.multipleDatabases,
+            PricingPlanBenefit.yubikeyChallengeResponse,
+            PricingPlanBenefit.viewFieldReferences,
             PricingPlanBenefit.longDatabaseTimeout,
             PricingPlanBenefit.attachmentPreview,
-            PricingPlanBenefit.yubikeyChallengeResponse,
             PricingPlanBenefit.customAppIcons,
-            PricingPlanBenefit.viewFieldReferences,
         ]
         self.smallPrint = nil
     }
@@ -275,12 +254,13 @@ class PricingPlanPremiumMonthly: RealPricingPlan {
             PricingPlanCondition(kind: .familySharing, isIncluded: true, moreInfo: .familySharing),
         ]
         self.benefits = [
+            PricingPlanBenefit.quickAutoFill,
             PricingPlanBenefit.multipleDatabases,
+            PricingPlanBenefit.yubikeyChallengeResponse,
+            PricingPlanBenefit.viewFieldReferences,
             PricingPlanBenefit.longDatabaseTimeout,
             PricingPlanBenefit.attachmentPreview,
-            PricingPlanBenefit.yubikeyChallengeResponse,
             PricingPlanBenefit.customAppIcons,
-            PricingPlanBenefit.viewFieldReferences,
         ]
         self.smallPrint = LString.subscriptionConditions
         self.maybeOfferTrial() 
@@ -304,15 +284,43 @@ class PricingPlanPremiumYearly: RealPricingPlan {
             PricingPlanCondition(kind: .familySharing, isIncluded: true, moreInfo: .familySharing),
         ]
         self.benefits = [
+            PricingPlanBenefit.quickAutoFill,
             PricingPlanBenefit.multipleDatabases,
+            PricingPlanBenefit.yubikeyChallengeResponse,
+            PricingPlanBenefit.viewFieldReferences,
             PricingPlanBenefit.longDatabaseTimeout,
             PricingPlanBenefit.attachmentPreview,
-            PricingPlanBenefit.yubikeyChallengeResponse,
             PricingPlanBenefit.customAppIcons,
-            PricingPlanBenefit.viewFieldReferences,
         ]
         self.smallPrint = LString.subscriptionConditions
         self.maybeOfferTrial() 
+    }
+}
+
+class PricingPlanVersionPurchase: RealPricingPlan {
+    override init(_ product: SKProduct) {
+        super.init(product)
+
+        self.localizedPriceWithPeriod = localizedPrice
+        self.callToAction = LString.premiumCallToActionBuyNow
+        self.ctaSubtitle = LString.planConditionFullPriceUpgrade
+        self.conditions = [
+            PricingPlanCondition(kind: .currentPremiumFeatures, isIncluded: true, moreInfo: .none),
+            PricingPlanCondition(kind: .updatesAndFixes, isIncluded: true, moreInfo: .none),
+            PricingPlanCondition(kind: .oneYearEmailSupport, isIncluded: true, moreInfo: .none),
+            PricingPlanCondition(kind: .upcomingPremiumFeatures, isIncluded: false, moreInfo: .none),
+            PricingPlanCondition(kind: .familySharing, isIncluded: false, moreInfo: .familySharing),
+        ]
+        self.benefits = [
+            PricingPlanBenefit.quickAutoFill,
+            PricingPlanBenefit.multipleDatabases,
+            PricingPlanBenefit.yubikeyChallengeResponse,
+            PricingPlanBenefit.viewFieldReferences,
+            PricingPlanBenefit.longDatabaseTimeout,
+            PricingPlanBenefit.attachmentPreview,
+            PricingPlanBenefit.customAppIcons,
+        ]
+        self.smallPrint = nil
     }
 }
 
@@ -321,7 +329,7 @@ class PricingPlanPremiumForever: RealPricingPlan {
         super.init(product)
         
         self.localizedPriceWithPeriod = localizedPrice
-        self.callToAction = LString.premiumCallToActionUpgradeNow
+        self.callToAction = LString.premiumCallToActionBuyNow
         self.ctaSubtitle = nil
         self.conditions = [
             PricingPlanCondition(kind: .allPremiumFeatures, isIncluded: true, moreInfo: .none),
@@ -331,12 +339,13 @@ class PricingPlanPremiumForever: RealPricingPlan {
             PricingPlanCondition(kind: .familySharing, isIncluded: false, moreInfo: .familySharing),
         ]
         self.benefits = [
+            PricingPlanBenefit.quickAutoFill,
             PricingPlanBenefit.multipleDatabases,
+            PricingPlanBenefit.yubikeyChallengeResponse,
+            PricingPlanBenefit.viewFieldReferences,
             PricingPlanBenefit.longDatabaseTimeout,
             PricingPlanBenefit.attachmentPreview,
-            PricingPlanBenefit.yubikeyChallengeResponse,
             PricingPlanBenefit.customAppIcons,
-            PricingPlanBenefit.viewFieldReferences,
         ]
         self.smallPrint = nil
     }

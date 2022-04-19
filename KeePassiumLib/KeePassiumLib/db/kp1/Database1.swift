@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2019 Andrei Popleteev <info@keepassium.com>
+//  Copyright © 2018–2022 Andrei Popleteev <info@keepassium.com>
 // 
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -63,7 +63,7 @@ public class Database1: Database {
     private let _keyHelper = KeyHelper1()
     
     private(set) var header: Header1!
-    private(set) var masterKey = SecureByteArray()
+    private(set) var masterKey = SecureBytes.empty()
     private(set) var backupGroup: Group1?
     private var metaStreamEntries = ContiguousArray<Entry1>()
 
@@ -84,7 +84,7 @@ public class Database1: Database {
             metaEntry.erase()
         }
         metaStreamEntries.removeAll()
-        Diag.debug("Database erased")
+        Diag.debug("DB memory cleaned up")
     }
 
     func createNewGroupID() -> Group1ID {
@@ -170,19 +170,23 @@ public class Database1: Database {
             self.compositeKey = compositeKey
         } catch let error as Header1.Error {
             Diag.error("Header error [reason: \(error.localizedDescription)]")
-            throw DatabaseError.loadError(reason: error.localizedDescription)
+            throw DatabaseError.loadError(
+                reason: .headerError(reason: error.localizedDescription)
+            )
         } catch let error as CryptoError {
             Diag.error("Crypto error [reason: \(error.localizedDescription)]")
-            throw DatabaseError.loadError(reason: error.localizedDescription)
+            throw DatabaseError.loadError(reason: .cryptoError(error))
         } catch let error as KeyFileError {
             Diag.error("Key file error [reason: \(error.localizedDescription)]")
-            throw DatabaseError.loadError(reason: error.localizedDescription)
+            throw DatabaseError.loadError(reason: .keyFileError(error))
         } catch let error as ChallengeResponseError {
             Diag.error("Challenge-response error [reason: \(error.localizedDescription)]")
-            throw DatabaseError.loadError(reason: error.localizedDescription)
+            throw DatabaseError.loadError(reason: .challengeResponseError(error))
         } catch let error as FormatError {
             Diag.error("Format error [reason: \(error.localizedDescription)]")
-            throw DatabaseError.loadError(reason: error.localizedDescription)
+            throw DatabaseError.loadError(
+                reason: .formatError(reason: error.localizedDescription)
+            )
         } 
     }
     
@@ -212,7 +216,7 @@ public class Database1: Database {
             key: AESKDF.transformRoundsParam,
             value: VarDict.TypedValue(value: UInt64(header.transformRounds)))
         
-        let combinedComponents: SecureByteArray
+        let combinedComponents: SecureBytes
         if compositeKey.state == .processedComponents {
             combinedComponents = try keyHelper.combineComponents(
                 passwordData: compositeKey.passwordData!, 
@@ -227,8 +231,8 @@ public class Database1: Database {
         
         let keyToTransform = keyHelper.getKey(fromCombinedComponents: combinedComponents)
         let transformedKey = try kdf.transform(key: keyToTransform, params: kdfParams)
-        let secureMasterSeed = SecureByteArray(header.masterSeed)
-        masterKey = SecureByteArray.concat(secureMasterSeed, transformedKey).sha256
+        let secureMasterSeed = SecureBytes.from(header.masterSeed)
+        masterKey = SecureBytes.concat(secureMasterSeed, transformedKey).sha256
         compositeKey.setFinalKeys(masterKey, nil)
     }
     
@@ -316,13 +320,21 @@ public class Database1: Database {
             Diag.debug("Decrypting AES cipher")
             let cipher = AESDataCipher()
             progress.addChild(cipher.initProgress(), withPendingUnitCount: ProgressSteps.decryption)
-            let decrypted = try cipher.decrypt(cipherText: data, key: masterKey, iv: header.initialVector)
+            let decrypted = try cipher.decrypt(
+                cipherText: data,
+                key: masterKey,
+                iv: header.initialVector
+            ) 
             return decrypted
         case .twofish:
             Diag.debug("Decrypting Twofish cipher")
             let cipher = TwofishDataCipher(isPaddingLikelyMessedUp: false)
             progress.addChild(cipher.initProgress(), withPendingUnitCount: ProgressSteps.decryption)
-            let decrypted = try cipher.decrypt(cipherText: data, key: masterKey, iv: header.initialVector)
+            let decrypted = try cipher.decrypt(
+                cipherText: data,
+                key: masterKey,
+                iv: header.initialVector
+            ) 
             return decrypted
         }
     }

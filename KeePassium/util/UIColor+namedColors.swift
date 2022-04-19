@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2019 Andrei Popleteev <info@keepassium.com>
+//  Copyright © 2018–2022 Andrei Popleteev <info@keepassium.com>
 // 
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -33,6 +33,9 @@ extension UIColor {
     }
     static var errorMessage: UIColor {
         return UIColor.systemRed
+    }
+    static var warningMessage: UIColor {
+        return UIColor.systemOrange
     }
     static var primaryText: UIColor {
         return UIColor(named: "PrimaryText") ?? .black

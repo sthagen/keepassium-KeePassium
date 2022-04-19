@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2021 Andrei Popleteev <info@keepassium.com>
+//  Copyright © 2018–2022 Andrei Popleteev <info@keepassium.com>
 //
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -12,7 +12,28 @@ import Foundation
 import PhotosUI
 import KeePassiumLib
 
-typealias PhotoPickerCompletion = (Result<UIImage?, Error>) ->Void
+struct PhotoPickerImage {
+    var image: UIImage
+    var name: String?
+    
+    public static func from(_ info: [UIImagePickerController.InfoKey : Any]) -> PhotoPickerImage? {
+        guard let originalImage = info[UIImagePickerController.InfoKey.originalImage] as? UIImage
+        else {
+            return nil
+        }
+        let imageURL = info[UIImagePickerController.InfoKey.imageURL] as? URL
+        return PhotoPickerImage(image: originalImage, name: imageURL?.lastPathComponent)
+    }
+    
+    public static func from(_ image: UIImage?, name: String?) -> PhotoPickerImage? {
+        guard let image = image else {
+            return nil
+        }
+        return PhotoPickerImage(image: image, name: name)
+    }
+}
+
+typealias PhotoPickerCompletion = (Result<PhotoPickerImage?, Error>) ->Void
 
 protocol PhotoPicker {
     func pickImage(from viewController: UIViewController, completion: @escaping PhotoPickerCompletion)
@@ -24,8 +45,12 @@ final class PhotoPickerFactory {
         if #available(iOS 14, *) {
             return PHPickerViewControllerPhotoPicker()
         } else {
-            return UIImagePickerControllerPhotoPicker()
+            return UIImagePickerControllerPhotoPicker(sourceType: .savedPhotosAlbum)
         }
+    }
+    
+    static func makeCameraPhotoPicker() -> PhotoPicker {
+        return UIImagePickerControllerPhotoPicker(sourceType: .camera)
     }
 }
 
@@ -38,10 +63,15 @@ private final class UIImagePickerControllerPhotoPicker:
     var completion: PhotoPickerCompletion?
     let imagePicker = UIImagePickerController()
 
-    override init() {
-        imagePicker.sourceType = .savedPhotosAlbum
+    init(sourceType: UIImagePickerController.SourceType) {
+        imagePicker.sourceType = sourceType
         imagePicker.allowsEditing = false
-        imagePicker.modalPresentationStyle = .overCurrentContext
+        imagePicker.imageExportPreset = .compatible
+        if sourceType == .camera {
+            imagePicker.modalPresentationStyle = .overFullScreen
+        } else {
+            imagePicker.modalPresentationStyle = .overCurrentContext
+        }
 
         super.init()
         imagePicker.delegate = self
@@ -62,22 +92,35 @@ private final class UIImagePickerControllerPhotoPicker:
         didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any])
     {
         imagePicker.dismiss(animated: true) { [weak self] in
-            self?.completion?(.success(info[UIImagePickerController.InfoKey.originalImage] as? UIImage))
+            let pickedImage = PhotoPickerImage.from(info)
+            self?.completion?(.success(pickedImage))
         }
+    }
+    
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        completion?(.success(nil))
     }
 }
 
 @available(iOS 14, *)
-private final class PHPickerViewControllerPhotoPicker: PhotoPicker, PHPickerViewControllerDelegate {
+private final class PHPickerViewControllerPhotoPicker:
+    NSObject,
+    PhotoPicker,
+    PHPickerViewControllerDelegate,
+    UIAdaptivePresentationControllerDelegate
+{
     let picker: PHPickerViewController
     var viewController: UIViewController?
     var completion: PhotoPickerCompletion?
 
-    init() {
+    override init() {
         var configuration = PHPickerConfiguration()
         configuration.filter = .images
         picker = PHPickerViewController(configuration: configuration)
+        super.init()
+        
         picker.delegate = self
+        picker.presentationController?.delegate = self
     }
 
     func pickImage(
@@ -111,11 +154,19 @@ private final class PHPickerViewControllerPhotoPicker: PhotoPicker, PHPickerView
                 return
             }
 
+            let pickedImage = PhotoPickerImage.from(
+                image as? UIImage,
+                name: result.itemProvider.suggestedName
+            )
             DispatchQueue.main.async { [weak self] in
                 self?.viewController?.dismiss(animated: true) { [weak self] in
-                    self?.completion?(.success(image as? UIImage))
+                    self?.completion?(.success(pickedImage))
                 }
             }
         }
+    }
+    
+    func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
+        completion?(.success(nil))
     }
 }

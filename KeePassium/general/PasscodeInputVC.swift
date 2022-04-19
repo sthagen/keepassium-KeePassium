@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2019 Andrei Popleteev <info@keepassium.com>
+//  Copyright © 2018–2022 Andrei Popleteev <info@keepassium.com>
 // 
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -9,7 +9,7 @@
 import KeePassiumLib
 import LocalAuthentication
 
-protocol PasscodeInputDelegate: class {
+protocol PasscodeInputDelegate: AnyObject {
     func passcodeInputDidCancel(_ sender: PasscodeInputVC)
     
     func passcodeInput(_sender: PasscodeInputVC, canAcceptPasscode passcode: String) -> Bool
@@ -32,6 +32,7 @@ class PasscodeInputVC: UIViewController {
 
     public enum Mode {
         case setup
+        case change
         case verification
     }
     
@@ -68,15 +69,16 @@ class PasscodeInputVC: UIViewController {
         
         passcodeTextField.delegate = self
         passcodeTextField.validityDelegate = self
-        passcodeTextField.isWatchdogAware = (mode != .verification) 
 
         switch mode {
-        case .setup:
+        case .setup, .change:
             instructionsLabel.text = LString.titleSetupAppPasscode
             mainButton.setTitle(LString.actionSavePasscode, for: .normal)
+            passcodeTextField.isWatchdogAware = true
         case .verification:
             instructionsLabel.text = LString.titleUnlockTheApp
             mainButton.setTitle(LString.actionUnlock, for: .normal)
+            passcodeTextField.isWatchdogAware = false 
         }
         cancelButton.isHidden = !isCancelAllowed
         instructionsToCancelButtonConstraint.isActive = isCancelAllowed
@@ -89,9 +91,7 @@ class PasscodeInputVC: UIViewController {
         refreshBiometricsButton()
         
         if shouldActivateKeyboard {
-            DispatchQueue.main.async { [self] in
-                self.passcodeTextField.becomeFirstResponder()
-            }
+            passcodeTextField.becomeFirstResponderWhenSafe()
         }
         super.viewWillAppear(animated)
     }
@@ -100,9 +100,7 @@ class PasscodeInputVC: UIViewController {
         super.viewDidAppear(animated)
         updateKeyboardLayoutConstraints()
         if shouldActivateKeyboard {
-            DispatchQueue.main.async { [self] in
-                self.passcodeTextField.becomeFirstResponder()
-            }
+            passcodeTextField.becomeFirstResponderWhenSafe()
         }
     }
     
@@ -122,17 +120,23 @@ class PasscodeInputVC: UIViewController {
     }
     
     private func updateKeyboardLayoutConstraints() {
-        if let window = view.window {
-            let viewTop = view.convert(view.frame.origin, to: window).y
-            let viewHeight = view.frame.height
-            let windowHeight = window.frame.height
-            let viewBottomOffset = windowHeight - (viewTop + viewHeight)
-            keyboardLayoutConstraint.viewOffset = viewBottomOffset
-        }
+        guard let screen = view.window?.screen else { return }
+        let windowSpace = screen.coordinateSpace
+        
+        let viewTop = view.convert(view.frame.origin, to: windowSpace).y
+        let viewHeight = view.frame.height
+        let windowHeight = windowSpace.bounds.height
+        let viewBottomOffset = windowHeight - (viewTop + viewHeight)
+        #if MAIN_APP
+        keyboardLayoutConstraint.viewOffset = viewBottomOffset
+        #else
+        let weirdAutoFillOffset = CGFloat(50)
+        keyboardLayoutConstraint.viewOffset = viewBottomOffset - weirdAutoFillOffset
+        #endif
     }
     
-    func showKeyboard() {
-        passcodeTextField.becomeFirstResponder()
+    public func showKeyboard() {
+        passcodeTextField.becomeFirstResponderWhenSafe()
     }
     
     private func setKeyboardType(_ type: Settings.PasscodeKeyboardType) {
@@ -142,17 +146,11 @@ class PasscodeInputVC: UIViewController {
         case .numeric:
             passcodeTextField.keyboardType = .numberPad
             nextKeyboardType = .alphanumeric
-            nextKeyboardTitle = NSLocalizedString(
-                "[AppLock/Passcode/KeyboardType/switchAction] 123→ABC",
-                value: "123→ABC",
-                comment: "Action: change keyboard type to enter alphanumeric passphrases")
+            nextKeyboardTitle = LString.actionSwitchToAlphanumericKeyboard
         case .alphanumeric:
             passcodeTextField.keyboardType = .asciiCapable
             nextKeyboardType = .numeric
-            nextKeyboardTitle = NSLocalizedString(
-                "[AppLock/Passcode/KeyboardType/switchAction] ABC→123",
-                value: "ABC→123",
-                comment: "Action: change keyboard type to enter PIN numbers")
+            nextKeyboardTitle = LString.actionSwitchToDigitalKeyboard
         }
         passcodeTextField.reloadInputViews()
         switchKeyboardButton.setTitle(nextKeyboardTitle, for: .normal)

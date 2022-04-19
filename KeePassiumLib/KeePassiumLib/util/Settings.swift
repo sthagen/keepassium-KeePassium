@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2019 Andrei Popleteev <info@keepassium.com>
+//  Copyright © 2018–2022 Andrei Popleteev <info@keepassium.com>
 // 
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -8,14 +8,14 @@
 
 import Foundation
 
-public protocol SettingsObserver: class {
+public protocol SettingsObserver: AnyObject {
     func settingsDidChange(key: Settings.Keys)
 }
 
 public class SettingsNotifications {
-    private weak var observer: SettingsObserver?
+    public weak var observer: SettingsObserver?
     
-    public init(observer: SettingsObserver) {
+    public init(observer: SettingsObserver? = nil) {
         self.observer = observer
     }
     
@@ -47,7 +47,7 @@ public class SettingsNotifications {
 }
 
 public class Settings {
-    public static let latestVersion = 3
+    public static let latestVersion = 4
     public static let current = Settings()
     
     public enum Keys: String {
@@ -96,6 +96,8 @@ public class Settings {
         case autoFillFinishedOK
         case copyTOTPOnAutoFill
         case autoFillPerfectMatch
+        case acceptAutoFillInput
+        case quickTypeEnabled
         
         case hapticFeedbackEnabled
         
@@ -505,6 +507,17 @@ public class Settings {
         case modificationTimeAsc
         case modificationTimeDesc
         
+        public var isAscending: Bool? {
+            switch self {
+            case .noSorting:
+                return nil
+            case .nameAsc, .creationTimeAsc, .modificationTimeAsc:
+                return true
+            case .nameDesc, .creationTimeDesc, .modificationTimeDesc:
+                return false
+            }
+        }
+        
         public var longTitle: String {
             switch self {
             case .noSorting:
@@ -604,6 +617,17 @@ public class Settings {
         case modificationTimeAsc
         case modificationTimeDesc
         
+        public var isAscending: Bool? {
+            switch self {
+            case .noSorting:
+                return nil
+            case .nameAsc, .creationTimeAsc, .modificationTimeAsc:
+                return true
+            case .nameDesc, .creationTimeDesc, .modificationTimeDesc:
+                return false
+            }
+        }
+                
         public var longTitle: String {
             switch self {
             case .noSorting:
@@ -975,10 +999,8 @@ public class Settings {
         }
     }
     
-    public var isAffectedByAutoFillFaceIDLoop_iOS_13_1_3 = false
-    
-    public func maybeFixAutoFillFaceIDLoop_iOS_13_1_3(_ timeout: AppLockTimeout) -> AppLockTimeout {
-        if isAffectedByAutoFillFaceIDLoop_iOS_13_1_3 && timeout == .immediately {
+    private func maybeFixAutoFillBiometricIDLoop(_ timeout: AppLockTimeout) -> AppLockTimeout {
+        if timeout == .immediately && AppGroup.isAppExtension {
             return .after1second
         } else {
             return timeout
@@ -991,9 +1013,9 @@ public class Settings {
                 .object(forKey: Keys.appLockTimeout.rawValue) as? Int,
                 let timeout = AppLockTimeout(rawValue: rawValue)
             {
-                return maybeFixAutoFillFaceIDLoop_iOS_13_1_3(timeout)
+                return maybeFixAutoFillBiometricIDLoop(timeout)
             }
-            return maybeFixAutoFillFaceIDLoop_iOS_13_1_3(AppLockTimeout.immediately)
+            return maybeFixAutoFillBiometricIDLoop(AppLockTimeout.immediately)
         }
         set {
             let oldValue = appLockTimeout
@@ -1337,7 +1359,37 @@ public class Settings {
                 key: .autoFillPerfectMatch)
         }
     }
-
+    
+    public var acceptAutoFillInput: Bool {
+        get {
+            let stored = UserDefaults.appGroupShared
+                .object(forKey: Keys.acceptAutoFillInput.rawValue)
+                as? Bool
+            return stored ?? false
+        }
+        set {
+            updateAndNotify(
+                oldValue: acceptAutoFillInput,
+                newValue: newValue,
+                key: .acceptAutoFillInput)
+        }
+    }
+    
+    public var isQuickTypeEnabled: Bool {
+        get {
+            let stored = UserDefaults.appGroupShared
+                .object(forKey: Keys.quickTypeEnabled.rawValue)
+                as? Bool
+            return stored ?? false
+        }
+        set {
+            updateAndNotify(
+                oldValue: isQuickTypeEnabled,
+                newValue: newValue,
+                key: .quickTypeEnabled)
+        }
+    }
+    
     
     public var isHapticFeedbackEnabled: Bool {
         get {
@@ -1545,4 +1597,38 @@ public class Settings {
             ]
         )
     }
+}
+
+extension LString {
+    public static let titleSortBy = NSLocalizedString(
+        "[SortBy]",
+        bundle: Bundle.framework,
+        value: "Sort By",
+        comment: "Title of a sort options list. Example: 'Sort by: Name'")
+    public static let titleSortByNone = NSLocalizedString(
+        "[SortBy/None]",
+        bundle: Bundle.framework,
+        value: "None",
+        comment: "List sorting option, when no sorting is selected. Example: 'Sort by: None'")
+    public static let titleSortByFileName = NSLocalizedString(
+        "[SortBy/FileName]",
+        bundle: Bundle.framework,
+        value: "Name",
+        comment: "List sorting option (for file names). Example: 'Sort by: Name'")
+    public static let titleSortByItemTitle = NSLocalizedString(
+        "[SortBy/ItemTitle]",
+        bundle: Bundle.framework,
+        value: "Title",
+        comment: "List sorting option (for groups and entries). Example: 'Sort by: Title'")
+    public static let titleSortByDateCreated = NSLocalizedString(
+        "[SortBy/DateCreated]",
+        bundle: Bundle.framework,
+        value: "Date Created",
+        comment: "List sorting option. Example: 'Sort by: Date Created'")
+    public static let titleSortByDateModified = NSLocalizedString(
+        "[SortBy/DateModified]",
+        bundle: Bundle.framework,
+        value: "Date Modified",
+        comment: "List sorting option. Example: 'Sort by: Date Modified'")
+
 }

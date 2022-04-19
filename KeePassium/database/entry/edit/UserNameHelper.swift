@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2019 Andrei Popleteev <info@keepassium.com>
+//  Copyright © 2018–2022 Andrei Popleteev <info@keepassium.com>
 //
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -17,7 +17,7 @@ class UserNameHelper {
             result.append(defaultUserName)
             namesLeft -= 1
         }
-        result.append(contentsOf: getUniqueUserNames(from: database).prefix(namesLeft - 1))
+        result.append(contentsOf: getUniqueUserNames(from: database).prefix(namesLeft))
         return result
     }
     
@@ -49,6 +49,15 @@ class UserNameHelper {
         } else {
             return nil
         }
+    }
+    
+    static func getRandomUserNames(count: Int) -> [String] {
+        assert(count > 0)
+        var randomUserNames = [String]()
+        for _ in 0..<count {
+            randomUserNames.append(getRandomUserName())
+        }
+        return randomUserNames
     }
     
     static func getRandomUserName() -> String {

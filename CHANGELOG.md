@@ -1,5 +1,316 @@
 #CHANGELOG
 
+## [1.31.105] - 2022-02-09
+
+### Improved
+
+- Upgraded YubiKit from 2.0 to 3.2
+- Added an opt-in "deep debug" mode for TestFlight builds, to analyze a rare bug
+- Updated all translations
+
+### Fixed
+
+- Crash on iPod Touch devices running iOS 15 (fixes #215)
+
+
+## [1.31.104] - 2022-01-28
+
+### Changed
+
+- Switched to a more lightweight method to access files (`NSFileCoordinator` instead of `UIDocument`).
+
+### Fixed
+
+- AutoFill crash when large DBs present in the app [thanks, everyone]
+- macOS: double Touch ID prompt for Quick AutoFill [thanks, Ville]
+- Entries hidden from AutoFill could still appear there (related #100) [thanks, u/567567]
+- Some icons did not immediately refresh when changing the icon set [thanks, Kamil]
+- Some errors appeared as codes instead of human-readable messages [thanks, everyone]
+
+
+## [1.30.103] - 2021-12-25
+
+### Added
+
+- Offline caching: when database is unreachable, load latest local copy (#135, #17)
+- Customizable download timeout for each database
+
+### Improved
+
+- Default download timeout reduced from 15 to 10 seconds
+- macOS: show the actual file path in File Info dialog
+
+### Fixed
+
+- AutoFill sometimes mishandled several perfect matches (fixes #212) [thanks, loeffelpan]
+- AutoFill sometimes opened an empty window [thanks, Nico]
+
+
+## [1.30.102] - 2021-12-19
+
+### Fixed
+
+- New attachments did not export properly via `Save As` menu (fixes #211) [thanks, Andreas]
+- AutoFill failed to show biometric unlock (regression in 1.28.97) [thanks, Felix and Ville]
+- Buttons in passcode input screen could be covered by keyboard [thanks, Ville]
+
+
+## [1.30.101] - 2021-12-10
+
+### Improved
+
+- Easier copying from a newly created entry [thanks, u/uschrisf and u/Vakke]
+
+### Fixed
+
+- macOS: Quick AutoFill now also works on macOS (fixes #206)
+- Empty window on iPad when launching in Split View mode [thanks, G]
+- Passwords were not colored in some cases [thanks, Jan]
+- AutoFill could use a wrong directory after freemium-to-Pro upgrade [thanks, ARK]
+- AutoFill could lock up the database when running low on memory [thanks, Tim]
+- Deserialization of pre-1.28 database settings
+- macOS: `Remove Master Keys` could miss some files in AutoFill
+- macOS: Some texts appeared truncated
+
+
+## [1.29.100] - 2021-11-29
+
+### Improved
+
+- New/edited entry gets highlighted in the group (now also on iPhones) [thanks, u/uschrisf]
+- Database context menu is duplicated on the `...` button [thanks, Igor]
+- Updated NL/PT/SK translations [thanks, everyone]
+
+### Fixed
+
+- Localization was mostly broken in previous release [thanks, everyone]
+- Quick AutoFill setup prompt appeared all the time [thanks, everyone]
+- Pressing Cancel while changing the app protection passcode could erase the passcode [thanks, Kevin]
+- Text input mode for username and URL fields
+
+
+## [1.28.99] - 2021-11-23
+
+### Improved
+
+- Updated translations [thanks, everyone]
+
+### Fixed
+
+- Occasional freeze and crash when launching the app [thanks, everyone]
+
+
+## [1.28.98] - 2021-11-21
+
+### Added
+
+- Quick AutoFill - fill out login forms with one tap, without even opening AutoFill (closes #50)
+- Can manually configure any database as read-only (related #64)
+
+### Improved
+
+- AutoFill setup instructions are also available for macOS
+- UI improvements here and there
+- Updated translations
+
+### Fixed
+
+- AutoFill for ccSLD domains like .co.nz or .co.jp (closes #201) [thanks, Adam and waynezhang]
+- Search field abruptly disappeared in some cases [thanks, Andrew]
+- Possible memory leak when tapping "Switch database" repeatedly
+- macOS: open/create database menu did not work sometimes
+
+
+## [1.28.97] - 2021-10-26
+
+### Changed
+
+- This version requires iOS 14 or newer
+
+### Improved 
+
+- Sensitive data is encrypted in process memory using Secure Enclave
+- All app files are additionally encrypted on disk and cannot be accessed while device is locked (NSFileProtectionComplete). Reinstall the app to activate this. (closes #141)
+- More secure keychain-based biometric authentication
+- Require passcode unlock after biometric data was modified
+- Keychain-stored data is restricted to the current device
+- Improved highlight of focused text fields on macOS
+- Old-style popups partially replaced with modern menus
+
+### Fixed
+
+- "Clear master keys on timeout" option was treated as always on
+- Show diagnostics on repeated Cancel taps [thanks, Anders]
+- Occasional crashes caused by database timeout on launch
+- Annoying autocorrection in URL fields
+
+
+## [1.27.96] - 2021-10-08
+
+### Improved
+
+- Updated translations
+
+### Fixed
+
+- New attachments to kdbx3 files were unreadable in KeePass [thanks, Adam]
+- Regression in 1.27.95: Wrong DB picker UI in AutoFill
+
+
+## [1.27.95] - 2021-09-26
+
+### Added
+
+- Possibility to copy/move data to other databases (closes #102) [thanks, everyone]
+- Added Ukrainian translation [thanks, Max]
+
+### Improved
+
+- Show file info in Sync Conflict alert
+- Optionally accept input from AutoFill providers
+- Updated all translations
+
+### Fixed
+
+- Timestamped backups were zero-filled (regression in 1.25.92)
+- Modulo bias in password generator (fixes #195) [thanks, Ben]
+- It was possible to skip premium upgrade notice (regression in 1.25.93)
+- Latest in-app backup was not updated when saving a conflicted DB
+- Auto-unlock worked only with "Auto-open the Previous Database" enabled [thanks, Tom]
+- Launch animation glitch [thanks, G]
+- Minor UI fixes here and there
+
+
+## [1.26.94] - 2021-09-06
+
+### Improved 
+
+- Show OTP codes in entry list (closes #8) [thanks, everyone]
+- Mark entries with attachments [thanks, David]
+
+### Fixed
+
+- AutoFill could show Touch ID prompt repeatedly [thanks, everyone]
+- Crash when adding attachments [thanks, everyone]
+- Insert/delete animation of custom fields [thanks, G]
+
+
+## [1.25.93] - 2021-08-31
+
+### Added
+
+- Possibility to save attachment files (in addition to view/export) (fixes #189) [thanks, Vitaly]
+
+### Improved
+
+- macOS: increase max width of split view's primary column
+- macOS: add entry/group creation to main menu
+- As an experiment, won't reduce DB timeout in free version under heavy use
+
+### Fixed
+
+- Soft-enforce single-DB limit in free version (#52)
+- Regression in 1.25.89: all DB Timeouts were paywalled in free version
+- Ensure incoming attachment files are closed after import
+
+
+## [1.25.92] - 2021-08-27
+
+### Added
+
+- Detect database conflicts on save, with "Overwrite" and "Save as" options ("Merge" is coming later)
+
+### Improved
+
+- Integration with macOS: UI, hotkeys, navigation (for example: Cmd-F to start search, Esc to return to previous view) [thanks, Vitaly]
+- Added "Learn more" help links for most common issues
+- Fonts in entry viewer and file info dialogs
+- Run slow file operations (e.g. backup maintenance) in background
+- Show database loading warnings also in AutoFill
+- Modern menu UI for username suggestions (iOS 14+)
+- Updated all translations [thanks, everyone]
+
+### Fixed
+
+- Regression in 1.25.89: Pro version requested purchase [thanks, Vitaly]
+- Possible crash when leaving some settings pages (fixes #179) [thanks, Vitaly]
+- Possible crash when DB locks up with a modal window (fixes #188) [thanks, Vitaly]
+- Some error messages appeared partially off-screen
+
+
+## [1.25.91] - 2021-08-19
+
+### Improved
+
+- Updated all translations [thanks, everyone]
+
+### Fixed
+
+- Regression in AutoFill: automatic search did not work (fixes #176) [thanks, everyone]
+
+
+## [1.25.90] - 2021-08-17
+
+### Fixed
+
+- macOS: Enable premium features when running in beta testing mode [thanks, u/remraf_1]
+
+
+## [1.25.89] - 2021-08-13
+
+### Changed
+
+- This version requires at least iOS 12
+- Massive internal changes to simplify future development
+
+### Added
+
+- Entry history management (closes #56) [thanks, Joahna V, Ivo and A13BioniciOS6]
+- Possibility to purchase premium version without subscription "like a CD box"
+- Possiblity to attach pictures from Photo Library or camera (closes #162) [thanks, everyone]
+- View entry's attachments as a gallery
+- Donations! Anyone can support the development now
+
+### Improved
+
+- AutoFill and the main app use the same file list (iOS 14+). Finally! (#1, #122, #125)
+- Added a separate field for hardware keys; no more confusion with key files
+- Entry expiration date can be edited
+- Show "What's new" section also in KeePassium Pro
+- AutoFill will import key files if possible, instead of simply referencing them (iOS 14+) (#142)
+- You can also select a key file for one-time use, without adding it to the list
+- Disabled editing of internal backup databases (they were always intended as read-only)
+- Search bar is visible by default (#165, #157) [thanks, everyone]
+- Can select and delete attachments in bulk
+- Can re-add a broken database directly from the error message
+- Showing database errors in a popup, better visibility on small screens
+- Added detection of Mega.nz and Boxcryptor (2021) file provider
+- Disabled Entry Viewer page swiping/animation on macOS
+- Added links to online help for most common issues
+- More informative licensing status display
+- Refined import workflow from other apps
+
+### Fixed
+
+- Prevent iCloud Keychain AutoFill prompts for password fields (caused a lot of confusion) (related #44)
+- Fixed keyboard occasionally missing in AutoFill. 4th attempt, should do the trick (fixes #133)
+- Entry attachment preview on macOS (closes #174) [thanks, layandreas]
+- Help article about Perpetual Fallback license was misformatted
+- Opening the Premium Upgrade screen from AutoFill
+- Double Face ID scan after a failed attempt (fixes #158) [thanks, Fotis]
+- Several UI improvements throughout
+- Hide Custom App Icon setting if not supported by the system [thanks, Andreas]
+- Automatically trim whitespaces in OTP config field
+- It was impossible to switch entry/group from a custom to (the current) standard icon
+- Subscription remained active after a cancelled trial [thanks, everyone]
+- Large text did not display correctly in AutoFill [thanks, Peter]
+
+
+## [1.25.88] - 2021-07-30
+
+- An internal build to ensure TestFlight continuity.
+
+
 ## [1.24.87] - 2021-05-06
 
 ### Added
@@ -24,7 +335,7 @@
 - Possibilty to add and select custom icons for groups and entries (closes #84) [thanks, Igor]
 - Slovak translation [thanks, onegin1]
 - Thai translation [thanks, poonnawit]
-- Turkish translation [thanks, ofmelnik]
+- Turkish translation [thanks, ofmenlik]
 
 ### Improved
 

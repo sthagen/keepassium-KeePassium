@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2021 Andrei Popleteev <info@keepassium.com>
+//  Copyright © 2018–2022 Andrei Popleteev <info@keepassium.com>
 //
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -36,8 +36,7 @@ class DiagnosticsViewerCoordinator: NSObject, Coordinator {
                 action: #selector(didPressDismissButton))
             diagnosticsViewerVC.navigationItem.leftBarButtonItem = leftButton
         }
-        router.push(diagnosticsViewerVC, animated: true, onPop: {
-            [weak self] (viewController) in
+        router.push(diagnosticsViewerVC, animated: true, onPop: { [weak self] in
             guard let self = self else { return }
             self.removeAllChildCoordinators()
             self.dismissHandler?(self)
@@ -53,12 +52,7 @@ extension DiagnosticsViewerCoordinator: DiagnosticsViewerDelegate {
     func didPressCopy(in diagnosticsViewer: DiagnosticsViewerVC, text: String) {
         Clipboard.general.insert(text: text, timeout: nil)
         HapticFeedback.play(.copiedToClipboard)
-        diagnosticsViewer.showNotification(
-            NSLocalizedString(
-                "[Diagnostics] Diagnostic log has been copied to clipboard.",
-                value: "Diagnostic log has been copied to clipboard.",
-                comment: "Notification/confirmation message")
-        )
+        diagnosticsViewer.showNotification(LString.diagnosticLogCopiedToClipboard)
     }
     
     func didPressContactSupport(in diagnosticsViewer: DiagnosticsViewerVC, text: String) {

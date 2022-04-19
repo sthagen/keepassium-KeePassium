@@ -1,6 +1,504 @@
 {
     "sections": [
         {
+            "version": "1.31",
+            "releaseDate": "2022-02-09T00:00:00Z",
+            "items": [
+                {
+                    "title": "🛠 Changed: Switched to a more lightweight method to access files",
+                    "type": 1
+                },
+                {
+                    "title": "🛠 Improved: Updated translations [thanks, everyone]",
+                    "type": 1
+                },
+                {
+                    "title": "🐞 Fixed: Crash on iPod Touch devices running iOS 15 (fixes #215)",
+                    "type": 1
+                },
+                {
+                    "title": "🐞 Fixed: AutoFill crash when large DBs present in the app [thanks, everyone]",
+                    "type": 1
+                },
+                {
+                    "title": "🐞 Fixed: macOS: double Touch ID prompt for Quick AutoFill [thanks, Ville]",
+                    "type": 1
+                },
+                {
+                    "title": "🐞 Fixed: Entries hidden from AutoFill could still appear there (related #100) [thanks, u/567567]",
+                    "type": 1
+                },
+                {
+                    "title": "🐞 Fixed: Some icons did not immediately refresh when changing the icon set [thanks, Kamil]",
+                    "type": 1
+                },
+                {
+                    "title": "🐞 Fixed: Some errors appeared as codes instead of human-readable messages [thanks, everyone]",
+                    "type": 1
+                }
+            ]
+        },
+        {
+            "version": "1.30",
+            "releaseDate": "2021-12-25T00:00:00Z",
+            "items": [
+                {
+                    "title": "🧩 Added: Offline caching: when database is unreachable, load latest local copy (#135, #17)",
+                    "type": 1
+                },
+                {
+                    "title": "🧩 Added: Customizable download timeout for each database",
+                    "type": 1
+                },
+                {
+                    "title": "🛠 Improved: Default download timeout reduced from 15 to 10 seconds",
+                    "type": 1
+                },
+                {
+                    "title": "🛠 Improved: Easier copying from a newly created entry [thanks, u/uschrisf and u/Vakke]",
+                    "type": 1
+                },
+                {
+                    "title": "🛠 Improved: macOS: show the actual file path in File Info dialog",
+                    "type": 1
+                },
+                {
+                    "title": "🐞 Fixed: macOS: Quick AutoFill now also works on macOS (fixes #206)",
+                    "type": 1
+                },
+                {
+                    "title": "🐞 Fixed: Empty window on iPad when launching in Split View mode [thanks, G]",
+                    "type": 1
+                },
+                {
+                    "title": "🐞 Fixed: Passwords were not colored in some cases [thanks, Jan]",
+                    "type": 1
+                },
+                {
+                    "title": "🐞 Fixed: AutoFill could use a wrong directory after freemium-to-Pro upgrade [thanks, ARK]",
+                    "type": 1
+                },
+                {
+                    "title": "🐞 Fixed: AutoFill could lock up the database when running low on memory [thanks, Tim]",
+                    "type": 1
+                },
+                {
+                    "title": "🐞 Fixed: Deserialization of pre-1.28 database settings",
+                    "type": 1
+                },
+                {
+                    "title": "🐞 Fixed: macOS: `Remove Master Keys` could miss some files in AutoFill",
+                    "type": 1
+                },
+                {
+                    "title": "🐞 Fixed: macOS: Some texts appeared truncated",
+                    "type": 1
+                },
+                {
+                    "title": "🐞 Fixed: New attachments did not export properly via `Save As` menu (fixes #211) [thanks, Andreas]",
+                    "type": 1
+                },
+                {
+                    "title": "🐞 Fixed: AutoFill failed to show biometric unlock (regression in 1.28.97) [thanks, Ville]",
+                    "type": 1
+                },
+                {
+                    "title": "🐞 Fixed: Buttons in passcode input screen could be covered by keyboard [thanks, Ville]",
+                    "type": 1
+                },
+                {
+                    "title": "🐞 Fixed: AutoFill sometimes mishandled several perfect matches (fixes #212) [thanks, loeffelpan]",
+                    "type": 1
+                },
+                {
+                    "title": "🐞 Fixed: AutoFill sometimes opened an empty window [thanks, Nico]",
+                    "type": 1
+                }
+            ]
+        },
+        {
+            "version": "1.29",
+            "releaseDate": "2021-11-29T00:00:00Z",
+            "items": [
+                {
+                    "title": "🛠 Improved: New/edited entry gets highlighted in the group (now also on iPhones) [thanks, u/uschrisf]",
+                    "type": 1
+                },
+                {
+                    "title": "🛠 Improved: Database context menu is duplicated on the `...` button [thanks, Igor]",
+                    "type": 1
+                },
+                {
+                    "title": "🛠 Improved: Updated NL/PT/SK translations [thanks, everyone]",
+                    "type": 1
+                },
+                {
+                    "title": "🐞 Fixed: Localization was mostly broken (regression in 1.28.99) [thanks, everyone]",
+                    "type": 1
+                },
+                {
+                    "title": "🐞 Fixed: Quick AutoFill setup prompt appeared all the time [thanks, everyone]",
+                    "type": 1
+                },
+                {
+                    "title": "🐞 Fixed: Pressing Cancel while changing the app protection passcode could erase the passcode [thanks, Kevin]",
+                    "type": 1
+                },
+                {
+                    "title": "🐞 Fixed: Text input mode for username and URL fields",
+                    "type": 1
+                }
+            ]
+        },
+        {
+            "version": "1.28",
+            "releaseDate": "2021-11-23T00:00:00Z",
+            "items": [
+                {
+                    "title": "This version requires iOS 14 or newer",
+                    "type": 1
+                },
+                {
+                    "title": "🧩 Added: Quick AutoFill - fill out login forms with one tap, without even opening AutoFill (closes #50)",
+                    "type": 2
+                },
+                {
+                    "title": "🧩 Added: Can manually configure any database as read-only (related #64)",
+                    "type": 1
+                },
+                {
+                    "title": "🛠 Improved: Sensitive data is encrypted in process memory using Secure Enclave",
+                    "type": 1
+                },
+                {
+                    "title": "🛠 Improved: All app files are additionally encrypted on disk and cannot be accessed while device is locked (NSFileProtectionComplete). Reinstall the app to activate this. (closes #141)",
+                    "type": 1
+                },
+                {
+                    "title": "🛠 Improved: More secure keychain-based biometric authentication",
+                    "type": 1
+                },
+                {
+                    "title": "🛠 Improved: Require passcode unlock after biometric data was modified",
+                    "type": 1
+                },
+                {
+                    "title": "🛠 Improved: Keychain-stored data is restricted to the current device",
+                    "type": 1
+                },
+                {
+                    "title": "🛠 Improved: Improved highlight of focused text fields on macOS",
+                    "type": 1
+                },
+                {
+                    "title": "🛠 Improved: AutoFill setup instructions also available for macOS",
+                    "type": 1
+                },
+                {
+                    "title": "🛠 Improved: UI improvements here and there",
+                    "type": 1
+                },
+                {
+                    "title": "🛠 Improved: Updated translations",
+                    "type": 1
+                },
+                {
+                    "title": "🐞 Fixed: AutoFill for ccSLD domains like .co.nz or .co.jp (closes #201) [thanks, Adam and waynezhang]",
+                    "type": 1
+                },
+                {
+                    "title": "🐞 Fixed: \"Clear master keys on timeout\" option was treated as always on",
+                    "type": 1
+                },
+                {
+                    "title": "🐞 Fixed: search field abruptly disappeared in some cases [thanks, Andrew]",
+                    "type": 1
+                },
+                {
+                    "title": "🐞 Fixed: Show diagnostics on repeated Cancel taps [thanks, Anders]",
+                    "type": 1
+                },
+                {
+                    "title": "🐞 Fixed: Occasional crashes caused by database timeout on launch",
+                    "type": 1
+                },
+                {
+                    "title": "🐞 Fixed: possible memory leak when tapping \"Switch database\" repeatedly",
+                    "type": 1
+                },
+                {
+                    "title": "🐞 Fixed: macOS: open/create database menu did not work sometimes",
+                    "type": 1
+                },
+                {
+                    "title": "🐞 Fixed: Annoying autocorrection in URL fields",
+                    "type": 1
+                }
+            ]
+        },
+        {
+            "version": "1.27",
+            "releaseDate": "2021-10-08T00:00:00Z",
+            "items": [
+                {
+                    "title": "🧩 Added: Possibility to copy/move data to other databases (closes #102) [thanks, everyone]",
+                    "type": 2
+                },
+                {
+                    "title": "🧩 Added: Ukrainian translation [thanks, Max]",
+                    "type": 1
+                },
+                {
+                    "title": "🛠 Improved: Show file info in Sync Conflict alert",
+                    "type": 1
+                },
+                {
+                    "title": "🛠 Improved: Optionally accept input from AutoFill providers",
+                    "type": 1
+                },
+                {
+                    "title": "🛠 Improved: Updated all translations",
+                    "type": 1
+                },
+                {
+                    "title": "🐞 Fixed: Timestamped backups were zero-filled (regression in 1.25.92)",
+                    "type": 1
+                },
+                {
+                    "title": "🐞 Fixed: Modulo bias in password generator (fixes #195) [thanks, Ben]",
+                    "type": 1
+                },
+                {
+                    "title": "🐞 Fixed: New attachments to kdbx3 files were unreadable in KeePass [thanks, Adam]",
+                    "type": 1
+                },
+                {
+                    "title": "🐞 Fixed: It was possible to skip premium upgrade notice (regression in 1.25.93)",
+                    "type": 1
+                },
+                {
+                    "title": "🐞 Fixed: Latest in-app backup was not updated when saving a conflicted DB",
+                    "type": 1
+                },
+                {
+                    "title": "🐞 Fixed: Auto-unlock worked only with \"Auto-open the Previous Database\" enabled [thanks, Tom]",
+                    "type": 1
+                },
+                {
+                    "title": "🐞 Fixed: Launch animation glitch [thanks, G]",
+                    "type": 1
+                },
+                {
+                    "title": "🐞 Fixed: Minor UI fixes here and there",
+                    "type": 1
+                }
+            ]
+        },
+        {
+            "version": "1.26",
+            "releaseDate": "2021-09-06T00:00:00Z",
+            "items": [
+                {
+                    "title": "🛠 Improved: Show OTP codes in entry list (closes #8) [thanks, everyone]",
+                    "type": 1
+                },
+                {
+                    "title": "🛠 Improved: Mark entries with attachments [thanks, David]",
+                    "type": 1
+                },
+                {
+                    "title": "🐞 Fixed: AutoFill could show Touch ID prompt repeatedly [thanks, everyone]",
+                    "type": 1
+                },
+                {
+                    "title": "🐞 Fixed: Crash when adding attachments [thanks, everyone]",
+                    "type": 1
+                },
+                {
+                    "title": "🐞 Fixed: Insert/delete animation of custom fields [thanks, G]",
+                    "type": 1
+                }
+            ]
+        },
+        {
+            "version": "1.25",
+            "releaseDate": "2021-08-27T00:00:00Z",
+            "items": [
+                {
+                    "title": "🧩 Added: Detect database conflicts on save, with \"Overwrite\" and \"Save as\" options (\"Merge\" is coming later)",
+                    "type": 1
+                },
+                {
+                    "title": "🧩 Added: Entry history management (closes #56) [thanks, Joahna V, Ivo and A13BioniciOS6]",
+                    "type": 1
+                },
+                {
+                    "title": "🧩 Added: Possibility to purchase premium version without subscription \"like a CD box\"",
+                    "type": 1
+                },
+                {
+                    "title": "🧩 Added: Possiblity to attach pictures from Photo Library or camera (closes #162) [thanks, everyone]",
+                    "type": 1
+                },
+                {
+                    "title": "🧩 Added: View entry's attachments as a gallery",
+                    "type": 1
+                },
+                {
+                    "title": "🧩 Added: Possibility to save attachment files (in addition to view/export) (fixes #189) [thanks, Vitaly]",
+                    "type": 1
+                },
+                {
+                    "title": "🧩 Added: Donations! Anyone can support the development now",
+                    "type": 1
+                },
+                {
+                    "title": "🛠 Improved: Massive internal changes to simplify future development",
+                    "type": 1
+                },
+                {
+                    "title": "🛠 Improved: AutoFill and the main app use the same file list (iOS 14+). Finally! (#1, #122, #125)",
+                    "type": 1
+                },
+                {
+                    "title": "🛠 Improved: Integration with macOS: UI, hotkeys, navigation (for example: Cmd-F to start search, Esc to return to previous view) [thanks, Vitaly]",
+                    "type": 1
+                },
+                {
+                    "title": "🛠 Changed: As an experiment, won't reduce DB timeout in free version under heavy use",
+                    "type": 1
+                },
+                {
+                    "title": "🛠 Improved: Added a separate field for hardware keys; no more confusion with key files",
+                    "type": 1
+                },
+                {
+                    "title": "🛠 Improved: Entry expiration date can be edited",
+                    "type": 1
+                },
+                {
+                    "title": "🛠 Improved: Show \"What's new\" section also in KeePassium Pro",
+                    "type": 1
+                },
+                {
+                    "title": "🛠 Improved: AutoFill will import key files if possible, instead of simply referencing them (iOS 14+) (#142)",
+                    "type": 1
+                },
+                {
+                    "title": "🛠 Improved: You can also select a key file for one-time use, without adding it to the list",
+                    "type": 1
+                },
+                {
+                    "title": "🛠 Improved: Disabled editing of internal backup databases (they were always intended as read-only)",
+                    "type": 1
+                },
+                {
+                    "title": "🛠 Improved: Search bar is visible by default (#165, #157) [thanks, everyone]",
+                    "type": 1
+                },
+                {
+                    "title": "🛠 Improved: Can select and delete attachments in bulk",
+                    "type": 1
+                },
+                {
+                    "title": "🛠 Improved: Can re-add a broken database directly from the error message",
+                    "type": 1
+                },
+                {
+                    "title": "🛠 Improved: Showing database errors in a popup, better visibility on small screens",
+                    "type": 1
+                },
+                {
+                    "title": "🛠 Improved: Show database loading warnings also in AutoFill",
+                    "type": 1
+                },
+                {
+                    "title": "🛠 Improved: Added detection of Mega.nz and Boxcryptor (2021) file provider",
+                    "type": 1
+                },
+                {
+                    "title": "🛠 Improved: Disabled Entry Viewer page swiping/animation on macOS",
+                    "type": 1
+                },
+                {
+                    "title": "🛠 Improved: Added links to online help for most common issues",
+                    "type": 1
+                },
+                {
+                    "title": "🛠 Improved: More informative licensing status display",
+                    "type": 1
+                },
+                {
+                    "title": "🛠 Improved: Import workflow from other apps",
+                    "type": 1
+                },
+                {
+                    "title": "🛠 Improved: Updated all translations [thanks, everyone]",
+                    "type": 1
+                },
+                {
+                    "title": "🐞 Fixed: Prevent iCloud Keychain AutoFill prompts for password fields (caused a lot of confusion) (related #44)",
+                    "type": 1
+                },
+                {
+                    "title": "🐞 Fixed: Fixed keyboard occasionally missing in AutoFill. 4th attempt, should do the trick (fixes #133)",
+                    "type": 1
+                },
+                {
+                    "title": "🐞 Fixed: Entry attachment preview on macOS (closes #174) [thanks, layandreas]",
+                    "type": 1
+                },
+                {
+                    "title": "🐞 Fixed: Help article about Perpetual Fallback license was misformatted",
+                    "type": 1
+                },
+                {
+                    "title": "🐞 Fixed: Opening the Premium Upgrade screen from AutoFill",
+                    "type": 1
+                },
+                {
+                    "title": "🐞 Fixed: Double Face ID scan after a failed attempt (fixes #158) [thanks, Fotis]",
+                    "type": 1
+                },
+                {
+                    "title": "🐞 Fixed: Several UI improvements throughout",
+                    "type": 1
+                },
+                {
+                    "title": "🐞 Fixed: Hide Custom App Icon setting if not supported by the system [thanks, Andreas]",
+                    "type": 1
+                },
+                {
+                    "title": "🐞 Fixed: Automatically trim whitespaces in OTP config field",
+                    "type": 1
+                },
+                {
+                    "title": "🐞 Fixed: It was impossible to switch entry/group from a custom to (the current) standard icon",
+                    "type": 1
+                },
+                {
+                    "title": "🐞 Fixed: Subscription remained active after a cancelled trial [thanks, everyone]",
+                    "type": 1
+                },
+                {
+                    "title": "🐞 Fixed: Large text did not display correctly in AutoFill [thanks, Peter]",
+                    "type": 1
+                },
+                {
+                    "title": "🐞 Fixed: Soft-enforce single-DB limit in free version (#52)",
+                    "type": 1
+                },
+                {
+                    "title": "🐞 Fixed: macOS: Enable premium features when running in beta testing mode [thanks, u/remraf_1]",
+                    "type": 1
+                },
+                {
+                    "title": "🐞 Fixed: Automatic search did not work in AutoFill (closes #176)  [thanks, everyone]",
+                    "type": 1
+                }
+            ]
+        },
+        {
             "version": "1.24",
             "releaseDate": "2021-05-06T00:00:00Z",
             "items": [
@@ -25,7 +523,7 @@
                     "type": 1
                 },
                 {
-                    "title": "🧩 Added: Turkish translation [thanks, ofmelnik]",
+                    "title": "🧩 Added: Turkish translation [thanks, ofmenlik]",
                     "type": 1
                 },
                 {

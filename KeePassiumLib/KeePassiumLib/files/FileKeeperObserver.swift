@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2019 Andrei Popleteev <info@keepassium.com>
+//  Copyright © 2018–2022 Andrei Popleteev <info@keepassium.com>
 // 
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -8,7 +8,7 @@
 
 import Foundation
 
-public protocol FileKeeperObserver: class {
+public protocol FileKeeperObserver: AnyObject {
     func fileKeeper(didAddFile urlRef: URLReference, fileType: FileType)
     func fileKeeper(didRemoveFile urlRef: URLReference, fileType: FileType)
     func fileKeeperHasPendingOperation()

@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2019 Andrei Popleteev <info@keepassium.com>
+//  Copyright © 2018–2022 Andrei Popleteev <info@keepassium.com>
 // 
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -209,6 +209,11 @@ public class Entry: DatabaseItem, Eraseable {
     public var isExpired: Bool { return canExpire && (Date() > expiryTime) }
     public var isDeleted: Bool
     
+    public var isHiddenFromSearch: Bool {
+        get { return false }
+        set { fatalError("This property can be modified only in some DB formats") }
+    }
+    
     public var attachments: Array<Attachment>
     
     public var description: String { return "Entry[\(rawTitle)]" }
@@ -275,7 +280,8 @@ public class Entry: DatabaseItem, Eraseable {
     }
     
     public func setField(name: String, value: String, isProtected: Bool? = nil) {
-        if let field = fields.first { $0.name == name } {
+        let existingField = fields.first { $0.name == name }
+        if let field = existingField {
             field.value = value
             if let isProtected = isProtected {
                 field.isProtected = isProtected

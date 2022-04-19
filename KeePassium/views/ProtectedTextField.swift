@@ -1,12 +1,12 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2019 Andrei Popleteev <info@keepassium.com>
+//  Copyright © 2018–2022 Andrei Popleteev <info@keepassium.com>
 // 
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
 //  by the Free Software Foundation: https://www.gnu.org/licenses/).
 //  For commercial licensing, please contact the author.
 
-import UIKit
+import KeePassiumLib
 
 class ProtectedTextField: ValidatingTextField {
     private let horizontalInsets = CGFloat(8.0)
@@ -16,6 +16,9 @@ class ProtectedTextField: ValidatingTextField {
     private let hideImage = UIImage(asset: .hideAccessory)
 
     private var toggleButton: UIButton! 
+    private var originalContentType: UITextContentType?
+    private var originalAutocorrectionType: UITextAutocorrectionType = .default
+    
     override var isSecureTextEntry: Bool {
         didSet {
             toggleButton?.isSelected = !isSecureTextEntry
@@ -25,6 +28,17 @@ class ProtectedTextField: ValidatingTextField {
     override func awakeFromNib() {
         super.awakeFromNib()
 
+        setupVisibilityAccessory()
+        allowAutoFillPrompt(Settings.current.acceptAutoFillInput)
+
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(resetVisibility(_:)),
+            name: UIApplication.willResignActiveNotification,
+            object: nil)
+    }
+    
+    private func setupVisibilityAccessory() {
         toggleButton = UIButton(type: .custom)
         toggleButton.tintColor = UIColor.actionTint 
         toggleButton.addTarget(self, action: #selector(toggleVisibility), for: .touchUpInside)
@@ -48,12 +62,6 @@ class ProtectedTextField: ValidatingTextField {
             comment: "Action/button to make password visible as plain-text")
         self.rightView = toggleButton
         self.rightViewMode = .always
-        
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(resetVisibility(_:)),
-            name: UIApplication.willResignActiveNotification,
-            object: nil)
     }
 
     override func rightViewRect(forBounds bounds: CGRect) -> CGRect {
@@ -72,5 +80,24 @@ class ProtectedTextField: ValidatingTextField {
     @objc
     func toggleVisibility(_ sender: Any) {
         isSecureTextEntry = !isSecureTextEntry
+    }
+    
+    func allowAutoFillPrompt(_ allowed: Bool) {
+        guard #available(iOS 12, *) else {
+            return
+        }
+        if allowed {
+            if textContentType == .oneTimeCode {
+                textContentType = originalContentType
+            }
+            if autocorrectionType == .no {
+                autocorrectionType = originalAutocorrectionType
+            }
+        } else {
+            originalContentType = textContentType
+            originalAutocorrectionType = autocorrectionType
+            textContentType = .oneTimeCode
+            autocorrectionType = .no
+        }
     }
 }

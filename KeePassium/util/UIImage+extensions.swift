@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2019 Andrei Popleteev <info@keepassium.com>
+//  Copyright © 2018–2022 Andrei Popleteev <info@keepassium.com>
 // 
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -21,11 +21,13 @@ enum ImageAsset: String {
     case deleteItemToolbar = "delete-item-toolbar"
     case editItemListitem = "edit-item-listitem"
     case editItemToolbar = "edit-item-toolbar"
+    case externalLinkBadge = "external-link-badge"
     case moreActionsToolbar = "more-actions-toolbar"
     case sortOrderAscToolbar = "sort-order-asc-toolbar"
     case sortOrderDescToolbar = "sort-order-desc-toolbar"
     case databaseBackupListitem = "database-backup-listitem"
     case databaseTrashedListitem = "database-trashed-listitem"
+    case filePreviewToolbar = "file-preview-toolbar"
     case fileProviderGenericListitem = "fp-generic-listitem"
     case fileProviderOnMyIPadListitem = "fp-on-ipad-listitem"
     case fileProviderOnMyIPhoneListitem = "fp-on-iphone-listitem"
@@ -44,6 +46,7 @@ enum ImageAsset: String {
     case premiumBenefitHardwareKeys = "premium-benefit-yubikey"
     case premiumBenefitCustomAppIcons = "premium-benefit-custom-appicons"
     case premiumBenefitFieldReferences = "premium-benefit-field-references"
+    case premiumBenefitQuickAutoFill = "premium-benefit-quick-autofill"
     case premiumBenefitSupport = "premium-benefit-support"
     case premiumBenefitShiny = "premium-benefit-shiny"
     case premiumConditionCheckedListitem = "premium-condition-checked-listitem"
@@ -59,12 +62,29 @@ enum ImageAsset: String {
 }
 
 enum SystemImageName: String {
+    case arrowshapeTurnUpForward = "arrowshape.turn.up.forward"
+    case camera = "camera"
+    case checkmark = "checkmark"
+    case chevronDown = "chevron.down"
+    case chevronForward = "chevron.forward"
+    case chevronUp = "chevron.up"
+    case clock = "clock"
+    case clockArrowCirclepath = "clock.arrow.circlepath"
     case docOnDoc = "doc.on.doc"
     case ellipsisCircle = "ellipsis.circle"
+    case exclamationMarkTriangle = "exclamationmark.triangle"
     case folder = "folder"
+    case gearshape2 = "gearshape.2"
+    case icloudSlash = "icloud.slash"
+    case infoCircle = "info.circle"
+    case megaphone = "megaphone"
+    case paperclip = "paperclip"
     case pencil = "pencil"
+    case photo = "photo"
+    case plus = "plus"
     case qrcode = "qrcode"
     case squareAndPencil = "square.and.pencil"
+    case squareAndArrowDown = "square.and.arrow.down"
     case squareAndArrowUp = "square.and.arrow.up"
     case trash = "trash"
 }
