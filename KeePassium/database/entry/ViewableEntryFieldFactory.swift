@@ -40,17 +40,6 @@ extension ViewableField {
         return !singlelineFields.contains(internalName)
     }
     
-    var visibleName: String {
-        switch internalName {
-        case EntryField.title: return LString.fieldTitle
-        case EntryField.userName: return LString.fieldUserName
-        case EntryField.password: return LString.fieldPassword
-        case EntryField.url: return LString.fieldURL
-        case EntryField.notes: return LString.fieldNotes
-        default:
-            return internalName
-        }
-    }
 }
 
 class BasicViewableField: ViewableField {
@@ -68,6 +57,18 @@ class BasicViewableField: ViewableField {
     var isHeightConstrained: Bool
     
     var isEditable: Bool { return true }
+    
+    var visibleName: String {
+        switch internalName {
+        case EntryField.title: return LString.fieldTitle
+        case EntryField.userName: return LString.fieldUserName
+        case EntryField.password: return LString.fieldPassword
+        case EntryField.url: return LString.fieldURL
+        case EntryField.notes: return LString.fieldNotes
+        default:
+            return internalName
+        }
+    }
     
     convenience init(field: EntryField, isValueHidden: Bool) {
         self.init(fieldOrNil: field, isValueHidden: isValueHidden)
@@ -97,6 +98,8 @@ class TOTPViewableField: DynamicViewableField {
     var totpGenerator: TOTPGenerator?
     
     override var internalName: String { return EntryField.totp }
+    override var visibleName: String { return LString.fieldTOTP }
+
     override var isEditable: Bool { return false }
     
     override var value: String {
@@ -129,6 +132,7 @@ class ViewableEntryFieldFactory {
         case title
         case emptyValues
         case nonEditable
+        case otpConfig
     }
     
     static func makeAll(
@@ -137,11 +141,22 @@ class ViewableEntryFieldFactory {
         excluding excludedFields: [ExcludedFields]
     ) -> [ViewableField] {
         var result = [ViewableField]()
-        let excludeTitle = excludedFields.contains(.title)
+
+        let hasValidOTPConfig = TOTPGeneratorFactory.makeGenerator(for: entry) != nil
+
+        var excludedFieldNames = Set<String>()
+        if excludedFields.contains(.title) {
+            excludedFieldNames.insert(EntryField.title)
+        }
+        if hasValidOTPConfig && excludedFields.contains(.otpConfig) {
+            excludedFieldNames.insert(EntryField.otpConfig1)
+            excludedFieldNames.insert(EntryField.otpConfig2Seed)
+            excludedFieldNames.insert(EntryField.otpConfig2Settings)
+        }
         let excludeEmptyValues = excludedFields.contains(.emptyValues)
         let excludeNonEditable = excludedFields.contains(.nonEditable)
         for field in entry.fields {
-            if excludeTitle && field.name == EntryField.title {
+            if excludedFieldNames.contains(field.name) {
                 continue
             }
             if excludeEmptyValues && field.value.isEmpty {
@@ -152,9 +167,7 @@ class ViewableEntryFieldFactory {
             result.append(viewableField)
         }
         
-        if let _ = TOTPGeneratorFactory.makeGenerator(for: entry),
-            !excludeNonEditable
-        {
+        if hasValidOTPConfig && !excludeNonEditable {
             result.append(TOTPViewableField(fields: entry.fields))
         }
         

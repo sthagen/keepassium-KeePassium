@@ -22,12 +22,13 @@ public class TOTPGeneratorFactory {
         if let totpField = find(SingleFieldFormat.fieldName, in: fields) {
             return parseSingleFieldFormat(totpField.value)
         } else {
-            guard let seedField = find(SplitFieldFormat.seedFieldName, in: fields),
-                let settingsField = find(SplitFieldFormat.settingsFieldName, in: fields)
-                else { return nil }
+            guard let seedField = find(SplitFieldFormat.seedFieldName, in: fields) else {
+                return nil
+            }
+            let settingsField = find(SplitFieldFormat.settingsFieldName, in: fields) 
             return SplitFieldFormat.parse(
                 seedString: seedField.value,
-                settingsString: settingsField.value)
+                settingsString: settingsField?.value)
         }
     }
     
@@ -54,6 +55,12 @@ public class TOTPGeneratorFactory {
 }
 
 
+
+public extension EntryField {
+    public static let otpConfig1 = EntryField.otp
+    public static let otpConfig2Seed = SplitFieldFormat.seedFieldName
+    public static let otpConfig2Settings = SplitFieldFormat.settingsFieldName
+}
 
 fileprivate class SingleFieldFormat {
     static let fieldName = EntryField.otp
@@ -202,13 +209,15 @@ fileprivate class KeeOtpFormat: SingleFieldFormat {
 fileprivate class SplitFieldFormat {
     static let seedFieldName = "TOTP Seed"
     static let settingsFieldName = "TOTP Settings"
+    static let defaultSettingsValue = "30;6"
     
-    static func parse(seedString: String, settingsString: String) -> TOTPGenerator? {
+    static func parse(seedString: String, settingsString: String?) -> TOTPGenerator? {
         guard let seed = parseSeedString(seedString) else {
             Diag.warning("Unrecognized TOTP seed format")
             return nil
         }
         
+        let settingsString = settingsString ?? SplitFieldFormat.defaultSettingsValue
         let settings = settingsString.split(separator: ";")
         if settings.count > 2 {
             Diag.verbose("Found redundant TOTP settings, ignoring [expected: 2, got: \(settings.count)]")

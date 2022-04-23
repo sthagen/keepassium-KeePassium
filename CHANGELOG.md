@@ -1,5 +1,36 @@
 #CHANGELOG
 
+## [1.31.107] - 2022-04-23
+
+### Improved
+
+- Disabled spelling autocorrection in entry editor (closes #223) [thanks, everyone]
+- Hidden redundant OTP config fields from entry viewer (closes #218) [thanks, plus-or-minus]
+- Made `TOTP Settings` field optional (closes #225) [thanks, plus-or-minus]
+- AutoFill will compare port numbers when comparing URLs [thanks, Z.X.]
+
+### Fixed
+
+- macOS: Cleaned up redundant menu items on macOS
+- Fixed readability of last characters in expanded fields [thanks, Sachin]
+- Removed copyright year from About screen
+- Removed obsolete error description for read-only OneDrive [thanks, Thomas]
+
+
+## [1.31.106] - 2022-03-26
+
+### Improved 
+
+- Renamed TOTP field for clarity (closes #219) [thanks, plus-or-minus]
+- Updated all translations
+
+### Fixed
+
+- Loading cached files when there is an unreachable SMB server in the system (related #109)
+- Keyboard focus on app launch [thanks, Nelson and raja]
+- File info sometimes did not refresh
+
+
 ## [1.31.105] - 2022-02-09
 
 ### Improved

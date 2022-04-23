@@ -549,6 +549,12 @@ extension LString {
         value: "Notes",
         comment: "Name of an entry field"
     )
+    public static let fieldTOTP = NSLocalizedString(
+        "[TOTP/FieldName]",
+        bundle: Bundle.framework,
+        value: "One-time password (TOTP)",
+        comment: "Name of an entry field. Acronym `TOTP` should not be translated."
+    )
     
     public static let previousItemVersionRestored = NSLocalizedString(
         "[Item/History/Restored]",
@@ -734,4 +740,11 @@ extension LString {
         bundle: Bundle.framework,
         value: "Face ID",
         comment: "Name of biometric authentication method. Trademarked, do not translate unless Apple traslated it to your language.")
+    
+    
+    public static let copyrightNotice = NSLocalizedString(
+        "[About/CopyrightAuthor]",
+        bundle: Bundle.framework,
+        value: "©Andrei Popleteev",
+        comment: "Copyright notice")
 }
