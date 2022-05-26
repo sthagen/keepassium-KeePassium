@@ -334,43 +334,37 @@ public class URLReference:
             return
         }
         
-        execute(
-            byTime: byTime,
-            on: URLReference.backgroundQueue,
-            slowSyncOperation: { () -> Result<URL, Error> in
+        let fileProvider = self.fileProvider
+        let queue = URLReference.backgroundQueue
+        queue.async {
+            let resolver = DispatchWorkItem() {
                 do {
                     let url = try self.resolveSync()
-                    return .success(url)
-                } catch {
-                    return .failure(error)
-                }
-            },
-            onSuccess: { [weak self] result in
-                guard let self = self else { return }
-                switch result {
-                case .success(let url):
                     self.error = nil
                     callbackQueue.addOperation {
                         callback(.success(url))
                     }
-                case .failure(let error):
-                    let fileAccessError = FileAccessError.make(
-                        from: error,
-                        fileProvider: self.fileProvider
-                    )
+                } catch {
+                    let fileAccessError = FileAccessError.make(from: error, fileProvider: fileProvider)
                     self.error = fileAccessError
                     callbackQueue.addOperation {
                         callback(.failure(fileAccessError))
                     }
                 }
-            },
-            onTimeout: { [self] in
-                self.error = FileAccessError.timeout(fileProvider: self.fileProvider)
+            }
+            queue.async(execute: resolver)
+            switch resolver.wait(timeout: byTime) {
+            case .success:
+                break
+            case .timedOut:
+                resolver.cancel() 
+                let fileAccessError = FileAccessError.timeout(fileProvider: fileProvider)
+                self.error = fileAccessError
                 callbackQueue.addOperation {
-                    callback(.failure(FileAccessError.timeout(fileProvider: self.fileProvider)))
+                    callback(.failure(fileAccessError))
                 }
             }
-        )
+        }
     }
     
     
@@ -424,6 +418,7 @@ public class URLReference:
             case .success(let url):
                 self.refreshInfo(
                     for: url,
+                    fileProvider: self.fileProvider,
                     byTime: byTime,
                     completionQueue: completionQueue,
                     completion: completion
@@ -438,13 +433,14 @@ public class URLReference:
     
     private func refreshInfo(
         for url: URL,
+        fileProvider: FileProvider?,
         byTime: DispatchTime,
         completionQueue: OperationQueue,
         completion: @escaping InfoCallback
     ) {
         FileDataProvider.readFileInfo(
             at: url,
-            fileProvider: nil,
+            fileProvider: fileProvider,
             canUseCache: false,
             byTime: byTime,
             completionQueue: completionQueue,
@@ -476,9 +472,15 @@ public class URLReference:
         }
         
         var isStale = false
+        let options: URL.BookmarkResolutionOptions
+        if #available(iOS 14.2, *) {
+            options = [.withoutUI, .withoutMounting, .withoutImplicitStartAccessing]
+        } else {
+            options = [.withoutUI, .withoutMounting]
+        }
         let _resolvedURL = try URL(
             resolvingBookmarkData: data,
-            options: [URL.BookmarkResolutionOptions.withoutUI],
+            options: options,
             relativeTo: nil,
             bookmarkDataIsStale: &isStale)
         self.resolvedURL = _resolvedURL
