@@ -453,15 +453,30 @@ extension PasswordGeneratorVC {
         case CellIndex.customModeLength:
             configureCustomModeLengthCell(cell as! PasswordGeneratorLengthCell)
         case CellIndex.customModeIncludeUpperCase:
-            configureCustomModeFixedSetCell(cell as! PasswordGeneratorFixedSetCell, set: .upperCase)
+            configureCustomModeFixedSetCell(
+                cell as! PasswordGeneratorFixedSetCell,
+                set: .upperCase,
+                conditions: [.required, .allowed, .inactive])
         case CellIndex.customModeIncludeLowerCase:
-            configureCustomModeFixedSetCell(cell as! PasswordGeneratorFixedSetCell, set: .lowerCase)
+            configureCustomModeFixedSetCell(
+                cell as! PasswordGeneratorFixedSetCell,
+                set: .lowerCase,
+                conditions: [.required, .allowed, .inactive])
         case CellIndex.customModeIncludeDigits:
-            configureCustomModeFixedSetCell(cell as! PasswordGeneratorFixedSetCell, set: .digits)
+            configureCustomModeFixedSetCell(
+                cell as! PasswordGeneratorFixedSetCell,
+                set: .digits,
+                conditions: [.required, .allowed, .inactive])
         case CellIndex.customModeIncludeSpecials:
-            configureCustomModeFixedSetCell(cell as! PasswordGeneratorFixedSetCell, set: .specials)
+            configureCustomModeFixedSetCell(
+                cell as! PasswordGeneratorFixedSetCell,
+                set: .specials,
+                conditions: [.required, .allowed, .inactive])
         case CellIndex.customModeIncludeLookalikes:
-            configureCustomModeFixedSetCell(cell as! PasswordGeneratorFixedSetCell, set: .lookalikes)
+            configureCustomModeFixedSetCell(
+                cell as! PasswordGeneratorFixedSetCell,
+                set: .lookalikes,
+                conditions: [.excluded, .inactive])
         case CellIndex.customModeMaxConsecutive:
             configureCustomModeMaxConsecutiveCell(cell as! PasswordGeneratorStepperCell)
         case CellIndex.customModeBlockList:
@@ -490,11 +505,12 @@ extension PasswordGeneratorVC {
     
     private func configureCustomModeFixedSetCell(
         _ cell: PasswordGeneratorFixedSetCell,
-        set: CustomPasswordGeneratorParams.FixedSet
+        set: CustomPasswordGeneratorParams.FixedSet,
+        conditions: [InclusionCondition]
     ) {
         cell.textLabel?.text = set.title
         cell.textLabel?.accessibilityLabel = set.description
-        cell.availableValues = [.required, .allowed, .excluded]
+        cell.availableValues = conditions
         cell.value = config.customModeConfig.fixedSets[set] ?? .allowed
         cell.valueChangeHandler = { [weak self] newValue in
             self?.config.customModeConfig.fixedSets[set] = newValue
@@ -516,7 +532,7 @@ extension PasswordGeneratorVC {
                 string: customSetDescription,
                 attributes: [
                     .font: UIFont.preferredFont(forTextStyle: .body).addingTraits(.traitItalic),
-                    .foregroundColor: UIColor.auxiliaryText
+                    .foregroundColor: UIColor.disabledText
                 ]
             )
             cell.accessibilityValue = LString.PasswordGenerator.titleCustomSetEmpty
@@ -542,7 +558,7 @@ extension PasswordGeneratorVC {
             [weak self, weak alert] _ in
             guard let self = self else { return }
             let text = alert?.textFields!.first!.text ?? ""
-            self.config.customModeConfig.customLists[condition] = text
+            self.config.customModeConfig.customLists[condition] = text.removingRepetitions()
             self.saveConfig()
             self.refresh()
             self.generate(animated: true)
@@ -751,5 +767,13 @@ extension PasswordGeneratorVC {
             return LString.PasswordGenerator.spaceCharacterName
         }
         return separator
+    }
+}
+
+
+extension String {
+    func removingRepetitions() -> String {
+        var present = Set<Character>()
+        return self.filter { present.insert($0).inserted }
     }
 }
