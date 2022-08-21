@@ -159,7 +159,7 @@ public class DatabaseSaver: ProgressObserver {
                 to: databaseFile.fileURL,
                 fileProvider: databaseFile.fileProvider,
                 queue: operationQueue,
-                dataSource: { [self] remoteURL, remoteData -> ByteArray? in 
+                outputDataSource: { [self] remoteURL, remoteData -> ByteArray? in 
                     assert(operationQueue.isCurrent)
                     let dataToWrite = resolveConflict(
                         localData: outData,
@@ -168,7 +168,11 @@ public class DatabaseSaver: ProgressObserver {
                         saveToSameFile: &isSaveToSameFile
                     )
                     isSaveCancelled = (dataToWrite == nil)
-                    return dataToWrite
+                    if isSaveToSameFile {
+                        return dataToWrite
+                    } else {
+                        return nil
+                    }
                 },
                 completionQueue: operationQueue,
                 completion: { [self] result in 

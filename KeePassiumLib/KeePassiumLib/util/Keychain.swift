@@ -6,7 +6,7 @@
 //  by the Free Software Foundation: https://www.gnu.org/licenses/).
 //  For commercial licensing, please contact the author.
 
-import Foundation
+import CryptoKit
 import LocalAuthentication
 
 public enum KeychainError: LocalizedError {
@@ -38,11 +38,12 @@ public class Keychain {
     
     private static let accessGroup: String? = nil
     private enum Service: String {
-        static let allValues: [Service] = [.general, databaseSettings, .premium]
+        static let allValues: [Service] = [.general, databaseSettings, .premium, .networkCredentials]
         
         case general = "KeePassium"
         case databaseSettings = "KeePassium.dbSettings"
         case premium = "KeePassium.premium"
+        case networkCredentials = "KeePassium.networkCredentials"
     }
     private let keychainFormatVersion = "formatVersion"
     private let appPasscodeAccount = "appPasscode"
@@ -55,8 +56,25 @@ public class Keychain {
     
     private let memoryProtectionKeyTagData = "SecureBytes.general".data(using: .utf8)!
     
+    private var hasWarnedAboutMissingMemoryProtectionKey = false
+    
     private init() {
         maybeUpgradeKeychainFormat()
+        
+        let hasMemoryProtectionKeyDisappeared =
+            SecureEnclave.isAvailable &&
+            !Settings.current.isFirstLaunch &&
+            !isMemoryProtectionKeyExist()
+        if hasMemoryProtectionKeyDisappeared {
+            Diag.warning("Memory protection key is gone. Device was restored from backup?")
+            reset()
+        }
+    }
+    
+    public func reset() {
+        removeAll()
+        makeAndStoreMemoryProtectionKey()
+        Diag.debug("Keychain data reset")
     }
     
     
@@ -161,7 +179,7 @@ public class Keychain {
     }
     
     @discardableResult
-    public func removeAll() -> Bool {
+    private func removeAll() -> Bool {
         let secItemClasses = [
             kSecClassGenericPassword,
             kSecClassInternetPassword,
@@ -244,6 +262,27 @@ public class Keychain {
     }
     
     
+    private func isMemoryProtectionKeyExist() -> Bool {
+        let query: [String: Any] = [
+            kSecClass as String              : kSecClassKey,
+            kSecAttrApplicationTag as String : memoryProtectionKeyTagData,
+            kSecAttrKeyType as String        : kSecAttrKeyTypeEC,
+            kSecReturnRef as String          : false
+        ]
+        
+        var item: CFTypeRef?
+        let status = SecItemCopyMatching(query as CFDictionary, &item)
+        switch status {
+        case errSecSuccess:
+            return true
+        case errSecItemNotFound:
+            return false
+        default:
+            Diag.warning("Failed to retrieve memory protection key [status: \(status)]")
+            return false
+        }
+    }
+    
     internal func getMemoryProtectionKey() -> SecKey? {
         let query: [String: Any] = [
             kSecClass as String              : kSecClassKey,
@@ -257,14 +296,16 @@ public class Keychain {
         switch status {
         case errSecSuccess:
             return (item as! SecKey)
-        case errSecItemNotFound:
-            return makeAndStoreMemoryProtectionKey()
         default:
-            Diag.warning("Failed to retrieve memory protection key, continuing without [status: \(status)]")
+            if !hasWarnedAboutMissingMemoryProtectionKey {
+                Diag.warning("Showing once: Failed to retrieve memory protection key, continuing without [status: \(status)]")
+                hasWarnedAboutMissingMemoryProtectionKey = true
+            }
             return nil
         }
     }
     
+    @discardableResult
     private func makeAndStoreMemoryProtectionKey() -> SecKey? {
         Diag.debug("Creating the memory protection key.")
         var error: Unmanaged<CFError>?
@@ -291,7 +332,7 @@ public class Keychain {
         
         guard let privateKey = SecKeyCreateRandomKey(attributes as CFDictionary, &error) else {
             let err = error!.takeRetainedValue() as Error
-            Diag.error("Failed to create random key [message: \(err.localizedDescription)]")
+            Diag.error("Failed to create the memory protection key [message: \(err.localizedDescription)]")
             return nil
         }
         return privateKey
@@ -368,6 +409,32 @@ public class Keychain {
         Diag.info("Purchase history upgraded")
         
         return purchaseHistory
+    }
+}
+
+internal extension Keychain {
+
+    func getNetworkCredential(for url: URL) throws -> NetworkCredential? {
+        guard let data = try get(
+            service: .networkCredentials,
+            account: url.absoluteString)
+        else {
+            return nil
+        }
+        return NetworkCredential.deserialize(from: data)
+    }
+    
+    func store(networkCredential: NetworkCredential, for url: URL) throws {
+        let data = networkCredential.serialize()
+        try set(service: .networkCredentials, account: url.absoluteString, data: data)
+    }
+    
+    func removeNetworkCredential(for url: URL) throws {
+        try remove(service: .networkCredentials, account: url.absoluteString)
+    }
+    
+    func removeAllNetworkCredentials() throws {
+        try remove(service: .networkCredentials, account: nil) 
     }
 }
 
