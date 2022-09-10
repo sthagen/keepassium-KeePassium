@@ -300,7 +300,6 @@
 		757FB3CB21F8D34A00F016FA /* PasscodeInputVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 757FB3C721F8D34A00F016FA /* PasscodeInputVC.swift */; };
 		757FB3CC21F9B4AF00F016FA /* ProtectedTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7548BC1721B07BFE001B00E9 /* ProtectedTextField.swift */; };
 		757FB3CD21F9C50700F016FA /* ValidatingTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 758BF0D720D1B1DA00897C83 /* ValidatingTextField.swift */; };
-		757FB3CF21F9C51C00F016FA /* UITextView+border.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7584B3F020DD908A0086C094 /* UITextView+border.swift */; };
 		757FB3D021F9C52600F016FA /* UITableViewCell+extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7529EAEA211577EA0093B117 /* UITableViewCell+extension.swift */; };
 		757FDF6226E2519E0023E028 /* OTPView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 757FDF6126E2519E0023E028 /* OTPView.swift */; };
 		757FDF6326E2519E0023E028 /* OTPView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 757FDF6126E2519E0023E028 /* OTPView.swift */; };
@@ -331,7 +330,6 @@
 		7583EA8B2685D372009969E7 /* Coordinator+premium.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75D76158262ED2E200B1DE7F /* Coordinator+premium.swift */; };
 		7583EA8F2685D720009969E7 /* AutoFillCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7583EA8E2685D720009969E7 /* AutoFillCoordinator.swift */; };
 		7583EA902685D720009969E7 /* AutoFillCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7583EA8E2685D720009969E7 /* AutoFillCoordinator.swift */; };
-		7584B3F120DD908A0086C094 /* UITextView+border.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7584B3F020DD908A0086C094 /* UITextView+border.swift */; };
 		7584CEF024D208E80063B421 /* HardwareKeyPicker.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7584CEF524D208E80063B421 /* HardwareKeyPicker.storyboard */; };
 		7584CEF124D208E80063B421 /* HardwareKeyPicker.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7584CEF524D208E80063B421 /* HardwareKeyPicker.storyboard */; };
 		7584CEF224D208E80063B421 /* HardwareKeyPicker.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7584CEF524D208E80063B421 /* HardwareKeyPicker.storyboard */; };
@@ -344,6 +342,8 @@
 		75876B272646EC2800FB470C /* DatabaseKeyChangerCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75876B252646EC2800FB470C /* DatabaseKeyChangerCoordinator.swift */; };
 		7588B6C62627351800F5D372 /* EntryFieldEditorCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7588B6C52627351800F5D372 /* EntryFieldEditorCoordinator.swift */; };
 		7588B6C72627351800F5D372 /* EntryFieldEditorCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7588B6C52627351800F5D372 /* EntryFieldEditorCoordinator.swift */; };
+		7589FDCD28B4EA2100CCC76B /* FieldCopiedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7589FDCC28B4EA2100CCC76B /* FieldCopiedView.swift */; };
+		7589FDCE28B4EA2100CCC76B /* FieldCopiedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7589FDCC28B4EA2100CCC76B /* FieldCopiedView.swift */; };
 		758BAD9524B5392300CC9265 /* PricingPlanPickerVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 758BAD9424B5392200CC9265 /* PricingPlanPickerVC.swift */; };
 		758BAD9624B5392300CC9265 /* PricingPlanPickerVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 758BAD9424B5392200CC9265 /* PricingPlanPickerVC.swift */; };
 		758BAD9724B53ABF00CC9265 /* PricingPlanPickerVC.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 758BAD9A24B53ABF00CC9265 /* PricingPlanPickerVC.storyboard */; };
@@ -502,6 +502,8 @@
 		75AA237B26CBCAED00488C4E /* DatabaseFile+extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75AA237926CBCAED00488C4E /* DatabaseFile+extensions.swift */; };
 		75AA237C26CBCAED00488C4E /* DatabaseFile+extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75AA237926CBCAED00488C4E /* DatabaseFile+extensions.swift */; };
 		75AA237D26CBCAED00488C4E /* DatabaseFile+extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75AA237926CBCAED00488C4E /* DatabaseFile+extensions.swift */; };
+		75AD22DC27FDE59200636D66 /* YubiKeyUSB.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75AD22DB27FDE59200636D66 /* YubiKeyUSB.swift */; };
+		75AD22DD27FDE59200636D66 /* YubiKeyUSB.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75AD22DB27FDE59200636D66 /* YubiKeyUSB.swift */; };
 		75AF1920282B0D6D00FA4BB5 /* PasswordGeneratorCells.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75AF191F282B0D6D00FA4BB5 /* PasswordGeneratorCells.swift */; };
 		75AF1921282B0D6D00FA4BB5 /* PasswordGeneratorCells.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75AF191F282B0D6D00FA4BB5 /* PasswordGeneratorCells.swift */; };
 		75AF1923282B0DBF00FA4BB5 /* InclusionCondition+extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75AF1922282B0DBF00FA4BB5 /* InclusionCondition+extensions.swift */; };
@@ -514,7 +516,6 @@
 		75B38BF3233E5B7C006BDEFC /* NewsCenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75679ACD22FD896F00372301 /* NewsCenter.swift */; };
 		75B38BF4233E5B7C006BDEFC /* WatchdogAwareTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 758BF0DC20D220B300897C83 /* WatchdogAwareTextField.swift */; };
 		75B38BF5233E5B7C006BDEFC /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 754BF07E2082A6BD00E3A292 /* AppDelegate.swift */; };
-		75B38BF6233E5B7C006BDEFC /* UITextView+border.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7584B3F020DD908A0086C094 /* UITextView+border.swift */; };
 		75B38BF8233E5B7C006BDEFC /* SettingsDataProtectionVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 752ED68C2235547D00C20D3E /* SettingsDataProtectionVC.swift */; };
 		75B38BFA233E5B7C006BDEFC /* UserNameHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75E4CA5C232C455D00EB6805 /* UserNameHelper.swift */; };
 		75B38BFB233E5B7C006BDEFC /* WatchdogAwareTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7561850220E033DB00EEFAEE /* WatchdogAwareTextView.swift */; };
@@ -736,7 +737,6 @@
 		75D7DF7F233E5E310029AD87 /* AppInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75679ACA22F8095F00372301 /* AppInfo.swift */; };
 		75D7DF80233E5E310029AD87 /* KeyFilePickerVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7532A24C21C5A035005DF56F /* KeyFilePickerVC.swift */; };
 		75D7DF81233E5E310029AD87 /* CredentialProviderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750CFBCA21BA9ACD00E62B09 /* CredentialProviderViewController.swift */; };
-		75D7DF82233E5E310029AD87 /* UITextView+border.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7584B3F020DD908A0086C094 /* UITextView+border.swift */; };
 		75D7DF84233E5E310029AD87 /* LongPressAwareNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7514CC9E22D5D14B00A0D7A4 /* LongPressAwareNavigationController.swift */; };
 		75D7DF85233E5E310029AD87 /* NewsCenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75679ACD22FD896F00372301 /* NewsCenter.swift */; };
 		75D7DF86233E5E310029AD87 /* FileListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75D3A3AE21BAE53F00255FC3 /* FileListCell.swift */; };
@@ -779,7 +779,7 @@
 		75D7DFB8233E5E310029AD87 /* FirstSetupVC.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 751E0D2E2309AFE90088BB10 /* FirstSetupVC.storyboard */; };
 		75D7DFB9233E5E310029AD87 /* KeyFilePickerVC.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 751E0D3A2309B0120088BB10 /* KeyFilePickerVC.storyboard */; };
 		75D7DFBA233E5E310029AD87 /* FileInfoVC.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 751E0D282309AFBA0088BB10 /* FileInfoVC.storyboard */; };
-		75D7DFC7233E5E8C0029AD87 /* KeePassiumPro AutoFill.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 75D7DFBE233E5E310029AD87 /* KeePassiumPro AutoFill.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		75D7DFC7233E5E8C0029AD87 /* KeePassium Pro AutoFill.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 75D7DFBE233E5E310029AD87 /* KeePassium Pro AutoFill.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		75D9913A26CEC8E400823331 /* SyncConflictAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75D9913926CEC8E400823331 /* SyncConflictAlert.swift */; };
 		75D9913B26CEC8E400823331 /* SyncConflictAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75D9913926CEC8E400823331 /* SyncConflictAlert.swift */; };
 		75D9913D26CEEDC800823331 /* SyncConflictAlert.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 75D9913C26CEEDC800823331 /* SyncConflictAlert.storyboard */; };
@@ -908,7 +908,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
-				75D7DFC7233E5E8C0029AD87 /* KeePassiumPro AutoFill.appex in Embed App Extensions */,
+				75D7DFC7233E5E8C0029AD87 /* KeePassium Pro AutoFill.appex in Embed App Extensions */,
 			);
 			name = "Embed App Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1497,7 +1497,6 @@
 		75838480268B55BF000D2E8B /* UIViewController+subviews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+subviews.swift"; sourceTree = "<group>"; };
 		75839A8F246B1A78003DAB7F /* SettingsSearchVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsSearchVC.swift; sourceTree = "<group>"; };
 		7583EA8E2685D720009969E7 /* AutoFillCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoFillCoordinator.swift; sourceTree = "<group>"; };
-		7584B3F020DD908A0086C094 /* UITextView+border.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITextView+border.swift"; sourceTree = "<group>"; };
 		7584CEF424D208E80063B421 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/HardwareKeyPicker.storyboard; sourceTree = "<group>"; };
 		7584CEF724D208EC0063B421 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/HardwareKeyPicker.strings"; sourceTree = "<group>"; };
 		7584CEF924D208F00063B421 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/HardwareKeyPicker.strings"; sourceTree = "<group>"; };
@@ -1513,6 +1512,7 @@
 		758544632351FE8D000D5E5E /* UIFont+monospace.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIFont+monospace.swift"; sourceTree = "<group>"; };
 		75876B252646EC2800FB470C /* DatabaseKeyChangerCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseKeyChangerCoordinator.swift; sourceTree = "<group>"; };
 		7588B6C52627351800F5D372 /* EntryFieldEditorCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntryFieldEditorCoordinator.swift; sourceTree = "<group>"; };
+		7589FDCC28B4EA2100CCC76B /* FieldCopiedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FieldCopiedView.swift; sourceTree = "<group>"; };
 		758AD0B425F58C3500864030 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/SettingsAppearanceVC.strings"; sourceTree = "<group>"; };
 		758AD0B625F58C4800864030 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/SettingsAppearanceVC.strings"; sourceTree = "<group>"; };
 		758BAD9424B5392200CC9265 /* PricingPlanPickerVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PricingPlanPickerVC.swift; sourceTree = "<group>"; };
@@ -1734,12 +1734,13 @@
 		75AC53CA2327674B000AA4FB /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/SettingsClipboardTimeoutVC.strings"; sourceTree = "<group>"; };
 		75AC53CC2327674B000AA4FB /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/PasscodeInputVC.strings"; sourceTree = "<group>"; };
 		75AC53CD2327674B000AA4FB /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/SettingsBackupTimeoutPickerVC.strings"; sourceTree = "<group>"; };
+		75AD22DB27FDE59200636D66 /* YubiKeyUSB.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YubiKeyUSB.swift; sourceTree = "<group>"; };
 		75AF191F282B0D6D00FA4BB5 /* PasswordGeneratorCells.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordGeneratorCells.swift; sourceTree = "<group>"; };
 		75AF1922282B0DBF00FA4BB5 /* InclusionCondition+extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "InclusionCondition+extensions.swift"; sourceTree = "<group>"; };
 		75AF1931282E621600FA4BB5 /* PasswordGeneratorLengthCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordGeneratorLengthCell.swift; sourceTree = "<group>"; };
 		75B24DB921C3CADB003C9486 /* EntryFinderVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntryFinderVC.swift; sourceTree = "<group>"; };
 		75B24DD421C523AE003C9486 /* SearchHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchHelper.swift; sourceTree = "<group>"; };
-		75B38C81233E5B7C006BDEFC /* KeePassiumPro.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = KeePassiumPro.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		75B38C81233E5B7C006BDEFC /* KeePassium Pro.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "KeePassium Pro.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		75B3B7BB20EABD9D007E8FA9 /* PlaceholderVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceholderVC.swift; sourceTree = "<group>"; };
 		75B5FB7620D53EA700D402D9 /* EntryFieldViewerVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntryFieldViewerVC.swift; sourceTree = "<group>"; };
 		75B5FB7820D6101100D402D9 /* ItemCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemCategory.swift; sourceTree = "<group>"; };
@@ -1811,7 +1812,7 @@
 		75D7614E262DDE0B00B1DE7F /* AboutCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutCoordinator.swift; sourceTree = "<group>"; };
 		75D76153262E1E9000B1DE7F /* SettingsCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsCoordinator.swift; sourceTree = "<group>"; };
 		75D76158262ED2E200B1DE7F /* Coordinator+premium.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Coordinator+premium.swift"; sourceTree = "<group>"; };
-		75D7DFBE233E5E310029AD87 /* KeePassiumPro AutoFill.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "KeePassiumPro AutoFill.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		75D7DFBE233E5E310029AD87 /* KeePassium Pro AutoFill.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "KeePassium Pro AutoFill.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
 		75D9913926CEC8E400823331 /* SyncConflictAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncConflictAlert.swift; sourceTree = "<group>"; };
 		75D9913C26CEEDC800823331 /* SyncConflictAlert.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = SyncConflictAlert.storyboard; sourceTree = "<group>"; };
 		75D99DE8269CED7D00D0E9D7 /* NSLayoutContraint+extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSLayoutContraint+extensions.swift"; sourceTree = "<group>"; };
@@ -2261,8 +2262,8 @@
 			children = (
 				754BF07B2082A6BD00E3A292 /* KeePassium.app */,
 				750CFBC721BA9ACD00E62B09 /* KeePassium AutoFill.appex */,
-				75B38C81233E5B7C006BDEFC /* KeePassiumPro.app */,
-				75D7DFBE233E5E310029AD87 /* KeePassiumPro AutoFill.appex */,
+				75B38C81233E5B7C006BDEFC /* KeePassium Pro.app */,
+				75D7DFBE233E5E310029AD87 /* KeePassium Pro AutoFill.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -2419,6 +2420,7 @@
 				751E0D0F2309AF400088BB10 /* EntryFileViewerVC.storyboard */,
 				75C94C6020B4BAC4004FA29D /* EntryHistoryViewerVC.swift */,
 				751E0D122309AF4C0088BB10 /* EntryHistoryViewerVC.storyboard */,
+				7589FDCC28B4EA2100CCC76B /* FieldCopiedView.swift */,
 			);
 			path = entry;
 			sourceTree = "<group>";
@@ -2493,6 +2495,7 @@
 		757ADC4323A1045C00D708D2 /* challenge-response */ = {
 			isa = PBXGroup;
 			children = (
+				75AD22DA27FDE57400636D66 /* YubiKeyUSB */,
 				75F2877F245D646B00F03657 /* MFIKeyActionSheet */,
 				7558D06123CE2F3E00547621 /* ChallengeResponseManager.swift */,
 			);
@@ -2560,12 +2563,19 @@
 			path = tipbox;
 			sourceTree = "<group>";
 		};
+		75AD22DA27FDE57400636D66 /* YubiKeyUSB */ = {
+			isa = PBXGroup;
+			children = (
+				75AD22DB27FDE59200636D66 /* YubiKeyUSB.swift */,
+			);
+			path = YubiKeyUSB;
+			sourceTree = "<group>";
+		};
 		75AD9FB3212EE35300F49C23 /* views */ = {
 			isa = PBXGroup;
 			children = (
 				75BF1964283F9C50006A9826 /* AccessibleStepper.swift */,
 				75E371932108CA08002602BD /* ProgressOverlay.swift */,
-				7584B3F020DD908A0086C094 /* UITextView+border.swift */,
 				75F5CACC20BD18320056C969 /* UIView+extension.swift */,
 				7529EAEA211577EA0093B117 /* UITableViewCell+extension.swift */,
 				758BF0D720D1B1DA00897C83 /* ValidatingTextField.swift */,
@@ -2777,9 +2787,9 @@
 			productReference = 754BF07B2082A6BD00E3A292 /* KeePassium.app */;
 			productType = "com.apple.product-type.application";
 		};
-		75B38BEF233E5B7C006BDEFC /* KeePassiumPro */ = {
+		75B38BEF233E5B7C006BDEFC /* KeePassium Pro */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 75B38C7E233E5B7C006BDEFC /* Build configuration list for PBXNativeTarget "KeePassiumPro" */;
+			buildConfigurationList = 75B38C7E233E5B7C006BDEFC /* Build configuration list for PBXNativeTarget "KeePassium Pro" */;
 			buildPhases = (
 				75B38BF2233E5B7C006BDEFC /* Sources */,
 				75B38C4B233E5B7C006BDEFC /* Frameworks */,
@@ -2793,17 +2803,17 @@
 			dependencies = (
 				75530C93233E604300EC557E /* PBXTargetDependency */,
 			);
-			name = KeePassiumPro;
+			name = "KeePassium Pro";
 			packageProductDependencies = (
 				75D1C58727B4155E0079E97E /* YubiKit */,
 			);
 			productName = KeePassium;
-			productReference = 75B38C81233E5B7C006BDEFC /* KeePassiumPro.app */;
+			productReference = 75B38C81233E5B7C006BDEFC /* KeePassium Pro.app */;
 			productType = "com.apple.product-type.application";
 		};
-		75D7DF7A233E5E310029AD87 /* KeePassiumPro AutoFill */ = {
+		75D7DF7A233E5E310029AD87 /* KeePassium Pro AutoFill */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 75D7DFBB233E5E310029AD87 /* Build configuration list for PBXNativeTarget "KeePassiumPro AutoFill" */;
+			buildConfigurationList = 75D7DFBB233E5E310029AD87 /* Build configuration list for PBXNativeTarget "KeePassium Pro AutoFill" */;
 			buildPhases = (
 				75D7DF7B233E5E310029AD87 /* Sources */,
 				75D7DFA8233E5E310029AD87 /* Frameworks */,
@@ -2813,9 +2823,9 @@
 			);
 			dependencies = (
 			);
-			name = "KeePassiumPro AutoFill";
+			name = "KeePassium Pro AutoFill";
 			productName = "KeePassium AutoFill";
-			productReference = 75D7DFBE233E5E310029AD87 /* KeePassiumPro AutoFill.appex */;
+			productReference = 75D7DFBE233E5E310029AD87 /* KeePassium Pro AutoFill.appex */;
 			productType = "com.apple.product-type.app-extension";
 		};
 /* End PBXNativeTarget section */
@@ -2919,8 +2929,8 @@
 			targets = (
 				754BF07A2082A6BD00E3A292 /* KeePassium */,
 				750CFBC621BA9ACD00E62B09 /* KeePassium AutoFill */,
-				75B38BEF233E5B7C006BDEFC /* KeePassiumPro */,
-				75D7DF7A233E5E310029AD87 /* KeePassiumPro AutoFill */,
+				75B38BEF233E5B7C006BDEFC /* KeePassium Pro */,
+				75D7DF7A233E5E310029AD87 /* KeePassium Pro AutoFill */,
 			);
 		};
 /* End PBXProject section */
@@ -3257,7 +3267,6 @@
 				7572665124CB17410099B6E1 /* HelpViewerVC.swift in Sources */,
 				75BE05F325DAA4E400B34CC0 /* SupportEmailComposer.swift in Sources */,
 				7526404328455DDC0003DDFA /* PasswordGeneratorLengthCell.swift in Sources */,
-				757FB3CF21F9C51C00F016FA /* UITextView+border.swift in Sources */,
 				759BC62D2487FE5200E88111 /* URLReference+extensions.swift in Sources */,
 				7583EA8F2685D720009969E7 /* AutoFillCoordinator.swift in Sources */,
 				75BF1961283EE1B8006A9826 /* PasswordGeneratorLabel.swift in Sources */,
@@ -3357,7 +3366,6 @@
 				751A565224CCD3CD001227D6 /* AppIconPicker.swift in Sources */,
 				75AF1932282E621600FA4BB5 /* PasswordGeneratorLengthCell.swift in Sources */,
 				754BF07F2082A6BD00E3A292 /* AppDelegate.swift in Sources */,
-				7584B3F120DD908A0086C094 /* UITextView+border.swift in Sources */,
 				7579A06724F0730A00C98F24 /* AppHistoryViewerVC.swift in Sources */,
 				752ED68D2235547D00C20D3E /* SettingsDataProtectionVC.swift in Sources */,
 				751A565524CCD3FF001227D6 /* AppIconSwitcherCoordinator.swift in Sources */,
@@ -3480,6 +3488,7 @@
 				75B3B7BC20EABD9D007E8FA9 /* PlaceholderVC.swift in Sources */,
 				75D76138262CCB6A00B1DE7F /* DatabasePickerCoordinator.swift in Sources */,
 				750E15A8269C95370040D599 /* OnboardingCoordinator.swift in Sources */,
+				75AD22DC27FDE59200636D66 /* YubiKeyUSB.swift in Sources */,
 				75F11C362883625D005B3DC0 /* NetworkAccessSettingsCoordinator.swift in Sources */,
 				7578488622C165C900BBEF9A /* SettingsBackupVC.swift in Sources */,
 				7588B6C62627351800F5D372 /* EntryFieldEditorCoordinator.swift in Sources */,
@@ -3520,6 +3529,7 @@
 				7579A06A24F074D500C98F24 /* AppHistory.swift in Sources */,
 				757ADC4523A1047600D708D2 /* HardwareKeyPicker.swift in Sources */,
 				75C94C5B20B4B8C2004FA29D /* EntryViewerPagesVC.swift in Sources */,
+				7589FDCD28B4EA2100CCC76B /* FieldCopiedView.swift in Sources */,
 				7578487D22C02A9100BBEF9A /* UITableViewCell+demoEditActions.swift in Sources */,
 				758E5EF225F2E22600E06AE7 /* DatabaseSaving.swift in Sources */,
 				7527FAB3262F71CC00623849 /* DataProtectionSettingsCoordinator.swift in Sources */,
@@ -3549,7 +3559,6 @@
 				751A565324CCD3CD001227D6 /* AppIconPicker.swift in Sources */,
 				75AF1933282E621600FA4BB5 /* PasswordGeneratorLengthCell.swift in Sources */,
 				75B38BF5233E5B7C006BDEFC /* AppDelegate.swift in Sources */,
-				75B38BF6233E5B7C006BDEFC /* UITextView+border.swift in Sources */,
 				7579A06824F0730A00C98F24 /* AppHistoryViewerVC.swift in Sources */,
 				75B38BF8233E5B7C006BDEFC /* SettingsDataProtectionVC.swift in Sources */,
 				751A565624CCD3FF001227D6 /* AppIconSwitcherCoordinator.swift in Sources */,
@@ -3672,6 +3681,7 @@
 				75B38C33233E5B7C006BDEFC /* SettingsBackupVC.swift in Sources */,
 				75D76139262CCB6A00B1DE7F /* DatabasePickerCoordinator.swift in Sources */,
 				750E15A9269C95370040D599 /* OnboardingCoordinator.swift in Sources */,
+				75AD22DD27FDE59200636D66 /* YubiKeyUSB.swift in Sources */,
 				75F11C372883625D005B3DC0 /* NetworkAccessSettingsCoordinator.swift in Sources */,
 				75BE064125DB1A1A00B34CC0 /* DiagnosticsViewerVC.swift in Sources */,
 				7588B6C72627351800F5D372 /* EntryFieldEditorCoordinator.swift in Sources */,
@@ -3712,6 +3722,7 @@
 				757ADC4723A1047600D708D2 /* HardwareKeyPicker.swift in Sources */,
 				75267D0025FF75E300A1CC95 /* ContextualAction.swift in Sources */,
 				75B38C46233E5B7C006BDEFC /* EntryViewerPagesVC.swift in Sources */,
+				7589FDCE28B4EA2100CCC76B /* FieldCopiedView.swift in Sources */,
 				75B38C47233E5B7C006BDEFC /* UITableViewCell+demoEditActions.swift in Sources */,
 				758E5EF325F2E22600E06AE7 /* DatabaseSaving.swift in Sources */,
 				7527FAB4262F71CC00623849 /* DataProtectionSettingsCoordinator.swift in Sources */,
@@ -3758,7 +3769,6 @@
 				7572665324CB17410099B6E1 /* HelpViewerVC.swift in Sources */,
 				75BE05F625DAA4E500B34CC0 /* SupportEmailComposer.swift in Sources */,
 				7526404428455DDC0003DDFA /* PasswordGeneratorLengthCell.swift in Sources */,
-				75D7DF82233E5E310029AD87 /* UITextView+border.swift in Sources */,
 				759BC62F2487FE5200E88111 /* URLReference+extensions.swift in Sources */,
 				7583EA902685D720009969E7 /* AutoFillCoordinator.swift in Sources */,
 				75BF1963283EE1B8006A9826 /* PasswordGeneratorLabel.swift in Sources */,
@@ -3858,7 +3868,7 @@
 		};
 		75530C93233E604300EC557E /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 75D7DF7A233E5E310029AD87 /* KeePassiumPro AutoFill */;
+			target = 75D7DF7A233E5E310029AD87 /* KeePassium Pro AutoFill */;
 			targetProxy = 75530C92233E604300EC557E /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -4998,7 +5008,7 @@
 				CODE_SIGN_ENTITLEMENTS = "KeePassium AutoFill/KeePassium_AutoFill.entitlements";
 				"CODE_SIGN_ENTITLEMENTS[sdk=macosx*]" = "KeePassium AutoFill/KeePassium_AutoFill-macOS.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 115;
+				CURRENT_PROJECT_VERSION = 116;
 				DEVELOPMENT_TEAM = 84W4PHXS24;
 				INFOPLIST_FILE = "KeePassium AutoFill/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
@@ -5030,7 +5040,7 @@
 				CODE_SIGN_ENTITLEMENTS = "KeePassium AutoFill/KeePassium_AutoFill.entitlements";
 				"CODE_SIGN_ENTITLEMENTS[sdk=macosx*]" = "KeePassium AutoFill/KeePassium_AutoFill-macOS.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 115;
+				CURRENT_PROJECT_VERSION = 116;
 				DEVELOPMENT_TEAM = 84W4PHXS24;
 				INFOPLIST_FILE = "KeePassium AutoFill/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
@@ -5193,7 +5203,7 @@
 				CODE_SIGN_ENTITLEMENTS = KeePassium/KeePassium.entitlements;
 				"CODE_SIGN_ENTITLEMENTS[sdk=macosx*]" = "KeePassium/KeePassium-macOS.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 115;
+				CURRENT_PROJECT_VERSION = 116;
 				DEVELOPMENT_TEAM = 84W4PHXS24;
 				"ENABLE_HARDENED_RUNTIME[sdk=macosx*]" = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -5228,7 +5238,7 @@
 				CODE_SIGN_ENTITLEMENTS = KeePassium/KeePassium.entitlements;
 				"CODE_SIGN_ENTITLEMENTS[sdk=macosx*]" = "KeePassium/KeePassium-macOS.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 115;
+				CURRENT_PROJECT_VERSION = 116;
 				DEVELOPMENT_TEAM = 84W4PHXS24;
 				"ENABLE_HARDENED_RUNTIME[sdk=macosx*]" = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -5263,7 +5273,7 @@
 				CODE_SIGN_ENTITLEMENTS = KeePassium/KeePassium.entitlements;
 				"CODE_SIGN_ENTITLEMENTS[sdk=macosx*]" = "KeePassium/KeePassium-macOS.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 115;
+				CURRENT_PROJECT_VERSION = 116;
 				DEVELOPMENT_TEAM = 84W4PHXS24;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_OPTIMIZATION_LEVEL = fast;
@@ -5296,7 +5306,7 @@
 				CODE_SIGN_ENTITLEMENTS = KeePassium/KeePassium.entitlements;
 				"CODE_SIGN_ENTITLEMENTS[sdk=macosx*]" = "KeePassium/KeePassium-macOS.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 115;
+				CURRENT_PROJECT_VERSION = 116;
 				DEVELOPMENT_TEAM = 84W4PHXS24;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_OPTIMIZATION_LEVEL = fast;
@@ -5329,7 +5339,7 @@
 				CODE_SIGN_ENTITLEMENTS = "KeePassium AutoFill/KeePassium_AutoFill.entitlements";
 				"CODE_SIGN_ENTITLEMENTS[sdk=macosx*]" = "KeePassium AutoFill/KeePassium_AutoFill-macOS.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 115;
+				CURRENT_PROJECT_VERSION = 116;
 				DEVELOPMENT_TEAM = 84W4PHXS24;
 				INFOPLIST_FILE = "$(SRCROOT)/KeePassium AutoFill/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
@@ -5361,7 +5371,7 @@
 				CODE_SIGN_ENTITLEMENTS = "KeePassium AutoFill/KeePassium_AutoFill.entitlements";
 				"CODE_SIGN_ENTITLEMENTS[sdk=macosx*]" = "KeePassium AutoFill/KeePassium_AutoFill-macOS.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 115;
+				CURRENT_PROJECT_VERSION = 116;
 				DEVELOPMENT_TEAM = 84W4PHXS24;
 				INFOPLIST_FILE = "$(SRCROOT)/KeePassium AutoFill/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
@@ -5414,7 +5424,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		75B38C7E233E5B7C006BDEFC /* Build configuration list for PBXNativeTarget "KeePassiumPro" */ = {
+		75B38C7E233E5B7C006BDEFC /* Build configuration list for PBXNativeTarget "KeePassium Pro" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				75B38C7F233E5B7C006BDEFC /* Debug */,
@@ -5423,7 +5433,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		75D7DFBB233E5E310029AD87 /* Build configuration list for PBXNativeTarget "KeePassiumPro AutoFill" */ = {
+		75D7DFBB233E5E310029AD87 /* Build configuration list for PBXNativeTarget "KeePassium Pro AutoFill" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				75D7DFBC233E5E310029AD87 /* Debug */,

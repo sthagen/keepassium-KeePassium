@@ -62,6 +62,7 @@ class EditableFieldCellFactory {
 
 internal protocol EditableFieldCellDelegate: AnyObject {
     func didChangeField(_ field: EditableField, in cell: EditableFieldCell)
+    func didPressDelete(_ field: EditableField, in cell: EditableFieldCell)
     func didPressReturn(for field: EditableField, in cell: EditableFieldCell)
     func didPressRandomize(for textInput: TextInputView, viaMenu: Bool, in cell: EditableFieldCell)
     func didPressButton(
@@ -363,9 +364,6 @@ class EntryFieldEditorMultiLineCell:
         textView.validityDelegate = self
         textView.delegate = self
         textView.addRandomizerEditMenu()
-        DispatchQueue.main.async {
-            self.textView.setupBorder()
-        }
     }
 
     override func becomeFirstResponder() -> Bool {
@@ -406,7 +404,8 @@ class EntryFieldEditorCustomFieldCell:
     @IBOutlet private weak var nameTextField: ValidatingTextField!
     @IBOutlet private weak var valueTextView: ValidatingTextView!
     @IBOutlet private weak var protectionSwitch: UISwitch!
-
+    @IBOutlet private weak var deleteButton: UIButton!
+    
     weak var delegate: EditableFieldCellDelegate?
     weak var field: EditableField? {
         didSet {
@@ -421,11 +420,14 @@ class EntryFieldEditorCustomFieldCell:
         
         nameTextField.font = UIFont.preferredFont(forTextStyle: .subheadline)
         nameTextField.adjustsFontForContentSizeCategory = true
+        
         valueTextView.font = UIFont.monospaceFont(forTextStyle: .body)
         valueTextView.adjustsFontForContentSizeCategory = true
         
         protectionSwitch.addTarget(self, action: #selector(protectionDidChange), for: .valueChanged)
-        
+        deleteButton.accessibilityLabel = LString.actionDelete
+        deleteButton.addTarget(self, action: #selector(didPressDelete), for: .touchUpInside)
+
         nameTextField.validityDelegate = self
         nameTextField.delegate = self
         nameTextField.addRandomizerEditMenu()
@@ -434,9 +436,6 @@ class EntryFieldEditorCustomFieldCell:
         valueTextView.delegate = self
         valueTextView.addRandomizerEditMenu()
 
-        DispatchQueue.main.async {
-            self.valueTextView.setupBorder()
-        }
     }
 
     override func becomeFirstResponder() -> Bool {
@@ -482,9 +481,16 @@ class EntryFieldEditorCustomFieldCell:
         delegate?.didPressRandomize(for: textInput, viaMenu: true, in: self)
     }
     
-    @objc func protectionDidChange() {
+    @objc
+    private func protectionDidChange() {
         guard let field = field else { return }
         field.isProtected = protectionSwitch.isOn
         delegate?.didChangeField(field, in: self)
+    }
+    
+    @objc
+    private func didPressDelete() {
+        guard let field = field else { return }
+        delegate?.didPressDelete(field, in: self)
     }
 }
