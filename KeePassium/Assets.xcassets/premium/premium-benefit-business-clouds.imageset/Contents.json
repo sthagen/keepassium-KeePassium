@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "appicon-calc_iPhoneSettings_29.png",
+      "filename" : "Stack 2.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "appicon-calc_iPhoneSettings_29@2x.png",
+      "filename" : "Stack 1.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "appicon-calc_iPhoneSettings_29@3x.png",
+      "filename" : "Stack.png",
       "idiom" : "universal",
       "scale" : "3x"
     }
@@ -21,6 +21,6 @@
     "version" : 1
   },
   "properties" : {
-    "template-rendering-intent" : "original"
+    "template-rendering-intent" : "template"
   }
 }

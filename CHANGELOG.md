@@ -1,5 +1,35 @@
 #CHANGELOG
 
+## [1.38.119] - 2022-10-26
+
+### Added
+
+- In-app support for OneDrive sync (free for OneDrive Personal; SharePoint and OneDrive for Business require premium) (#256, #248, #80, #55)
+
+### Improved
+
+- Added 'Empty Recycle Bin' context menu for the corresponding group [thanks, YJ]
+
+
+## [1.37.118] - 2022-10-07
+
+### Removed
+
+- Deleted two custom app icons (calc, info), due to Apple's demand.
+
+### Improved
+
+- macOS: On launch, show Touch ID prompt automatically [thanks, YJ]
+- macOS: In app passcode screen, pressing Esc will show Touch ID prompt (closes #253) [thanks, moenodedev]
+- Updated IT and PT-BR translations
+
+### Fixed
+
+- macOS: WebDAV connection could not find the server
+- Excluded expired entries from search (closes #252) [thanks, cryptosteve2]
+- Minor UI fixes here and there
+
+
 ## [1.36.116] - 2022-09-03
 
 ### Added

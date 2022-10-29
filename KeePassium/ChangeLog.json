@@ -1,6 +1,54 @@
 {
     "sections": [
         {
+            "version": "1.38",
+            "releaseDate": "2022-10-26T00:00:00Z",
+            "items": [
+                {
+                    "title": "🧩 Added: In-app support for OneDrive sync (free for OneDrive Personal; SharePoint and OneDrive for Business require premium)",
+                    "type": 2
+                },
+                {
+                    "title": "🛠 Improved: Added 'Empty Recycle Bin' context menu for the corresponding group [thanks, YJ]",
+                    "type": 1
+                }
+            ]
+        },
+        {
+            "version": "1.37",
+            "releaseDate": "2022-10-07T00:00:00Z",
+            "items": [
+                {
+                    "title": "❌ Deleted two custom app icons (calc, info), due to Apple's demand.",
+                    "type": 1
+                },
+                {
+                    "title": "🛠 Improved: macOS: On launch, show Touch ID prompt automatically [thanks, YJ]",
+                    "type": 1
+                },
+                {
+                    "title": "🛠 Improved: macOS: In app passcode screen, pressing Esc will show Touch ID prompt (closes #253) [thanks, moenodedev]",
+                    "type": 1
+                },
+                {
+                    "title": "🛠 Improved: Updated IT and PT-BR translations",
+                    "type": 1
+                },
+                {
+                    "title": "🐞 Fixed: macOS: WebDAV connection could not find the server",
+                    "type": 1
+                },
+                {
+                    "title": "🐞 Fixed: Excluded expired entries from search (closes #252) [thanks, cryptosteve2]",
+                    "type": 1
+                },
+                {
+                    "title": "🐞 Fixed: Minor UI fixes here and there",
+                    "type": 1
+                }
+            ]
+        },
+        {
             "version": "1.36",
             "releaseDate": "2022-09-03T00:00:00Z",
             "items": [
