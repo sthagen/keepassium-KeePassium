@@ -684,7 +684,13 @@ extension LString {
         bundle: Bundle.framework,
         value: "Open Database",
         comment: "Action/button")
+    public static let tryRemoteConnection = NSLocalizedString(
+        "[Database/RecommendRemote/callToAction]",
+        bundle: Bundle.framework,
+        value: "Try connecting to your remote storage directly from KeePassium.",
+        comment: "Suggested solution/call to action when intermediate sync app fails.")
 
+    
     public static let masterKeySuccessfullyChanged = NSLocalizedString(
         "[Database/MasterKey/changed] Master key successfully changed",
         bundle: Bundle.framework,
@@ -755,6 +761,20 @@ extension LString {
         comment: "Message to confirm user intentions"
     )
 
+    public static let otpCodeCopyToClipboardDemo = "Demo"
+    public static let otpCodeCopiedToClipboard = NSLocalizedString(
+        "[OTP/CopiedToClipboard/title]",
+        bundle: Bundle.framework,
+        value: "One-time password copied to clipboard",
+        comment: "Notification next to the OTP code which was copied to clipboard"
+    )
+    public static let otpCodeHereItIs = NSLocalizedString(
+        "[OTP/Title/sentenceCase]",
+        bundle: Bundle.framework,
+        value: "One-time password",
+        comment: "Description of an OTP code; sentence case."
+    )
+    
     
     public static let itemIconPickerStandardIcons = NSLocalizedString(
         "[ItemIconPicker/StandardIcons]",

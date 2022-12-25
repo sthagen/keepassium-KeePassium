@@ -38,6 +38,7 @@ final class MainCoordinator: Coordinator {
     private var databaseViewerCoordinator: DatabaseViewerCoordinator?
 
     private let watchdog: Watchdog
+    private let localNotifications = LocalNotifications()
     private let mainWindow: UIWindow
     fileprivate var appCoverWindow: UIWindow?
     fileprivate var appLockWindow: UIWindow?
@@ -45,7 +46,7 @@ final class MainCoordinator: Coordinator {
     fileprivate var isBiometricAuthShown = false
     private var isInitialAppLock = true
     
-    fileprivate let biometricAuthReuseDuration = TimeInterval(2.0)
+    fileprivate let biometricAuthReuseDuration = TimeInterval(3.0)
     fileprivate var lastSuccessfulBiometricAuthTime: Date = .distantPast
     
     private var selectedDatabaseRef: URLReference?
@@ -65,6 +66,8 @@ final class MainCoordinator: Coordinator {
 
         rootSplitVC.viewControllers = [primaryNavVC, placeholderNavVC]
 
+        UNUserNotificationCenter.current().delegate = localNotifications
+        
         watchdog = Watchdog.shared
         watchdog.delegate = self
         
@@ -627,6 +630,17 @@ extension MainCoordinator: OnboardingCoordinatorDelegate {
             )
         })
     }
+    
+    func didPressConnectToServer(in coordinator: OnboardingCoordinator) {
+        Diag.info("Network access permission implied by user action")
+        Settings.current.isNetworkAccessAllowed = true
+        coordinator.dismiss(completion: { [weak self] in
+            guard let self = self else { return }
+            self.databasePickerCoordinator.addRemoteDatabase(
+                presenter: self.rootSplitVC
+            )
+        })
+    }
 }
 
 extension MainCoordinator: FileKeeperDelegate {
@@ -712,7 +726,7 @@ extension MainCoordinator: DatabaseUnlockerCoordinatorDelegate {
         for fileRef: URLReference,
         in coordinator: DatabaseUnlockerCoordinator
     ) -> UnreachableFileFallbackStrategy {
-        return DatabaseSettingsManager.shared.getFallbackStrategy(fileRef)
+        return DatabaseSettingsManager.shared.getFallbackStrategy(fileRef, forAutoFill: false)
     }
     
     func didUnlockDatabase(
@@ -736,6 +750,26 @@ extension MainCoordinator: DatabaseUnlockerCoordinatorDelegate {
             })
         } else {
             databasePickerCoordinator.addExistingDatabase(presenter: rootSplitVC)
+        }
+    }
+    
+    func didPressAddRemoteDatabase(
+        connectionType: RemoteConnectionType?,
+        in coordinator: DatabaseUnlockerCoordinator
+    ) {
+        if rootSplitVC.isCollapsed {
+            primaryRouter.pop(animated: true, completion: { [weak self] in
+                guard let self = self else { return }
+                self.databasePickerCoordinator.addRemoteDatabase(
+                    connectionType: connectionType,
+                    presenter: self.rootSplitVC
+                )
+            })
+        } else {
+            databasePickerCoordinator.addRemoteDatabase(
+                connectionType: connectionType,
+                presenter: rootSplitVC
+            )
         }
     }
 }
@@ -770,6 +804,19 @@ extension MainCoordinator: DatabaseViewerCoordinatorDelegate {
 
         if !self.rootSplitVC.isCollapsed {
             self.databasePickerCoordinator.selectDatabase(self.selectedDatabaseRef, animated: false)
+        }
+    }
+    
+    func didPressReaddDatabase(in coordinator: DatabaseViewerCoordinator) {
+        databaseViewerCoordinator?.closeDatabase(
+            shouldLock: false,
+            reason: .userRequest,
+            animated: true
+        ) { [weak self] in
+            guard let self = self else { return }
+            self.databasePickerCoordinator.addExistingDatabase(
+                presenter: self.rootSplitVC
+            )
         }
     }
 }

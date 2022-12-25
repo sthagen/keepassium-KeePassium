@@ -37,6 +37,10 @@ protocol DatabaseUnlockerCoordinatorDelegate: AnyObject {
         in coordinator: DatabaseUnlockerCoordinator
     )
     func didPressReinstateDatabase(_ fileRef: URLReference, in coordinator: DatabaseUnlockerCoordinator)
+    func didPressAddRemoteDatabase(
+        connectionType: RemoteConnectionType?,
+        in coordinator: DatabaseUnlockerCoordinator
+    )
 }
 
 final class DatabaseUnlockerCoordinator: Coordinator, Refreshable {
@@ -318,7 +322,13 @@ extension DatabaseUnlockerCoordinator {
         if databaseSettingsManager.isReadOnly(currentDatabaseRef) {
             databaseStatus.insert(.readOnly)
         }
-        let fallbackTimeout = databaseSettingsManager.getFallbackTimeout(currentDatabaseRef)
+        #if AUTOFILL_EXT
+        let fallbackTimeout = databaseSettingsManager
+            .getFallbackTimeout(currentDatabaseRef, forAutoFill: true)
+        #elseif MAIN_APP
+        let fallbackTimeout = databaseSettingsManager
+            .getFallbackTimeout(currentDatabaseRef, forAutoFill: false)
+        #endif
 
         databaseLoader = DatabaseLoader(
             dbRef: currentDatabaseRef,
@@ -352,6 +362,26 @@ extension DatabaseUnlockerCoordinator {
                     guard let self = self else { return }
                     Diag.debug("Will reinstate database")
                     self.delegate?.didPressReinstateDatabase(self.databaseRef, in: self)
+                }
+            )
+        )
+    }
+    
+    private func showIntuneProtectionError() {
+        let message = LString.Error.databaseProtectedByIntune + "\n\n" + LString.tryRemoteConnection
+        databaseUnlockerVC.showErrorMessage(
+            message,
+            reason: nil,
+            haptics: .error,
+            action: ToastAction(
+                title: LString.actionConnectToServer,
+                handler: { [weak self] in
+                    guard let self = self else { return }
+                    Diag.debug("Will add remote database")
+                    self.delegate?.didPressAddRemoteDatabase(
+                        connectionType: nil,
+                        in: self
+                    )
                 }
             )
         )
@@ -503,6 +533,19 @@ extension DatabaseUnlockerCoordinator: DatabaseLoaderDelegate {
                 databaseUnlockerVC.hideProgressView(animated: true)
                 showDatabaseError(error.localizedDescription, reason: error.failureReason)
                 databaseUnlockerVC.maybeFocusOnPassword()
+            case .reAddDatabase:
+                databaseUnlockerVC.hideProgressView(animated: true)
+                showDatabaseError(error.localizedDescription, reason: error.failureReason)
+                delegate?.didPressReinstateDatabase(databaseRef, in: self)
+            }
+        case .wrongFormat(let fileFormat):
+            databaseUnlockerVC.refresh()
+            databaseUnlockerVC.hideProgressView(animated: true)
+            switch (fileFormat) {
+            case .intuneProtectedFile:
+                showIntuneProtectionError()
+            default:
+                showDatabaseError(error.localizedDescription, reason: error.failureReason)
             }
         default:
             databaseUnlockerVC.refresh()

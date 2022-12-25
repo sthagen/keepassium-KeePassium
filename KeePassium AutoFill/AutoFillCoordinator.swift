@@ -38,6 +38,7 @@ class AutoFillCoordinator: NSObject, Coordinator {
     fileprivate var isBiometricAuthShown = false
     fileprivate var isPasscodeInputShown = false
     
+    private let localNotifications = LocalNotifications()
     
     init(
         rootController: CredentialProviderViewController,
@@ -63,6 +64,7 @@ class AutoFillCoordinator: NSObject, Coordinator {
         Diag.info(AppInfo.description)
 
         watchdog.delegate = self
+        UNUserNotificationCenter.current().delegate = localNotifications
     }
     
     deinit {
@@ -144,10 +146,22 @@ class AutoFillCoordinator: NSObject, Coordinator {
             let totpGenerator = TOTPGeneratorFactory.makeGenerator(for: entry)
         {
             let totpString = totpGenerator.generate()
-            Clipboard.general.insert(
+            let isCopied = Clipboard.general.insert(
                 text: totpString,
                 timeout: TimeInterval(settings.clipboardTimeout.seconds)
             )
+            let formattedOTP = OTPCodeFormatter.decorate(otpCode: totpString)
+            if isCopied {
+                LocalNotifications.showTOTPNotification(
+                    title: formattedOTP,
+                    body: LString.otpCodeCopiedToClipboard
+                )
+            } else {
+                LocalNotifications.showTOTPNotification(
+                    title: formattedOTP,
+                    body: LString.otpCodeHereItIs
+                )
+            }
         }
         
         let passwordCredential = ASPasswordCredential(
@@ -292,7 +306,7 @@ extension AutoFillCoordinator: DatabaseLoaderDelegate {
         }
         log.debug("Got stored master key for \(dbRef.visibleFileName, privacy: .private)")
         
-        let timeout = databaseSettingsManager.getFallbackTimeout(dbRef)
+        let timeout = databaseSettingsManager.getFallbackTimeout(dbRef, forAutoFill: true)
         
         assert(self.quickTypeDatabaseLoader == nil)
         quickTypeDatabaseLoader = DatabaseLoader(
@@ -605,7 +619,7 @@ extension AutoFillCoordinator: DatabaseUnlockerCoordinatorDelegate {
         for fileRef: URLReference,
         in coordinator: DatabaseUnlockerCoordinator
     ) -> UnreachableFileFallbackStrategy {
-        return DatabaseSettingsManager.shared.getFallbackStrategy(fileRef)
+        return DatabaseSettingsManager.shared.getFallbackStrategy(fileRef, forAutoFill: true)
     }
 
     func didUnlockDatabase(
@@ -631,6 +645,19 @@ extension AutoFillCoordinator: DatabaseUnlockerCoordinatorDelegate {
         router.pop(animated: true, completion: { [weak self] in
             guard let self = self else { return }
             self.databasePickerCoordinator.addExistingDatabase(
+                presenter: self.router.navigationController
+            )
+        })
+    }
+    
+    func didPressAddRemoteDatabase(
+        connectionType: RemoteConnectionType?,
+        in coordinator: DatabaseUnlockerCoordinator
+    ) {
+        router.pop(animated: true, completion: { [weak self] in
+            guard let self = self else { return }
+            self.databasePickerCoordinator.addRemoteDatabase(
+                connectionType: connectionType,
                 presenter: self.router.navigationController
             )
         })

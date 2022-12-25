@@ -1,5 +1,60 @@
 #CHANGELOG
 
+## [1.40.123] - 2022-12-23
+
+### Fixed 
+
+- Connection to personal OneDrive accounts should not require premium (closes #270) [thanks, Rune]
+- "What's new" section appeared empty
+
+
+## [1.39.122] - 2022-12-21
+
+### Fixed 
+
+- 'Unexpected server response format' after signing in to OneDrive (fixes #268) [thanks, everyone]
+- Repeating Face ID in AutoFill on some devices with iOS 16.2 (closes #266) [thanks, everyone]
+
+
+## [1.38.121] - 2022-12-19
+
+### Added
+
+- Database settings: Separate fallback settings for AutoFill [thanks, Leonid] 
+- Database settings: Option to re-add the DB as a fallback strategy [thanks, Kevin]
+- Provisional business license check
+
+### Improved
+
+- Updated all translations [thanks, everyone]
+
+
+## [1.38.120] - 2022-12-16
+
+### Added
+
+- Option to search in passwords (closes #196) [thanks, everyone]
+- AutoFill can notify you about one-time password in the clipboard. To activate, open app settings → AutoFill Passwords → Copy OTP to Clipboard → turn it off, then back on. (fixes #242) [thanks, ixs]
+- Support for digest authentication for WebDAV connections [thanks, Andreas]
+
+### Improved
+
+- Preserve the .latest backup with a timestamp before overwriting it (only if changed) [thanks, Vadim]
+- When opening a non-DB file as a database, recognize the most common incorrect file types
+- Added 'Connect to Server' action to onboarding
+- Updated all translations [thanks, everyone]
+
+### Fixed
+
+- Face ID loop on some devices with iOS 16.2 (closes #266) [thanks, everyone]
+- Replaced some toast notifications with more persistent announcements (fixes #250) [thanks, psifertex]
+- App name was missing in macOS Activity Monitor and support emails [thanks, Felix]
+- macOS: improved logging of YubiKey-related errors [thanks, u/Historical_Pie_7716]
+- Added 'Show Password' button for WebDAV credentials [thanks, Andreas]
+- Added a dedicated app URL scheme for the Pro edition
+- Minor UI fixes here and there
+
+
 ## [1.38.119] - 2022-10-26
 
 ### Added
