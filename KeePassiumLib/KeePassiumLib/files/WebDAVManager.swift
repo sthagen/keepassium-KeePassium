@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2022 Andrei Popleteev <info@keepassium.com>
+//  Copyright © 2018–2023 Andrei Popleteev <info@keepassium.com>
 //
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -40,7 +40,7 @@ public final class WebDAVManager: NSObject {
     public func getFileInfo(
         url: URL,
         credential: NetworkCredential,
-        timeout: TimeInterval,
+        timeout: Timeout,
         completionQueue: OperationQueue? = nil,
         completion: @escaping (Result<FileInfo, FileAccessError>) -> Void
     ) {
@@ -64,7 +64,7 @@ public final class WebDAVManager: NSObject {
     public func downloadFile(
         url: URL,
         credential: NetworkCredential,
-        timeout: TimeInterval,
+        timeout: Timeout,
         completionQueue: OperationQueue? = nil,
         completion: @escaping (Result<ByteArray, FileAccessError>) -> Void
     ) {
@@ -89,7 +89,7 @@ public final class WebDAVManager: NSObject {
         data: ByteArray,
         url: URL,
         credential: NetworkCredential,
-        timeout: TimeInterval,
+        timeout: Timeout,
         completionQueue: OperationQueue? = nil,
         completion: @escaping (Result<Void, FileAccessError>) -> Void
     ) {

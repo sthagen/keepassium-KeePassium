@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2022 Andrei Popleteev <info@keepassium.com>
+//  Copyright © 2018–2023 Andrei Popleteev <info@keepassium.com>
 //
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -753,21 +753,18 @@ extension MainCoordinator: DatabaseUnlockerCoordinatorDelegate {
         }
     }
     
-    func didPressAddRemoteDatabase(
-        connectionType: RemoteConnectionType?,
-        in coordinator: DatabaseUnlockerCoordinator
-    ) {
+    func didPressAddRemoteDatabase(in coordinator: DatabaseUnlockerCoordinator) {
         if rootSplitVC.isCollapsed {
             primaryRouter.pop(animated: true, completion: { [weak self] in
                 guard let self = self else { return }
-                self.databasePickerCoordinator.addRemoteDatabase(
-                    connectionType: connectionType,
+                self.databasePickerCoordinator.maybeAddRemoteDatabase(
+                    bypassPaywall: true,
                     presenter: self.rootSplitVC
                 )
             })
         } else {
-            databasePickerCoordinator.addRemoteDatabase(
-                connectionType: connectionType,
+            databasePickerCoordinator.maybeAddRemoteDatabase(
+                bypassPaywall: true,
                 presenter: rootSplitVC
             )
         }

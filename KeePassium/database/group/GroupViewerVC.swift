@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2022 Andrei Popleteev <info@keepassium.com>
+//  Copyright © 2018–2023 Andrei Popleteev <info@keepassium.com>
 // 
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -402,6 +402,9 @@ final class GroupViewerVC:
         cell.iconView?.image = UIImage.kpIcon(forEntry: entry)
         
         cell.totpGenerator = TOTPGeneratorFactory.makeGenerator(for: entry)
+        cell.otpCopiedHandler = { [weak self] in
+            self?.showNotification(LString.otpCodeCopiedToClipboard)
+        }
         
         cell.hasAttachments = entry.attachments.count > 0
         cell.accessibilityCustomActions = getAccessibilityActions(for: entry)

@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2022 Andrei Popleteev <info@keepassium.com>
+//  Copyright © 2018–2023 Andrei Popleteev <info@keepassium.com>
 // 
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -240,5 +240,18 @@ public extension URL {
     private static func posixError(_ err: Int32) -> NSError {
         return NSError(domain: NSPOSIXErrorDomain, code: Int(err),
                        userInfo: [NSLocalizedDescriptionKey: String(cString: strerror(err))])
+    }
+}
+
+extension URL {
+    public var queryItems: [String: String] {
+        guard let components = URLComponents(url: self, resolvingAgainstBaseURL: true),
+              let queryItems = components.queryItems
+        else {
+            return [:]
+        }
+        return queryItems.reduce(into: [String: String]()) { (result, item) in
+            result[item.name] = item.value
+        }
     }
 }

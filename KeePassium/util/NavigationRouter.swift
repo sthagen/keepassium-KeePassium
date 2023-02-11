@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2022 Andrei Popleteev <info@keepassium.com>
+//  Copyright © 2018–2023 Andrei Popleteev <info@keepassium.com>
 //
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -22,6 +22,43 @@ final public class RouterNavigationController: UINavigationController {
             action: #selector(didPressEscapeKey)
         )
         return [escapeCommand] + (super.keyCommands ?? [])
+    }
+    
+    public init() {
+        super.init(navigationBarClass: nil, toolbarClass: nil)
+        setupBarAppearance()
+    }
+    
+    public override init(rootViewController: UIViewController) {
+        super.init(rootViewController: rootViewController)
+        setupBarAppearance()
+    }
+    
+    public required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        setupBarAppearance()
+    }
+    
+    public override func awakeFromNib() {
+        super.awakeFromNib()
+        setupBarAppearance()
+    }
+    
+    private func setupBarAppearance() {
+        guard #available(iOS 15.0, *) else {
+            return
+        }
+        let navBarAppearance = UINavigationBarAppearance()
+        navBarAppearance.configureWithDefaultBackground()
+        navBarAppearance.backgroundColor = .systemBackground
+        navigationBar.standardAppearance = navBarAppearance
+        navigationBar.scrollEdgeAppearance = navBarAppearance
+        
+        let toolbarAppearance = UIToolbarAppearance()
+        toolbarAppearance.configureWithDefaultBackground()
+        toolbarAppearance.backgroundColor = .systemBackground
+        toolbar.standardAppearance = toolbarAppearance
+        toolbar.scrollEdgeAppearance = toolbarAppearance
     }
     
     @objc

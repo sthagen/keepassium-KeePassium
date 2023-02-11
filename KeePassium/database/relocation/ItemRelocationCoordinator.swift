@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2022 Andrei Popleteev <info@keepassium.com>
+//  Copyright © 2018–2023 Andrei Popleteev <info@keepassium.com>
 //
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -531,10 +531,7 @@ extension ItemRelocationCoordinator: DatabaseUnlockerCoordinatorDelegate {
         })
     }
     
-    func didPressAddRemoteDatabase(
-        connectionType: RemoteConnectionType?,
-        in coordinator: DatabaseUnlockerCoordinator
-    ) {
+    func didPressAddRemoteDatabase(in coordinator: DatabaseUnlockerCoordinator) {
         guard let databasePickerCoordinator = databasePickerCoordinator else {
             Diag.warning("No database picker found, cancelling")
             assertionFailure()
@@ -543,8 +540,8 @@ extension ItemRelocationCoordinator: DatabaseUnlockerCoordinatorDelegate {
         
         router.pop(animated: true, completion: { [weak self] in
             guard let self = self else { return }
-            databasePickerCoordinator.addRemoteDatabase(
-                connectionType: connectionType,
+            databasePickerCoordinator.maybeAddRemoteDatabase(
+                bypassPaywall: true,
                 presenter: self.router.navigationController
             )
         })

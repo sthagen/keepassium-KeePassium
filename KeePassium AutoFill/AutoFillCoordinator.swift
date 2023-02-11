@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2022 Andrei Popleteev <info@keepassium.com>
+//  Copyright © 2018–2023 Andrei Popleteev <info@keepassium.com>
 //
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -241,6 +241,7 @@ extension AutoFillCoordinator {
     ) {
         let entryFinderCoordinator = EntryFinderCoordinator(
             router: router,
+            originalRef: fileRef,
             databaseFile: databaseFile,
             loadingWarnings: warnings,
             serviceIdentifiers: serviceIdentifiers
@@ -306,14 +307,14 @@ extension AutoFillCoordinator: DatabaseLoaderDelegate {
         }
         log.debug("Got stored master key for \(dbRef.visibleFileName, privacy: .private)")
         
-        let timeout = databaseSettingsManager.getFallbackTimeout(dbRef, forAutoFill: true)
+        let timeoutDuration = databaseSettingsManager.getFallbackTimeout(dbRef, forAutoFill: true)
         
         assert(self.quickTypeDatabaseLoader == nil)
         quickTypeDatabaseLoader = DatabaseLoader(
             dbRef: dbRef,
             compositeKey: masterKey,
             status: [.readOnly],
-            timeout: timeout,
+            timeout: Timeout(duration: timeoutDuration),
             delegate: self
         )
         log.trace("Will load database")
@@ -453,7 +454,7 @@ extension AutoFillCoordinator: WatchdogDelegate {
         if Settings.current.premiumIsLockDatabasesOnTimeout {
             entryFinderCoordinator?.lockDatabase()
         }else {
-            entryFinderCoordinator?.stop(animated: animate)
+            entryFinderCoordinator?.stop(animated: animate, completion: nil)
         }
     }
 
@@ -650,14 +651,11 @@ extension AutoFillCoordinator: DatabaseUnlockerCoordinatorDelegate {
         })
     }
     
-    func didPressAddRemoteDatabase(
-        connectionType: RemoteConnectionType?,
-        in coordinator: DatabaseUnlockerCoordinator
-    ) {
+    func didPressAddRemoteDatabase(in coordinator: DatabaseUnlockerCoordinator) {
         router.pop(animated: true, completion: { [weak self] in
             guard let self = self else { return }
-            self.databasePickerCoordinator.addRemoteDatabase(
-                connectionType: connectionType,
+            self.databasePickerCoordinator.maybeAddRemoteDatabase(
+                bypassPaywall: true,
                 presenter: self.router.navigationController
             )
         })
@@ -670,5 +668,14 @@ extension AutoFillCoordinator: EntryFinderCoordinatorDelegate {
     
     func didSelectEntry(_ entry: Entry, in coordinator: EntryFinderCoordinator) {
         returnCredentials(entry: entry)
+    }
+    
+    func didPressReaddDatabase(in coordinator: EntryFinderCoordinator) {
+        coordinator.stop(animated: true) { [weak self] in
+            guard let self = self else { return }
+            self.databasePickerCoordinator.addExistingDatabase(
+                presenter: self.router.navigationController
+            )
+        }
     }
 }

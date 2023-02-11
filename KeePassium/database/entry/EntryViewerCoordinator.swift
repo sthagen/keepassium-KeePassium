@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2022 Andrei Popleteev <info@keepassium.com>
+//  Copyright © 2018–2023 Andrei Popleteev <info@keepassium.com>
 //
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -258,7 +258,12 @@ extension EntryViewerCoordinator {
             animated: true)
         
         let fileProvider = FileProvider.find(for: url) 
-        FileDataProvider.read(url, fileProvider: fileProvider, completionQueue: .main) {
+        FileDataProvider.read(
+            url,
+            fileProvider: fileProvider,
+            timeout: Timeout(duration: FileDataProvider.defaultTimeoutDuration),
+            completionQueue: .main
+        ) {
             [weak self] result in
             assert(Thread.isMainThread)
             guard let self = self else { return }

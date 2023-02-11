@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2022 Andrei Popleteev <info@keepassium.com>
+//  Copyright © 2018–2023 Andrei Popleteev <info@keepassium.com>
 //
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -37,10 +37,7 @@ protocol DatabaseUnlockerCoordinatorDelegate: AnyObject {
         in coordinator: DatabaseUnlockerCoordinator
     )
     func didPressReinstateDatabase(_ fileRef: URLReference, in coordinator: DatabaseUnlockerCoordinator)
-    func didPressAddRemoteDatabase(
-        connectionType: RemoteConnectionType?,
-        in coordinator: DatabaseUnlockerCoordinator
-    )
+    func didPressAddRemoteDatabase(in coordinator: DatabaseUnlockerCoordinator)
 }
 
 final class DatabaseUnlockerCoordinator: Coordinator, Refreshable {
@@ -86,6 +83,7 @@ final class DatabaseUnlockerCoordinator: Coordinator, Refreshable {
             self.removeAllChildCoordinators()
             self.dismissHandler?(self)
         })
+        setDatabase(databaseRef)
     }
     
     func refresh() {
@@ -138,7 +136,8 @@ final class DatabaseUnlockerCoordinator: Coordinator, Refreshable {
             return
         }
         
-        fileRef.refreshInfo(timeout: 2) { [weak self] result in
+        let timeout = Timeout(duration: 2.0)
+        fileRef.refreshInfo(timeout: timeout) { [weak self] result in
             guard let self = self else { return }
             switch result {
             case .success(_):
@@ -323,10 +322,10 @@ extension DatabaseUnlockerCoordinator {
             databaseStatus.insert(.readOnly)
         }
         #if AUTOFILL_EXT
-        let fallbackTimeout = databaseSettingsManager
+        let fallbackTimeoutDuration = databaseSettingsManager
             .getFallbackTimeout(currentDatabaseRef, forAutoFill: true)
         #elseif MAIN_APP
-        let fallbackTimeout = databaseSettingsManager
+        let fallbackTimeoutDuration = databaseSettingsManager
             .getFallbackTimeout(currentDatabaseRef, forAutoFill: false)
         #endif
 
@@ -334,7 +333,7 @@ extension DatabaseUnlockerCoordinator {
             dbRef: currentDatabaseRef,
             compositeKey: compositeKey,
             status: databaseStatus,
-            timeout: fallbackTimeout,
+            timeout: Timeout(duration: fallbackTimeoutDuration),
             delegate: self
         )
         databaseLoader!.load()
@@ -378,10 +377,7 @@ extension DatabaseUnlockerCoordinator {
                 handler: { [weak self] in
                     guard let self = self else { return }
                     Diag.debug("Will add remote database")
-                    self.delegate?.didPressAddRemoteDatabase(
-                        connectionType: nil,
-                        in: self
-                    )
+                    self.delegate?.didPressAddRemoteDatabase(in: self)
                 }
             )
         )

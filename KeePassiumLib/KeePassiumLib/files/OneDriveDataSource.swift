@@ -8,8 +8,12 @@
 
 import Foundation
 
-public final class OneDriveDataSource: DataSource {
-    private static let defaultTimeout: TimeInterval = 15.0
+public final class OneDriveDataSource: DataSource {    
+    private struct AuthorizedItem {
+        var filePath: String
+        var parent: OneDriveSharedFolder?
+        var token: OAuthToken
+    }
     
     func getAccessCoordinator() -> FileAccessCoordinator {
         return PassthroughFileAccessCoordinator()
@@ -20,7 +24,7 @@ public final class OneDriveDataSource: DataSource {
         operation: String,
         completionQueue: OperationQueue,
         completion: @escaping FileOperationCompletion<ReturnType>
-    ) -> (String, OAuthToken)? {
+    ) -> AuthorizedItem? {
         guard Settings.current.isNetworkAccessAllowed else {
             Diag.error("Network access denied [operation: \(operation)]")
             completionQueue.addOperation {
@@ -49,8 +53,8 @@ public final class OneDriveDataSource: DataSource {
             }
             return nil
         }
-        
-        return (filePath, token)
+        let parent = OneDriveFileURL.getParent(from: url) 
+        return AuthorizedItem(filePath: filePath, parent: parent, token: token)
     }
     
     private func saveUpdatedToken(_ newToken: OAuthToken, prefixedURL url: URL) {
@@ -62,13 +66,13 @@ public final class OneDriveDataSource: DataSource {
         at url: URL,
         fileProvider: FileProvider?,
         canUseCache: Bool,
-        byTime: DispatchTime,
+        timeout: Timeout,
         queue: OperationQueue,
         completionQueue: OperationQueue,
         completion: @escaping FileOperationCompletion<FileInfo>
     ) {
         assert(fileProvider == .keepassiumOneDrive)
-        guard let (filePath, token) = checkAccessAndCredentials(
+        guard let authorizedItem = checkAccessAndCredentials(
             url: url,
             operation: "readFileInfo",
             completionQueue: completionQueue,
@@ -78,8 +82,9 @@ public final class OneDriveDataSource: DataSource {
         }
         
         OneDriveManager.shared.getItemInfo(
-            path: filePath,
-            token: token,
+            path: authorizedItem.filePath,
+            parent: authorizedItem.parent,
+            token: authorizedItem.token,
             tokenUpdater: { self.saveUpdatedToken($0, prefixedURL: url) },
             completionQueue: completionQueue,
             completion: { result in
@@ -97,13 +102,13 @@ public final class OneDriveDataSource: DataSource {
     func read(
         _ url: URL,
         fileProvider: FileProvider?,
-        byTime: DispatchTime,
+        timeout: Timeout,
         queue: OperationQueue,
         completionQueue: OperationQueue,
         completion: @escaping FileOperationCompletion<ByteArray>
     ) {
         assert(fileProvider == .keepassiumOneDrive)
-        guard let (filePath, token) = checkAccessAndCredentials(
+        guard let authorizedItem = checkAccessAndCredentials(
             url: url,
             operation: "read",
             completionQueue: completionQueue,
@@ -113,8 +118,9 @@ public final class OneDriveDataSource: DataSource {
         }
         
         OneDriveManager.shared.getFileContents(
-            filePath: filePath,
-            token: token,
+            filePath: authorizedItem.filePath,
+            parent: authorizedItem.parent,
+            token: authorizedItem.token,
             tokenUpdater: { self.saveUpdatedToken($0, prefixedURL: url) },
             completionQueue: completionQueue,
             completion: { result in
@@ -133,13 +139,13 @@ public final class OneDriveDataSource: DataSource {
         _ data: ByteArray,
         to url: URL,
         fileProvider: FileProvider?,
-        byTime: DispatchTime,
+        timeout: Timeout,
         queue: OperationQueue,
         completionQueue: OperationQueue,
         completion: @escaping FileOperationCompletion<Void>
     ) {
         assert(fileProvider == .keepassiumOneDrive)
-        guard let (filePath, token) = checkAccessAndCredentials(
+        guard let authorizedItem = checkAccessAndCredentials(
             url: url,
             operation: "write",
             completionQueue: completionQueue,
@@ -148,10 +154,11 @@ public final class OneDriveDataSource: DataSource {
             return 
         }
         OneDriveManager.shared.uploadFile(
-            filePath: filePath,
+            filePath: authorizedItem.filePath,
+            parent: authorizedItem.parent,
             contents: data,
             fileName: url.lastPathComponent,
-            token: token,
+            token: authorizedItem.token,
             tokenUpdater: { self.saveUpdatedToken($0, prefixedURL: url) },
             completionQueue: completionQueue,
             completion: { result in
@@ -172,7 +179,7 @@ public final class OneDriveDataSource: DataSource {
         to writeURL: URL,
         fileProvider: FileProvider?,
         outputDataSource: @escaping (URL, ByteArray) throws -> ByteArray?,
-        byTime: DispatchTime,
+        timeout: Timeout,
         queue: OperationQueue,
         completionQueue: OperationQueue,
         completion: @escaping FileOperationCompletion<Void>
@@ -190,7 +197,7 @@ public final class OneDriveDataSource: DataSource {
         read(
             readURL, 
             fileProvider: fileProvider,
-            byTime: byTime,
+            timeout: timeout,
             queue: operationQueue,
             completionQueue: operationQueue, 
             completion: { [self] result in 
@@ -210,7 +217,7 @@ public final class OneDriveDataSource: DataSource {
                             dataToWrite,
                             to: writeURL, 
                             fileProvider: fileProvider,
-                            byTime: .now() + OneDriveDataSource.defaultTimeout,
+                            timeout: Timeout(duration: timeout.duration),
                             queue: operationQueue,
                             completionQueue: completionQueue,
                             completion: completion
