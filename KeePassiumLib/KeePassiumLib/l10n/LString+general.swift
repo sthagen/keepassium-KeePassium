@@ -38,6 +38,12 @@ extension LString {
         value: "Discard",
         comment: "Action/button to discard any unsaved changes"
     )
+    public static let actionRetry = NSLocalizedString(
+        "[Generic] Retry",
+        bundle: Bundle.framework,
+        value: "Retry",
+        comment: "Action: repeat the previous (failed) action"
+    )
     public static let actionDelete = NSLocalizedString(
         "[Generic] Delete",
         bundle: Bundle.framework,
@@ -822,7 +828,8 @@ extension LString {
         comment: "Name of biometric authentication method. Trademarked, do not translate unless Apple traslated it to your language.")
     
     
-    public static let copyrightNotice = NSLocalizedString(
+    public static let copyrightNotice = "©KeePassium Labs" 
+    public static let previousCopyrightNotice = NSLocalizedString(
         "[About/CopyrightAuthor]",
         bundle: Bundle.framework,
         value: "©Andrei Popleteev",

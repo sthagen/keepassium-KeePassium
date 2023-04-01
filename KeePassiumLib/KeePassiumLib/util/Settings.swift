@@ -711,7 +711,7 @@ public class Settings {
             let storedVersion = UserDefaults.appGroupShared
                 .object(forKey: Keys.settingsVersion.rawValue)
                 as? Int
-            return storedVersion ?? 0
+            return storedVersion ?? Settings.latestVersion
         }
         set {
             let oldValue = settingsVersion
@@ -1479,8 +1479,7 @@ public class Settings {
         isTestEnvironment = true
         #else
         if AppGroup.isMainApp {
-            let lastPathComp = Bundle.main.appStoreReceiptURL?.lastPathComponent
-            isTestEnvironment = lastPathComp == "sandboxReceipt"
+            isTestEnvironment = ProcessInfo.isTestFlightApp
             UserDefaults.appGroupShared.set(isTestEnvironment, forKey: Keys.testEnvironment.rawValue)
         } else {
             isTestEnvironment = UserDefaults.appGroupShared

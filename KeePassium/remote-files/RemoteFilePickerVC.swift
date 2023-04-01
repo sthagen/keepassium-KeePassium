@@ -15,7 +15,6 @@ protocol RemoteFilePickerDelegate: AnyObject {
         credential: NetworkCredential,
         in viewController: RemoteFilePickerVC
     )
-    func didPressLoginToOneDrive(privateSession: Bool, in viewController: RemoteFilePickerVC)
 }
 
 final class RemoteFilePickerVC: UITableViewController {
@@ -345,18 +344,23 @@ extension RemoteFilePickerVC {
             return
         }
         
+        var inputTextNeedsUpdate = false
         if let urlUser = urlComponents.user {
             webdavUsername = urlUser
             webdavUsernameTextField?.text = urlUser
+            inputTextNeedsUpdate = true
         }
         if let urlPassword = urlComponents.password {
             webdavPassword = urlPassword
             webdavPasswordTextField?.text = urlPassword
+            inputTextNeedsUpdate = true
         }
         urlComponents.user = nil
         urlComponents.password = nil
         self.webdavURL = urlComponents.url
-        webdavURLTextField?.text = self.webdavURL?.absoluteString ?? text
+        if inputTextNeedsUpdate  {
+            webdavURLTextField?.text = self.webdavURL?.absoluteString ?? text
+        }
         
         refreshDoneButton()
     }
@@ -378,13 +382,6 @@ extension RemoteFilePickerVC {
         cell.button.setTitle(LString.actionSignInToOneDrive, for: .normal)
         cell.button.contentHorizontalAlignment = .center
         cell.button.isEnabled = !isBusy
-        cell.buttonPressHandler = { [weak self] theSwitch in
-            guard let self = self else { return }
-            self.delegate?.didPressLoginToOneDrive(
-                privateSession: self.oneDrivePrivateSession,
-                in: self
-            )
-        }
     }
     
     private func configureOneDrivePrivateSessionCell(_ cell: SwitchCell) {

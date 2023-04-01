@@ -108,10 +108,6 @@ extension RemoteFilePickerCoordinator: RemoteFilePickerDelegate {
             credential: credential,
             viewController: viewController)
     }
-    
-    func didPressLoginToOneDrive(privateSession: Bool, in viewController: RemoteFilePickerVC) {
-        startOneDriveSignIn(privateSession: privateSession, viewController: viewController)
-    }
 }
 
 extension RemoteFilePickerCoordinator: ConnectionTypePickerDelegate {
@@ -128,7 +124,13 @@ extension RemoteFilePickerCoordinator: ConnectionTypePickerDelegate {
     }
     
     func didSelect(connectionType: RemoteConnectionType, in viewController: ConnectionTypePickerVC) {
-        showSourceSelector(connectionType: connectionType)
+        switch connectionType {
+        case .webdav:
+            showSourceSelector(connectionType: connectionType)
+        case .oneDrive, .oneDriveForBusiness:
+            startOneDriveSignIn(privateSession: false, viewController: viewController)
+        }
+        
     }
 }
 
@@ -160,7 +162,7 @@ extension RemoteFilePickerCoordinator {
         )
     }
     
-    private func startOneDriveSignIn(privateSession: Bool, viewController: RemoteFilePickerVC) {
+    private func startOneDriveSignIn(privateSession: Bool, viewController: ConnectionTypePickerVC) {
         viewController.setState(isBusy: true)
         OneDriveManager.shared.authenticate(
             presenter: viewController,
@@ -186,10 +188,12 @@ extension RemoteFilePickerCoordinator {
 }
 
 extension RemoteFilePickerCoordinator {
-    private func startAddingOneDriveFile(token: OAuthToken, viewController: RemoteFilePickerVC) {
+    private func startAddingOneDriveFile(token: OAuthToken, viewController: ConnectionTypePickerVC) {
+        viewController.setState(isBusy: true)
         OneDriveManager.shared.getDriveInfo(parent: nil, freshToken: token) {
             [weak self, weak viewController] result in
             guard let self = self, let viewController = viewController else { return }
+            viewController.setState(isBusy: false)
             switch result {
             case .success(let driveInfo):
                 self.oneDriveAccount = OneDriveAccount(
@@ -197,7 +201,7 @@ extension RemoteFilePickerCoordinator {
                     token: token
                 )
                 if driveInfo.type == .personal {
-                    self.showOneDriveFolder(folder: nil, presenter: viewController)
+                    self.showOneDriveWelcomeFolder(presenter: viewController)
                 } else {
                     self.performPremiumActionOrOfferUpgrade(
                         for: .canUseBusinessClouds,
@@ -206,7 +210,7 @@ extension RemoteFilePickerCoordinator {
                         in: viewController
                     ) { [weak self, weak presenter = viewController] in
                         guard let self = self, let presenter = presenter else { return }
-                        self.showOneDriveFolder(folder: nil, presenter: presenter)
+                        self.showOneDriveWelcomeFolder(presenter: presenter)
                     }
                 }
             case .failure(let oneDriveError):
@@ -215,26 +219,43 @@ extension RemoteFilePickerCoordinator {
         }
     }
     
-    private func showOneDriveFolder(folder: OneDriveFileItem?, presenter: UIViewController) {
+    private func showOneDriveWelcomeFolder(presenter: ConnectionTypePickerVC) {
         guard let oneDriveAccount = oneDriveAccount else {
             Diag.warning("Not signed into any OneDrive account")
             assertionFailure()
             return
         }
-        let folderName = folder?.fileInfo.fileName ?? oneDriveAccount.driveInfo.type.description
+        let vc = RemoteFolderViewerVC.make()
+        vc.items = [
+            OneDriveSpecialItem(kind: .personalFiles),
+            OneDriveSpecialItem(kind: .sharedWithMe),
+        ]
+        vc.folderName = oneDriveAccount.driveInfo.type.description
+        vc.delegate = self
+        router.push(vc, animated: true, onPop: {})
+    }
+    
+    private func showOneDriveFolder(folder: OneDriveItem, presenter: RemoteFolderViewerVC) {
+        guard let oneDriveAccount = oneDriveAccount else {
+            Diag.warning("Not signed into any OneDrive account")
+            assertionFailure()
+            return
+        }
+        
+        presenter.setState(isBusy: true)
         OneDriveManager.shared.getItems(
-            in: folder?.itemPath ?? "/",
-            parent: folder?.parent,
+            in: folder,
             token: oneDriveAccount.token,
             tokenUpdater: nil 
         ) {
             [weak self, weak presenter] result in
             guard let self = self else { return }
+            presenter?.setState(isBusy: false)
             switch result {
             case .success(let items):
                 let vc = RemoteFolderViewerVC.make()
                 vc.items = items
-                vc.folderName = folderName
+                vc.folderName = folder.name
                 vc.delegate = self
                 self.router.push(vc, animated: true, onPop: {
                     
@@ -247,10 +268,10 @@ extension RemoteFilePickerCoordinator {
     
     private func didSelectOneDriveFile(
         _ fileItem: OneDriveFileItem,
-        oneDriveAccount: OneDriveAccount
+        account: OneDriveAccount
     ) {
-        let fileURL = OneDriveFileURL.build(from: fileItem, driveInfo: oneDriveAccount.driveInfo)
-        let credential = NetworkCredential(oauthToken: oneDriveAccount.token)
+        let fileURL = fileItem.toURL(with: account.driveInfo)
+        let credential = NetworkCredential(oauthToken: account.token)
         delegate?.didPickRemoteFile(url: fileURL, credential: credential, in: self)
         dismiss()
     }
@@ -263,24 +284,58 @@ extension RemoteFilePickerCoordinator: RemoteFolderViewerDelegate {
             assertionFailure()
             return
         }
+
+        guard let oneDriveItem = item as? OneDriveItem else {
+            Diag.warning("Unexpected type of selected remote item")
+            assertionFailure()
+            return
+        }
+
+        if item.isFolder {
+            showOneDriveFolder(folder: oneDriveItem, presenter: viewController)
+            return
+        }
+        
         guard let oneDriveFileItem = item as? OneDriveFileItem else {
             Diag.warning("Unexpected type of selected item")
             assertionFailure()
             return
         }
-
-        if oneDriveFileItem.isFolder {
-            showOneDriveFolder(folder: oneDriveFileItem, presenter: viewController)
-            return
-        }
         
-        if oneDriveAccount.isCorporateAccount {
+        viewController.setState(isBusy: true)
+        OneDriveManager.shared.updateItemInfo(
+            oneDriveFileItem,
+            freshToken: oneDriveAccount.token,
+            completionQueue: .main,
+            completion: { [weak self, weak viewController] result in
+                guard let self = self, let viewController = viewController else { return }
+                viewController.setState(isBusy: false)
+                switch result {
+                case .success(let fileItem):
+                    self.processSelectedOneDriveItem(
+                        fileItem: fileItem,
+                        account: oneDriveAccount,
+                        in: viewController)
+                case .failure(let oneDriveError):
+                    Diag.info("Failed to update shared item [message: \(oneDriveError.localizedDescription)]")
+                    viewController.showErrorAlert(oneDriveError)
+                }
+            }
+        )
+    }
+    
+    private func processSelectedOneDriveItem(
+        fileItem: OneDriveFileItem,
+        account: OneDriveAccount,
+        in viewController: RemoteFolderViewerVC
+    ) {
+        if account.isCorporateAccount {
             performPremiumActionOrOfferUpgrade(for: .canUseBusinessClouds, in: viewController) {
                 [weak self] in
-                self?.didSelectOneDriveFile(oneDriveFileItem, oneDriveAccount: oneDriveAccount)
+                self?.didSelectOneDriveFile(fileItem, account: account)
             }
         } else {
-            didSelectOneDriveFile(oneDriveFileItem, oneDriveAccount: oneDriveAccount)
+            didSelectOneDriveFile(fileItem, account: account)
         }
     }
 }
