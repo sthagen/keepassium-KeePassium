@@ -82,6 +82,12 @@
 /* Class = "UILabel"; text = "Fancy deboss pattern by Daniel Beaton"; ObjectID = "Kdg-Hz-XOQ"; */
 "Kdg-Hz-XOQ.text" = "Ozdobny tłoczny wzór - Daniel Beaton";
 
+/* Class = "UILabel"; text = "Passphrase wordlists by EFF"; ObjectID = "kvO-9B-1Sy"; */
+"kvO-9B-1Sy.text" = "Listy haseł według EFF";
+
+/* Class = "UILabel"; text = "MIT license"; ObjectID = "KWA-h1-ddu"; */
+"KWA-h1-ddu.text" = "Licencja MIT";
+
 /* Class = "UILabel"; text = "MIT license"; ObjectID = "lht-LP-o0Y"; */
 "lht-LP-o0Y.text" = "Licencja MIT";
 
@@ -147,6 +153,9 @@
 
 /* Class = "UILabel"; text = "Yubico Mobile iOS SDK by Yubico AB"; ObjectID = "Xee-Y1-Dcw"; */
 "Xee-Y1-Dcw.text" = "Yubico Mobile iOS SDK - Yubico AB";
+
+/* Class = "UILabel"; text = "SwiftDomainParser by Dashlane"; ObjectID = "y9Z-rr-JL8"; */
+"y9Z-rr-JL8.text" = "SwiftDomainParser autorstwa Dashlana";
 
 /* Class = "UILabel"; text = "MIT license"; ObjectID = "Z7s-Ch-895"; */
 "Z7s-Ch-895.text" = "Licencja MIT";
