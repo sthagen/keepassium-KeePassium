@@ -1,5 +1,41 @@
 #CHANGELOG
 
+## [1.45.135] - 2023-05-29
+
+### Improved
+
+- Expand the randomizer sheet when going to full mode
+
+### Fixed
+
+- iCloud Drive icon on iOS 16.5 [thanks, E.M.]
+- Excessive WebDAV credential caching (fixes #295) [thanks, Henrik]
+- Update the cached derived key on DB save [thanks, Santiago]
+- macOS: top margin of some popovers
+
+
+## [1.44.134] - 2023-05-29
+
+### Fixed
+
+- macOS: App settings were getting reset by AutoFill
+
+
+## [1.44.133] - 2023-05-23
+
+### Changed
+
+- Alternative app icons are available in the free version, no longer a premium feature
+- Extended the provisional business license to 2023-07-31
+- Updated translations
+
+### Fixed
+
+- macOS: App settings were getting reset on every launch (regression in 1.43.131) [thanks, everyone]
+- AutoFill: matching entries by service name [thanks, D.S.]
+- AutoFill: parsing the domain-only entry URL fields (without the scheme component)
+
+
 ## [1.43.132] - 2023-05-07
 
 ### Improved
