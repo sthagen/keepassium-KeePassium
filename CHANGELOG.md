@@ -1,5 +1,53 @@
 #CHANGELOG
 
+## [1.45.138] - 2023-07-13
+
+### Changed
+
+- Extended the provisional business license to 2023-08-31
+- Updated translations
+
+
+## [1.45.137] - 2023-07-12
+
+### Improved
+
+- Added expiry option "Now" (closes #300) [thanks, thejoker8814]
+- Added detection of MagentaCloud file provider
+- Updated all translations
+
+### Removed 
+
+- Intune: removed AutoFill, because not supported by Intune SDK (msintuneappsdk/ms-intune-app-sdk-ios#314)
+
+### Fixed
+
+- AutoFill: exclude groups that have AutoType disabled [thanks, Kelly]
+- Search: Check parent groups when omitting non-searchable ones
+- Minor UI improvements in expiry date editor
+
+
+## [1.45.136] - 2023-07-03
+
+### Added
+
+- Uniform and scalable SF Symbols icons (closes #287) [thanks, everyone]
+- Passphrase generator now includes EFF short list #1 [thanks, K.J.]
+
+### Changed
+
+- This version requires at least iOS 15.4 / macOS 12.0
+
+### Fixed
+
+- OneDrive: periodic "invalid_grant" error [thanks, everyone]
+- Error messages could be visible while loading a fallback database [thanks, everyone]
+- Database unlocker could load a wrong fallback file sometimes
+- Lingering donation suggestion, required database reload [thanks everyone]
+- Temporary files (such as print previews) could stay around for too long [thanks, Christopher]
+- Minor UI refinements here and there
+
+
 ## [1.45.135] - 2023-05-29
 
 ### Improved

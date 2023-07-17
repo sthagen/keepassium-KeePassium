@@ -43,9 +43,7 @@ final class EntryFieldEditorCoordinator: Coordinator {
     
     private var isModified = false{
         didSet {
-            if #available(iOS 13, *) {
-                fieldEditorVC.isModalInPresentation = isModified
-            }
+            fieldEditorVC.isModalInPresentation = isModified
         }
     }
     
@@ -134,8 +132,7 @@ final class EntryFieldEditorCoordinator: Coordinator {
         guard TOTPGeneratorFactory.isValidURI(uri) else {
             fieldEditorVC.showNotification(
                 isQRBased ? LString.otpQRCodeNotValid: LString.otpInvalidSecretCode,
-                image: .get(.exclamationMarkTriangle)?
-                    .withTintColor(.errorMessage, renderingMode: .alwaysOriginal)
+                image: .symbol(.exclamationMarkTriangle, tint: .errorMessage)
             )
             return
         }
@@ -197,7 +194,7 @@ final class EntryFieldEditorCoordinator: Coordinator {
         let randomNamesMenuItems = randomUserNames.map { (userName) -> UIAction in
             UIAction(
                 title: userName,
-                image: UIImage.get(.wandAndStars),
+                image: .symbol(.wandAndStars),
                 handler: applyUserName
             )
         }

@@ -96,6 +96,7 @@ final class DatabaseUnlockerCoordinator: Coordinator, Refreshable {
     
     func setDatabase(_ fileRef: URLReference) {
         databaseRef = fileRef
+        fallbackDatabaseRef = DatabaseManager.getFallbackFile(for: databaseRef)
         databaseUnlockerVC.databaseRef = fileRef
         
         guard let dbSettings = DatabaseSettingsManager.shared.getSettings(for: databaseRef) else {
@@ -131,8 +132,8 @@ final class DatabaseUnlockerCoordinator: Coordinator, Refreshable {
     
     private func maybeShowInitialDatabaseError(_ fileRef: URLReference) {
         databaseUnlockerVC.hideErrorMessage(animated: false)
-        if let dbError = fileRef.error {
-            showDatabaseError(fileRef.visibleFileName, reason: dbError.localizedDescription)
+        if let fileAccessError = fileRef.error {
+            showFileError(fileAccessError)
             return
         }
         
@@ -146,10 +147,7 @@ final class DatabaseUnlockerCoordinator: Coordinator, Refreshable {
                 if fileAccessError.isTimeout {
                     return
                 }
-                self.showDatabaseError(
-                    self.databaseRef.visibleFileName,
-                    reason: fileAccessError.localizedDescription
-                )
+                self.showFileError(fileAccessError)
             }
         }
     }
@@ -345,18 +343,55 @@ extension DatabaseUnlockerCoordinator {
         }
     }
     
-    private func showDatabaseError(_ message: String, reason: String?) {
-        guard databaseRef.needsReinstatement else {
-            databaseUnlockerVC.showErrorMessage(message, reason: reason, haptics: .error)
+    private func showFileError(_ error: FileAccessError) {
+        switch error {
+        case .authorizationRequired:
+            databaseUnlockerVC.showErrorMessage(
+                error.localizedDescription,
+                reason: error.failureReason,
+                haptics: .error,
+                action: .init(
+                    title: error.recoverySuggestion ?? LString.actionFixThis,
+                    handler: { [weak self] in
+                        guard let self = self else { return }
+                        Diag.debug("Will reinstate database")
+                        self.delegate?.didPressReinstateDatabase(self.databaseRef, in: self)
+                    }
+                )
+            )
+        default:
+            databaseUnlockerVC.showErrorMessage(
+                error.localizedDescription,
+                reason: error.failureReason,
+                haptics: .error
+            )
+        }
+    }
+    
+    private func showDatabaseLoadError(_ error: DatabaseLoader.Error) {
+        let currentDatabaseRef: URLReference
+        switch state {
+        case .unlockOriginalFileFast,
+             .unlockOriginalFileSlow:
+            currentDatabaseRef = databaseRef
+        case .unlockFallbackFile:
+            currentDatabaseRef = fallbackDatabaseRef ?? databaseRef
+        }
+        
+        guard currentDatabaseRef.needsReinstatement else {
+            databaseUnlockerVC.showErrorMessage(
+                error.localizedDescription,
+                reason: error.failureReason,
+                haptics: .error
+            )
             return
         }
         databaseUnlockerVC.showErrorMessage(
-            message,
-            reason: reason,
+            error.localizedDescription,
+            reason: error.failureReason,
             haptics: .error,
-            action: ToastAction(
-                title: LString.actionReAddFile,
-                icon: nil,
+            action: .init(
+                title: error.recoverySuggestion ?? LString.actionFixThis,
                 handler: { [weak self] in
                     guard let self = self else { return }
                     Diag.debug("Will reinstate database")
@@ -372,7 +407,7 @@ extension DatabaseUnlockerCoordinator {
             message,
             reason: nil,
             haptics: .error,
-            action: ToastAction(
+            action: .init(
                 title: LString.actionConnectToServer,
                 handler: { [weak self] in
                     guard let self = self else { return }
@@ -527,11 +562,11 @@ extension DatabaseUnlockerCoordinator: DatabaseLoaderDelegate {
                 }
             case .showError:
                 databaseUnlockerVC.hideProgressView(animated: true)
-                showDatabaseError(error.localizedDescription, reason: error.failureReason)
+                showDatabaseLoadError(error)
                 databaseUnlockerVC.maybeFocusOnPassword()
             case .reAddDatabase:
                 databaseUnlockerVC.hideProgressView(animated: true)
-                showDatabaseError(error.localizedDescription, reason: error.failureReason)
+                showDatabaseLoadError(error)
                 delegate?.didPressReinstateDatabase(databaseRef, in: self)
             }
         case .wrongFormat(let fileFormat):
@@ -541,13 +576,13 @@ extension DatabaseUnlockerCoordinator: DatabaseLoaderDelegate {
             case .intuneProtectedFile:
                 showIntuneProtectionError()
             default:
-                showDatabaseError(error.localizedDescription, reason: error.failureReason)
+                showDatabaseLoadError(error)
             }
         default:
             databaseUnlockerVC.refresh()
             databaseUnlockerVC.hideProgressView(animated: true)
             
-            showDatabaseError(error.localizedDescription, reason: error.failureReason)
+            showDatabaseLoadError(error)
             databaseUnlockerVC.maybeFocusOnPassword()
         }
         delegate?.didNotUnlockDatabase(

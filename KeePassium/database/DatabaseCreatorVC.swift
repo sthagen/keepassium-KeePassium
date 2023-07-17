@@ -48,7 +48,6 @@ class DatabaseCreatorVC: UIViewController {
     @IBOutlet weak var continueButton: UIButton!
     @IBOutlet weak var errorMessagePanel: UIView!
     @IBOutlet weak var errorLabel: UILabel!
-    @IBOutlet weak var keyboardLayoutConstraint: KeyboardLayoutConstraint!
     @IBOutlet weak var scrollView: UIScrollView!
     
     weak var delegate: DatabaseCreatorDelegate?
@@ -67,7 +66,7 @@ class DatabaseCreatorVC: UIViewController {
         
         navigationItem.title = LString.titleCreateDatabase
         
-        view.backgroundColor = UIColor(patternImage: UIImage(asset: .backgroundPattern))
+        view.backgroundColor = ImageAsset.backgroundPattern.asColor()
         view.layer.isOpaque = false
 
         passwordField.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
@@ -93,29 +92,6 @@ class DatabaseCreatorVC: UIViewController {
         hardwareKeyField.accessibilityLabel = LString.fieldHardwareKey
         
         passwordField.becomeFirstResponder()
-    }
-
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        updateKeyboardLayoutConstraints()
-    }
-    
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        DispatchQueue.main.async {
-            self.updateKeyboardLayoutConstraints()
-        }
-    }
-    
-    private func updateKeyboardLayoutConstraints() {
-        let view = containerView
-        if let window = view.window {
-            let viewTop = view.convert(view.frame.origin, to: window).y
-            let viewHeight = view.frame.height
-            let windowHeight = window.frame.height
-            let viewBottomOffset = windowHeight - (viewTop + viewHeight)
-            keyboardLayoutConstraint.viewOffset = viewBottomOffset
-        }
     }
     
     @discardableResult
@@ -145,7 +121,6 @@ class DatabaseCreatorVC: UIViewController {
         
         var toastStyle = ToastStyle()
         toastStyle.backgroundColor = .warningMessage
-        toastStyle.imageSize = CGSize(width: 29, height: 29)
         toastStyle.displayShadow = false
         let toastAction = ToastAction(
             title: LString.actionShowDetails,
@@ -156,7 +131,7 @@ class DatabaseCreatorVC: UIViewController {
         let toastView = view.toastViewForMessage(
             message,
             title: nil,
-            image: UIImage.get(.exclamationMarkTriangle),
+            image: .symbol(.exclamationMarkTriangle),
             action: toastAction,
             style: toastStyle
         )

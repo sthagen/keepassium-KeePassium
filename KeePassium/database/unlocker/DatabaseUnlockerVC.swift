@@ -30,8 +30,10 @@ protocol DatabaseUnlockerDelegate: AnyObject {
 }
 
 final class DatabaseUnlockerVC: UIViewController, Refreshable {    
+    @IBOutlet private weak var scrollView: UIScrollView!
     @IBOutlet private weak var databaseLocationIconImage: UIImageView!
     @IBOutlet private weak var databaseFileNameLabel: UILabel!
+    @IBOutlet private weak var errorMessageView: ErrorMessageView!
     @IBOutlet private weak var inputPanel: UIView!
     @IBOutlet private weak var fakeUserNameField: UITextField!
     @IBOutlet private weak var passwordField: ProtectedTextField!
@@ -39,9 +41,7 @@ final class DatabaseUnlockerVC: UIViewController, Refreshable {
     @IBOutlet private weak var hardwareKeyField: ValidatingTextField!
     @IBOutlet private weak var unlockButton: UIButton!
     @IBOutlet private weak var masterKeyKnownLabel: UILabel!
-    @IBOutlet weak var lockDatabaseButton: UIButton!
-    @IBOutlet private weak var lockedOnTimeoutLabel: UILabel!
-    @IBOutlet weak var keyboardLayoutConstraint: KeyboardLayoutConstraint!
+    @IBOutlet private weak var lockDatabaseButton: UIButton!
     
     weak var delegate: DatabaseUnlockerDelegate?
     var shouldAutofocus = false
@@ -67,7 +67,7 @@ final class DatabaseUnlockerVC: UIViewController, Refreshable {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.backgroundColor = UIColor(patternImage: UIImage(asset: .backgroundPattern))
+        view.backgroundColor = ImageAsset.backgroundPattern.asColor()
         view.layer.isOpaque = false
         unlockButton.titleLabel?.adjustsFontForContentSizeCategory = true
         
@@ -80,11 +80,7 @@ final class DatabaseUnlockerVC: UIViewController, Refreshable {
         hardwareKeyField.cursor = .arrow
         #endif
         
-        keyboardLayoutConstraint.layoutCallback = { [weak self] in
-            self?.view.layoutIfNeeded()
-        }
-        
-        lockedOnTimeoutLabel.isHidden = true
+        errorMessageView.isHidden = true
         
         refresh()
         
@@ -112,96 +108,60 @@ final class DatabaseUnlockerVC: UIViewController, Refreshable {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         navigationController?.setToolbarHidden(true, animated: true)
-        updateKeyboardLayoutConstraints()
         if shouldAutofocus {
             UIAccessibility.post(notification: .layoutChanged, argument: passwordField)
             maybeFocusOnPassword()
         }
     }
     
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        DispatchQueue.main.async {
-            self.updateKeyboardLayoutConstraints()
-        }
-    }
-    
-    private func updateKeyboardLayoutConstraints() {
-        let windowSpace: UICoordinateSpace
-        if #available(iOS 14, *) {
-            guard let screen = view.window?.screen else { return }
-            windowSpace = screen.coordinateSpace
-        } else {
-            guard let window = view.window else { return }
-            windowSpace = window.coordinateSpace
-        }
-        let viewTop = view.convert(view.frame.origin, to: windowSpace).y
-        let viewHeight = view.frame.height
-        let windowHeight = windowSpace.bounds.height
-        let viewBottomOffset = windowHeight - (viewTop + viewHeight)
-        keyboardLayoutConstraint.viewOffset = viewBottomOffset
-    }
-    
     public func clearPasswordField() {
         passwordField.text = ""
     }
     
-    @discardableResult
     func showErrorMessage(
         _ text: String,
         reason: String?=nil,
         haptics: HapticFeedback.Kind?=nil,
-        action: ToastAction?=nil
-    ) -> UIView {
+        action: ErrorMessageView.Action?=nil
+    ) {
+        guard isViewLoaded else { return }
         let text = [text, reason]
-            .compactMap { return $0 } 
+            .compactMap { $0 } 
             .joined(separator: "\n")
         Diag.error(text)
         
-        var toastAction = action
-        if toastAction == nil {
-            toastAction = ToastAction(
-                title: LString.actionShowDetails,
-                handler: { [weak self] in
-                    self?.didPressErrorDetails()
-                }
-            )
+        if let haptics {
+            HapticFeedback.play(haptics)
         }
-
-        let toastStyle = ToastStyle()
-        let toastView = view.toastViewForMessage(
-            text,
-            title: nil,
-            image: UIImage.get(.exclamationMarkTriangle)?
-                .withTintColor(.errorMessage, renderingMode: .alwaysOriginal),
-            action: toastAction,
-            style: toastStyle
-        )
-        view.showToast(toastView, duration: 5, position: .top, action: toastAction, completion: nil)
-        StoreReviewSuggester.registerEvent(.trouble)
+        errorMessageView.message = text
+        errorMessageView.action = action
+        errorMessageView.show(animated: true)
+        UIAccessibility.post(notification: .screenChanged, argument: errorMessageView)
         
-        return toastView
+        StoreReviewSuggester.registerEvent(.trouble)
+        scrollView.setContentOffset(.zero, animated: true)
     }
     
     func hideErrorMessage(animated: Bool) {
-        view.hideToast()
+        guard isViewLoaded else { return }
+        
+        errorMessageView.hide(animated: animated)
+        UIAccessibility.post(notification: .screenChanged, argument: self.view)
     }
 
     func showMasterKeyInvalid(message: String) {
-        HapticFeedback.play(.wrongPassword)
-        let toast = showErrorMessage(
+        showErrorMessage(
             message,
             haptics: .wrongPassword,
-            action: ToastAction(
+            action: .init(
                 title: LString.forgotPasswordQuestion,
-                icon: UIImage(asset: .externalLinkBadge),
                 isLink: true,
                 handler: { [weak self] in
                     self?.showInvalidPasswordHelp()
                 }
             )
         )
-        toast.shake()
+        errorMessageView.shake()
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { [weak self] in
             self?.maybeFocusOnPassword()
@@ -231,7 +191,8 @@ final class DatabaseUnlockerVC: UIViewController, Refreshable {
         
         databaseFileNameLabel.text = databaseRef.visibleFileName
         databaseFileNameLabel.textColor = UIColor.primaryText
-        databaseLocationIconImage.image = databaseRef.getIcon(fileType: .database)
+        let locationSymbol = databaseRef.getIconSymbol(fileType: .database)
+        databaseLocationIconImage.image = .symbol(locationSymbol)
         refreshInputMode()
     }
     

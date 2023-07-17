@@ -11,11 +11,7 @@ import UIKit
 extension UIColor {
 
     static var systemTint: UIColor {
-        if #available(iOS 15, *) {
-            return UIColor.tintColor.resolvedColor(with: .current)
-        } else {
-            return actionTint
-        }
+        return UIColor.tintColor.resolvedColor(with: .current)
     }
     
     static var actionTint: UIColor {
@@ -25,7 +21,7 @@ extension UIColor {
         return UIColor(named: "ActionText") ?? .white
     }
     static var iconTint: UIColor {
-        return UIColor(named: "iconTint") ?? UIColor.systemBlue
+        return UIColor(named: "IconTint") ?? UIColor.systemBlue
     }
     static var destructiveTint: UIColor {
         return UIColor(named: "DestructiveTint") ?? UIColor.systemRed

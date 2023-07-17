@@ -39,6 +39,7 @@
 		753E9A6225FEBE3000541121 /* Toast.swift in Sources */ = {isa = PBXBuildFile; fileRef = 753E9A6125FEBE2F00541121 /* Toast.swift */; };
 		754025152950700E000ABA73 /* ManagedAppConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 754025142950700E000ABA73 /* ManagedAppConfig.swift */; };
 		7544570425CAE2D50011386C /* TPInAppReceipt in Frameworks */ = {isa = PBXBuildFile; productRef = 7544570325CAE2D50011386C /* TPInAppReceipt */; };
+		754840EE2A52C957001EEF21 /* URLQueryItems+extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 754840ED2A52C957001EEF21 /* URLQueryItems+extensions.swift */; };
 		754ABE9C25AB898B00B98A63 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 754ABE9A25AB898B00B98A63 /* InfoPlist.strings */; };
 		754D7C0E238C26A7005652E1 /* YubiKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 754D7C0D238C26A7005652E1 /* YubiKey.swift */; };
 		7558700722E5857C00E1DD89 /* TOTPGeneratorFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7558700622E5857C00E1DD89 /* TOTPGeneratorFactory.swift */; };
@@ -52,6 +53,7 @@
 		757C51CF29F17D3C008986F4 /* DomainParser in Frameworks */ = {isa = PBXBuildFile; productRef = 757C51CE29F17D3C008986F4 /* DomainParser */; };
 		757C51D129F18192008986F4 /* DomainNameHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 757C51D029F18192008986F4 /* DomainNameHelper.swift */; };
 		757E78D82822D729009017BF /* PasswordGeneratorParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 757E78D72822D729009017BF /* PasswordGeneratorParams.swift */; };
+		75804AAF2A43B5A300A9C985 /* eff-short-wordlist-1.txt in Resources */ = {isa = PBXBuildFile; fileRef = 75804AAE2A43B5A300A9C985 /* eff-short-wordlist-1.txt */; };
 		758FF6D4290193F0007DE8EB /* OneDriveDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 758FF6D3290193F0007DE8EB /* OneDriveDataSource.swift */; };
 		758FF6D82902DB07007DE8EB /* RemoteFileItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 758FF6D72902DB07007DE8EB /* RemoteFileItem.swift */; };
 		758FF6DB2902DB64007DE8EB /* OneDriveManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 758FF6DA2902DB64007DE8EB /* OneDriveManager.swift */; };
@@ -252,6 +254,7 @@
 		75393AB9238D3AC400C63C54 /* ChallengeResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChallengeResponse.swift; sourceTree = "<group>"; };
 		753E9A6125FEBE2F00541121 /* Toast.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Toast.swift; sourceTree = "<group>"; };
 		754025142950700E000ABA73 /* ManagedAppConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManagedAppConfig.swift; sourceTree = "<group>"; };
+		754840ED2A52C957001EEF21 /* URLQueryItems+extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URLQueryItems+extensions.swift"; sourceTree = "<group>"; };
 		754A322A244269F500632B39 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/Localizable.strings; sourceTree = "<group>"; };
 		754ABE9B25AB898B00B98A63 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		754ABE9D25AB898B00B98A63 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -281,6 +284,7 @@
 		75707EC426CE7B3B00BE5EBC /* OperationQueue+extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OperationQueue+extensions.swift"; sourceTree = "<group>"; };
 		757C51D029F18192008986F4 /* DomainNameHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DomainNameHelper.swift; sourceTree = "<group>"; };
 		757E78D72822D729009017BF /* PasswordGeneratorParams.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordGeneratorParams.swift; sourceTree = "<group>"; };
+		75804AAE2A43B5A300A9C985 /* eff-short-wordlist-1.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = "eff-short-wordlist-1.txt"; sourceTree = "<group>"; };
 		758FF6D3290193F0007DE8EB /* OneDriveDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OneDriveDataSource.swift; sourceTree = "<group>"; };
 		758FF6D72902DB07007DE8EB /* RemoteFileItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteFileItem.swift; sourceTree = "<group>"; };
 		758FF6DA2902DB64007DE8EB /* OneDriveManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OneDriveManager.swift; sourceTree = "<group>"; };
@@ -613,6 +617,7 @@
 			children = (
 				75AF193A282EF1B600FA4BB5 /* eff-large-wordlist.txt */,
 				75AF193C282EF39300FA4BB5 /* eff-short-wordlist-2-0.txt */,
+				75804AAE2A43B5A300A9C985 /* eff-short-wordlist-1.txt */,
 			);
 			path = wordlists;
 			sourceTree = "<group>";
@@ -831,6 +836,7 @@
 				753858DA291957BF006ADA21 /* FileFormatRecognizer.swift */,
 				75AEAFA329871F25008F6F4C /* Timeout.swift */,
 				757C51D029F18192008986F4 /* DomainNameHelper.swift */,
+				754840ED2A52C957001EEF21 /* URLQueryItems+extensions.swift */,
 			);
 			path = util;
 			sourceTree = "<group>";
@@ -1083,6 +1089,7 @@
 				75D09BDD2174F76500F7DEF2 /* LICENSE in Resources */,
 				754ABE9C25AB898B00B98A63 /* InfoPlist.strings in Resources */,
 				75AF193B282EF1B600FA4BB5 /* eff-large-wordlist.txt in Resources */,
+				75804AAF2A43B5A300A9C985 /* eff-short-wordlist-1.txt in Resources */,
 				75AF193D282EF39300FA4BB5 /* eff-short-wordlist-2-0.txt in Resources */,
 				751E0CDF2309A3420088BB10 /* Localizable.strings in Resources */,
 			);
@@ -1189,6 +1196,7 @@
 				758FF6D4290193F0007DE8EB /* OneDriveDataSource.swift in Sources */,
 				75D09C282174F77000F7DEF2 /* CustomIcon2.swift in Sources */,
 				75AF193F282EF76C00FA4BB5 /* PassphraseWordlist.swift in Sources */,
+				754840EE2A52C957001EEF21 /* URLQueryItems+extensions.swift in Sources */,
 				75AF1926282E593400FA4BB5 /* InclusionCondition.swift in Sources */,
 				75F4ACE42177469500B22D8B /* FileKeeperObserver.swift in Sources */,
 				75D09B8E2174F02F00F7DEF2 /* Salsa20.swift in Sources */,
@@ -1411,7 +1419,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.4;
 				LLVM_LTO = YES;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
@@ -1473,7 +1481,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.4;
 				LLVM_LTO = YES;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
@@ -1499,7 +1507,7 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				INFOPLIST_FILE = KeePassiumLib/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1526,7 +1534,7 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				INFOPLIST_FILE = KeePassiumLib/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

@@ -65,8 +65,6 @@ protocol GroupViewerDelegate: AnyObject {
 
     func getActionPermissions(for group: Group) -> DatabaseItem.ActionPermissions
     func getActionPermissions(for entry: Entry) -> DatabaseItem.ActionPermissions
-    
-    func getAnnouncements(for group: Group, in viewController: GroupViewerVC) -> [AnnouncementItem]
 }
 
 final class GroupViewerVC:
@@ -106,7 +104,12 @@ final class GroupViewerVC:
     
     private var actionPermissions = DatabaseItem.ActionPermissions()
     
-    private var announcements = [AnnouncementItem]()
+    internal var announcements = [AnnouncementItem]() {
+        didSet {
+            guard isViewLoaded else { return }
+            tableView.reloadSections([0], with: .automatic)
+        }
+    }
     
     private var isActivateSearch: Bool = false
     private var searchHelper = SearchHelper()
@@ -135,15 +138,14 @@ final class GroupViewerVC:
         
         createItemButton = UIBarButtonItem(
             title: LString.actionCreate,
-            image: UIImage(asset: .createItemToolbar),
+            image: .symbol(.plus),
             primaryAction: nil,
             menu: nil)
         navigationItem.setRightBarButton(createItemButton, animated: false)
         navigationItem.titleView = titleView
         
         printButton.title = LString.actionPrint
-        printButton.image = UIImage.get(.printer)?
-            .withConfiguration(UIImage.SymbolConfiguration(weight: .light))
+        printButton.image = .symbol(.printer)
         
         settingsNotifications = SettingsNotifications(observer: self)
         
@@ -226,8 +228,6 @@ final class GroupViewerVC:
         titleView.iconView.image = UIImage.kpIcon(forGroup: group)
         navigationItem.title = titleView.titleLabel.text
 
-        announcements = delegate?.getAnnouncements(for: group, in: self) ?? []
-
         actionPermissions =
             delegate?.getActionPermissions(for: group) ??
             DatabaseItem.ActionPermissions()
@@ -246,13 +246,7 @@ final class GroupViewerVC:
         tableView.reloadData()
         
         sortOrderButton.menu = makeListSettingsMenu()
-        sortOrderButton.image = Settings.current.groupSortOrder.toolbarIcon
-    }
-    
-    func refreshAnnouncements() {
-        guard isViewLoaded, let group = group else { return }
-        announcements = delegate?.getAnnouncements(for: group, in: self) ?? []
-        tableView.reloadSections([0], with: .automatic)
+        sortOrderButton.image = .symbol(.listBullet)
     }
     
     private func refreshDynamicCells() {
@@ -836,7 +830,7 @@ extension GroupViewerVC: SettingsObserver {
     func settingsDidChange(key: Settings.Keys) {
         switch key {
         case .appLockEnabled, .rememberDatabaseKey:
-            refreshAnnouncements()
+            refresh()
         default:
             break
         }

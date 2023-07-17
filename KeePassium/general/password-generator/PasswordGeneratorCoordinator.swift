@@ -140,9 +140,7 @@ extension PasswordGeneratorCoordinator {
         } else {
             viewController.showNotification(
                 LString.titleCopiedToClipboard,
-                image: UIImage.get(.docOnDoc)?
-                    .applyingSymbolConfiguration(.init(weight: .light))?
-                    .withTintColor(.green, renderingMode: .alwaysTemplate),
+                image: .symbol(.docOnDoc),
                 duration: 1)
         }
     }
@@ -231,9 +229,7 @@ extension PasswordGeneratorCoordinator: PasswordGeneratorQuickSheetDelegate {
         fullModeVC.delegate = self
         self.passGenVC = fullModeVC
         prepareFullModeGenerator(fullModeVC)
-        if #available(iOS 15, *),
-           let sheet = viewController.sheetPresentationController
-        {
+        if let sheet = viewController.sheetPresentationController {
             sheet.animateChanges {
                 sheet.selectedDetentIdentifier = .large
             }

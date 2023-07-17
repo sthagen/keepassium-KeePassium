@@ -69,7 +69,10 @@ extension SearchHelper {
         
         let relevantEntries = allEntries
             .filter { (entry) in
-                (entry.parent as? Group2)?.isSearchingEnabled ?? true
+                let parent2 = entry.parent as? Group2
+                let canSearch = parent2?.resolvingIsSearchingEnabled() ?? true
+                let canAutoType = parent2?.resolvingIsAutoTypeEnabled() ?? true
+                return canSearch && canAutoType
             }
             .filter { (entry) in
                 !(entry.isDeleted || entry.isHiddenFromSearch)
@@ -96,7 +99,10 @@ extension SearchHelper {
         
         let relevantEntries = allEntries
             .filter { (entry) in
-                (entry.parent as? Group2)?.isSearchingEnabled ?? true
+                let parent2 = entry.parent as? Group2
+                let canSearch = parent2?.resolvingIsSearchingEnabled() ?? true
+                let canAutoType = parent2?.resolvingIsAutoTypeEnabled() ?? true
+                return canSearch && canAutoType
             }
             .filter { (entry) in
                 !(entry.isDeleted || entry.isExpired || entry.isHiddenFromSearch)

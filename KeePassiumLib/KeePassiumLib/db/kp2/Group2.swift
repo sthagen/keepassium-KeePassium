@@ -22,13 +22,7 @@ public class Group2: Group {
     public var customData: CustomData2 
     
     override public var isIncludeEntriesInSearch: Bool {
-        if let isSearchingEnabled = isSearchingEnabled {
-            return isSearchingEnabled
-        }
-        guard let parent2 = parent as? Group2 else {
-            return true
-        }
-        return parent2.isIncludeEntriesInSearch
+        return resolvingIsSearchingEnabled()
     }
     
     override init(database: Database?) {
@@ -88,6 +82,26 @@ public class Group2: Group {
         targetGroup2.previousParentGroupUUID = previousParentGroupUUID
         targetGroup2.tags = tags
         targetGroup2.customData = customData.clone()
+    }
+    
+    public func resolvingIsSearchingEnabled() -> Bool {
+        if let isSearchingEnabled { // nil means "check parent"
+            return isSearchingEnabled
+        }
+        guard let parent2 = parent as? Group2 else {
+            return true
+        }
+        return parent2.resolvingIsSearchingEnabled()
+    }
+    
+    public func resolvingIsAutoTypeEnabled() -> Bool {
+        if let isAutoTypeEnabled { // nil means "check parent"
+            return isAutoTypeEnabled
+        }
+        guard let parent2 = parent as? Group2 else {
+            return true
+        }
+        return parent2.resolvingIsAutoTypeEnabled()
     }
     
     override public func createEntry(detached: Bool = false) -> Entry {

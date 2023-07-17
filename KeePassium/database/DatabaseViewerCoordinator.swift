@@ -30,7 +30,7 @@ protocol DatabaseViewerCoordinatorDelegate: AnyObject {
     
     func didRelocateDatabase(_ databaseFile: DatabaseFile, to url: URL)
     
-    func didPressReaddDatabase(in coordinator: DatabaseViewerCoordinator)
+    func didPressReinstateDatabase(_ fileRef: URLReference, in coordinator: DatabaseViewerCoordinator)
 }
 
 final class DatabaseViewerCoordinator: Coordinator {
@@ -690,13 +690,6 @@ extension DatabaseViewerCoordinator: GroupViewerDelegate {
         result.canMoveItem = true
         return result
     }
-
-    func getAnnouncements(for group: Group, in viewController: GroupViewerVC) -> [AnnouncementItem] {
-        guard group.isRoot else {
-            return []
-        }
-        return announcements
-    }
 }
 
 extension DatabaseViewerCoordinator: ProgressViewHost {
@@ -906,7 +899,7 @@ extension DatabaseViewerCoordinator {
         {
             announcements.append(donationAnnouncement)
         }
-        rootGroupViewer.refreshAnnouncements()
+        rootGroupViewer.announcements = announcements
     }
     
     private func shouldOfferAppLockSetup() -> Bool {
@@ -928,8 +921,7 @@ extension DatabaseViewerCoordinator {
             title: LString.titleAppProtection,
             body: LString.appProtectionDescription,
             actionTitle: LString.callToActionActivateAppProtection,
-            image: UIImage(asset: .settingsAppLockListitem)
-                .withTintColor(.primaryText, renderingMode: .alwaysOriginal),
+            image: .symbol(.appProtection),
             onDidPressAction: { [weak self] _ in
                 self?.startAppProtectionSetup()
             },
@@ -944,17 +936,22 @@ extension DatabaseViewerCoordinator {
     private func makeFallbackDatabaseAnnouncement(
         for viewController: GroupViewerVC
     ) -> AnnouncementItem {
+        let actionTitle: String?
+        switch originalRef.error {
+        case .authorizationRequired(_, let recoveryAction):
+            actionTitle = recoveryAction
+        default:
+            actionTitle = nil
+        }
         return AnnouncementItem(
-            title: nil,
-            body: LString.databaseIsFallbackCopy,
-            actionTitle: originalRef.needsReinstatement ? LString.actionReAddFile : nil,
-            image: .get(.icloudSlash)?
-                .applyingSymbolConfiguration(.init(weight: .light))?
-                .withTintColor(UIColor.primaryText, renderingMode: .alwaysOriginal),
-            onDidPressAction: { [weak self, weak viewController] _ in
+            title: LString.databaseIsFallbackCopy,
+            body: originalRef.error?.errorDescription,
+            actionTitle: actionTitle,
+            image: .symbol(.iCloudSlash),
+            onDidPressAction: { [weak self] _ in
                 guard let self = self else { return }
-                self.delegate?.didPressReaddDatabase(in: self)
-                viewController?.refreshAnnouncements()
+                self.delegate?.didPressReinstateDatabase(originalRef, in: self)
+                self.updateAnnouncements()
             }
         )
     }
@@ -966,10 +963,7 @@ extension DatabaseViewerCoordinator {
             title: nil,
             body: LString.databaseIsReadOnly,
             actionTitle: nil,
-            image: nil,
-            onDidPressAction: { [weak viewController] _ in
-                viewController?.refreshAnnouncements()
-            }
+            image: nil
         )
     }
     
@@ -994,14 +988,14 @@ extension DatabaseViewerCoordinator {
             title: nil,
             body: texts.0,
             actionTitle: texts.1,
-            image: .get(.heart)?.withTintColor(.systemRed, renderingMode: .alwaysOriginal),
-            onDidPressAction: { [weak self, weak viewController] _ in
+            image: .symbol(.heart)?.withTintColor(.systemRed, renderingMode: .alwaysOriginal),
+            onDidPressAction: { [weak self] _ in
                 self?.showTipBox()
-                viewController?.refreshAnnouncements()
+                self?.updateAnnouncements()
             },
-            onDidPressClose: { [weak viewController] _ in
+            onDidPressClose: { [weak self] _ in
                 TipBox.registerTipBoxSeen()
-                viewController?.refreshAnnouncements()
+                self?.updateAnnouncements()
             }
         )
         return announcement
