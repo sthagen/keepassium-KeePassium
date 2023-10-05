@@ -55,6 +55,7 @@ final class EntryViewerCoordinator: NSObject, Coordinator, Refreshable {
     var databaseSaver: DatabaseSaver?
     var fileExportHelper: FileExportHelper?
     var savingProgressHost: ProgressViewHost? { return progressHost }
+    var saveSuccessHandler: (() -> Void)?
     
     private var expiryDateEditorModalRouter: NavigationRouter?
     
@@ -519,7 +520,6 @@ extension EntryViewerCoordinator {
         entry.touch(.modified, updateParents: false)
         
         delegate?.didUpdateEntry(entry, in: self)
-        EntryChangeNotifications.post(entryDidChange: entry)
         
         saveDatabase(databaseFile)
     }

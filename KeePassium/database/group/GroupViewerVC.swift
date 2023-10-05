@@ -10,9 +10,13 @@ import KeePassiumLib
 
 protocol GroupViewerDelegate: AnyObject {
     func didPressLockDatabase(in viewController: GroupViewerVC)
-    func didPressChangeMasterKey(at popoverAnchor: PopoverAnchor, in viewController: GroupViewerVC)
-    func didPressPrintDatabase(at popoverAnchor: PopoverAnchor, in viewController: GroupViewerVC)
+    func didPressChangeMasterKey(in viewController: GroupViewerVC)
+    func didPressPrintDatabase(in viewController: GroupViewerVC)
+    func didPressReloadDatabase(at popoverAnchor: PopoverAnchor, in viewController: GroupViewerVC)
     func didPressSettings(at popoverAnchor: PopoverAnchor, in viewController: GroupViewerVC)
+    func didPressPasswordAudit(in viewController: GroupViewerVC)
+    func didPressFaviconsDownload(in viewController: GroupViewerVC)
+    func didPressPasswordGenerator(at popoverAnchor: PopoverAnchor, in viewController: GroupViewerVC)
 
     func didSelectGroup(_ group: Group?, in viewController: GroupViewerVC) -> Bool
     
@@ -82,8 +86,9 @@ final class GroupViewerVC:
     weak var delegate: GroupViewerDelegate?
     
     @IBOutlet private weak var sortOrderButton: UIBarButtonItem!
-    @IBOutlet private weak var changeMasterKeyButton: UIBarButtonItem!
-    @IBOutlet private weak var printButton: UIBarButtonItem!
+    @IBOutlet private weak var databaseMenuButton: UIBarButtonItem!
+    @IBOutlet private weak var reloadDatabaseButton: UIBarButtonItem!
+    @IBOutlet private weak var passwordGeneratorButton: UIBarButtonItem!
     
     weak var group: Group? {
         didSet {
@@ -94,6 +99,8 @@ final class GroupViewerVC:
     var isGroupEmpty: Bool {
         return groupsSorted.isEmpty && entriesSorted.isEmpty
     }
+
+    var canDownloadFavicons: Bool = true
     
     private var titleView = DatabaseItemTitleView()
     
@@ -143,9 +150,8 @@ final class GroupViewerVC:
             menu: nil)
         navigationItem.setRightBarButton(createItemButton, animated: false)
         navigationItem.titleView = titleView
-        
-        printButton.title = LString.actionPrint
-        printButton.image = .symbol(.printer)
+        reloadDatabaseButton.title = LString.actionReloadDatabase
+        passwordGeneratorButton.title = LString.PasswordGenerator.titleRandomGenerator
         
         settingsNotifications = SettingsNotifications(observer: self)
         
@@ -234,9 +240,10 @@ final class GroupViewerVC:
         createItemButton.isEnabled =
             actionPermissions.canCreateGroup ||
             actionPermissions.canCreateEntry
-        changeMasterKeyButton.isEnabled = actionPermissions.canEditDatabase
+        
         
         createItemButton.menu = makeCreateItemMenu(for: createItemButton)
+        configureDatabaseMenuButton(databaseMenuButton)
         
         if isSearchActive {
             updateSearchResults(for: searchController)
@@ -274,6 +281,72 @@ final class GroupViewerVC:
         entriesSorted.append(contentsOf: weakEntriesSorted)
     }
     
+    private func configureDatabaseMenuButton(_ barButton: UIBarButtonItem) {
+        barButton.title = LString.titleDatabaseOperations
+        let lockDatabaseAction = UIAction(
+            title: LString.actionLockDatabase,
+            image: .symbol(.lock),
+            attributes: [.destructive],
+            handler: { [weak self] _ in
+                guard let self else { return }
+                self.delegate?.didPressLockDatabase(in: self)
+            }
+        )
+        let printDatabaseAction = UIAction(
+            title: LString.actionPrint,
+            image: .symbol(.printer),
+            handler: { [weak self] _ in
+                guard let self else { return }
+                self.delegate?.didPressPrintDatabase(in: self)
+            }
+        )
+        let changeMasterKeyAction = UIAction(
+            title: LString.actionChangeMasterKey,
+            image: .symbol(.key),
+            handler: { [weak self] _ in
+                guard let self else { return }
+                self.delegate?.didPressChangeMasterKey(in: self)
+            }
+        )
+        let passwordAuditAction = UIAction(
+            title: LString.titlePasswordAudit,
+            image: .symbol(.networkBadgeShield),
+            handler: { [weak self] _ in
+                guard let self else { return }
+                self.delegate?.didPressPasswordAudit(in: self)
+            }
+        )
+        let faviconsDownloadAction = UIAction(
+            title: LString.actionDownloadFavicons,
+            image: .symbol(.wandAndStars),
+            handler: { [weak self] _ in
+                guard let self else { return }
+                self.delegate?.didPressFaviconsDownload(in: self)
+            }
+        )
+        
+        if !actionPermissions.canEditDatabase {
+            changeMasterKeyAction.attributes.insert(.disabled)
+            faviconsDownloadAction.attributes.insert(.disabled)
+        }
+        
+        let lockMenu = UIMenu(options: [.displayInline], children: [lockDatabaseAction])
+        
+        var menuElements = [
+                changeMasterKeyAction,
+                passwordAuditAction,
+                canDownloadFavicons ? faviconsDownloadAction : nil,
+                printDatabaseAction,
+                lockMenu,
+            ].compactMap { $0 }
+        if #available(iOS 16, *) {
+            barButton.preferredMenuElementOrder = .fixed
+        } else {
+            menuElements.reverse()
+        }
+        let menu = UIMenu(children: menuElements)
+        barButton.menu = menu
+    }
     
 
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -782,35 +855,19 @@ final class GroupViewerVC:
         delegate?.didPressRelocateItem(selectedItem, mode: mode, at: popoverAnchor, in: self)
     }
     
+    @IBAction func didPressReloadDatabase(_ sender: UIBarButtonItem) {
+        let popoverAnchor = PopoverAnchor(barButtonItem: sender)
+        delegate?.didPressReloadDatabase(at: popoverAnchor, in: self)
+    }
+    
     @IBAction func didPressSettings(_ sender: UIBarButtonItem) {
         let popoverAnchor = PopoverAnchor(barButtonItem: sender)
         delegate?.didPressSettings(at: popoverAnchor, in: self)
     }
     
-    @IBAction func didPressLockDatabase(_ sender: UIBarButtonItem) {
+    @IBAction func didPressPasswordGenerator(_ sender: UIBarButtonItem) {
         let popoverAnchor = PopoverAnchor(barButtonItem: sender)
-        
-        let confirmationAlert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-        confirmationAlert.addAction(title: LString.actionLockDatabase, style: .destructive) {
-            [weak self] _ in
-            guard let self = self else { return }
-            self.delegate?.didPressLockDatabase(in: self)
-        }
-        confirmationAlert.addAction(title: LString.actionCancel, style: .cancel, handler: nil)
-        
-        confirmationAlert.modalPresentationStyle = .popover
-        popoverAnchor.apply(to: confirmationAlert.popoverPresentationController)
-        present(confirmationAlert, animated: true, completion: nil)
-    }
-    
-    @IBAction func didPressChangeDatabaseSettings(_ sender: UIBarButtonItem) {
-        let popoverAnchor = PopoverAnchor(barButtonItem: sender)
-        delegate?.didPressChangeMasterKey(at: popoverAnchor, in: self)
-    }
-    
-    @IBAction func didPressPrintDatabase(_ sender: UIBarButtonItem) {
-        let popoverAnchor = PopoverAnchor(barButtonItem: sender)
-        delegate?.didPressPrintDatabase(at: popoverAnchor, in: self)
+        delegate?.didPressPasswordGenerator(at: popoverAnchor, in: self)
     }
 }
 

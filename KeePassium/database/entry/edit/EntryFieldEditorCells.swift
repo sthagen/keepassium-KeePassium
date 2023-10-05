@@ -10,53 +10,24 @@
 import UIKit
 import KeePassiumLib
 
-
-class EditableFieldCellFactory {
-    public static func dequeueAndConfigureCell(
-        from tableView: UITableView,
-        for indexPath: IndexPath,
-        field: EditableField
-    ) -> EditableFieldCell & UITableViewCell {
-        let cellStoryboardID: String
-        if field.isFixed {
-            if field.isMultiline {
-                cellStoryboardID = EntryFieldEditorMultiLineCell.storyboardID
-            } else {
-                if field.isProtected || (field.internalName == EntryField.password) {
-                    cellStoryboardID = PasswordEntryFieldCell.storyboardID
-                } else {
-                    cellStoryboardID = EntryFieldEditorSingleLineCell.storyboardID
-                }
-            }
-        } else {
-            cellStoryboardID = EntryFieldEditorCustomFieldCell.storyboardID
-        }
-        let cell = tableView.dequeueReusableCell(
-            withIdentifier: cellStoryboardID,
-            for: indexPath)
-            as! EditableFieldCell & UITableViewCell
-        cell.field = field
-        
-        if let singleLineCell = cell as? EntryFieldEditorSingleLineCell {
-            decorate(singleLineCell, field: field)
-        }
-        return cell
-    }
+struct EntryFieldActionConfiguration {
+    static let hidden = Self(state: [.hidden], menu: nil)
     
-    private static func decorate(_ cell: EntryFieldEditorSingleLineCell, field: EditableField) {
-        cell.textField.keyboardType = .default
-        cell.actionButton.isHidden = true
+    enum State {
+        case enabled
+        case hidden
+        case busy
+    }
+    var state: Set<State>
+    var menu: UIMenu?
+    
+    public func apply(to button: UIButton) {
+        button.menu = menu
+        button.showsMenuAsPrimaryAction = menu != nil
         
-        switch field.internalName {
-        case EntryField.userName:
-            cell.actionButton.setTitle(LString.actionChooseUserName, for: .normal)
-            cell.actionButton.isHidden = false
-            cell.textField.keyboardType = .emailAddress
-        case EntryField.url:
-            cell.textField.keyboardType = .URL
-        default:
-            break
-        }
+        button.isHidden = state.contains(.hidden)
+        button.isEnabled = state.contains(.enabled)
+        button.configuration?.showsActivityIndicator = state.contains(.busy)
     }
 }
 
@@ -70,8 +41,7 @@ internal protocol EditableFieldCellDelegate: AnyObject {
         at popoverAnchor: PopoverAnchor,
         in cell: EditableFieldCell)
     
-    @available(iOS 14, *)
-    func getButtonMenu(for field: EditableField, in cell: EditableFieldCell) -> UIMenu?
+    func getActionConfiguration(for field: EditableField) -> EntryFieldActionConfiguration
 }
 
 internal protocol EditableFieldCell: AnyObject {
@@ -89,45 +59,40 @@ class EntryFieldEditorTitleCell:
 {
     public static let storyboardID = "TitleCell"
     
-    @IBOutlet weak var iconView: UIImageView!
     @IBOutlet weak var titleTextField: ValidatingTextField!
-    @IBOutlet weak var changeIconButton: UIButton!
+    @IBOutlet weak var iconButton: UIButton!
     
     weak var field: EditableField? {
-        didSet {
-            titleTextField.text = field?.value
-        }
+        didSet { refresh() }
     }
     var icon: UIImage? {
-        get { return iconView.image }
-        set { iconView.image = newValue }
+        didSet { refresh() }
     }
     weak var delegate: EditableFieldCellDelegate?
     
     override func awakeFromNib() {
         super.awakeFromNib()
 
+        titleTextField.font = UIFont.entryTextFont()
         titleTextField.validityDelegate = self
         titleTextField.delegate = self
         titleTextField.addRandomizerEditMenu()
         
-        let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(didTapIcon))
-        iconView.addGestureRecognizer(tapRecognizer)
+        iconButton.configuration = .tinted()
+        iconButton.borderColor = .actionTint
+        iconButton.borderWidth = 1
+        iconButton.cornerRadius = 5
+        iconButton.configuration?.baseForegroundColor = .iconTint
+        iconButton.accessibilityLabel = LString.fieldIcon
     }
     
-    @objc func didTapIcon(_ gestureRecognizer: UITapGestureRecognizer) {
-        if gestureRecognizer.state == .ended {
-            didPressChangeIcon(gestureRecognizer)
-        }
-    }
-    
-    @IBAction func didPressChangeIcon(_ sender: Any) {
-        guard let field = field else { return }
-        let popoverAnchor = PopoverAnchor(
-            sourceView: changeIconButton,
-            sourceRect: changeIconButton.bounds
-        )
-        delegate?.didPressButton(for: field, at: popoverAnchor, in: self)
+    private func refresh() {
+        guard let field else { return }
+        let buttonConfig = delegate?.getActionConfiguration(for: field)
+        buttonConfig?.apply(to: iconButton)
+        iconButton.configuration?.image = icon?.downscalingToSquare(maxSide: 29)
+        
+        titleTextField.text = field.value
     }
     
     override func becomeFirstResponder() -> Bool {
@@ -137,6 +102,16 @@ class EntryFieldEditorTitleCell:
             titleTextField.selectAll(nil)
         }
         return result
+    }
+    
+    func pulsateIcon() {
+        let scalingAnimation = CABasicAnimation(keyPath: "transform.scale")
+        scalingAnimation.toValue = 1.25
+        scalingAnimation.duration = 0.2
+        scalingAnimation.timingFunction = CAMediaTimingFunction.init(name: .easeOut)
+        scalingAnimation.autoreverses = true
+        scalingAnimation.repeatCount = 1
+        iconButton.layer.add(scalingAnimation, forKey: nil)
     }
     
     func validate() {
@@ -179,7 +154,9 @@ class EntryFieldEditorSingleLineCell:
     @IBOutlet weak var actionButton: UIButton!
     
     weak var delegate: EditableFieldCellDelegate? {
-        didSet { refreshMenu() }
+        didSet {
+            refreshActionButton()
+        }
     }
     weak var field: EditableField? {
         didSet {
@@ -189,32 +166,29 @@ class EntryFieldEditorSingleLineCell:
                 (field?.isProtected ?? false) && Settings.current.isHideProtectedFields
             textField.accessibilityLabel = field?.visibleName
             textField.textContentType = field?.textContentType
-            refreshMenu()
+            refreshActionButton()
         }
     }
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         titleLabel.font = UIFont.preferredFont(forTextStyle: .subheadline)
         titleLabel.adjustsFontForContentSizeCategory = true
-        textField.font = UIFont.monospaceFont(forTextStyle: .body)
+        textField.font = UIFont.entryTextFont()
         textField.adjustsFontForContentSizeCategory = true
         
         textField.validityDelegate = self
         textField.delegate = self
         textField.addRandomizerEditMenu()
+
     }
 
-    private func refreshMenu() {
-        guard #available(iOS 14, *) else { return }
-        
-        if let field = field,
-           let buttonMenu = delegate?.getButtonMenu(for: field, in: self)
-        {
-            actionButton.menu = buttonMenu
-            actionButton.showsMenuAsPrimaryAction = true
-        } else {
-            actionButton.showsMenuAsPrimaryAction = false
+    private func refreshActionButton() {
+        guard let field = field else {
+            return
         }
+        let actionConfig = delegate?.getActionConfiguration(for: field) ?? .hidden
+        actionConfig.apply(to: actionButton)
     }
     
     override func becomeFirstResponder() -> Bool {
@@ -224,6 +198,7 @@ class EntryFieldEditorSingleLineCell:
 
     func validate() {
         textField.validate()
+        refreshActionButton()
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
@@ -236,6 +211,7 @@ class EntryFieldEditorSingleLineCell:
         guard let field = field else { return }
         field.value = textField.text ?? ""
         delegate?.didChangeField(field, in: self)
+        refreshActionButton()
     }
     
     func validatingTextFieldShouldValidate(_ sender: ValidatingTextField) -> Bool {
@@ -264,6 +240,7 @@ final class PasswordEntryFieldCell:
     public static let storyboardID = "PasswordEntryFieldCell"
     @IBOutlet private weak var textField: ValidatingTextField!
     @IBOutlet private weak var titleLabel: UILabel!
+    @IBOutlet private weak var passwordQualityIndicatorView: PasswordQualityIndicatorView!
     @IBOutlet weak var randomizeButton: UIButton!
     
     weak var delegate: EditableFieldCellDelegate?
@@ -275,6 +252,7 @@ final class PasswordEntryFieldCell:
                 (field?.isProtected ?? false) && Settings.current.isHideProtectedFields
             textField.accessibilityLabel = field?.visibleName
             randomizeButton.accessibilityLabel = LString.PasswordGenerator.titleRandomGenerator
+            passwordQualityIndicatorView.quality = .init(password: field?.value)
         }
     }
     
@@ -283,7 +261,7 @@ final class PasswordEntryFieldCell:
         
         titleLabel.font = UIFont.preferredFont(forTextStyle: .subheadline)
         titleLabel.adjustsFontForContentSizeCategory = true
-        textField.font = UIFont.monospaceFont(forTextStyle: .body)
+        textField.font = UIFont.entryTextFont()
         textField.adjustsFontForContentSizeCategory = true
         
         textField.validityDelegate = self
@@ -309,6 +287,7 @@ final class PasswordEntryFieldCell:
     func validatingTextField(_ sender: ValidatingTextField, textDidChange text: String) {
         guard let field = field else { return }
         field.value = textField.text ?? ""
+        passwordQualityIndicatorView.quality = .init(password: textField.text)
         delegate?.didChangeField(field, in: self)
     }
     
@@ -358,7 +337,7 @@ class EntryFieldEditorMultiLineCell:
         
         titleLabel.font = UIFont.preferredFont(forTextStyle: .subheadline)
         titleLabel.adjustsFontForContentSizeCategory = true
-        textView.font = UIFont.monospaceFont(forTextStyle: .body)
+        textView.font = UIFont.entryTextFont()
         textView.adjustsFontForContentSizeCategory = true
         
         textView.validityDelegate = self
@@ -418,10 +397,10 @@ class EntryFieldEditorCustomFieldCell:
     override func awakeFromNib() {
         super.awakeFromNib()
         
-        nameTextField.font = UIFont.preferredFont(forTextStyle: .subheadline)
+        nameTextField.font = UIFont.entryTextFont()
         nameTextField.adjustsFontForContentSizeCategory = true
         
-        valueTextView.font = UIFont.monospaceFont(forTextStyle: .body)
+        valueTextView.font = UIFont.entryTextFont()
         valueTextView.adjustsFontForContentSizeCategory = true
         
         protectionSwitch.addTarget(self, action: #selector(protectionDidChange), for: .valueChanged)

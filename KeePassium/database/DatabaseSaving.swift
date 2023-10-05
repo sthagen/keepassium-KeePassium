@@ -13,8 +13,12 @@ protocol DatabaseSaving: DatabaseSaverDelegate {
     
     var databaseSaver: DatabaseSaver? { get set }
     var savingProgressHost: ProgressViewHost? { get }
+    var saveSuccessHandler: (() -> Void)? { get set }
     
-    func saveDatabase(_ databaseFile: DatabaseFile, timeoutDuration: TimeInterval)
+    func saveDatabase(
+        _ databaseFile: DatabaseFile,
+        timeoutDuration: TimeInterval,
+        onSuccess: (() -> Void)?)
     
     func willStartSaving(databaseFile: DatabaseFile)
     func canCancelSaving(databaseFile: DatabaseFile) -> Bool
@@ -31,9 +35,11 @@ protocol DatabaseSaving: DatabaseSaverDelegate {
 extension DatabaseSaving {
     func saveDatabase(
         _ databaseFile: DatabaseFile,
-        timeoutDuration: TimeInterval = FileDataProvider.defaultTimeoutDuration
+        timeoutDuration: TimeInterval = FileDataProvider.defaultTimeoutDuration,
+        onSuccess: (() -> Void)? = nil
     ) {
         assert(databaseSaver == nil)
+        saveSuccessHandler = onSuccess
         databaseSaver = DatabaseSaver(
             databaseFile: databaseFile,
             timeoutDuration: timeoutDuration,
@@ -101,17 +107,15 @@ extension DatabaseSaving {
             guard let self = self else { return }
             switch strategy {
             case .cancelSaving:
-                completion(nil, false)
-                self.databaseSaver(databaseSaver, didCancelSaving: local)
+                completion(.cancel)
             case .overwriteRemote:
-                completion(local.data, true)
+                completion(.overwrite(local.data))
             case .merge:
                 assertionFailure("Not implemented")
-                completion(nil, false)
-                self.databaseSaver = nil
+                completion(.cancel)
             case .saveAs:
-                completion(local.data, false)
-                self.databaseSaver = nil
+                completion(.considerExported)
+                self.databaseSaver = nil 
                 self.saveToAnotherFile(databaseFile: local) 
             }
         }
@@ -130,6 +134,7 @@ extension DatabaseSaving {
             dbSettings.maybeSetMasterKey(of: databaseFile.database)
         }
         didSave(databaseFile: databaseFile)
+        saveSuccessHandler?()
     }
     
     func databaseSaver(

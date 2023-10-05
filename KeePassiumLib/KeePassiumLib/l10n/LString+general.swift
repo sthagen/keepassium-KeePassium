@@ -8,6 +8,18 @@
 
 extension LString {
 
+  public static let entriesSelectedCountTemplate = NSLocalizedString(
+        "[Generic/Count/EntriesSelected]",
+        bundle: Bundle.framework,
+        comment: "Number of entries selected. For example: 'No entries selected', '1 entry selected'. IMPORTANT: Please fill out all the plural forms."
+    )
+    
+    public static let bitCountTemplate = NSLocalizedString(
+        "[Generic/Count/Bits]",
+        bundle: Bundle.framework,
+        comment: "Number of bits. For example: '123 bits of entropy'. IMPORTANT: Please fill out all the plural forms."
+    )
+
     public static let actionOK = NSLocalizedString(
         "[Generic] OK",
         bundle: Bundle.framework,
@@ -110,6 +122,13 @@ extension LString {
         value: "Create",
         comment: "Action/button to create an item (entry, group, file — depending on context)"
     )
+    public static let actionSelect = NSLocalizedString(
+        "[Generic/Action/SelectItems]",
+        bundle: Bundle.framework,
+        value: "Select",
+        comment: "Action/button to select some items in a list."
+    )
+
     public static let actionFileSaveAs = NSLocalizedString(
         "[Generic/File/Save as]",
         bundle: Bundle.framework,
@@ -405,6 +424,12 @@ extension LString {
         value: "The database is unreachable.\nThis is its latest local copy.",
         comment: "Message shown after we show a cached local database instead of the (unavailable) original database."
     )
+    public static let titleDatabaseOperations = NSLocalizedString(
+        "[Database/Operations/title]",
+        bundle: Bundle.framework,
+        value: "Database Operations",
+        comment: "Title of a list with database-related actions (e.g. lock database, change master key, etc)"
+    )
     public static let actionLockDatabase = NSLocalizedString(
         "[Database/Opened/action] Lock Database",
         bundle: Bundle.framework,
@@ -455,6 +480,12 @@ extension LString {
         bundle: Bundle.framework,
         value: "Create Database",
         comment: "Title of a form for creating a database"
+    )
+    public static let actionChangeMasterKey = NSLocalizedString(
+        "[Database/MasterKey/Change/action]",
+        bundle: Bundle.framework,
+        value: "Change Master Key",
+        comment: "Action/button: change master key of a database."
     )
     public static let titleRememberYourPassword = NSLocalizedString(
         "[Database/MasterKey/RememberYourPassword/title]",
@@ -579,6 +610,12 @@ extension LString {
         comment: "VoiceOver description of a group [groupTitle: String, itemCount: Int]"
     )
     
+    public static let fieldIcon = NSLocalizedString(
+        "[Entry/Field/name] Icon",
+        bundle: Bundle.framework,
+        value: "Icon",
+        comment: "Name of an entry field"
+    )
     public static let fieldTitle = NSLocalizedString(
         "[Entry/Field/name] Title",
         bundle: Bundle.framework,
@@ -708,6 +745,16 @@ extension LString {
         bundle: Bundle.framework,
         value: "Open Database",
         comment: "Action/button")
+    public static let actionReloadDatabase = NSLocalizedString(
+        "[Database/Reload/action]",
+        bundle: Bundle.framework,
+        value: "Reload Database",
+        comment: "Action/button")
+    public static let actionSaveDatabase = NSLocalizedString(
+        "[Database/Save/action] Save Database",
+        bundle: Bundle.framework,
+        value: "Save Database",
+        comment: "Action/button to save the current database.")
     public static let tryRemoteConnection = NSLocalizedString(
         "[Database/RecommendRemote/callToAction]",
         bundle: Bundle.framework,
@@ -845,6 +892,36 @@ extension LString {
         bundle: Bundle.framework,
         value: "Add Custom Icon",
         comment: "Action: add/import an image as a custom icon"
+    )
+    public static let actionDownloadFavicon = NSLocalizedString(
+        "[Database/CustomIcon/DownloadFavicon/action]",
+        bundle: Bundle.framework,
+        value: "Download Favicon",
+        comment: "Action: download icon of a website"
+    )
+    public static let actionDownloadFavicons = NSLocalizedString(
+        "[Database/CustomIcon/DownloadFavicons/action]",
+        bundle: Bundle.framework,
+        value: "Download Favicons",
+        comment: "Action/button to download favicons of websites mentioned in selected entries."
+    )
+    public static let faviconUpdateStatsTemplate = NSLocalizedString(
+        "[Database/CustomIcon/DownloadFavicons/stats]",
+        bundle: Bundle.framework,
+        value: "Entries processed: %d\nIcons updated: %d",
+        comment: "Report of favicon download results."
+    )
+    public static let statusDownloadingOneFavicon = NSLocalizedString(
+        "[Database/CustomIcon/DownloadOneFavicon/status]",
+        bundle: Bundle.framework,
+        value: "Downloading favicon",
+        comment: "Status message: a website favicon is being downloaded"
+    )
+    public static let statusDownloadingFavicons = NSLocalizedString(
+        "[Database/CustomIcon/DownloadFavicons/status]",
+        bundle: Bundle.framework,
+        value: "Downloading favicons",
+        comment: "Status message: multiple website favicons are being downloaded"
     )
     
     

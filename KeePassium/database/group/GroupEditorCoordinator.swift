@@ -32,6 +32,7 @@ final class GroupEditorCoordinator: Coordinator {
     var databaseSaver: DatabaseSaver?
     var fileExportHelper: FileExportHelper?
     var savingProgressHost: ProgressViewHost? { return router }
+    var saveSuccessHandler: (() -> Void)?
 
     init(router: NavigationRouter, databaseFile: DatabaseFile, parent: Group, target: Group?) {
         self.router = router
@@ -85,11 +86,9 @@ final class GroupEditorCoordinator: Coordinator {
         if let originalGroup = originalGroup {
             group.apply(to: originalGroup, makeNewUUID: false)
             delegate?.didUpdateGroup(originalGroup, in: self)
-            GroupChangeNotifications.post(groupDidChange: originalGroup)
         } else {
             parent.add(group: group)
             delegate?.didUpdateGroup(group, in: self)
-            GroupChangeNotifications.post(groupDidChange: group)
         }
         
         saveDatabase(databaseFile)
@@ -107,7 +106,8 @@ final class GroupEditorCoordinator: Coordinator {
     func showIconPicker() {
         let iconPickerCoordinator = ItemIconPickerCoordinator(
             router: router,
-            databaseFile: databaseFile
+            databaseFile: databaseFile,
+            customFaviconUrl: nil
         )
         iconPickerCoordinator.item = group
         iconPickerCoordinator.dismissHandler = { [weak self] (coordinator) in

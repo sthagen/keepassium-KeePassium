@@ -94,6 +94,11 @@ struct PricingPlanBenefit {
         title: LString.premiumBenefitBusinessCloudsTitle,
         description: LString.premiumBenefitBusinessCloudsDescription
     )
+    static let passwordAudit = PricingPlanBenefit(
+        symbolName: .premiumBenefitPasswordAudit,
+        title: LString.premiumBenefitPasswordAuditTitle,
+        description: LString.premiumBenefitPasswordAuditDescription
+    )
     static let viewFieldReferences = PricingPlanBenefit(
         symbolName: .premiumBenefitFieldReferences,
         title: LString.premiumBenefitFieldReferecesTitle,
@@ -128,7 +133,8 @@ class PricingPlanFactory {
         case .version88,
              .version96,
              .version99,
-             .version120:
+             .version120,
+             .version139:
             return PricingPlanVersionPurchase(product)
         case .donationSmall,
              .donationMedium,
@@ -189,6 +195,7 @@ class FreePricingPlan: PricingPlan {
             PricingPlanBenefit.quickAutoFill,
             PricingPlanBenefit.multipleDatabases,
             PricingPlanBenefit.yubikeyChallengeResponse,
+            PricingPlanBenefit.passwordAudit,
             PricingPlanBenefit.businessClouds,
             PricingPlanBenefit.viewFieldReferences,
             PricingPlanBenefit.longDatabaseTimeout,
@@ -251,6 +258,7 @@ class PricingPlanPremiumMonthly: RealPricingPlan {
             PricingPlanBenefit.quickAutoFill,
             PricingPlanBenefit.multipleDatabases,
             PricingPlanBenefit.yubikeyChallengeResponse,
+            PricingPlanBenefit.passwordAudit,
             PricingPlanBenefit.businessClouds,
             PricingPlanBenefit.viewFieldReferences,
             PricingPlanBenefit.longDatabaseTimeout,
@@ -280,6 +288,7 @@ class PricingPlanPremiumYearly: RealPricingPlan {
             PricingPlanBenefit.quickAutoFill,
             PricingPlanBenefit.multipleDatabases,
             PricingPlanBenefit.yubikeyChallengeResponse,
+            PricingPlanBenefit.passwordAudit,
             PricingPlanBenefit.businessClouds,
             PricingPlanBenefit.viewFieldReferences,
             PricingPlanBenefit.longDatabaseTimeout,
@@ -307,6 +316,7 @@ class PricingPlanVersionPurchase: RealPricingPlan {
             PricingPlanBenefit.quickAutoFill,
             PricingPlanBenefit.multipleDatabases,
             PricingPlanBenefit.yubikeyChallengeResponse,
+            PricingPlanBenefit.passwordAudit,
             PricingPlanBenefit.businessClouds,
             PricingPlanBenefit.viewFieldReferences,
             PricingPlanBenefit.longDatabaseTimeout,
@@ -333,6 +343,7 @@ class PricingPlanPremiumForever: RealPricingPlan {
             PricingPlanBenefit.quickAutoFill,
             PricingPlanBenefit.multipleDatabases,
             PricingPlanBenefit.yubikeyChallengeResponse,
+            PricingPlanBenefit.passwordAudit,
             PricingPlanBenefit.businessClouds,
             PricingPlanBenefit.viewFieldReferences,
             PricingPlanBenefit.longDatabaseTimeout,

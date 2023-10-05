@@ -9,6 +9,8 @@
 import Foundation
 
 public class CustomIcon2: Eraseable {
+    public static let maxSide = CGFloat(128)
+    
     public private(set) var uuid: UUID
     public private(set) var data: ByteArray
     public private(set) var name: String?
@@ -107,14 +109,15 @@ public class CustomIcon2: Eraseable {
         xmlIcon.addChild(name: Xml2.uuid, value: uuid.base64EncodedString())
         xmlIcon.addChild(name: Xml2.data, value: data.base64EncodedString())
         
-        guard formatVersion >= .v4_1 else {
-            return xmlIcon
-        }
-        
-        if let name = name {
+        if formatVersion.supports(.customIconName),
+           let name = name
+        {
             xmlIcon.addChild(name: Xml2.name, value: name)
         }
-        if let lastModificationTime = lastModificationTime {
+        
+        if formatVersion.supports(.customIconModificationTime),
+           let lastModificationTime = lastModificationTime
+        {
             xmlIcon.addChild(
                 name: Xml2.lastModificationTime,
                 value: timeFormatter.dateToXMLString(lastModificationTime)

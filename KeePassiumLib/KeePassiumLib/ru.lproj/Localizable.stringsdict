@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>[Generic/Count/Bits]</key>
+	<dict>
+		<key>GenericCountBits</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>d</string>
+			<key>few</key>
+			<string>%d бита</string>
+			<key>many</key>
+			<string>%d бит</string>
+			<key>one</key>
+			<string>%d бит</string>
+			<key>other</key>
+			<string>%d бит</string>
+		</dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@GenericCountBits@</string>
+	</dict>
+	<key>[Generic/Count/EntriesSelected]</key>
+	<dict>
+		<key>GenericCountEntriesSelected</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>d</string>
+			<key>few</key>
+			<string>Выбрано %d записи</string>
+			<key>many</key>
+			<string>Выбрано %d записей</string>
+			<key>one</key>
+			<string>Выбрана %d запись</string>
+			<key>other</key>
+			<string>Выбрано %d записей</string>
+		</dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@GenericCountEntriesSelected@</string>
+	</dict>
+</dict>
+</plist>

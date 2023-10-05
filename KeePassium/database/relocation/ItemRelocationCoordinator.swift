@@ -43,6 +43,7 @@ class ItemRelocationCoordinator: Coordinator {
     var databaseSaver: DatabaseSaver?
     var fileExportHelper: FileExportHelper?
     var savingProgressHost: ProgressViewHost? { return router }
+    var saveSuccessHandler: (() -> Void)?
     
     private var postSavingPhase: (()->Void)?
     
@@ -141,20 +142,6 @@ extension ItemRelocationCoordinator {
             }
         }
         return true
-    }
-    
-    private func notifyContentChanged() {
-        for item in itemsToRelocate {
-            if let entry = item.value as? Entry, let group = entry.parent {
-                EntryChangeNotifications.post(entryDidChange: entry)
-                GroupChangeNotifications.post(groupDidChange: group)
-            } else if let group = item.value as? Group {
-                GroupChangeNotifications.post(groupDidChange: group)
-            }
-        }
-        if let destinationGroup = destinationGroup {
-            GroupChangeNotifications.post(groupDidChange: destinationGroup)
-        }
     }
     
     
@@ -376,7 +363,6 @@ extension ItemRelocationCoordinator: DatabaseSaving {
             return
         }
         delegate?.didRelocateItems(in: self)
-        notifyContentChanged()
         router.pop(viewController: groupPicker, animated: true)
     }
     

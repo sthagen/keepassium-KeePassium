@@ -34,6 +34,7 @@ public enum SymbolName: String {
     public static let premiumBenefitFieldReferences = Self.arrowshapeTurnUpForwardCircle
     public static let premiumBenefitQuickAutoFill = Self.bolt
     public static let premiumBenefitBusinessClouds = Self.briefcase
+    public static let premiumBenefitPasswordAudit = Self.networkBadgeShield
     public static let premiumBenefitSupport = Self.questionmarkBubble
     public static let premiumBenefitShiny = Self.faceSmiling
     
@@ -42,6 +43,7 @@ public enum SymbolName: String {
     case arrowshapeTurnUpForward = "arrowshape.turn.up.forward" 
     case arrowshapeTurnUpForwardCircle = "arrowshape.turn.up.forward.circle" 
     case asterisk = "asterisk" 
+    case bellSlash = "bell.slash" 
     case bolt = "bolt" 
     case bookClosed = "book.closed" 
     case briefcase = "briefcase" 
@@ -54,10 +56,14 @@ public enum SymbolName: String {
     case clockArrowCirclepath = "clock.arrow.circlepath" 
     case clockBadgeCheckmark = "clock.badge.checkmark" 
     case clockShield = "clock.shield" 
+    case dieFace3 = "die.face.3" 
     case docOnDoc = "doc.on.doc" 
     case ellipsis = "ellipsis" 
+    case ellipsisCircle = "ellipsis.circle"
     case externalLink = "external-link" 
+    case exclamationMarkOctagonFill = "exclamationmark.octagon.fill"
     case exclamationMarkTriangle = "exclamationmark.triangle" 
+    case exclamationMarkTriangleFill = "exclamationmark.triangle.fill"
     case eye = "eye" 
     case eyeFill = "eye.fill" 
     case faceID = "faceid" 
@@ -73,7 +79,7 @@ public enum SymbolName: String {
     case iPadHomeButton = "ipad.homebutton" 
     case iPhone = "iphone" 
     case iPhoneHomeButton = "iphone.homebutton" 
-    case key = "key.diagnonal" 
+    case key = "key.diagonal" 
     case keyDoc = "key.doc" 
     case keyDocHorizontal = "key.doc.horizontal" 
     case keyboard = "keyboard" 
@@ -81,6 +87,7 @@ public enum SymbolName: String {
     case lock = "lock" 
     case minus = "minus" 
     case network = "network" 
+    case networkBadgeShield = "network.badge.shield" 
     case nosign = "nosign" 
     case noteText = "note.text" 
     case pencil = "pencil" 
@@ -175,23 +182,6 @@ extension UIImage {
         }
         let _iconSet = iconSet ?? Settings.current.databaseIconSet
         return _iconSet.getIcon(group.iconID)
-    }
-    
-    func downscalingToSquare(maxSide: CGFloat) -> UIImage? {
-        let targetSide: CGFloat
-        if size.width > maxSide && size.height > maxSide {
-            targetSide = maxSide
-        } else {
-            targetSide = min(size.width, size.height)
-        }
-        
-        let targetSize = CGSize(width: targetSide, height: targetSide)
-        UIGraphicsBeginImageContextWithOptions(targetSize, false, self.scale)
-        self.draw(in: CGRect(x: 0, y: 0, width: targetSide, height: targetSide))
-        let resized = UIGraphicsGetImageFromCurrentImageContext()
-        UIGraphicsEndImageContext()
-        
-        return resized
     }
     
     func withGradientUnderlay() -> UIImage? {

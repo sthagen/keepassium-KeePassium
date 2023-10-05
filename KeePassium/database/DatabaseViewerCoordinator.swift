@@ -31,6 +31,8 @@ protocol DatabaseViewerCoordinatorDelegate: AnyObject {
     func didRelocateDatabase(_ databaseFile: DatabaseFile, to url: URL)
     
     func didPressReinstateDatabase(_ fileRef: URLReference, in coordinator: DatabaseViewerCoordinator)
+    
+    func didPressReloadDatabase(_ databaseFile: DatabaseFile, in coordinator: DatabaseViewerCoordinator)
 }
 
 final class DatabaseViewerCoordinator: Coordinator {
@@ -46,6 +48,8 @@ final class DatabaseViewerCoordinator: Coordinator {
     
     weak var delegate: DatabaseViewerCoordinatorDelegate?
     var dismissHandler: CoordinatorDismissHandler?
+    
+    public var currentGroupUUID: UUID? { currentGroup?.uuid }
 
     private let primaryRouter: NavigationRouter
     private let placeholderRouter: NavigationRouter
@@ -62,6 +66,7 @@ final class DatabaseViewerCoordinator: Coordinator {
         return !databaseFile.status.contains(.readOnly)
     }
 
+    private var initialGroupUUID: UUID?
     private weak var currentGroup: Group?
     private weak var currentEntry: Entry?
     private weak var rootGroupViewer: GroupViewerVC?
@@ -81,12 +86,16 @@ final class DatabaseViewerCoordinator: Coordinator {
     var databaseSaver: DatabaseSaver?
     var fileExportHelper: FileExportHelper?
     var savingProgressHost: ProgressViewHost? { return self }
+    var saveSuccessHandler: (() -> Void)?
+
+    let faviconDownloader: FaviconDownloader
     
     init(
         splitViewController: RootSplitVC,
         primaryRouter: NavigationRouter,
         originalRef: URLReference,
         databaseFile: DatabaseFile,
+        context: DatabaseReloadContext?,
         loadingWarnings: DatabaseLoadingWarnings?
     ) {
         self.splitViewController = splitViewController
@@ -97,9 +106,13 @@ final class DatabaseViewerCoordinator: Coordinator {
         self.database = databaseFile.database
         self.loadingWarnings = loadingWarnings
         
+        self.initialGroupUUID = context?.groupUUID
+        
         let placeholderVC = PlaceholderVC.instantiateFromStoryboard()
         let placeholderWrapperVC = RouterNavigationController(rootViewController: placeholderVC)
         self.placeholderRouter = NavigationRouter(placeholderWrapperVC)
+
+        faviconDownloader = FaviconDownloader()
     }
     
     deinit {
@@ -123,7 +136,7 @@ final class DatabaseViewerCoordinator: Coordinator {
 
         settingsNotifications = SettingsNotifications(observer: self)
         
-        showGroup(database.root, replacingTopVC: splitViewController.isCollapsed)
+        showInitialGroups(replacingTopVC: splitViewController.isCollapsed)
         showEntry(nil)
         
         settingsNotifications.startObserving()
@@ -160,7 +173,7 @@ final class DatabaseViewerCoordinator: Coordinator {
     }
     
     private func getPresenterForModals() -> UIViewController {
-        return splitViewController
+        return splitViewController.presentedViewController ?? splitViewController
     }
 }
 
@@ -262,7 +275,33 @@ extension DatabaseViewerCoordinator {
         getPresenterForModals().present(passcodeInputVC, animated: true, completion: nil)
     }
     
-    private func showGroup(_ group: Group?, replacingTopVC: Bool = false) {
+    private func showInitialGroups(replacingTopVC: Bool) {
+        guard let initialGroupUUID,
+              let initialGroup = database.root?.findGroup(byUUID: initialGroupUUID)
+        else {
+            showGroup(database.root, replacingTopVC: replacingTopVC, animated: true)
+            return
+        }
+        
+        var groupStack = [Group]()
+        var currentGroup: Group? = initialGroup
+        while let subgroup = currentGroup {
+            groupStack.append(subgroup)
+            currentGroup = currentGroup?.parent
+        }
+        groupStack.reverse() 
+        
+        let rootGroup = groupStack.removeFirst()
+        showGroup(rootGroup, replacingTopVC: replacingTopVC, animated: false)
+        
+        groupStack.forEach { subgroup in
+            DispatchQueue.main.async {
+                self.showGroup(subgroup, animated: false)
+            }
+        }
+    }
+    
+    private func showGroup(_ group: Group?, replacingTopVC: Bool = false, animated: Bool) {
         guard let group = group else {
             Diag.error("The group is nil")
             assertionFailure()
@@ -276,8 +315,9 @@ extension DatabaseViewerCoordinator {
         let groupViewerVC = GroupViewerVC.instantiateFromStoryboard()
         groupViewerVC.delegate = self
         groupViewerVC.group = group
+        groupViewerVC.canDownloadFavicons = database is Database2
         
-        let isCustomTransition = replacingTopVC
+        let isCustomTransition = replacingTopVC && animated
         if isCustomTransition {
             primaryRouter.prepareCustomTransition(
                 duration: vcAnimationDuration,
@@ -287,7 +327,7 @@ extension DatabaseViewerCoordinator {
         }
         primaryRouter.push(
             groupViewerVC,
-            animated: !isCustomTransition,
+            animated: animated && !isCustomTransition,
             replaceTopViewController: replacingTopVC,
             onPop: {
                 [weak self, previousGroup] in
@@ -400,14 +440,69 @@ extension DatabaseViewerCoordinator {
         viewController.present(modalRouter, animated: true, completion: nil)
         addChildCoordinator(settingsCoordinator)
     }
+
+    private func showPasswordAuditOrOfferPremium(in viewController: UIViewController) {
+        self.showPasswordAudit(in: viewController)
+    }
     
-    private func showMasterKeyChanger(
-        at popoverAnchor: PopoverAnchor,
-        in viewController: UIViewController
-    ) {
+    private func showPasswordAudit(in viewController: UIViewController) {
+        let modalRouter = NavigationRouter.createModal(style: .formSheet)
+        let passwordAuditCoordinator = PasswordAuditCoordinator(
+            databaseFile: databaseFile,
+            router: modalRouter
+        )
+        passwordAuditCoordinator.delegate = self
+        passwordAuditCoordinator.dismissHandler = { [weak self] coordinator in
+            self?.removeChildCoordinator(coordinator)
+            self?.refresh()
+        }
+        passwordAuditCoordinator.start()
+        viewController.present(modalRouter, animated: true, completion: nil)
+        addChildCoordinator(passwordAuditCoordinator)
+    }
+
+    private func downloadFavicons(in viewController: UIViewController) {
+        var allEntries = [Entry]()
+        databaseFile.database.root?.collectAllEntries(to: &allEntries)
+
+        downloadFavicons(for: allEntries, in: viewController) { [weak self] downloadedFavicons in
+            guard let db2 = self?.database as? Database2, let databaseFile = self?.databaseFile else {
+                return
+            }
+
+            downloadedFavicons.forEach {
+                guard let entry2 = $0.entry as? Entry2 else {
+                    return
+                }
+
+                guard let icon = db2.addCustomIcon($0.image) else {
+                    Diag.error("Failed to add favicon to database")
+                    return
+                }
+                db2.setCustomIcon(icon, for: entry2)
+            }
+            self?.refresh()
+
+            let alert = UIAlertController(
+                title: databaseFile.visibleFileName,
+                message: String.localizedStringWithFormat(
+                    LString.faviconUpdateStatsTemplate,
+                    allEntries.count,
+                    downloadedFavicons.count),
+                preferredStyle: .alert
+            )
+            alert.addAction(title: LString.actionSaveDatabase, style: .default, preferred: true) {
+                [weak self] _ in
+                self?.saveDatabase(databaseFile)
+            }
+            viewController.present(alert, animated: true)
+        }
+    }
+    
+    private func showMasterKeyChanger(in viewController: UIViewController) {
         Diag.info("Will change master key")
         
-        let modalRouter = NavigationRouter.createModal(style: .formSheet, at: popoverAnchor)
+        let modalRouter = NavigationRouter.createModal(style: .formSheet)
         let databaseKeyChangeCoordinator = DatabaseKeyChangerCoordinator(
             databaseFile: databaseFile,
             router: modalRouter
@@ -445,7 +540,7 @@ extension DatabaseViewerCoordinator {
         addChildCoordinator(groupEditorCoordinator)
     }
     
-    private func showEntryEditor(for entryToEdit: Entry?, at popoverAnchor: PopoverAnchor?) {
+    private func showEntryEditor(for entryToEdit: Entry?, at popoverAnchor: PopoverAnchor?, onDismiss: (() -> Void)? = nil) {
         Diag.info("Will edit entry")
         guard let parent = currentGroup else {
             Diag.warning("Parent group is not definted")
@@ -462,6 +557,7 @@ extension DatabaseViewerCoordinator {
         )
         entryFieldEditorCoordinator.dismissHandler = { [weak self] coordinator in
             self?.removeChildCoordinator(coordinator)
+            onDismiss?()
         }
         entryFieldEditorCoordinator.delegate = self
         entryFieldEditorCoordinator.start()
@@ -493,7 +589,7 @@ extension DatabaseViewerCoordinator {
         addChildCoordinator(itemRelocationCoordinator)
     }
     
-    private func showDatabasePrintDialog(at popoverAnchor: PopoverAnchor) {
+    private func showDatabasePrintDialog() {
         Diag.info("Will print database")
         let databaseFormatter = DatabasePrintFormatter()
         guard let formattedText = databaseFormatter.toAttributedString(
@@ -547,20 +643,36 @@ extension DatabaseViewerCoordinator: GroupViewerDelegate {
         closeDatabase(shouldLock: true, reason: .userRequest, animated: true, completion: nil)
     }
 
-    func didPressChangeMasterKey(at popoverAnchor: PopoverAnchor, in viewController: GroupViewerVC) {
-        showMasterKeyChanger(at: popoverAnchor, in: viewController)
+    func didPressChangeMasterKey(in viewController: GroupViewerVC) {
+        showMasterKeyChanger(in: viewController)
     }
 
-    func didPressPrintDatabase(at popoverAnchor: PopoverAnchor, in viewController: GroupViewerVC) {
-        showDatabasePrintDialog(at: popoverAnchor)
+    func didPressPrintDatabase(in viewController: GroupViewerVC) {
+        showDatabasePrintDialog()
+    }
+
+    func didPressReloadDatabase(at popoverAnchor: PopoverAnchor, in viewController: GroupViewerVC) {
+        delegate?.didPressReloadDatabase(databaseFile, in: self)
     }
     
     func didPressSettings(at popoverAnchor: PopoverAnchor, in viewController: GroupViewerVC) {
         showAppSettings(at: popoverAnchor, in: viewController)
     }
 
+    func didPressPasswordAudit(in viewController: GroupViewerVC) {
+        showPasswordAuditOrOfferPremium(in: viewController)
+    }
+
+    func didPressFaviconsDownload(in viewController: GroupViewerVC) {
+        downloadFavicons(in: viewController)
+    }
+    
+    func didPressPasswordGenerator(at popoverAnchor: PopoverAnchor, in viewController: GroupViewerVC) {
+        showPasswordGenerator(at: popoverAnchor, in: viewController)
+    }
+    
     func didSelectGroup(_ group: Group?, in viewController: GroupViewerVC) -> Bool {
-        showGroup(group)
+        showGroup(group, animated: true)
         
         return false
     }
@@ -1013,4 +1125,14 @@ extension DatabaseViewerCoordinator {
         addChildCoordinator(tipBoxCoordinator)
         getPresenterForModals().present(modalRouter, animated: true, completion: nil)
     }
+}
+
+extension DatabaseViewerCoordinator: PasswordAuditCoordinatorDelegate {
+    func didPressEditEntry(_ entry: KeePassiumLib.Entry, at popoverAnchor: PopoverAnchor, onDismiss: @escaping () -> Void) {
+        showEntryEditor(for: entry, at: popoverAnchor, onDismiss: onDismiss)
+    }
+}
+
+extension DatabaseViewerCoordinator: FaviconDownloading {
+    var faviconDownloadingProgressHost: ProgressViewHost { return self }
 }

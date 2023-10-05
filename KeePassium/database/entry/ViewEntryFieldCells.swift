@@ -120,9 +120,8 @@ class ViewableFieldCell: UITableViewCell, ViewableFieldCellBase {
             .preferredFont(forTextStyle: .subheadline)
             .withRelativeSize(textScale)
         nameLabel.adjustsFontForContentSizeCategory = true
-        valueText.font = UIFont
-            .monospaceFont(forTextStyle: .body)
-            .withRelativeSize(textScale)
+        
+        valueText.font = UIFont.entryTextFont().withRelativeSize(textScale)
         valueText.adjustsFontForContentSizeCategory = true
         
         nameLabel.text = field?.visibleName
@@ -243,8 +242,29 @@ class ProtectedFieldCell: ViewableFieldCell {
         theButton.addTarget(self, action: #selector(toggleValueHidden), for: .touchUpInside)
         theButton.isSelected = !(field?.isValueHidden ?? true)
         valueText.isSelectable = theButton.isSelected
-        accessoryView = theButton
         toggleButton = theButton
+
+        guard field?.internalName == EntryField.password else {
+            accessoryView = theButton
+            refreshTextView()
+            return
+        }
+
+        let indicatorView = PasswordQualityIndicatorIconView()
+        indicatorView.quality = .init(password: field?.resolvedValue)
+        guard !indicatorView.isHidden else {
+            accessoryView = theButton
+            refreshTextView()
+            return
+        }
+
+        let wrapperiew = UIView()
+        wrapperiew.addSubview(theButton)
+        wrapperiew.addSubview(indicatorView)
+        wrapperiew.frame = .init(x: 0, y: 0, width: 48, height: 24)
+        indicatorView.frame = .init(x: 0, y: 3, width: 18, height: 18)
+        theButton.frame = .init(x: 24, y: 0, width: 24, height: 24)
+        accessoryView = wrapperiew
         
         refreshTextView()
     }

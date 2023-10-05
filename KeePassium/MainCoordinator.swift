@@ -62,6 +62,8 @@ final class MainCoordinator: Coordinator {
     
     private var isInitialDatabase = true
     
+    private var isReloadingDatabase = false
+    
     init(window: UIWindow) {
         self.mainWindow = window
         self.rootSplitVC = RootSplitVC()
@@ -133,13 +135,6 @@ final class MainCoordinator: Coordinator {
             return
         }
         Diag.info("Intune account is enrolled")
-        IntuneMAMDiagnosticConsole.getIntuneLogPaths()?.forEach { logFilePath in
-            Diag.info(logFilePath)
-            if let fileURL = URL(string: "file://" + logFilePath) {
-                let log: String = (try? String(contentsOf: fileURL)) ?? "failed"
-                Diag.info(log)
-            }
-        }
         #endif
         
         runAfterStartTasks()
@@ -148,8 +143,8 @@ final class MainCoordinator: Coordinator {
     private func runAfterStartTasks() {
         #if INTUNE
         applyIntuneAppConfig()
-        
-        guard ManagedAppConfig.shared.hasProvisionalLicense() else {
+
+        guard LicenseManager.shared.hasActiveBusinessLicense() else {
             showOrgLicensePaywall()
             return
         }
@@ -157,7 +152,7 @@ final class MainCoordinator: Coordinator {
         DispatchQueue.main.async { [weak self] in
             self?.maybeShowOnboarding()
         }
-        
+
         let isAutoUnlockStartupDatabase = Settings.current.isAutoUnlockStartupDatabase
         databasePickerCoordinator.shouldSelectDefaultDatabase = isAutoUnlockStartupDatabase
     }
@@ -252,9 +247,12 @@ extension MainCoordinator {
             self?.runAfterStartTasks()
         }
         alert.addAction(title: LString.titleDiagnosticLog, style: .default) { [weak self] _ in
-            self?.showDiagnostics(onDismiss: { [weak self] in
-                self?.runAfterStartTasks()
-            })
+            guard let self else { return }
+            DispatchQueue.main.async {
+                self.showDiagnostics(onDismiss: { [weak self] in
+                    self?.runAfterStartTasks()
+                })
+            }
         }
         DispatchQueue.main.async {
             self.getPresenterForModals().present(alert, animated: true)
@@ -369,7 +367,10 @@ extension MainCoordinator {
 
 extension MainCoordinator {
     
-    private func setDatabase(_ databaseRef: URLReference?) {
+    private func setDatabase(
+        _ databaseRef: URLReference?,
+        autoOpenWith context: DatabaseReloadContext? = nil
+    ) {
         self.selectedDatabaseRef = databaseRef
         guard let databaseRef = databaseRef else {
             showPlaceholder()
@@ -377,6 +378,7 @@ extension MainCoordinator {
         }
         
         let dbUnlocker = showDatabaseUnlocker(databaseRef)
+        dbUnlocker.reloadingContext = context
         dbUnlocker.setDatabase(databaseRef)
     }
     
@@ -440,6 +442,7 @@ extension MainCoordinator {
     private func showDatabaseViewer(
         _ fileRef: URLReference,
         databaseFile: DatabaseFile,
+        context: DatabaseReloadContext?,
         warnings: DatabaseLoadingWarnings
     ) {
         let databaseViewerCoordinator = DatabaseViewerCoordinator(
@@ -447,6 +450,7 @@ extension MainCoordinator {
             primaryRouter: primaryRouter,
             originalRef: fileRef, 
             databaseFile: databaseFile, 
+            context: context,
             loadingWarnings: warnings
         )
         databaseViewerCoordinator.dismissHandler = { [weak self] coordinator in
@@ -552,6 +556,29 @@ extension MainCoordinator {
         case .internalBackup, .internalDocuments, .internalInbox:
             assertionFailure("Should not be here. Can reinstate only external or remote files.")
             return
+        }
+    }
+    
+    private func reloadDatabase(
+        _ databaseFile: DatabaseFile,
+        from databaseViewerCoordinator: DatabaseViewerCoordinator
+    ) {
+        let context = DatabaseReloadContext(for: databaseFile.database)
+        context.groupUUID = databaseViewerCoordinator.currentGroupUUID
+        
+        isReloadingDatabase = true
+        databaseViewerCoordinator.closeDatabase(
+            shouldLock: false,
+            reason: .userRequest,
+            animated: true
+        ) { [weak self] in
+            guard let self else { return }
+            guard let dbRef = databaseFile.fileReference else {
+                Diag.debug("Database file reference is nil, cancelling")
+                assertionFailure()
+                return
+            }
+            setDatabase(dbRef, autoOpenWith: context)
         }
     }
 }
@@ -764,6 +791,13 @@ extension MainCoordinator: WatchdogDelegate {
 }
 
 extension MainCoordinator: PasscodeInputDelegate {
+    func passcodeInput(_ sender: PasscodeInputVC, shouldTryPasscode passcode: String) {
+        let isMatch = try? Keychain.shared.isAppPasscodeMatch(passcode)
+        if isMatch ?? false { 
+            passcodeInput(sender, didEnterPasscode: passcode)
+        }
+    }
+    
     func passcodeInput(_ sender: PasscodeInputVC, didEnterPasscode passcode: String) {
         do {
             if try Keychain.shared.isAppPasscodeMatch(passcode) { 
@@ -888,6 +922,9 @@ extension MainCoordinator: DatabaseUnlockerCoordinatorDelegate {
         _ fileRef: URLReference,
         in coordinator: DatabaseUnlockerCoordinator
     ) -> Bool {
+        if isReloadingDatabase {
+            return true
+        }
         if isInitialDatabase && Settings.current.isAutoUnlockStartupDatabase {
             return true
         }
@@ -897,6 +934,7 @@ extension MainCoordinator: DatabaseUnlockerCoordinatorDelegate {
     func willUnlockDatabase(_ fileRef: URLReference, in coordinator: DatabaseUnlockerCoordinator) {
         databasePickerCoordinator.setEnabled(false)
         isInitialDatabase = false
+        isReloadingDatabase = false 
     }
     
     func didNotUnlockDatabase(
@@ -922,7 +960,13 @@ extension MainCoordinator: DatabaseUnlockerCoordinatorDelegate {
         in coordinator: DatabaseUnlockerCoordinator
     ) {
         databasePickerCoordinator.setEnabled(true)
-        showDatabaseViewer(fileRef, databaseFile: databaseFile, warnings: warnings)
+        
+        showDatabaseViewer(
+            fileRef,
+            databaseFile: databaseFile,
+            context: coordinator.reloadingContext,
+            warnings: warnings
+        )
     }
     
     func didPressReinstateDatabase(
@@ -997,5 +1041,9 @@ extension MainCoordinator: DatabaseViewerCoordinatorDelegate {
         ) { [weak self] in
             self?.reinstateDatabase(fileRef)
         }
+    }
+    
+    func didPressReloadDatabase(_ databaseFile: DatabaseFile, in coordinator: DatabaseViewerCoordinator) {
+        reloadDatabase(databaseFile, from: coordinator)
     }
 }

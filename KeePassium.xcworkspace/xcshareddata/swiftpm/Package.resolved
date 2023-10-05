@@ -15,7 +15,7 @@
       "location" : "https://github.com/keepassium/microsoft-authentication-library-for-objc/",
       "state" : {
         "branch" : "keepassium",
-        "revision" : "7c649c4139faee517db5bc013d27abd39f5c1fcc"
+        "revision" : "4158c0129d29ab8f5951f040cf9e0dce4877a815"
       }
     },
     {
@@ -43,6 +43,15 @@
       "state" : {
         "branch" : "keepassium",
         "revision" : "7a0521f7da0dec54b14ed06a0275a5bf277163ab"
+      }
+    },
+    {
+      "identity" : "zxcvbn-ios",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/keepassium/zxcvbn-ios/",
+      "state" : {
+        "branch" : "keepassium",
+        "revision" : "7952c8fdd2cb64b2b397f8504947d92f6ee9e224"
       }
     }
   ],

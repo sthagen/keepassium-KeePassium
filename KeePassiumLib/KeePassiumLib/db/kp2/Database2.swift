@@ -24,11 +24,24 @@ public class Database2: Database {
         public var description: String {
             switch self {
             case .v3:
-                return "v3"
+                return "kdbx3"
             case .v4:
-                return "v4"
+                return "kdbx4"
             case .v4_1:
-                return "v4.1"
+                return "kdbx4.1"
+            }
+        }
+        
+        public func hasMajorDifferences(with otherVersion: FormatVersion) -> Bool {
+            switch (self, otherVersion) {
+            case (.v3, _),
+                 (_, .v3):
+                return true
+            case (.v4, .v4_1),
+                 (.v4_1, .v4):
+                return false
+            default:
+                return true
             }
         }
     }
@@ -117,6 +130,7 @@ public class Database2: Database {
     
     private(set) var header: Header2!
     private(set) var meta: Meta2!
+    public var formatVersion: FormatVersion { header.formatVersion }
     public var binaries: [Binary2.ID: Binary2] = [:]
     public var customIcons: [CustomIcon2] { return meta.customIcons }
     public var defaultUserName: String { return meta.defaultUserName }
@@ -162,6 +176,19 @@ public class Database2: Database {
         rootGroup.isExpanded = true
         db.root = rootGroup
         return db
+    }
+    
+    public func formatUpgradeRequired(for feature: DatabaseFeature2) -> FormatVersion? {
+        let minimumRequiredFormat = FormatVersion.minimumRequired(for: feature)
+        if minimumRequiredFormat > header.formatVersion {
+            return minimumRequiredFormat
+        } else {
+            return nil
+        }
+    }
+    
+    public func upgradeFormatVersion(to newerVersion: FormatVersion) {
+        header.upgradeFormatVersion(to: newerVersion)
     }
     
     override public class func isSignatureMatches(data: ByteArray) -> Bool {
@@ -1268,8 +1295,32 @@ public class Database2: Database {
         return Attachment2(name: name, isCompressed: false, data: data)
     }
 
-
-    @discardableResult
+    
+    public func setCustomIcon(_ icon: CustomIcon2, for entry: Entry2) {
+        entry.backupState()
+        entry.customIconUUID = icon.uuid
+        entry.touch(.accessed)
+        entry.touch(.modified, updateParents: false)
+    }
+    
+    public func setCustomIcon(_ icon: CustomIcon2, for group: Group2) {
+        group.customIconUUID = icon.uuid
+        group.touch(.accessed)
+        group.touch(.modified, updateParents: false)
+    }
+    
+    public func addCustomIcon(_ image: UIImage) -> CustomIcon2? {
+        guard let normalizedImage = image.downscalingToSquare(maxSide: CustomIcon2.maxSide) else {
+            Diag.error("Failed to normalize the image, cancelling")
+            return nil
+        }
+        guard let pngData = normalizedImage.pngData() else {
+            Diag.warning("Failed to get image's PNG data, cancelling")
+            return nil
+        }
+        return addCustomIcon(pngData: ByteArray(data: pngData))
+    }
+    
     public func addCustomIcon(pngData: ByteArray) -> CustomIcon2 {
         if let existingIcon = findCustomIcon(pngDataSha256: pngData.sha256) {
             return existingIcon
