@@ -9,8 +9,8 @@
 import KeePassiumLib
 
 extension UIViewController {
-    
-    func showErrorAlert(_ error: Error, title: String?=nil) {
+
+    func showErrorAlert(_ error: Error, title: String? = nil) {
         var message = error.localizedDescription
         if let localizedError = error as? LocalizedError,
            let recoverySuggestion = localizedError.recoverySuggestion
@@ -19,20 +19,28 @@ extension UIViewController {
         }
         showErrorAlert(message, title: title)
     }
-    
-    func showErrorAlert(_ message: String, title: String?=nil) {
+
+    func showErrorAlert(_ message: String, title: String? = nil) {
         let alert = UIAlertController.make(
             title: title ?? LString.titleError,
             message: message,
             dismissButtonTitle: LString.actionOK)
         present(alert, animated: true, completion: nil)
-        
+
         StoreReviewSuggester.registerEvent(.trouble)
     }
-    
-    func requestNetworkAccessPermission(allowed completion: @escaping () -> Void) {
+
+    func ensuringNetworkAccessPermitted(allowed completion: @escaping () -> Void) {
+        requestingNetworkAccessPermission { isAllowed in
+            if isAllowed {
+                completion()
+            }
+        }
+    }
+
+    func requestingNetworkAccessPermission(completion: @escaping (_ isAllowed: Bool) -> Void) {
         if Settings.current.isNetworkAccessAllowed {
-            completion()
+            completion(true)
             return
         }
         let networkModeAlert = UIAlertController(
@@ -43,15 +51,16 @@ extension UIViewController {
         networkModeAlert.addAction(title: LString.titleAllowNetworkAccess, style: .default) { _ in
             Diag.info("Network access is allowed by the user")
             Settings.current.isNetworkAccessAllowed = true
-            completion()
+            completion(true)
         }
         networkModeAlert.addAction(title: LString.titleStayOffline, style: .cancel) { _ in
             Diag.info("Network access is denied by the user")
             Settings.current.isNetworkAccessAllowed = false
+            completion(false)
         }
         present(networkModeAlert, animated: true)
     }
-    
+
     private func getHostViewForToastNotifications() -> UIView {
         var hostVC: UIViewController = self
         if hostVC is UITableViewController, let navVC = self.navigationController {
@@ -62,15 +71,15 @@ extension UIViewController {
         }
         return hostVC.view
     }
-    
+
     func showNotification(
         _ message: String,
         title: String? = nil,
         image: UIImage? = nil,
         position: ToastPosition = .top,
         action: ToastAction? = nil,
-        duration: TimeInterval = 5.0)
-    {
+        duration: TimeInterval = 5.0
+    ) {
         var style = ToastStyle()
         style.buttonColor = .actionTint
 
@@ -90,14 +99,14 @@ extension UIViewController {
             completion: nil
         )
     }
-    
+
     func showSuccessNotification(_ message: String, icon: SymbolName) {
         showNotification(
             message,
             image: .symbol(icon)
         )
     }
-    
+
     func hideAllToasts() {
         getHostViewForToastNotifications().hideAllToasts()
     }

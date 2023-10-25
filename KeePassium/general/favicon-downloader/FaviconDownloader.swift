@@ -64,6 +64,14 @@ final class FaviconDownloader {
         progressHandler: ((ProgressEx) -> Void)? = nil,
         completionHandler: @escaping (DownloadFaviconResult) -> Void
     ) {
+        guard Settings.current.isNetworkAccessAllowed else {
+            Diag.error("Network access denied, cancelling")
+            DispatchQueue.main.async {
+                completionHandler(.failure(.canceled))
+            }
+            return
+        }
+
         let progress = ProgressEx()
         progress.localizedDescription = LString.statusDownloadingOneFavicon
         progress.totalUnitCount = 2
@@ -97,6 +105,14 @@ final class FaviconDownloader {
         completionHandler: @escaping (DownloadFaviconsResult) -> Void
     ) {
         Diag.info("Starting favicons download")
+        guard Settings.current.isNetworkAccessAllowed else {
+            Diag.error("Network access denied, cancelling")
+            DispatchQueue.main.async {
+                completionHandler(.failure(.canceled))
+            }
+            return
+        }
+
         let progress = ProgressEx()
         progress.localizedDescription = LString.statusDownloadingFavicons
 
@@ -238,10 +254,10 @@ final class FaviconDownloader {
                 return Favicon(html: linkTagString, baseURL: url)
             }
             Diag.debug("Found \(icons.count) icon links in HTML")
-            
+
             let appleTouchIcon = icons.first(where: { $0.type == .appleTouchIcon })
             let iconsBySize = icons.sorted(by: { $0.size.width > $1.size.width })
-            
+
             guard let bestIcon = appleTouchIcon ?? iconsBySize.first else {
                 DispatchQueue.main.async {
                     completionHandler(.failure(.invalidURL))
@@ -280,7 +296,11 @@ final class FaviconDownloader {
             if let error {
                 Diag.error("Favicon request failed [message: \(error.localizedDescription)]")
                 DispatchQueue.main.async {
-                    completionHandler(.failure((error as NSError).code == NSURLErrorCancelled ? .canceled : .requestError(error)))
+                    if (error as NSError).code == NSURLErrorCancelled {
+                        completionHandler(.failure(.canceled))
+                    } else {
+                        completionHandler(.failure(.requestError(error)))
+                    }
                 }
                 return
             }

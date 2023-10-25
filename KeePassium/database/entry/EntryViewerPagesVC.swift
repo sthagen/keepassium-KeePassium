@@ -7,6 +7,7 @@
 //  For commercial licensing, please contact the author.
 
 import KeePassiumLib
+import UniformTypeIdentifiers
 
 protocol EntryViewerPagesDataSource: AnyObject {
     func getPageCount(for viewController: EntryViewerPagesVC) -> Int
@@ -14,12 +15,19 @@ protocol EntryViewerPagesDataSource: AnyObject {
     func getPageIndex(of page: UIViewController, for viewController: EntryViewerPagesVC) -> Int?
 }
 
+protocol EntryViewerPagesVCDelegate: AnyObject {
+    func canDropFiles(_ files: [UIDragItem]) -> Bool
+    func didDropFiles(_ files: [TemporaryFileURL])
+}
+
 final class EntryViewerPagesVC: UIViewController, Refreshable {
 
     @IBOutlet private weak var pageSelector: UISegmentedControl!
     @IBOutlet private weak var containerView: UIView!
-    
+
     public weak var dataSource: EntryViewerPagesDataSource?
+
+    weak var delegate: EntryViewerPagesVCDelegate?
 
     private var isHistoryEntry = false
     private var canEditEntry = false
@@ -27,9 +35,9 @@ final class EntryViewerPagesVC: UIViewController, Refreshable {
     private var resolvedEntryTitle = ""
     private var isEntryExpired = false
     private var entryLastModificationTime = Date.distantPast
-    
+
     private var titleView = DatabaseItemTitleView()
-    
+
     private var pagesViewController: UIPageViewController! 
     private var currentPageIndex = 0 {
         didSet {
@@ -38,12 +46,11 @@ final class EntryViewerPagesVC: UIViewController, Refreshable {
             }
         }
     }
-    
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.titleView = titleView
-        
+
         pagesViewController = UIPageViewController(
             transitionStyle: .scroll,
             navigationOrientation: .horizontal,
@@ -58,6 +65,8 @@ final class EntryViewerPagesVC: UIViewController, Refreshable {
         pagesViewController.view.frame = containerView.bounds
         containerView.addSubview(pagesViewController.view)
         pagesViewController.didMove(toParent: self)
+
+        view.addInteraction(UIDropInteraction(delegate: self))
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -70,19 +79,19 @@ final class EntryViewerPagesVC: UIViewController, Refreshable {
             switchTo(page: Settings.current.entryViewerPage)
         }
     }
-    
+
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 
         navigationItem.rightBarButtonItem =
             pagesViewController.viewControllers?.first?.navigationItem.rightBarButtonItem
     }
-    
+
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         refresh()
     }
-    
+
     public func setContents(from entry: Entry, isHistoryEntry: Bool, canEditEntry: Bool) {
         entryIcon = UIImage.kpIcon(forEntry: entry)
         resolvedEntryTitle = entry.resolvedTitle
@@ -92,7 +101,7 @@ final class EntryViewerPagesVC: UIViewController, Refreshable {
         self.canEditEntry = canEditEntry
         refresh()
     }
-    
+
     public func switchTo(page index: Int) {
         guard let dataSource = dataSource,
               let targetPageVC = dataSource.getPage(index: index, for: self)
@@ -100,7 +109,7 @@ final class EntryViewerPagesVC: UIViewController, Refreshable {
             assertionFailure()
             return
         }
-        
+
         let direction: UIPageViewController.NavigationDirection
         if index >= currentPageIndex {
             direction = .forward
@@ -115,16 +124,16 @@ final class EntryViewerPagesVC: UIViewController, Refreshable {
             [targetPageVC],
             direction: direction,
             animated: !ProcessInfo.isRunningOnMac,
-            completion: { [weak self] (finished) in
+            completion: { [weak self] _ in
                 self?.changeCurrentPage(from: previousPageVC, to: targetPageVC, index: index)
             }
         )
     }
-    
-    @IBAction func didChangePage(_ sender: Any) {
+
+    @IBAction private func didChangePage(_ sender: Any) {
         switchTo(page: pageSelector.selectedSegmentIndex)
     }
-    
+
     private func changeCurrentPage(
         from previousPageVC: UIViewController?,
         to targetPageVC: UIViewController,
@@ -136,11 +145,11 @@ final class EntryViewerPagesVC: UIViewController, Refreshable {
         currentPageIndex = index
         navigationItem.rightBarButtonItem =
             targetPageVC.navigationItem.rightBarButtonItem
-        
+
         let toolbarItems = targetPageVC.toolbarItems
         setToolbarItems(toolbarItems, animated: true)
     }
-    
+
     func refresh() {
         guard isViewLoaded else { return }
         titleView.titleLabel.setText(resolvedEntryTitle, strikethrough: isEntryExpired)
@@ -161,7 +170,7 @@ final class EntryViewerPagesVC: UIViewController, Refreshable {
         } else {
             titleView.subtitleLabel.isHidden = true
         }
-        
+
         let currentPage = pagesViewController.viewControllers?.first
         (currentPage as? Refreshable)?.refresh()
     }
@@ -199,7 +208,7 @@ extension EntryViewerPagesVC: UIPageViewControllerDataSource {
         }
         return dataSource?.getPage(index: index - 1, for: self)
     }
-    
+
     func pageViewController(
         _ pageViewController: UIPageViewController,
         viewControllerAfter viewController: UIViewController
@@ -207,7 +216,73 @@ extension EntryViewerPagesVC: UIPageViewControllerDataSource {
         guard let index = dataSource?.getPageIndex(of: viewController, for: self) else {
             return nil
         }
-        
+
         return dataSource?.getPage(index: index + 1, for: self)
+    }
+}
+
+extension EntryViewerPagesVC: UIDropInteractionDelegate {
+    func dropInteraction(_ interaction: UIDropInteraction, canHandle session: UIDropSession) -> Bool {
+        return session.hasItemsConforming(toTypeIdentifiers: [UTType.item.identifier])
+    }
+
+    func dropInteraction(
+        _ interaction: UIDropInteraction,
+        sessionDidUpdate session: UIDropSession
+    ) -> UIDropProposal {
+        if delegate?.canDropFiles(session.items) ?? false {
+            return UIDropProposal(operation: .copy)
+        } else {
+            return UIDropProposal(operation: .forbidden)
+        }
+    }
+
+    func dropInteraction(_ interaction: UIDropInteraction, performDrop session: UIDropSession) {
+        var files: [TemporaryFileURL] = []
+        let dispatchGroup = DispatchGroup()
+
+        Diag.debug("Processing \(session.items.count) dropped files")
+        for dragItem in session.items {
+            dispatchGroup.enter()
+
+            dragItem.itemProvider.loadFileRepresentation(forTypeIdentifier: UTType.item.identifier) { url, error in
+                if let error = error {
+                    Diag.error("Failed to load dropped file [error: \(error.localizedDescription)]")
+                    dispatchGroup.leave()
+                    return
+                }
+
+                guard let url = url else {
+                    Diag.error("Dropped file URL is invalid")
+                    dispatchGroup.leave()
+                    return
+                }
+
+                do {
+                    let file = try TemporaryFileURL(fileName: url.lastPathComponent)
+                    try FileManager.default.copyItem(at: url, to: file.url)
+                    files.append(file)
+                } catch {
+                    Diag.error("Copying dropped file to temporary folder failed [error: \(error.localizedDescription)]")
+                }
+
+                dispatchGroup.leave()
+            }
+        }
+
+        dispatchGroup.notify(queue: .main) { [weak self] in
+            guard let self else { return }
+            guard !files.isEmpty else {
+                Diag.debug("No dropped files could be loaded")
+                return
+            }
+
+            if self.currentPageIndex != 1 {
+                self.switchTo(page: 1)
+            }
+
+            Diag.debug("Trying to add \(files.count) dropped files to the entry")
+            self.delegate?.didDropFiles(files)
+        }
     }
 }

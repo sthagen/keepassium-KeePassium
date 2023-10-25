@@ -54,6 +54,12 @@ final class PasswordAuditService {
 
     func performAudit(completionHandler: @escaping (PasswordAuditResult) -> Void) {
         Diag.info("Starting password audit")
+        guard Settings.current.isNetworkAccessAllowed else {
+            Diag.error("Network access denied, cancelling")
+            completionHandler(.failure(.canceled))
+            return
+        }
+
         let progress = ProgressEx()
         progress.localizedDescription = LString.statusAuditingPasswords
 
@@ -67,7 +73,7 @@ final class PasswordAuditService {
         entries.removeAll(where: {
             $0.isDeleted || ($0 as? Entry2)?.qualityCheck == false
         })
-        
+
         guard !entries.isEmpty else {
             Diag.debug("Database has no entries, aborting")
             completionHandler(.success([]))
