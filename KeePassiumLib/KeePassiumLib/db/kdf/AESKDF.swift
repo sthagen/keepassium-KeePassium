@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2023 Andrei Popleteev <info@keepassium.com>
+//  Copyright © 2018–2024 KeePassium Labs <info@keepassium.com>
 // 
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -22,6 +22,8 @@ class AESKDF: KeyDerivationFunction {
     private let subkeySize = 16
     private var progress = ProgressEx()
 
+    fileprivate let defaultIterations: UInt64 = 100_000
+
     public var defaultParams: KDFParams {
         let params = KDFParams()
         params.setValue(key: KDFParams.uuidParam, value: VarDict.TypedValue(value: uuid.data))
@@ -32,11 +34,25 @@ class AESKDF: KeyDerivationFunction {
             value: VarDict.TypedValue(value: transformSeed))
         params.setValue(
             key: AESKDF.transformRoundsParam,
-            value: VarDict.TypedValue(value: UInt64(100_000)))
+            value: VarDict.TypedValue(value: defaultIterations))
         return params
     }
 
     required init() {
+    }
+
+    func parseParams(_ kdfParams: KDFParams, to settings: inout EncryptionSettings) {
+        settings.iterations = kdfParams.getValue(key: AESKDF.transformRoundsParam)?.asUInt64()
+        settings.memory = nil
+        settings.parallelism = nil
+    }
+
+    func apply(_ settings: EncryptionSettings, to kdfParams: inout KDFParams) {
+        assert(settings.iterations != nil, "Iterations parameter must be defined")
+        let iterations = settings.iterations ?? defaultIterations
+        kdfParams.setValue(
+            key: AESKDF.transformRoundsParam,
+            value: VarDict.TypedValue(value: iterations))
     }
 
     func initProgress() -> ProgressEx {

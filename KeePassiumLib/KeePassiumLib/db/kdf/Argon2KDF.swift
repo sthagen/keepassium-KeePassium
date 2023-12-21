@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2023 Andrei Popleteev <info@keepassium.com>
+//  Copyright © 2018–2024 KeePassium Labs <info@keepassium.com>
 // 
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -59,6 +59,32 @@ class AbstractArgon2KDF {
             throw CryptoError.invalidKDFParam(kdfName: name, paramName: AbstractArgon2KDF.saltParam)
         }
         return salt
+    }
+
+    func parseParams(_ kdfParams: KDFParams, to settings: inout EncryptionSettings) {
+        settings.iterations = kdfParams.getValue(key: AbstractArgon2KDF.iterationsParam)?.asUInt64()
+        settings.memory = kdfParams.getValue(key: AbstractArgon2KDF.memoryParam)?.asUInt64()
+        settings.parallelism = kdfParams.getValue(key: AbstractArgon2KDF.parallelismParam)?.asUInt32()
+    }
+
+    func apply(_ settings: EncryptionSettings, to kdfParams: inout KDFParams) {
+        assert(settings.iterations != nil, "Iterations parameter must be defined")
+        let iterations = settings.iterations ?? defaultIterations
+        kdfParams.setValue(
+            key: AbstractArgon2KDF.iterationsParam,
+            value: VarDict.TypedValue(value: iterations))
+
+        assert(settings.memory != nil, "Memory parameter must be defined")
+        let memory = settings.memory ?? defaultMemory
+        kdfParams.setValue(
+            key: AbstractArgon2KDF.memoryParam,
+            value: VarDict.TypedValue(value: memory))
+
+        assert(settings.parallelism != nil, "Parallelism parameter must be defined")
+        let parallelism = settings.parallelism ?? defaultParallelism
+        kdfParams.setValue(
+            key: AbstractArgon2KDF.parallelismParam,
+            value: VarDict.TypedValue(value: parallelism))
     }
 
     public var defaultParams: KDFParams {

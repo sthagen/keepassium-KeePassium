@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2023 Andrei Popleteev <info@keepassium.com>
+//  Copyright © 2018–2024 KeePassium Labs <info@keepassium.com>
 //
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -84,7 +84,13 @@ public enum LString {
     }
 
 
-    enum Warning {
+    public enum Warning {
+        public static let iconWithMessageTemplate = NSLocalizedString(
+            "[Generic/WarningWithIcon/template]",
+            bundle: Bundle.framework,
+            value: "⚠️ %@",
+            comment: "Warning message template. Swap the icon and message for right-to-left languages."
+        )
         public static let fileIsInTrashTemplate = NSLocalizedString(
             "[File/In Trash/warning]",
             bundle: Bundle.framework,

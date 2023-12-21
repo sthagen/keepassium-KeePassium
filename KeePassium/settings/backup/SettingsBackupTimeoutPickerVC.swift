@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2023 Andrei Popleteev <info@keepassium.com>
+//  Copyright © 2018–2024 KeePassium Labs <info@keepassium.com>
 //
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -60,6 +60,10 @@ class SettingsBackupTimeoutPickerVC: UITableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         Settings.current.backupKeepingDuration = items[indexPath.row]
         refresh()
-        delegate?.didFinish(self)
+        if Settings.current.isManaged(key: .backupKeepingDuration) {
+            showManagedSettingNotification()
+        } else {
+            delegate?.didFinish(self)
+        }
     }
 }

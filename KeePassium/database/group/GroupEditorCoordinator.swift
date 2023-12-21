@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2023 Andrei Popleteev <info@keepassium.com>
+//  Copyright © 2018–2024 KeePassium Labs <info@keepassium.com>
 //
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -49,9 +49,9 @@ final class GroupEditorCoordinator: Coordinator {
         }
         group.touch(.accessed)
 
-        groupEditorVC = GroupEditorVC.instantiateFromStoryboard()
+        let groupProperties = GroupEditorVC.Property.makeAll(for: group, parent: parent)
+        groupEditorVC = GroupEditorVC(group: group, properties: groupProperties)
         groupEditorVC.delegate = self
-        groupEditorVC.group = group
         if originalGroup == nil {
             groupEditorVC.title = LString.titleCreateGroup
         } else {

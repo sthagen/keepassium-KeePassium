@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2023 Andrei Popleteev <info@keepassium.com>
+//  Copyright © 2018–2024 KeePassium Labs <info@keepassium.com>
 //
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -377,14 +377,14 @@ extension EntryFieldEditorCoordinator: EntryFieldEditorDelegate {
         }
 
         viewController.isDownloadingFavicon = true
-        viewController.refresh() 
+        refresh() 
         downloadFavicon(for: url, in: viewController) { [weak self, weak viewController] image in
             guard let self, let viewController else { return }
             viewController.isDownloadingFavicon = false
             if let image {
                 self.changeIcon(image: image)
             }
-            viewController.refresh()
+            refresh()
         }
     }
 }

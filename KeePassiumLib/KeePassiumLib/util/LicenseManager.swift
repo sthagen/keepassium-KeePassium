@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018-2023 Andrei Popleteev <info@keepassium.com>
+//  Copyright © 2018–2024 KeePassium Labs <info@keepassium.com>
 //
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -16,12 +16,23 @@ public final class LicenseManager {
         case unknown
     }
 
-    private func getLicenseKeyString() -> String? {
-        return ManagedAppConfig.shared.getLicenseValue()
+    private var cachedLicenseStatus: Bool?
+    public func hasActiveBusinessLicense() -> Bool {
+        if let cachedLicenseStatus {
+            return cachedLicenseStatus
+        }
+
+        let licenseStatus = isLicensedForBusiness()
+        cachedLicenseStatus = licenseStatus
+        return licenseStatus
     }
 
-    public func hasActiveBusinessLicense() -> Bool {
-        guard let licenseKey = getLicenseKeyString() else {
+    internal func checkBusinessLicense() {
+        cachedLicenseStatus = isLicensedForBusiness()
+    }
+
+    private func isLicensedForBusiness() -> Bool {
+        guard let licenseKey = ManagedAppConfig.shared.license else {
             return false
         }
 

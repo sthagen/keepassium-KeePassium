@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2023 Andrei Popleteev <info@keepassium.com>
+//  Copyright © 2018–2024 KeePassium Labs <info@keepassium.com>
 // 
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -20,6 +20,12 @@ extension LString {
         "[Generic/Count/Bits]",
         bundle: Bundle.framework,
         comment: "Number of bits. For example: '123 bits of entropy'. IMPORTANT: Please fill out all the plural forms."
+    )
+
+    public static let threadCountTemplate = NSLocalizedString(
+        "[Generic/Count/Threads]",
+        bundle: Bundle.framework,
+        comment: "Number of computation threads. For example: '4 threads'. IMPORTANT: Please fill out all the plural forms."
     )
 
     public static let actionOK = NSLocalizedString(
@@ -664,12 +670,95 @@ extension LString {
         value: "One-Time Password (HOTP)",
         comment: "Name of an entry field. Acronym `HOTP` should not be translated."
     )
+    public static let fieldUUID = "UUID" 
 
     public static let previousItemVersionRestored = NSLocalizedString(
         "[Item/History/Restored]",
         bundle: Bundle.framework,
         value: "Previous version restored",
         comment: "Notification that an archived/historical item (e.g entry) has been successfully restored"
+    )
+
+    public static let titleItemProperties = NSLocalizedString(
+        "[Item/Properties/title]",
+        bundle: Bundle.framework,
+        value: "Properties",
+        comment: "Title of a list with item (e.g. entry) properties/settings, such as searchability, auto-typing, etc"
+    )
+    public static let titleItemAdvancedProperties = NSLocalizedString(
+        "[Item/Properties/Advanced/title]",
+        bundle: Bundle.framework,
+        value: "Advanced",
+        comment: "Title of a list with advanced/expert-level properties of a database item (e.g. entry)"
+    )
+
+    public static let titleItemPropertyPasswordAudit = NSLocalizedString(
+        "[Item/Properties/PasswordAudit/title]",
+        bundle: Bundle.framework,
+        value: "Password Audit",
+        comment: "Title of a setting: whether the item (e.g. entry) should be included in password audit"
+    )
+    public static let itemPasswordAuditAllowed = NSLocalizedString(
+        "[Item/Properties/PasswordAudit/allowed]",
+        bundle: Bundle.framework,
+        value: "Allowed",
+        comment: "Possible value of the `Password Audit` setting. For example: 'Password Audit: Allowed'"
+    )
+    public static let itemPasswordAuditDisabled = NSLocalizedString(
+        "[Item/Properties/PasswordAudit/disabled]",
+        bundle: Bundle.framework,
+        value: "Disabled",
+        comment: "Possible value of the `Password Audit` setting. For example: 'Password Audit: Disabled'"
+    )
+
+    public static let titleItemPropertyAutoFill = NSLocalizedString(
+        "[Item/Properties/AutoFill/title]",
+        bundle: Bundle.framework,
+        value: "Password AutoFill",
+        comment: "Title of a setting: whether the item (e.g. entry) should be used in AutoFill feature"
+    )
+    public static let titleItemPropertyAutoFillKeePassXC = NSLocalizedString(
+        "[Item/Properties/AutoFill/KeePassXC/title]",
+        bundle: Bundle.framework,
+        value: "Password AutoFill (KeePassXC)",
+        comment: "Title of a setting: whether the item (e.g. entry) should be used in AutoFill feature. App-specific setting for KeePassXC."
+    )
+    public static let itemAutoFillAllowed = NSLocalizedString(
+        "[Item/Properties/AutoFill/allowed]",
+        bundle: Bundle.framework,
+        value: "Allowed",
+        comment: "Possible value of the `Password AutoFill` setting. For example: 'Password AutoFill: Allowed'"
+    )
+    public static let itemAutoFillDisabled = NSLocalizedString(
+        "[Item/Properties/AutoFill/disabled]",
+        bundle: Bundle.framework,
+        value: "Disabled",
+        comment: "Possible value of the `Password AutoFill` setting. For example: 'Password AutoFill: Disabled'"
+    )
+
+    public static let titleItemPropertySearch = NSLocalizedString(
+        "[Item/Properties/Search/title] Search",
+        bundle: Bundle.framework,
+        value: "Search",
+        comment: "Title of a setting: whether the item (e.g. entry) should be considered during search. Example: 'Search: Allowed'"
+    )
+    public static let itemSearchAllowed = NSLocalizedString(
+        "[Item/Properties/Search/allowed]",
+        bundle: Bundle.framework,
+        value: "Allowed",
+        comment: "Possible value of the `Search` setting. Example: 'Search: Allowed'"
+    )
+    public static let itemSearchDisabled = NSLocalizedString(
+        "[Item/Properties/Search/disabled]",
+        bundle: Bundle.framework,
+        value: "Disabled",
+        comment: "Possible value of the `Search` setting, when the item should be excluded from search results. Example: 'Search: Disabled'"
+    )
+    public static let itemPropertyInheritedTemplate = NSLocalizedString(
+        "[Item/Properties/inheritedValue]",
+        bundle: Bundle.framework,
+        value: "Inherit from parent group (%@)",
+        comment: "Default value of an item property. For example: 'Password Audit: Inherit from parent group (Allowed)'. [inheritedValue: String]"
     )
 
 

@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2023 Andrei Popleteev <info@keepassium.com>
+//  Copyright © 2018–2024 KeePassium Labs <info@keepassium.com>
 // 
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -8,14 +8,14 @@
 
 import KeePassiumLib
 
-protocol SettingsClipboardTimeoutViewControllerDelegate: AnyObject {
-    func didFinishSelection(in viewController: SettingsClipboardTimeoutVC)
+protocol SettingsClipboardTimeoutVCDelegate: AnyObject {
+    func didSelectTimeout(_ timeout: Settings.ClipboardTimeout, in viewController: SettingsClipboardTimeoutVC)
 }
 
 final class SettingsClipboardTimeoutVC: UITableViewController, Refreshable {
     private let cellID = "Cell"
 
-    weak var delegate: SettingsClipboardTimeoutViewControllerDelegate?
+    weak var delegate: SettingsClipboardTimeoutVCDelegate?
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -55,12 +55,6 @@ final class SettingsClipboardTimeoutVC: UITableViewController, Refreshable {
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let timeout = Settings.ClipboardTimeout.allValues[indexPath.row]
-        didSelectTimeout(timeout)
-    }
-
-    private func didSelectTimeout(_ timeout: Settings.ClipboardTimeout) {
-        Settings.current.clipboardTimeout = timeout
-        refresh()
-        delegate?.didFinishSelection(in: self)
+        delegate?.didSelectTimeout(timeout, in: self)
     }
 }

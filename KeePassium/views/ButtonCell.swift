@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018-2022 Andrei Popleteev <info@keepassium.com>
+//  Copyright © 2018–2024 KeePassium Labs <info@keepassium.com>
 //
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -9,7 +9,7 @@
 import UIKit
 
 final class ButtonCell: UITableViewCell {
-    var button: MultilineButton! 
+    var button: UIButton! 
     var buttonPressHandler: ((UIButton) -> Void)?
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -27,8 +27,13 @@ final class ButtonCell: UITableViewCell {
     }
 
     private func setupCell() {
-        button = MultilineButton(frame: .zero)
-        button.setTitleColor(.actionTint, for: .normal)
+        var config = UIButton.Configuration.plain()
+        config.titleLineBreakMode = .byWordWrapping
+        config.contentInsets.leading = 0
+        config.contentInsets.trailing = 0
+
+        button = UIButton(configuration: config)
+
         contentView.addSubview(button)
 
         button.translatesAutoresizingMaskIntoConstraints = false

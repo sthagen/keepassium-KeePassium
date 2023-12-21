@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2023 Andrei Popleteev <info@keepassium.com>
+//  Copyright © 2018–2024 KeePassium Labs <info@keepassium.com>
 // 
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -130,6 +130,7 @@ final class SettingsAppLockVC: UITableViewController, Refreshable {
 
     @IBAction private func didChangeLockDatabasesOnFailedPasscodeSwitch(_ sender: UISwitch) {
         Settings.current.isLockAllDatabasesOnFailedPasscode = lockDatabasesOnFailedPasscodeSwitch.isOn
+        showNotificationIfManaged(setting: .lockAllDatabasesOnFailedPasscode)
     }
 
     @IBAction private func didToggleBiometricsSwitch(_ sender: UISwitch) {

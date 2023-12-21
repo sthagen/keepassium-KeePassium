@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2023 Andrei Popleteev <info@keepassium.com>
+//  Copyright © 2018–2024 KeePassium Labs <info@keepassium.com>
 //
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -11,6 +11,7 @@ import Foundation
 public struct OAuthToken: Codable {
     public var accessToken: String
     public var refreshToken: String
+    public var accountIdentifier: String?
     public var acquired: Date
     public var lifespan: TimeInterval
     public var halflife: TimeInterval { lifespan / 2 }

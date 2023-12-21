@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2023 Andrei Popleteev <info@keepassium.com>
+//  Copyright © 2018–2024 KeePassium Labs <info@keepassium.com>
 // 
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -299,6 +299,7 @@ final class DatabasePickerVC: TableViewControllerWithContextActions, Refreshable
                 let isOn = (action.state == .on)
                 Settings.current.isBackupFilesVisible = !isOn
                 self?.refresh()
+                self?.showNotificationIfManaged(setting: .backupFilesVisible)
             }
         )
         let backupMenu = UIMenu.make(
@@ -321,8 +322,16 @@ final class DatabasePickerVC: TableViewControllerWithContextActions, Refreshable
             macOptions: [],
             children: sortMenuItems
         )
+
+        let listMenuTitle: String
+        if #available(iOS 16, *) {
+            listMenuTitle = ""
+        } else {
+            listMenuTitle = LString.titleSortBy
+        }
+
         return UIMenu.make(
-            title: LString.titleSortBy,
+            title: listMenuTitle,
             reverse: true,
             children: [sortOptionsMenu, backupMenu])
     }

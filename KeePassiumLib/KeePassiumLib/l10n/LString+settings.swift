@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2023 Andrei Popleteev <info@keepassium.com>
+//  Copyright © 2018–2024 KeePassium Labs <info@keepassium.com>
 //
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -368,5 +368,12 @@ extension LString {
         bundle: Bundle.framework,
         value: "About KeePassium",
         comment: "Menu item that shows info about KeePassium app")
+
+
+    public static let thisSettingIsManaged = NSLocalizedString(
+        "[Settings/Managed/notification]",
+        bundle: Bundle.framework,
+        value: "This setting is managed by your organization.",
+        comment: "Notification when corporate user tries to change an app setting controlled by organization's IT department.")
 }
 // swiftlint:enable line_length

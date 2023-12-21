@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2023 Andrei Popleteev <info@keepassium.com>
+//  Copyright © 2018–2024 KeePassium Labs <info@keepassium.com>
 //
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -170,11 +170,12 @@ public class DatabaseSaver: ProgressObserver {
         }
 
         Diag.info("Checking original database for out-of-band changes")
+        let phase2Timeout = Timeout(duration: timeoutDuration)
         FileDataProvider.read(
             databaseFile.fileURL,
             fileProvider: databaseFile.fileProvider,
             queue: operationQueue,
-            timeout: timeout,
+            timeout: phase2Timeout,
             completionQueue: operationQueue,
             completion: { [self] result in
                 assert(operationQueue.isCurrent)

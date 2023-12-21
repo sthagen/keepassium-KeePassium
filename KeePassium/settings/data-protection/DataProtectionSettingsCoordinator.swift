@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2023 Andrei Popleteev <info@keepassium.com>
+//  Copyright © 2018–2024 KeePassium Labs <info@keepassium.com>
 //
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -115,16 +115,30 @@ extension DataProtectionSettingsCoordinator: SettingsDatabaseTimeoutViewControll
 
         Watchdog.shared.restart() 
 
-        DispatchQueue.main.async { [weak router] in
-            router?.pop(viewController: viewController, animated: true)
+        if Settings.current.isManaged(key: .databaseLockTimeout) {
+            viewController.showManagedSettingNotification()
+        } else {
+            DispatchQueue.main.async { [weak router] in
+                router?.pop(viewController: viewController, animated: true)
+            }
         }
     }
 }
 
-extension DataProtectionSettingsCoordinator: SettingsClipboardTimeoutViewControllerDelegate {
-    func didFinishSelection(in viewController: SettingsClipboardTimeoutVC) {
-        DispatchQueue.main.async { [weak router] in
-            router?.pop(viewController: viewController, animated: true)
+extension DataProtectionSettingsCoordinator: SettingsClipboardTimeoutVCDelegate {
+    func didSelectTimeout(
+        _ timeout: Settings.ClipboardTimeout,
+        in viewController: SettingsClipboardTimeoutVC
+    ) {
+        Settings.current.clipboardTimeout = timeout
+        refresh()
+
+        if Settings.current.isManaged(key: .clipboardTimeout) {
+            viewController.showManagedSettingNotification()
+        } else {
+            DispatchQueue.main.async { [weak router] in
+                router?.pop(viewController: viewController, animated: true)
+            }
         }
     }
 }

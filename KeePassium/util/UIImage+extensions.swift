@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2023 Andrei Popleteev <info@keepassium.com>
+//  Copyright © 2018–2024 KeePassium Labs <info@keepassium.com>
 // 
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -26,7 +26,9 @@ public enum SymbolName: String {
     public static let keyFile = Self.keyDocHorizontal
     public static let actionRestore = Self.clockArrowCirclepath
     public static let appProtection = Self.lock
+    public static let autoFill = Self.return
     public static let fieldReference = Self.arrowRightCircle
+    public static let passwordAudit = Self.networkBadgeShield
 
     public static let premiumBenefitMultiDB = Self.shieldBadgePlus
     public static let premiumBenefitDBTimeout = Self.clockBadgeCheckmark
@@ -85,6 +87,7 @@ public enum SymbolName: String {
     case keyboard = "keyboard" 
     case listBullet = "list.bullet" 
     case lock = "lock" 
+    case lockShield = "lock.shield"
     case minus = "minus" 
     case network = "network" 
     case networkBadgeShield = "network.badge.shield" 
@@ -92,6 +95,7 @@ public enum SymbolName: String {
     case noteText = "note.text" 
     case pencil = "pencil" 
     case person = "person" 
+    case person2BadgeGearshape = "person.2.badge.gearshape" 
     case person3 = "person.3" 
     case photo = "photo" 
     case plus = "plus" 
@@ -100,6 +104,7 @@ public enum SymbolName: String {
     case qrcode = "qrcode" 
     case questionmarkBubble = "questionmark.bubble" 
     case rectangleStack = "rectangle.stack" 
+    case `return` = "return" 
     case shieldBadgePlus = "shield.badge.plus" 
     case sliderVertical3 = "slider.vertical.3" 
     case starFill = "star.fill" 
