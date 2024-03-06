@@ -19,6 +19,8 @@ public class EntryField: Eraseable {
     public static let totp = "TOTP"
     public static let otp = "otp"
 
+    public static let tags = "tags" + UUID().uuidString
+
     public var name: String
     public var value: String {
         didSet {
@@ -374,37 +376,6 @@ public class Entry: DatabaseItem, Eraseable {
             parentGroup = parentGroupUnwrapped.parent
         }
         return groupNames.reversed().joined(separator: " / ")
-    }
-
-    public func matches(query: SearchQuery) -> Bool {
-        for word in query.textWords {
-            var wordFound = false
-            for field in fields {
-                wordFound = field.contains(
-                    word: word,
-                    includeFieldNames: query.includeFieldNames,
-                    includeProtectedValues: query.includeProtectedValues,
-                    includePasswords: query.includePasswords,
-                    options: query.compareOptions)
-                if wordFound {
-                    break
-                }
-            }
-            if wordFound {
-                continue
-            }
-
-            for att in attachments {
-                if att.name.localizedContains(word, options: query.compareOptions) {
-                    wordFound = true
-                    break
-                }
-            }
-            if !wordFound {
-                return false
-            }
-        }
-        return true
     }
 }
 

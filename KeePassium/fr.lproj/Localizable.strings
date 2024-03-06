@@ -4,6 +4,9 @@
 /* Hint shown when both password and key file are empty. */
 "[Database/Create] Please enter a password or choose a key file." = "Veuillez entrer un mot de passe ou choisir un fichier clé.";
 
+/* Notification for business users when they set up too weak database password. */
+"[Database/Create/orgRequiresStronger]" = "Votre organisation a besoin d'un mot de passe de base de données plus complexe.";
+
 /* Note for a sample entry */
 "[Database/Create/TemplateEntry/notes] You can also store some notes, if you like." = "Si vous le souhaitez, vous pouvez également enregistrer quelques notes.";
 
@@ -52,12 +55,144 @@
 /* Title of entry viewer's tab with previous revisions of the entry */
 "[Entry/Tab/History/title]" = "Historique";
 
+/* Title of entry viewer's tab with advanced/secondary properties */
+"[Entry/Tab/More/title]" = "Plus";
+
 /* Menu title. For example: `About KeePassium`. [appName: String] */
 "[Menu/About/title]" = "À propos de %@";
 
 /* Menu title: app settings */
 "[Menu/Preferences/title]" = "Préférences…";
 
+/* Action/button */
+"[Onboarding/AddExistingDatabase/action]" = "Ajouter base de données existante";
+
+/* Action/button to set up the App Protection feature. Not a call to action. */
+"[Onboarding/AppProtection/activate]" = "Activer la protection de l'application";
+
+/* Text in the App Protection onboarding screen. */
+"[Onboarding/AppProtection/text1]" = "KeePassium est votre coffre-fort. La protection de l'application garantit que vous seul(e) pouvez l'ouvrir.";
+
+/* Title of the App Protection onboarding screen */
+"[Onboarding/AppProtection/title]" = "Strictement confidentiel";
+
+/* Action/button */
+"[Onboarding/CreateNewDatabase/action]" = "Créer nouvelle base de données";
+
+/* Text in the Data Encryption intro screen */
+"[Onboarding/DataEncryption/text1]" = "Votre coffre-fort est une base de données chiffrée.";
+
+/* Text in the Data Encryption intro screen */
+"[Onboarding/DataEncryption/text2]" = "Vous pouvez conserver les bases de données dans votre nuage favori ou localement sur votre appareil.";
+
+/* Title of the Data Encryption intro screen */
+"[Onboarding/DataEncryption/title]" = "Chiffrement des données";
+
+/* Text in the introductory onboarding screen. */
+"[Onboarding/Intro/text1]" = "KeePassium conserve vos mots de passe et autres informations sensibles de manière sécurisée.";
+
+/* Text in the introductory onboarding screen. */
+"[Onboarding/Intro/text2]" = "Il n'y a aucune publicité et aucun suivi.";
+
+/* Text in the introductory onboarding screen. */
+"[Onboarding/Intro/text3]" = "Nous ne savons rien à votre sujet.";
+
+/* Text in the introductory onboarding screen. */
+"[Onboarding/Intro/text4]" = "Vos données vous appartiennent.";
+
+/* Title of the introductory onboarding screen. */
+"[Onboarding/Intro/title]" = "Bienvenue";
+
+/* Text in the Security intro screen */
+"[Onboarding/Security/text1]" = "Vos informations sont chiffrées dans une boîte sécurisée (base de données). Les boîtes sécurisées sont stockées dans un coffre-fort (KeePassium).";
+
+/* Text in the Security intro screen */
+"[Onboarding/Security/text2]" = "Le coffre-fort et les boîtes sécurisées ont des clés différentes et vous seul(e) les connaissez.";
+
+/* Title of the Security intro screen */
+"[Onboarding/Security/title]" = "Sécurité maximale";
+
+/* Action to skip selected item/items in future password audits. */
+"[PasswordAudit/Action/Exclude]" = "Exclure de l'audit";
+
+/* Status message: password audit in progress */
+"[PasswordAudit/Auditing/status]" = "Audit des mots de passe";
+
+/* Error message after a failed password audit request [message: String]. */
+"[PasswordAudit/Error/text]" = "Une erreur est survenue lors de la communication avec le service HIBP. %@";
+
+/* Description of the password audit results, where a number appears next to each password. */
+"[PasswordAudit/ExposureCount/description]" = "Le nombre indique combien de fois le mot de passe a été trouvé dans des fuites de données connues.";
+
+/* Description of the Password Audit function. */
+"[PasswordAudit/Intro/text]" = "L'audit des mots de passe vérifie vos mots de passe par rapport à une base de données en ligne de mots de passe divulgués de manière sécurisée et privée.\n\nKeePassium enverra des informations calculées à partir de vos mots de passe (des \"sommes de contrôle\" partielles) au service [Have I Been Pwned](https://haveibeenpwned.com). Le service renverra des informations détaillées sur les mots de passe compromis qui ont des \"sommes de contrôle\" partielles similaires. L'application comparera ensuite ces \"sommes de contrôle\" détaillées dans votre téléphone et détectera quels sont vos mots de passe susceptibles d'être compromis.\n\nVos mots de passe réels ne sont jamais partagés avec le service en ligne.\n[En savoir plus…](%@)";
+
+/* Result of a password audit. */
+"[PasswordAudit/Results/allGood]" = "Bonne nouvelle ! Aucun de vos mots de passe n'est apparu dans des fuites de données connues.";
+
+/* Title of a list with passwords that are known to have been exposed in online breaches. */
+"[PasswordAudit/Results/title]" = "Mots de passe compromis";
+
+/* Action/button: intiate password audit */
+"[PasswordAudit/Start/action]" = "Lancer l'audit";
+
+/* Title of a screen to check which passwords are known to be compromised. */
+"[PasswordAudit/title]" = "Audit des mots de passe";
+
+/* Password quality description. For example: `Password quality: Weak`. [level: String] */
+"[PasswordQuality/description]" = "Qualité du mot de passe : %@";
+
+/* Almost good password quality */
+"[PasswordQuality/Level] Almost good" = "Satisfaisant";
+
+/* Good password quality */
+"[PasswordQuality/Level] Good" = "Bon";
+
+/* Very good password quality */
+"[PasswordQuality/Level] Very good" = "Très bon";
+
+/* Very weak password quality */
+"[PasswordQuality/Level] Very weak" = "Très faible";
+
+/* Weak password quality */
+"[PasswordQuality/Level] Weak" = "Faible";
+
+/* Password quality description. For example: `Very good (234 bits of entropy)`. [level: String, formattedBitCount: String] */
+"[PasswordQuality/LevelWithEntropy/description]" = "%1$@ (%2$@ d'entropie)";
+
 /* Action/button to make password visible as plain-text */
 "[ProtectedTextField] Show Password" = "Afficher le mot de passe";
+
+/* Title of the confirmation dialog for `Delete` action for several items */
+"[Selection/Delete/confirmation]" = "Supprimer la sélection ?";
+
+/* Title of the confirmation dialog for `Exclude from audit` action for several items */
+"[Selection/ExcludeFromAudit/confirmation]" = "Exclure la sélection de l'audit de mot de passe ?";
+
+/* Action/button to create a new item tag */
+"[Tags/Create/action]" = "Créer une étiquette";
+
+/* Call to action/hint inside a text input */
+"[Tags/Create/placeholder]" = "Saisissez le nom de l'étiquette";
+
+/* Title of the tag creation dialog */
+"[Tags/Create/title]" = "Nouvelle étiquette";
+
+/* Status message with a call to action */
+"[Tags/None/placeholder]" = "Il n'y a aucune étiquette dans la base de données. Ajoutez-en une.";
+
+/* Status message: tag search result is empty */
+"[Tags/Search/emptyResult]" = "Aucune étiquette adéquate n'a été trouvée.";
+
+/* Title of a list with all the tags existing in the database. */
+"[Tags/Section/All]" = "Toutes les étiquettes";
+
+/* Title of a list with tags used by parent groups. */
+"[Tags/Section/Inherited]" = "Étiquettes héritées";
+
+/* Title of a list with tags chosen by the user for a specific entry or group. */
+"[Tags/Section/Selected]" = "Étiquettes sélectionnées";
+
+/* Title: the number of times a tag is encountered in the database. */
+"[Tags/UsageCount/title]" = "Nombre d'utilisations";
 

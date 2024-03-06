@@ -21,6 +21,7 @@ class ChallengeResponseManager {
 
     public private(set) var supportsNFC = false
     public private(set) var supportsMFI = false
+    public private(set) var supportsMFIoverUSB = false
     public private(set) var supportsUSB = false
 
     private var mfiKeyActionSheetView: MFIKeyActionSheetView? 
@@ -60,6 +61,7 @@ class ChallengeResponseManager {
 
 
     private func initSessionObservers() {
+        supportsMFIoverUSB = YubiKitDeviceCapabilities.supportsMFIOverUSBC
         supportsMFI = YubiKitDeviceCapabilities.supportsMFIAccessoryKey
         if supportsMFI {
             initMFISessionObserver()
@@ -342,8 +344,6 @@ class ChallengeResponseManager {
         #if targetEnvironment(macCatalyst)
         usbYubiKey?.cancel()
         usbYubiKey = nil
-        #else
-        assertionFailure("Should not be here")
         #endif
     }
 

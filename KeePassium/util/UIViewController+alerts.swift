@@ -81,9 +81,13 @@ extension UIViewController {
         title: String? = nil,
         image: UIImage? = nil,
         position: ToastPosition = .top,
+        hidePrevious: Bool = false,
         action: ToastAction? = nil,
         duration: TimeInterval = 5.0
     ) {
+        if hidePrevious {
+            getHostViewForToastNotifications().hideAllToasts()
+        }
         var style = ToastStyle()
         style.buttonColor = .actionTint
 
@@ -117,11 +121,11 @@ extension UIViewController {
         }
     }
 
-    func showManagedSettingNotification() {
+    func showManagedSettingNotification(text: String = LString.thisSettingIsManaged) {
         hideAllToasts()
         showNotification(
-            LString.thisSettingIsManaged,
-            image: .symbol(.person2BadgeGearshape)?
+            text,
+            image: .symbol(.managedParameter)?
                 .withTintColor(.iconTint, renderingMode: .alwaysOriginal)
         )
     }

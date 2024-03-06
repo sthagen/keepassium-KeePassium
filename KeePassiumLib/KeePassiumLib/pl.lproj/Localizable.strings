@@ -637,6 +637,9 @@
 /* Localized name of the storage service: Boxcryptor (https://boxcryptor.com) */
 "[FileProvider/Boxcryptor/name]" = "Boxcryptor";
 
+/* Localized name of the storage service: Cryptomator (https://cryptomator.org) */
+"[FileProvider/Cryptomator/name]" = "Cryptomator";
+
 /* Localized name of the storage service: Dropbox (https://dropbox.com) */
 "[FileProvider/Dropbox/name]" = "Dropbox";
 
@@ -669,6 +672,9 @@
 
 /* Localized name of the storage service: pCloud (https://pcloud.com) */
 "[FileProvider/pCloud/name]" = "pCloud";
+
+/* Localized name of the storage service: Proton Drive (https://proton.me/drive) */
+"[FileProvider/ProtonDrive/name]" = "Proton Drive";
 
 /* Localized name of the storage service: QNAP Qfile (https://apps.apple.com/app/qfile/id526330408) */
 "[FileProvider/qnapQFile/name]" = "Qfile";
@@ -731,10 +737,10 @@
 "[General/DestinationGroup/title] Choose a Destination" = "Miejsce docelowe";
 
 /* Feature status: disabled/inactive. Keep it short, possibly abbreviated. */
-"[General/Feature/Off]" = "Włączone";
+"[General/Feature/Off]" = "Wyłącz";
 
 /* Feature status: enabled/active. Keep it short, possibly abbreviated. */
-"[General/Feature/On]" = "Włączone";
+"[General/Feature/On]" = "Włącz";
 
 /* Placeholder for folders without files */
 "[General/FileList/Empty/title]" = "Folder jest pusty";
@@ -825,6 +831,9 @@
 
 /* Checkbox/Button to show a text field in its full size */
 "[Generic] Show more" = "Pokaż więcej";
+
+/* Action/button to skip the current step and proceed with the next one */
+"[Generic] Skip" = "Pomiń";
 
 /* Message to confirm deletion of an item. */
 "[Generic/ConfirmDelete/title] Are you sure?" = "Jesteś pewien?";
@@ -927,6 +936,9 @@
 
 /* Master key/unlock option: don't use hardware keys */
 "[HardwareKey/None] No Hardware Key" = "Brak klucza sprzętowego";
+
+/* Title of a list with possible hardware key connections */
+"[HardwareKey/Picker/title]" = "Klucz sprzętowy";
 
 /* Master key/unlock option: use given slot of YubiKey */
 "[HardwareKey/YubiKey/Slot] YubiKey Slot #%d" = "Gniazdo YubiKey %d";

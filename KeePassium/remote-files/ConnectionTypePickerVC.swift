@@ -9,13 +9,17 @@
 import KeePassiumLib
 
 protocol ConnectionTypePickerDelegate: AnyObject {
+    func isConnectionTypeEnabled(
+        _ connectionType: RemoteConnectionType,
+        in viewController: ConnectionTypePickerVC) -> Bool
+
     func willSelect(
         connectionType: RemoteConnectionType,
         in viewController: ConnectionTypePickerVC) -> Bool
     func didSelect(connectionType: RemoteConnectionType, in viewController: ConnectionTypePickerVC)
 }
 
-final class ConnectionTypePickerVC: UITableViewController, Refreshable {
+final class ConnectionTypePickerVC: UITableViewController, Refreshable, BusyStateIndicating {
     private enum CellID {
         static let itemCell = "itemCell"
     }
@@ -54,7 +58,7 @@ final class ConnectionTypePickerVC: UITableViewController, Refreshable {
         tableView.reloadData()
     }
 
-    public func setState(isBusy: Bool) {
+    public func indicateState(isBusy: Bool) {
         titleView.showSpinner(isBusy, animated: true)
         self.isBusy = isBusy
         refresh()
@@ -78,14 +82,19 @@ extension ConnectionTypePickerVC {
             .dequeueReusableCell(withIdentifier: CellID.itemCell, for: indexPath)
             as! SubtitleCell
 
-        let value = values[indexPath.row]
-        cell.textLabel?.text = value.description
+        let connectionType = values[indexPath.row]
+        cell.textLabel?.text = connectionType.description
         cell.imageView?.contentMode = .scaleAspectFit
-        cell.imageView?.image = .symbol(value.iconSymbol)
+        cell.imageView?.image = .symbol(connectionType.fileProvider.iconSymbol)
         cell.selectionStyle = .default
-        cell.setEnabled(!isBusy)
 
-        if value.isPremiumUpgradeRequired {
+        let isAllowed = connectionType.fileProvider.isAllowed
+        cell.detailTextLabel?.text = isAllowed ? nil : LString.Error.storageAccessDeniedByOrg
+
+        let isEnabled = delegate?.isConnectionTypeEnabled(connectionType, in: self) ?? true
+        cell.setEnabled(isEnabled && isAllowed && !isBusy)
+
+        if connectionType.isPremiumUpgradeRequired {
             cell.accessoryType = .none
             cell.accessoryView = PremiumBadgeAccessory()
         } else {
@@ -101,19 +110,25 @@ extension ConnectionTypePickerVC {
         if isBusy {
             return nil
         }
+        let selectedConnectionType = values[indexPath.row]
+        guard selectedConnectionType.fileProvider.isAllowed else {
+            showManagedSettingNotification(text: LString.Error.storageAccessDeniedByOrg)
+            return nil
+        }
         return indexPath
     }
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let selectedValue = values[indexPath.row]
-        let canSelect = delegate?.willSelect(connectionType: selectedValue, in: self) ?? false
-        guard canSelect else {
+        let selectedConnectionType = values[indexPath.row]
+        let isEnabled = delegate?.isConnectionTypeEnabled(selectedConnectionType, in: self) ?? true
+        let canSelect = delegate?.willSelect(connectionType: selectedConnectionType, in: self) ?? false
+        guard isEnabled && canSelect else {
             tableView.deselectRow(at: indexPath, animated: true)
             return
         }
 
-        self.selectedValue = selectedValue
+        self.selectedValue = selectedConnectionType
         tableView.reloadData()
-        delegate?.didSelect(connectionType: selectedValue, in: self)
+        delegate?.didSelect(connectionType: selectedConnectionType, in: self)
     }
 }

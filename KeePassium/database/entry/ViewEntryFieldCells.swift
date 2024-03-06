@@ -40,6 +40,11 @@ class ViewableFieldCellFactory {
                 withIdentifier: ExpandableFieldCell.storyboardID,
                 for: indexPath)
                 as! ExpandableFieldCell
+        } else if field.internalName == EntryField.tags {
+            cell = tableView.dequeueReusableCell(
+                withIdentifier: TagsCell.storyboardID,
+                for: indexPath)
+                as! TagsCell
         } else {
             cell = tableView.dequeueReusableCell(
                 withIdentifier: ViewableFieldCell.storyboardID,
@@ -103,13 +108,13 @@ class ViewableFieldCell: UITableViewCell, ViewableFieldCellBase {
             target: self,
             action: #selector(didTapValueTextView))
         scrollTapGestureRecognizer.numberOfTapsRequired = 1
-        valueScrollView.addGestureRecognizer(scrollTapGestureRecognizer)
+        valueScrollView?.addGestureRecognizer(scrollTapGestureRecognizer)
 
-        valueScrollView.alwaysBounceVertical = false
-        valueScrollView.alwaysBounceHorizontal = false
+        valueScrollView?.alwaysBounceVertical = false
+        valueScrollView?.alwaysBounceHorizontal = false
         if ProcessInfo.isCatalystApp {
-            valueScrollView.isScrollEnabled = false
-            valueScrollView.showsVerticalScrollIndicator = false
+            valueScrollView?.isScrollEnabled = false
+            valueScrollView?.showsVerticalScrollIndicator = false
         }
     }
 
@@ -243,14 +248,16 @@ class ProtectedFieldCell: ViewableFieldCell {
         valueText.isSelectable = theButton.isSelected
         toggleButton = theButton
 
-        guard field?.internalName == EntryField.password else {
+        guard let field,
+              field.internalName == EntryField.password,
+              field.isAuditable else {
             accessoryView = theButton
             refreshTextView()
             return
         }
 
         let indicatorView = PasswordQualityIndicatorIconView()
-        indicatorView.quality = .init(password: field?.resolvedValue)
+        indicatorView.quality = .init(password: field.resolvedValue)
         indicatorView.onTap = { [weak self] indicator in
             guard let toastHost = self?.contentView,
                   let quality = indicator.quality
@@ -337,6 +344,16 @@ class ProtectedFieldCell: ViewableFieldCell {
     }
 }
 
+final class TagsCell: ViewableFieldCell {
+    override class var storyboardID: String { "TagsCell" }
+
+    override func setupCell() {
+        super.setupCell()
+
+        valueText.attributedText = TagFormatter.format(field?.value)
+        valueText.accessibilityLabel = field?.value
+    }
+}
 
 class ExpandableFieldCell: ViewableFieldCell {
     override class var storyboardID: String { "ExpandableFieldCell" }

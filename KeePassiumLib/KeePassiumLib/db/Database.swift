@@ -7,15 +7,43 @@
 //  For commercial licensing, please contact the author.
 
 public struct SearchQuery {
+    public enum Word {
+        private static let separator = ":" as Character
+        private static let tagPrefix = "tag"
+
+        case text(Substring)
+        case tag(Substring)
+
+        static func from(text: String) -> [Self] {
+            let queryWords = text.split(separator: " " as Character)
+            return queryWords.map { word in
+                let subwords = word
+                    .split(separator: separator, maxSplits: 1)
+                    .map { $0.trimmingCharacters(in: .whitespaces) }
+                guard subwords.count == 2,
+                      subwords[0].lowercased() == tagPrefix
+                else {
+                    return .text(word)
+                }
+                guard let index = subwords[1].firstIndex(where: { !$0.isWhitespace }) else {
+                    return .text(word)
+                }
+                let tag = subwords[1].suffix(from: index)
+                return .tag(tag)
+            }
+        }
+    }
+
     public let includeSubgroups: Bool
     public let includeDeleted: Bool
     public let includeFieldNames: Bool
     public let includeProtectedValues: Bool
     public let includePasswords: Bool
     public let compareOptions: String.CompareOptions
+    public let flattenGroups: Bool
 
     public let text: String
-    public let textWords: [Substring]
+    public let textWords: [Word]
 
     public init(
         includeSubgroups: Bool,
@@ -24,8 +52,8 @@ public struct SearchQuery {
         includeProtectedValues: Bool,
         includePasswords: Bool,
         compareOptions: String.CompareOptions,
-        text: String,
-        textWords: [Substring]
+        flattenGroups: Bool,
+        text: String
     ) {
         self.includeSubgroups = includeSubgroups
         self.includeDeleted = includeDeleted
@@ -33,8 +61,9 @@ public struct SearchQuery {
         self.includeProtectedValues = includeProtectedValues
         self.includePasswords = includePasswords
         self.compareOptions = compareOptions
+        self.flattenGroups = flattenGroups
         self.text = text
-        self.textWords = text.split(separator: " ")
+        self.textWords = Word.from(text: text)
     }
 }
 
@@ -104,10 +133,11 @@ open class Database: Eraseable {
         return result
     }
 
-    public func search(query: SearchQuery, result: inout [Entry]) -> Int {
-        result.removeAll()
-        root?.filterEntries(query: query, result: &result)
-        return result.count
+    public func search(query: SearchQuery, foundEntries: inout [Entry], foundGroups: inout [Group]) -> Int {
+        foundEntries.removeAll()
+        foundGroups.removeAll()
+        root?.filter(query: query, foundEntries: &foundEntries, foundGroups: &foundGroups)
+        return foundEntries.count + foundGroups.count
     }
 
     public func delete(group: Group) {

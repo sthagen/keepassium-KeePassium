@@ -32,6 +32,8 @@ protocol ViewableField: AnyObject {
 
     var isValueHidden: Bool { get set }
 
+    var isAuditable: Bool { get set }
+
     var isHeightConstrained: Bool { get set }
 }
 
@@ -54,6 +56,8 @@ class BasicViewableField: ViewableField {
 
     var isValueHidden: Bool
 
+    var isAuditable: Bool = true
+
     var isHeightConstrained: Bool
 
     var isEditable: Bool { return true }
@@ -65,6 +69,7 @@ class BasicViewableField: ViewableField {
         case EntryField.password: return LString.fieldPassword
         case EntryField.url: return LString.fieldURL
         case EntryField.notes: return LString.fieldNotes
+        case EntryField.tags: return LString.fieldTags
         default:
             return internalName
         }
@@ -143,6 +148,7 @@ class ViewableEntryFieldFactory {
         var result = [ViewableField]()
 
         let hasValidOTPConfig = TOTPGeneratorFactory.makeGenerator(for: entry) != nil
+        let isAuditable = (entry as? Entry2)?.qualityCheck ?? true
 
         var excludedFieldNames = Set<String>()
         if excludedFields.contains(.title) {
@@ -164,6 +170,7 @@ class ViewableEntryFieldFactory {
             }
 
             let viewableField = makeOne(field: field)
+            viewableField.isAuditable = isAuditable
             result.append(viewableField)
         }
 
@@ -172,6 +179,21 @@ class ViewableEntryFieldFactory {
         }
 
         return result
+    }
+
+    static func makeTags(from entry: Entry, parent: Group?, includeEmpty: Bool) -> (EntryField, ViewableField)? {
+        let tags = entry.tags
+        guard !tags.isEmpty || includeEmpty else {
+            return nil
+        }
+
+        let entryField = EntryField(
+            name: EntryField.tags,
+            value: TagHelper.tagsToString(tags),
+            isProtected: false
+        )
+        let viewableField = BasicViewableField(fieldOrNil: entryField, isValueHidden: false)
+        return (entryField, viewableField)
     }
 
     static private func makeOne(field: EntryField) -> ViewableField {

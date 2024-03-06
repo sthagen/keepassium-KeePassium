@@ -700,6 +700,9 @@
 /* Localized name of the storage service: Boxcryptor (https://boxcryptor.com) */
 "[FileProvider/Boxcryptor/name]" = "Boxcryptor";
 
+/* Localized name of the storage service: Cryptomator (https://cryptomator.org) */
+"[FileProvider/Cryptomator/name]" = "Cryptomator";
+
 /* Localized name of the storage service: Dropbox (https://dropbox.com) */
 "[FileProvider/Dropbox/name]" = "Dropbox";
 
@@ -735,6 +738,9 @@
 
 /* Localized name of the storage service: pCloud (https://pcloud.com) */
 "[FileProvider/pCloud/name]" = "pCloud";
+
+/* Localized name of the storage service: Proton Drive (https://proton.me/drive) */
+"[FileProvider/ProtonDrive/name]" = "Proton Drive";
 
 /* Localized name of the storage service: QNAP Qfile (https://apps.apple.com/app/qfile/id526330408) */
 "[FileProvider/qnapQFile/name]" = "QNAP Qfile";
@@ -895,6 +901,9 @@
 /* Checkbox/Button to show a text field in its full size */
 "[Generic] Show more" = "さらに表示";
 
+/* Action/button to skip the current step and proceed with the next one */
+"[Generic] Skip" = "スキップ";
+
 /* Action/button to select some items in a list. */
 "[Generic/Action/SelectItems]" = "選択";
 
@@ -999,6 +1008,9 @@
 
 /* Master key/unlock option: don't use hardware keys */
 "[HardwareKey/None] No Hardware Key" = "ハードウェアキーがありません";
+
+/* Title of a list with possible hardware key connections */
+"[HardwareKey/Picker/title]" = "ハードウェアキー";
 
 /* Master key/unlock option: use given slot of YubiKey */
 "[HardwareKey/YubiKey/Slot] YubiKey Slot #%d" = "YubiKey スロット %d";

@@ -75,6 +75,11 @@ extension LString {
         comment: "Explanation of the database sync conflict `Cancel` option.")
 
 
+    public static let titleHardwareKeys = NSLocalizedString(
+        "[HardwareKey/Picker/title]",
+        bundle: Bundle.framework,
+        value: "Hardware Keys",
+        comment: "Title of a list with possible hardware key connections")
     public static let hardwareKeyNotAvailableInAutoFill = NSLocalizedString(
         "[HardwareKey/AutoFill/NotAvailable] Hardware keys are not available in AutoFill.",
         bundle: Bundle.framework,
@@ -85,6 +90,29 @@ extension LString {
         bundle: Bundle.framework,
         value: "NFC requires iOS 13 or later.",
         comment: "A notification that NFC (Near Field Communication) interface is not supported by the current iOS version.")
+    public static let usbUnavailableIPadAppOnMac = NSLocalizedString(
+        "[HardwareKey/USB/iPadAppOnMac]",
+        bundle: Bundle.framework,
+        value: "USB is not available, because this is an iPad app running on macOS. Use the native Mac app instead.",
+        comment: "Information notice")
+    public static let usbHardwareKeyNotSupported = NSLocalizedString(
+        "[HardwareKey/USB/chalRespNotSupported]",
+        bundle: Bundle.framework,
+        value: "This device does not support challenge-response over USB connection.",
+        comment: "Information notice. 'Challenge-response' is a glossary term.")
+    public static let hardwareKeyPortNFC = "NFC"
+    public static let hardwareKeyPortUSB = "USB"
+    public static let hardwareKeyPortLightning = "Lightning"
+    public static let hardwareKeyPortLightningOverUSBC = NSLocalizedString(
+        "[HardwareKey/Interface/LightningViaUSBAdapter]",
+        bundle: Bundle.framework,
+        value: "Lightning (via USB adapter)",
+        comment: "Connector type for older Apple devices, used through a USB adapter. https://en.wikipedia.org/wiki/Lightning_(connector)")
+    public static let hardwareKeyRequiresUSBtoLightningAdapter = NSLocalizedString(
+        "[HardwareKey/LightningOverUSB/RequiresAdapter]",
+        bundle: Bundle.framework,
+        value: "Requires Apple USB-C to Lightning adapter",
+        comment: "A notice for hardware keys that need an adapter for physical connection to device.")
 
 
     public static let titleDatabaseSettings = NSLocalizedString(

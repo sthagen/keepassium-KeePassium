@@ -27,8 +27,8 @@ public class Group: DatabaseItem, Eraseable {
     }
     public var isDeleted: Bool
 
-    public var isIncludeEntriesInSearch: Bool {
-        return true 
+    public var isIncludeChildrenInSearch: Bool {
+        return true
     }
 
     private var isChildrenModified: Bool
@@ -239,23 +239,42 @@ public class Group: DatabaseItem, Eraseable {
         entries.append(contentsOf: self.entries)
     }
 
-    public func filterEntries(query: SearchQuery, result: inout [Entry]) {
+    public func filter(query: SearchQuery, foundEntries: inout [Entry], foundGroups: inout [Group]) {
         if self.isDeleted && !query.includeDeleted {
+            return
+        }
+
+        guard isIncludeChildrenInSearch else {
             return
         }
 
         if query.includeSubgroups {
             for group in groups {
-                group.filterEntries(query: query, result: &result)
+                if query.flattenGroups {
+                    if group.matches(query: query, scope: .tags) {
+                        var entries: [Entry] = []
+                        group.collectAllEntries(to: &entries)
+                        foundEntries.append(contentsOf: entries)
+                    } else if group.matches(query: query, scope: .fields) {
+                        foundEntries.append(contentsOf: group.entries)
+                        for subgroup in group.groups {
+                            subgroup.filter(query: query, foundEntries: &foundEntries, foundGroups: &foundGroups)
+                        }
+                    } else {
+                        group.filter(query: query, foundEntries: &foundEntries, foundGroups: &foundGroups)
+                    }
+                } else {
+                    if group.matches(query: query, scope: .any) {
+                        foundGroups.append(group)
+                    }
+                    group.filter(query: query, foundEntries: &foundEntries, foundGroups: &foundGroups)
+                }
             }
         }
 
-        guard isIncludeEntriesInSearch else {
-            return
-        }
         for entry in entries {
-            if entry.matches(query: query) {
-                result.append(entry)
+            if entry.matches(query: query, scope: .any) {
+                foundEntries.append(entry)
             }
         }
     }
