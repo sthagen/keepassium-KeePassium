@@ -51,7 +51,7 @@ public final class ManagedAppConfig: NSObject {
     private var intuneConfig: [String: Any]?
     private var previousLicenseValue: String?
     private var hasWarnedAboutMissingLicense = false
-    private var allowedFileProviders: Set<FileProvider>?
+    private var allowedFileProviders: FileProviderRestrictions?
 
     override private init() {
         super.init()
@@ -75,6 +75,7 @@ public final class ManagedAppConfig: NSObject {
             hasWarnedAboutMissingLicense = false
             LicenseManager.shared.checkBusinessLicense()
         }
+        guard isManaged() else { return }
         allowedFileProviders = nil
     }
 }
@@ -158,6 +159,14 @@ extension ManagedAppConfig {
         }
     }
 
+    private func warnAboutMissingLicenseOnce() {
+        if hasWarnedAboutMissingLicense {
+            return
+        }
+        Diag.warning("Could not find active business license, managed configuration won't apply.")
+        hasWarnedAboutMissingLicense = true
+    }
+
     internal func getBoolIfLicensed(_ key: Key) -> Bool? {
         let result: Bool?
         switch key {
@@ -179,16 +188,7 @@ extension ManagedAppConfig {
              .hideAppLockSetupReminder,
              .requireAppPasscodeSet:
             result = getBool(key)
-        case .configVersion,
-             .license,
-             .supportEmail,
-             .appLockTimeout,
-             .databaseLockTimeout,
-             .clipboardTimeout,
-             .backupKeepingDuration,
-             .allowedFileProviders,
-             .minimumAppPasscodeEntropy,
-             .minimumDatabasePasswordEntropy:
+        default:
             Diag.error("Key `\(key.rawValue)` is not boolean, ignoring")
             assertionFailure()
             return nil
@@ -198,15 +198,11 @@ extension ManagedAppConfig {
             return nil
         }
 
-        if LicenseManager.shared.hasActiveBusinessLicense() {
-            return result
+        guard LicenseManager.shared.hasActiveBusinessLicense() else {
+            warnAboutMissingLicenseOnce()
+            return nil
         }
-
-        if !hasWarnedAboutMissingLicense {
-            Diag.warning("Could not find active business license, managed configuration won't apply.")
-            hasWarnedAboutMissingLicense = true
-        }
-        return nil
+        return result
     }
 
     internal func getIntIfLicensed(_ key: Key) -> Int? {
@@ -220,26 +216,7 @@ extension ManagedAppConfig {
              .minimumAppPasscodeEntropy,
              .minimumDatabasePasswordEntropy:
             result = getInt(key)
-        case .license,
-             .supportEmail,
-             .autoUnlockLastDatabase,
-             .rememberDatabaseKey,
-             .rememberDatabaseFinalKey,
-             .keepKeyFileAssociations,
-             .keepHardwareKeyAssociations,
-             .lockAllDatabasesOnFailedPasscode,
-             .lockAppOnLaunch,
-             .lockDatabasesOnTimeout,
-             .useUniversalClipboard,
-             .hideProtectedFields,
-             .showBackupFiles,
-             .backupDatabaseOnSave,
-             .excludeBackupFilesFromSystemBackup,
-             .enableQuickTypeAutoFill,
-             .allowNetworkAccess,
-             .hideAppLockSetupReminder,
-             .allowedFileProviders,
-             .requireAppPasscodeSet:
+        default:
             Diag.error("Key `\(key.rawValue)` is not an integer, ignoring.")
             assertionFailure()
             return nil
@@ -249,40 +226,67 @@ extension ManagedAppConfig {
             return nil
         }
 
-        if LicenseManager.shared.hasActiveBusinessLicense() {
-            return result
+        guard LicenseManager.shared.hasActiveBusinessLicense() else {
+            warnAboutMissingLicenseOnce()
+            return nil
+        }
+        return result
+    }
+
+    internal func getStringArrayIfLicensed(_ key: Key) -> [String]? {
+        var result: [String]?
+        switch key {
+        case .allowedFileProviders:
+            result = getStringArray(key)
+        default:
+            Diag.error("Key `\(key.rawValue)` is not a string array, ignoring.")
+            assertionFailure()
+            return nil
         }
 
-        if !hasWarnedAboutMissingLicense {
-            Diag.warning("Could not find active business license, managed configuration won't apply.")
-            hasWarnedAboutMissingLicense = true
+        guard result != nil else {
+            return nil
         }
-        return nil
+
+        guard LicenseManager.shared.hasActiveBusinessLicense() else {
+            warnAboutMissingLicenseOnce()
+            return nil
+        }
+        return result
     }
 }
 
 extension ManagedAppConfig {
     private static let fileProvidersAll = "all"
+    private enum FileProviderRestrictions {
+        case allowAll
+        case allowSome(Set<FileProvider>)
+    }
 
     internal func isAllowed(_ fileProvider: FileProvider) -> Bool {
         if allowedFileProviders == nil {
-            allowedFileProviders = getAllowedFileProviders()
+            allowedFileProviders = parseAllowedFileProviders()
         }
-        return allowedFileProviders!.contains(fileProvider)
+        switch allowedFileProviders! {
+        case .allowAll:
+            return true
+        case .allowSome(let allowedOnes):
+            return allowedOnes.contains(fileProvider)
+        }
     }
 
-    private func getAllowedFileProviders() -> Set<FileProvider> {
-        guard let allowedProviderIDs = getStringArray(.allowedFileProviders) else {
-            return FileProvider.all
+    private func parseAllowedFileProviders() -> FileProviderRestrictions {
+        guard let allowedProviderIDs = getStringArrayIfLicensed(.allowedFileProviders) else {
+            return .allowAll
         }
         if allowedProviderIDs.contains(Self.fileProvidersAll) {
-            return FileProvider.all
+            return .allowAll
         }
 
         let allowedProviders = allowedProviderIDs.compactMap {
             FileProvider(rawValue: $0)
         }
-        return Set(allowedProviders)
+        return .allowSome(Set(allowedProviders))
     }
 }
 
