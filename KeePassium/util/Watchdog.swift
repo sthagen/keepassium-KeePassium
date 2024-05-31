@@ -107,7 +107,7 @@ class Watchdog {
         delegate.showAppCover(self)
         if delegate.isAppLocked { return }
 
-        let databaseTimeout = Settings.current.premiumDatabaseLockTimeout
+        let databaseTimeout = Settings.current.databaseLockTimeout
         if databaseTimeout == .immediately && !isIgnoringMinimizationOnce {
             Diag.debug("Going to background: Database Lock engaged")
             engageDatabaseLock(animate: false)
@@ -176,7 +176,13 @@ class Watchdog {
     }
 
     @objc private func maybeLockDatabase() {
-        let timeout = Settings.current.premiumDatabaseLockTimeout
+        if hasRebootedSinceLastTime() && Settings.current.isLockDatabasesOnReboot {
+            Diag.debug("Device reboot detected, locking the databases")
+            engageDatabaseLock(animate: false)
+            return
+        }
+
+        let timeout = Settings.current.databaseLockTimeout
         switch timeout {
         case .never:
             return
@@ -193,6 +199,27 @@ class Watchdog {
             let isLockedJustNow = intervalSinceLocked < 0.2
 
             engageDatabaseLock(animate: isLockedJustNow)
+        }
+    }
+
+    private func hasRebootedSinceLastTime() -> Bool {
+        guard let currentBootTimestamp = UIDevice.current.bootTime() else {
+            Diag.warning("Cannot get boot time, assuming changed")
+            return true
+        }
+        do {
+            guard let storedBootTimestamp = try Keychain.shared.getDeviceBootTimestamp() else {
+                try Keychain.shared.setDeviceBootTimestamp(currentBootTimestamp)
+                return false
+            }
+            if abs(currentBootTimestamp.timeIntervalSince(storedBootTimestamp)) < 1 {
+                return false
+            }
+            try Keychain.shared.setDeviceBootTimestamp(currentBootTimestamp)
+            return true
+        } catch {
+            Diag.error("Keychain access error, assuming boot time changed")
+            return true
         }
     }
 
@@ -220,7 +247,7 @@ class Watchdog {
             databaseLockTimer.invalidate()
         }
 
-        let timeout = Settings.current.premiumDatabaseLockTimeout
+        let timeout = Settings.current.databaseLockTimeout
         Diag.verbose("Database Lock timeout: \(timeout.seconds)")
         switch timeout {
         case .never, .immediately:

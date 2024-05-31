@@ -77,6 +77,7 @@ public class Settings {
         case lockAppOnLaunch
         case databaseLockTimeout
         case lockDatabasesOnTimeout
+        case lockDatabasesOnReboot
         case passcodeKeyboardType
 
         case clipboardTimeout
@@ -428,15 +429,14 @@ public class Settings {
         }
     }
 
-    public enum EntryListDetail: Int {
-        public static let allValues = [none, userName, password, url, notes, lastModifiedDate]
-
+    public enum EntryListDetail: Int, CaseIterable {
         case none
         case userName
         case password
         case url
         case notes
         case lastModifiedDate
+        case tags
 
         public var longTitle: String {
             // swiftlint:disable line_length
@@ -476,7 +476,13 @@ public class Settings {
                     "[Settings/EntryListDetail/longTitle] Last Modified Date",
                     bundle: Bundle.framework,
                     value: "Last Modified Date",
-                    comment: "An option in Group Viewer settings. Refers fo the most recent time when the entry was modified. Will be shown as 'Entry Subtitle: Last Modified Date'.")
+                    comment: "An option in Group Viewer settings. Refers to the most recent time when the entry was modified. Will be shown as 'Entry Subtitle: Last Modified Date'.")
+            case .tags:
+                return NSLocalizedString(
+                    "[Settings/EntryListDetail/longTitle] Tags",
+                    bundle: Bundle.framework,
+                    value: "Tags",
+                    comment: "An option in Group Viewer settings. Refers to the tags field of the entry. Will be shown as 'Entry Subtitle: Tags'.")
             }
             // swiftlint:enable line_length
         }
@@ -1112,6 +1118,23 @@ public class Settings {
         }
     }
 
+    public var isLockDatabasesOnReboot: Bool {
+        get {
+            if let managedValue = ManagedAppConfig.shared.getBoolIfLicensed(.lockDatabasesOnReboot) {
+                return managedValue
+            }
+            let stored = UserDefaults.appGroupShared
+                .object(forKey: Keys.lockDatabasesOnReboot.rawValue)
+                as? Bool
+            return stored ?? false
+        }
+        set {
+            updateAndNotify(
+                oldValue: isLockDatabasesOnReboot,
+                newValue: newValue,
+                key: .lockDatabasesOnReboot)
+        }
+    }
 
     public var clipboardTimeout: ClipboardTimeout {
         get {
@@ -1732,6 +1755,8 @@ extension Settings.Keys {
             return .databaseLockTimeout
         case .lockDatabasesOnTimeout:
             return .lockDatabasesOnTimeout
+        case .lockDatabasesOnReboot:
+            return .lockDatabasesOnReboot
         case .clipboardTimeout:
             return .clipboardTimeout
         case .universalClipboardEnabled:

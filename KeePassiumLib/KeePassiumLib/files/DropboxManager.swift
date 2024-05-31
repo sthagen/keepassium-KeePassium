@@ -88,8 +88,7 @@ final public class DropboxManager: NSObject {
 
     private func parseFileListResponse(
         _ json: [String: Any],
-        folder: DropboxItem,
-        accountId: String
+        folder: DropboxItem
     ) -> [DropboxItem]? {
         guard let items = json[DropboxAPI.Keys.entries] as? [[String: Any]] else {
             Diag.error("Failed to parse file list response: value field missing")
@@ -199,6 +198,18 @@ final public class DropboxManager: NSObject {
             return
         }
 
+        let error = queryItems.getValue(name: DropboxAPI.Keys.error)
+        switch error {
+        case "access_denied":
+            completionQueue.addOperation {
+                Diag.error("Access denied, authentication cancelled")
+                completion(.failure(.cancelledByUser))
+            }
+            return
+        default:
+            break
+        }
+
         guard let codeItem = queryItems[DropboxAPI.Keys.code],
               let authCodeString = codeItem.value
         else {
@@ -236,22 +247,29 @@ final public class DropboxManager: NSObject {
         case let .authorization(authCode, codeVerifier):
             refreshToken = nil
             accountId = nil
-            postParams.append("redirect_uri=\(DropboxAPI.authRedirectURI)")
-            postParams.append("code=\(authCode)")
+            postParams.append(
+                "redirect_uri=" +
+                DropboxAPI.authRedirectURI.addingPercentEncoding(withAllowedCharacters: .alphanumerics)!)
+            postParams.append(
+                "code=" +
+                authCode.addingPercentEncoding(withAllowedCharacters: .alphanumerics)!)
+            postParams.append(
+                "code_verifier=" +
+                codeVerifier.addingPercentEncoding(withAllowedCharacters: .alphanumerics)!)
             postParams.append("grant_type=authorization_code")
-            postParams.append("code_verifier=\(codeVerifier)")
         case .refresh(let token):
             refreshToken = token.refreshToken
             accountId = token.accountIdentifier
-            postParams.append("refresh_token=\(token.refreshToken)")
+            postParams.append(
+                "refresh_token=" +
+                token.refreshToken.addingPercentEncoding(withAllowedCharacters: .alphanumerics)!)
             postParams.append("grant_type=refresh_token")
         }
 
         let postData = postParams
             .joined(separator: "&")
-            .data(using: .ascii, allowLossyConversion: false)!
-        let postLength = "\(postData.count)"
-        urlRequest.setValue(postLength, forHTTPHeaderField: DropboxAPI.Keys.contentLength)
+            .data(using: .utf8, allowLossyConversion: false)!
+        urlRequest.setValue(String(postData.count), forHTTPHeaderField: DropboxAPI.Keys.contentLength)
         urlRequest.httpBody = postData
 
         let dataTask = urlSession.dataTask(with: urlRequest) { data, response, error in
@@ -323,7 +341,7 @@ extension DropboxManager: RemoteDataSourceManager {
 
     public func getAccountInfo(
         freshToken token: OAuthToken,
-        completionQueue: OperationQueue = .main,
+        completionQueue: OperationQueue,
         completion: @escaping (Result<DropboxAccountInfo, RemoteError>) -> Void
     ) {
         var urlRequest = URLRequest(url: DropboxAPI.accountInfoURL)
@@ -437,7 +455,7 @@ extension DropboxManager: RemoteDataSourceManager {
             case .success(let json):
                 let cursor = json[DropboxAPI.Keys.cursor] as? String
                 let hasMore = json[DropboxAPI.Keys.hasMore] as? Bool
-                if let fileItems = parseFileListResponse(json, folder: folder, accountId: token.accountIdentifier!) {
+                if let fileItems = parseFileListResponse(json, folder: folder) {
                     Diag.debug("File list acquired successfully")
                     if let hasMore = hasMore,
                        hasMore {

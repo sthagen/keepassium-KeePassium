@@ -8,11 +8,11 @@
 
 public enum PremiumFeature: Int {
     public static let all: [PremiumFeature] = [
-        .canUseMultipleDatabases, 
-        .canUseLongDatabaseTimeouts, 
-        .canPreviewAttachments, 
-        .canUseHardwareKeys,    
-        .canKeepMasterKeyOnDatabaseTimeout, 
+        .canUseMultipleDatabases,
+        .canUseLongDatabaseTimeouts,
+        .canPreviewAttachments,
+        .canUseHardwareKeys,
+        .canKeepMasterKeyOnDatabaseTimeout,
         .canChangeAppIcon,
         .canViewFieldReferences,
         .canRelocateAcrossDatabases,
@@ -66,17 +66,17 @@ public enum PremiumFeature: Int {
 
         switch self {
         case .canUseMultipleDatabases,
-             .canUseLongDatabaseTimeouts,
              .canUseHardwareKeys,
-             .canKeepMasterKeyOnDatabaseTimeout,
              .canViewFieldReferences,
              .canRelocateAcrossDatabases,
              .canUseQuickTypeAutoFill,
              .canUseBusinessClouds,
              .canAuditPasswords:
             return isEntitled
-        case .canChangeAppIcon:
-            return true 
+        case .canChangeAppIcon,
+             .canUseLongDatabaseTimeouts,
+             .canKeepMasterKeyOnDatabaseTimeout:
+            return true
         case .canPreviewAttachments:
             return true 
         case .canUseExpressUnlock:

@@ -11,7 +11,10 @@ public protocol RemoteFileItem {
     var isFolder: Bool { get }
     var fileInfo: FileInfo? { get }
     var supportsItemCreation: Bool { get }
+    var belongsToCorporateAccount: Bool { get }
+}
 
+public protocol SerializableRemoteFileItem: RemoteFileItem {
     static func fromURL(_ url: URL) -> Self?
     func toURL() -> URL
 }

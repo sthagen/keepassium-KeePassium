@@ -92,6 +92,8 @@
 		751ABAD52915B745008C18DE /* SubtitleCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 758FF6CE28FC2C9C007DE8EB /* SubtitleCell.swift */; };
 		751ABAD72915B7B5008C18DE /* DatabaseItem+ActionPermissions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75E9E2B8290C1AEB00B79BE8 /* DatabaseItem+ActionPermissions.swift */; };
 		751ABAD92915B7ED008C18DE /* GroupViewerCells.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75E9E2B3290C19FA00B79BE8 /* GroupViewerCells.swift */; };
+		751C7D502BDFE3A0006A58F4 /* XMLParsingSanityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 751C7D4F2BDFE3A0006A58F4 /* XMLParsingSanityTests.swift */; };
+		751C7D542BE03582006A58F4 /* XMLParsingCompletenessTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 751C7D532BE03582006A58F4 /* XMLParsingCompletenessTests.swift */; };
 		751DED732847B44B00B6D02E /* UITextInput+extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 751DED722847B44B00B6D02E /* UITextInput+extensions.swift */; };
 		751DED742847B44B00B6D02E /* UITextInput+extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 751DED722847B44B00B6D02E /* UITextInput+extensions.swift */; };
 		751DED752847B44B00B6D02E /* UITextInput+extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 751DED722847B44B00B6D02E /* UITextInput+extensions.swift */; };
@@ -339,6 +341,8 @@
 		757ADC5723A5180600D708D2 /* DismissableNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 757ADC4F23A5180600D708D2 /* DismissableNavigationController.swift */; };
 		757D336120EF382D000A47F0 /* SettingsDatabaseTimeoutVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 757D336020EF382D000A47F0 /* SettingsDatabaseTimeoutVC.swift */; };
 		757D336320EF5081000A47F0 /* SettingsClipboardTimeoutVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 757D336220EF5081000A47F0 /* SettingsClipboardTimeoutVC.swift */; };
+		757D82742C091CDA006C8B96 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 75183ED02BB8A20A008F1614 /* PrivacyInfo.xcprivacy */; };
+		757D82752C091CDB006C8B96 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 75183ED02BB8A20A008F1614 /* PrivacyInfo.xcprivacy */; };
 		757E78DA2824135D009017BF /* PasswordGeneratorCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 757E78D92824135D009017BF /* PasswordGeneratorCoordinator.swift */; };
 		757E78DB2824135D009017BF /* PasswordGeneratorCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 757E78D92824135D009017BF /* PasswordGeneratorCoordinator.swift */; };
 		757E78E0282414D5009017BF /* PasswordGeneratorVC.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 757E78DF282414D5009017BF /* PasswordGeneratorVC.storyboard */; };
@@ -665,7 +669,6 @@
 		75B38C6E233E5B7C006BDEFC /* EntryFileViewerVC.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 751E0D0F2309AF400088BB10 /* EntryFileViewerVC.storyboard */; };
 		75B38C6F233E5B7C006BDEFC /* FileInfoVC.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 751E0D282309AFBA0088BB10 /* FileInfoVC.storyboard */; };
 		75B38C70233E5B7C006BDEFC /* PlaceholderVC.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 75C38044217A3204006F74C2 /* PlaceholderVC.storyboard */; };
-		75B38C71233E5B7C006BDEFC /* SettingsDatabaseTimeoutVC.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 75ED429F2313A3EF003DE72E /* SettingsDatabaseTimeoutVC.storyboard */; };
 		75B38C73233E5B7C006BDEFC /* SettingsAutoFillVC.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 751E0CF72309AEBB0088BB10 /* SettingsAutoFillVC.storyboard */; };
 		75B38C74233E5B7C006BDEFC /* DatabaseUnlockerVC.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 751E0D1E2309AF670088BB10 /* DatabaseUnlockerVC.storyboard */; };
 		75B38C75233E5B7C006BDEFC /* SettingsClipboardTimeoutVC.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 75ED42A62313C0BB003DE72E /* SettingsClipboardTimeoutVC.storyboard */; };
@@ -1014,7 +1017,6 @@
 		75D076BD28B639D200F02E39 /* perpetual-fallback-license.html in Resources */ = {isa = PBXBuildFile; fileRef = 756FC99A24F45B13007F9920 /* perpetual-fallback-license.html */; };
 		75D076BE28B639D200F02E39 /* HelpViewerVC.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7572665424CB18520099B6E1 /* HelpViewerVC.storyboard */; };
 		75D076BF28B639D200F02E39 /* (null) in Resources */ = {isa = PBXBuildFile; };
-		75D076C028B639D200F02E39 /* SettingsDatabaseTimeoutVC.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 75ED429F2313A3EF003DE72E /* SettingsDatabaseTimeoutVC.storyboard */; };
 		75D076C128B639D200F02E39 /* appicon-atom-black_iPhoneApp_60@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 758FC10E24CEF71F00BAD35C /* appicon-atom-black_iPhoneApp_60@3x.png */; };
 		75D076C228B639D200F02E39 /* appicon-atom-white_iPadApp_76.png in Resources */ = {isa = PBXBuildFile; fileRef = 758FC0F424CEF71A00BAD35C /* appicon-atom-white_iPadApp_76.png */; };
 		75D076C328B639D200F02E39 /* appicon-keepass_iPhoneApp_60@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 758FC0DA24CEF71500BAD35C /* appicon-keepass_iPhoneApp_60@3x.png */; };
@@ -1167,7 +1169,6 @@
 		75EC7C05262B161F00D8C7EB /* DatabaseLoadingWarningsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75EC7C03262B161F00D8C7EB /* DatabaseLoadingWarningsVC.swift */; };
 		75ED428923132A80003DE72E /* SettingsAppTimeoutVC.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 75ED428B23132A80003DE72E /* SettingsAppTimeoutVC.storyboard */; };
 		75ED429223133DEF003DE72E /* SettingsBackupTimeoutPickerVC.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 75ED429423133DEF003DE72E /* SettingsBackupTimeoutPickerVC.storyboard */; };
-		75ED429D2313A3EF003DE72E /* SettingsDatabaseTimeoutVC.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 75ED429F2313A3EF003DE72E /* SettingsDatabaseTimeoutVC.storyboard */; };
 		75ED42A42313C0BB003DE72E /* SettingsClipboardTimeoutVC.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 75ED42A62313C0BB003DE72E /* SettingsClipboardTimeoutVC.storyboard */; };
 		75EEC20F2747EE6A0092505F /* AutoFillSettingsCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75EEC20E2747EE6A0092505F /* AutoFillSettingsCoordinator.swift */; };
 		75EEC2102747EE6A0092505F /* AutoFillSettingsCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75EEC20E2747EE6A0092505F /* AutoFillSettingsCoordinator.swift */; };
@@ -1253,6 +1254,11 @@
 		F33F2C5A2B32FEFC009EFB18 /* TagSelectorCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = F33F2C532B32E059009EFB18 /* TagSelectorCoordinator.swift */; };
 		F33F2C5C2B32FEFC009EFB18 /* TagSelectorVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = F33F2C502B32DD61009EFB18 /* TagSelectorVC.swift */; };
 		F34010A32AA1E540005FDF55 /* ExposureCountFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = F34010A22AA1E540005FDF55 /* ExposureCountFormatter.swift */; };
+		F34AB0712BAF1C7D00BB50A3 /* GoogleDriveConnectionSetupCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = F34AB0702BAF1C7D00BB50A3 /* GoogleDriveConnectionSetupCoordinator.swift */; };
+		F34AB0722BAF1E7C00BB50A3 /* GoogleDriveConnectionSetupCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = F34AB0702BAF1C7D00BB50A3 /* GoogleDriveConnectionSetupCoordinator.swift */; };
+		F34AB0732BAF1E7C00BB50A3 /* GoogleDriveConnectionSetupCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = F34AB0702BAF1C7D00BB50A3 /* GoogleDriveConnectionSetupCoordinator.swift */; };
+		F34AB0742BAF1E7D00BB50A3 /* GoogleDriveConnectionSetupCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = F34AB0702BAF1C7D00BB50A3 /* GoogleDriveConnectionSetupCoordinator.swift */; };
+		F34AB0752BAF1E7D00BB50A3 /* GoogleDriveConnectionSetupCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = F34AB0702BAF1C7D00BB50A3 /* GoogleDriveConnectionSetupCoordinator.swift */; };
 		F34B0DCA2B21D10C001F7500 /* FreeBadgeAccessory.swift in Sources */ = {isa = PBXBuildFile; fileRef = F34B0DC92B21D10C001F7500 /* FreeBadgeAccessory.swift */; };
 		F34B0DCB2B2212A0001F7500 /* FreeBadgeAccessory.swift in Sources */ = {isa = PBXBuildFile; fileRef = F34B0DC92B21D10C001F7500 /* FreeBadgeAccessory.swift */; };
 		F34B0DCC2B2212A2001F7500 /* FreeBadgeAccessory.swift in Sources */ = {isa = PBXBuildFile; fileRef = F34B0DC92B21D10C001F7500 /* FreeBadgeAccessory.swift */; };
@@ -1305,6 +1311,11 @@
 		F3D0114A2B77CEFB00A9AF96 /* SearchHelperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3D011492B77CEFB00A9AF96 /* SearchHelperTests.swift */; };
 		F3D9DE452AA79CAA00FEAF50 /* FaviconDownloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = F377C9AA2AA74A1A00266397 /* FaviconDownloader.swift */; };
 		F3D9DE462AA79CAB00FEAF50 /* FaviconDownloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = F377C9AA2AA74A1A00266397 /* FaviconDownloader.swift */; };
+		F3E194682BCF23DB00FD03EE /* DeleteWordlistAccessory.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3E194672BCF23DB00FD03EE /* DeleteWordlistAccessory.swift */; };
+		F3E194692BCF23DB00FD03EE /* DeleteWordlistAccessory.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3E194672BCF23DB00FD03EE /* DeleteWordlistAccessory.swift */; };
+		F3E1946A2BCF23DB00FD03EE /* DeleteWordlistAccessory.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3E194672BCF23DB00FD03EE /* DeleteWordlistAccessory.swift */; };
+		F3E1946B2BCF23DB00FD03EE /* DeleteWordlistAccessory.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3E194672BCF23DB00FD03EE /* DeleteWordlistAccessory.swift */; };
+		F3E1946C2BCF23DB00FD03EE /* DeleteWordlistAccessory.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3E194672BCF23DB00FD03EE /* DeleteWordlistAccessory.swift */; };
 		F3F72EF02AB32C8900C804FC /* Favicon.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3F72EEF2AB32C8900C804FC /* Favicon.swift */; };
 /* End PBXBuildFile section */
 
@@ -1510,8 +1521,9 @@
 		751C41E12700E4260002FB8F /* uk */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = uk; path = uk.lproj/SettingsSearchVC.strings; sourceTree = "<group>"; };
 		751C41E22700E4260002FB8F /* uk */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = uk; path = uk.lproj/SettingsVC.strings; sourceTree = "<group>"; };
 		751C41E32700E4260002FB8F /* uk */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = uk; path = uk.lproj/SettingsClipboardTimeoutVC.strings; sourceTree = "<group>"; };
-		751C41E42700E4260002FB8F /* uk */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = uk; path = uk.lproj/SettingsDatabaseTimeoutVC.strings; sourceTree = "<group>"; };
 		751C41E52700E4260002FB8F /* uk */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = uk; path = uk.lproj/SettingsDataProtectionVC.strings; sourceTree = "<group>"; };
+		751C7D4F2BDFE3A0006A58F4 /* XMLParsingSanityTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XMLParsingSanityTests.swift; sourceTree = "<group>"; };
+		751C7D532BE03582006A58F4 /* XMLParsingCompletenessTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XMLParsingCompletenessTests.swift; sourceTree = "<group>"; };
 		751DED722847B44B00B6D02E /* UITextInput+extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITextInput+extensions.swift"; sourceTree = "<group>"; };
 		751E0CE72309AE5D0088BB10 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/SettingsDataProtectionVC.storyboard; sourceTree = "<group>"; };
 		751E0CED2309AE8D0088BB10 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/SettingsVC.storyboard; sourceTree = "<group>"; };
@@ -1590,7 +1602,6 @@
 		75319123263800DC000A1119 /* tr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/DatabasePickerVC.strings; sourceTree = "<group>"; };
 		75319125263800DC000A1119 /* tr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/DatabaseUnlockerVC.strings; sourceTree = "<group>"; };
 		75319126263800DC000A1119 /* tr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/EntryViewerPagesVC.strings; sourceTree = "<group>"; };
-		75319127263800DC000A1119 /* tr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/SettingsDatabaseTimeoutVC.strings; sourceTree = "<group>"; };
 		75319128263800DC000A1119 /* tr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/EntryFinderVC.strings; sourceTree = "<group>"; };
 		75319129263800DC000A1119 /* tr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/GroupViewerVC.strings; sourceTree = "<group>"; };
 		7531912A263800DC000A1119 /* tr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/KeyFilePickerVC.strings; sourceTree = "<group>"; };
@@ -1627,7 +1638,6 @@
 		7532822824A8049F00A71F87 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/SettingsDataProtectionVC.strings; sourceTree = "<group>"; };
 		7532822A24A8049F00A71F87 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/DatabaseUnlockerVC.strings; sourceTree = "<group>"; };
 		7532822B24A8049F00A71F87 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/EntryViewerPagesVC.strings; sourceTree = "<group>"; };
-		7532822D24A8049F00A71F87 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/SettingsDatabaseTimeoutVC.strings; sourceTree = "<group>"; };
 		7532822E24A8049F00A71F87 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/EntryFinderVC.strings; sourceTree = "<group>"; };
 		7532822F24A8049F00A71F87 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/GroupViewerVC.strings; sourceTree = "<group>"; };
 		7532823224A804A000A71F87 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/SettingsAppTimeoutVC.strings; sourceTree = "<group>"; };
@@ -1660,7 +1670,6 @@
 		75339568263800AA00341D24 /* sk */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sk; path = sk.lproj/DatabasePickerVC.strings; sourceTree = "<group>"; };
 		7533956A263800AA00341D24 /* sk */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sk; path = sk.lproj/DatabaseUnlockerVC.strings; sourceTree = "<group>"; };
 		7533956B263800AA00341D24 /* sk */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sk; path = sk.lproj/EntryViewerPagesVC.strings; sourceTree = "<group>"; };
-		7533956C263800AA00341D24 /* sk */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sk; path = sk.lproj/SettingsDatabaseTimeoutVC.strings; sourceTree = "<group>"; };
 		7533956D263800AA00341D24 /* sk */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sk; path = sk.lproj/EntryFinderVC.strings; sourceTree = "<group>"; };
 		7533956E263800AA00341D24 /* sk */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sk; path = sk.lproj/GroupViewerVC.strings; sourceTree = "<group>"; };
 		7533956F263800AA00341D24 /* sk */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sk; path = sk.lproj/KeyFilePickerVC.strings; sourceTree = "<group>"; };
@@ -1695,7 +1704,6 @@
 		7534380C2643FE6E0032D284 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/DatabasePickerVC.strings; sourceTree = "<group>"; };
 		7534380E2643FE6E0032D284 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/DatabaseUnlockerVC.strings; sourceTree = "<group>"; };
 		7534380F2643FE6E0032D284 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/EntryViewerPagesVC.strings; sourceTree = "<group>"; };
-		753438102643FE6F0032D284 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/SettingsDatabaseTimeoutVC.strings; sourceTree = "<group>"; };
 		753438112643FE6F0032D284 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/EntryFinderVC.strings; sourceTree = "<group>"; };
 		753438122643FE6F0032D284 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/GroupViewerVC.strings; sourceTree = "<group>"; };
 		753438132643FE6F0032D284 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/KeyFilePickerVC.strings; sourceTree = "<group>"; };
@@ -1750,7 +1758,6 @@
 		754A323A24426AA300632B39 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/SettingsDataProtectionVC.strings; sourceTree = "<group>"; };
 		754A323C24426AA300632B39 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/DatabaseUnlockerVC.strings; sourceTree = "<group>"; };
 		754A323D24426AA300632B39 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/EntryViewerPagesVC.strings; sourceTree = "<group>"; };
-		754A323F24426AA300632B39 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/SettingsDatabaseTimeoutVC.strings; sourceTree = "<group>"; };
 		754A324024426AA300632B39 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/EntryFinderVC.strings; sourceTree = "<group>"; };
 		754A324124426AA300632B39 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/GroupViewerVC.strings; sourceTree = "<group>"; };
 		754A324424426AA300632B39 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/SettingsAppTimeoutVC.strings; sourceTree = "<group>"; };
@@ -1780,7 +1787,6 @@
 		754ABEAD25AB8A5900B98A63 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/SettingsBackupVC.strings; sourceTree = "<group>"; };
 		754ABEAF25AB8A5900B98A63 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/DatabaseUnlockerVC.strings; sourceTree = "<group>"; };
 		754ABEB025AB8A5900B98A63 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/EntryViewerPagesVC.strings; sourceTree = "<group>"; };
-		754ABEB225AB8A5900B98A63 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/SettingsDatabaseTimeoutVC.strings; sourceTree = "<group>"; };
 		754ABEB325AB8A5900B98A63 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/EntryFinderVC.strings; sourceTree = "<group>"; };
 		754ABEB425AB8A5900B98A63 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/GroupViewerVC.strings; sourceTree = "<group>"; };
 		754ABEB725AB8A5900B98A63 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/SettingsAppTimeoutVC.strings; sourceTree = "<group>"; };
@@ -1813,7 +1819,6 @@
 		754ABEE125AB95D300B98A63 /* pl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pl; path = pl.lproj/SettingsDataProtectionVC.strings; sourceTree = "<group>"; };
 		754ABEE325AB95D300B98A63 /* pl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pl; path = pl.lproj/DatabaseUnlockerVC.strings; sourceTree = "<group>"; };
 		754ABEE425AB95D300B98A63 /* pl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pl; path = pl.lproj/EntryViewerPagesVC.strings; sourceTree = "<group>"; };
-		754ABEE625AB95D300B98A63 /* pl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pl; path = pl.lproj/SettingsDatabaseTimeoutVC.strings; sourceTree = "<group>"; };
 		754ABEE725AB95D300B98A63 /* pl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pl; path = pl.lproj/EntryFinderVC.strings; sourceTree = "<group>"; };
 		754ABEE825AB95D300B98A63 /* pl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pl; path = pl.lproj/GroupViewerVC.strings; sourceTree = "<group>"; };
 		754ABEEB25AB95D300B98A63 /* pl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pl; path = pl.lproj/SettingsAppTimeoutVC.strings; sourceTree = "<group>"; };
@@ -1846,7 +1851,6 @@
 		754ABF0F25AB969000B98A63 /* pt-BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-BR"; path = "pt-BR.lproj/SettingsDataProtectionVC.strings"; sourceTree = "<group>"; };
 		754ABF1125AB969000B98A63 /* pt-BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-BR"; path = "pt-BR.lproj/DatabaseUnlockerVC.strings"; sourceTree = "<group>"; };
 		754ABF1225AB969000B98A63 /* pt-BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-BR"; path = "pt-BR.lproj/EntryViewerPagesVC.strings"; sourceTree = "<group>"; };
-		754ABF1425AB969000B98A63 /* pt-BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-BR"; path = "pt-BR.lproj/SettingsDatabaseTimeoutVC.strings"; sourceTree = "<group>"; };
 		754ABF1525AB969000B98A63 /* pt-BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-BR"; path = "pt-BR.lproj/EntryFinderVC.strings"; sourceTree = "<group>"; };
 		754ABF1625AB969000B98A63 /* pt-BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-BR"; path = "pt-BR.lproj/GroupViewerVC.strings"; sourceTree = "<group>"; };
 		754ABF1925AB969000B98A63 /* pt-BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-BR"; path = "pt-BR.lproj/SettingsAppTimeoutVC.strings"; sourceTree = "<group>"; };
@@ -1914,7 +1918,6 @@
 		756B2442243F74E000AA121A /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/SettingsDataProtectionVC.strings; sourceTree = "<group>"; };
 		756B2444243F74E000AA121A /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/DatabaseUnlockerVC.strings; sourceTree = "<group>"; };
 		756B2445243F74E000AA121A /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/EntryViewerPagesVC.strings; sourceTree = "<group>"; };
-		756B2447243F74E000AA121A /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/SettingsDatabaseTimeoutVC.strings; sourceTree = "<group>"; };
 		756B2448243F74E000AA121A /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/EntryFinderVC.strings; sourceTree = "<group>"; };
 		756B2449243F74E000AA121A /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/GroupViewerVC.strings; sourceTree = "<group>"; };
 		756B244C243F74E000AA121A /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/SettingsAppTimeoutVC.strings; sourceTree = "<group>"; };
@@ -2077,7 +2080,6 @@
 		75AC35CB23549DE700B60614 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/SettingsBackupVC.strings; sourceTree = "<group>"; };
 		75AC35CD23549DE700B60614 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/DatabaseUnlockerVC.strings; sourceTree = "<group>"; };
 		75AC35CE23549DE700B60614 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/EntryViewerPagesVC.strings; sourceTree = "<group>"; };
-		75AC35D023549DE700B60614 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/SettingsDatabaseTimeoutVC.strings; sourceTree = "<group>"; };
 		75AC35D123549DE700B60614 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/GroupViewerVC.strings; sourceTree = "<group>"; };
 		75AC35D223549DE700B60614 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/EntryFinderVC.strings; sourceTree = "<group>"; };
 		75AC35D523549DE700B60614 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/SettingsAppTimeoutVC.strings; sourceTree = "<group>"; };
@@ -2108,7 +2110,6 @@
 		75AC535A2326FE6E000AA4FB /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/SettingsDataProtectionVC.strings; sourceTree = "<group>"; };
 		75AC535C2326FE6E000AA4FB /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/DatabaseUnlockerVC.strings; sourceTree = "<group>"; };
 		75AC535D2326FE6E000AA4FB /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/EntryViewerPagesVC.strings; sourceTree = "<group>"; };
-		75AC53602326FE6E000AA4FB /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/SettingsDatabaseTimeoutVC.strings; sourceTree = "<group>"; };
 		75AC53612326FE6E000AA4FB /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/EntryFinderVC.strings; sourceTree = "<group>"; };
 		75AC53622326FE6E000AA4FB /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/GroupViewerVC.strings; sourceTree = "<group>"; };
 		75AC53652326FE6E000AA4FB /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/SettingsAppTimeoutVC.strings; sourceTree = "<group>"; };
@@ -2139,7 +2140,6 @@
 		75AC53852326FF7E000AA4FB /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/SettingsDataProtectionVC.strings"; sourceTree = "<group>"; };
 		75AC53872326FF7E000AA4FB /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/DatabaseUnlockerVC.strings"; sourceTree = "<group>"; };
 		75AC53882326FF7E000AA4FB /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/EntryViewerPagesVC.strings"; sourceTree = "<group>"; };
-		75AC538B2326FF7E000AA4FB /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/SettingsDatabaseTimeoutVC.strings"; sourceTree = "<group>"; };
 		75AC538C2326FF7E000AA4FB /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/EntryFinderVC.strings"; sourceTree = "<group>"; };
 		75AC538D2326FF7E000AA4FB /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/GroupViewerVC.strings"; sourceTree = "<group>"; };
 		75AC53902326FF7E000AA4FB /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/SettingsAppTimeoutVC.strings"; sourceTree = "<group>"; };
@@ -2170,7 +2170,6 @@
 		75AC53B22327674B000AA4FB /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/SettingsDataProtectionVC.strings"; sourceTree = "<group>"; };
 		75AC53B42327674B000AA4FB /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/DatabaseUnlockerVC.strings"; sourceTree = "<group>"; };
 		75AC53B52327674B000AA4FB /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/EntryViewerPagesVC.strings"; sourceTree = "<group>"; };
-		75AC53B62327674B000AA4FB /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/SettingsDatabaseTimeoutVC.strings"; sourceTree = "<group>"; };
 		75AC53B92327674B000AA4FB /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/EntryFinderVC.strings"; sourceTree = "<group>"; };
 		75AC53BA2327674B000AA4FB /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/GroupViewerVC.strings"; sourceTree = "<group>"; };
 		75AC53BD2327674B000AA4FB /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/SettingsAppTimeoutVC.strings"; sourceTree = "<group>"; };
@@ -2287,7 +2286,6 @@
 		75E4CA6D232D0B0F00EB6805 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/SettingsDataProtectionVC.strings; sourceTree = "<group>"; };
 		75E4CA6F232D0B0F00EB6805 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/DatabaseUnlockerVC.strings; sourceTree = "<group>"; };
 		75E4CA70232D0B0F00EB6805 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/EntryViewerPagesVC.strings; sourceTree = "<group>"; };
-		75E4CA71232D0B0F00EB6805 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/SettingsDatabaseTimeoutVC.strings; sourceTree = "<group>"; };
 		75E4CA74232D0B0F00EB6805 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/EntryFinderVC.strings; sourceTree = "<group>"; };
 		75E4CA75232D0B0F00EB6805 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/GroupViewerVC.strings; sourceTree = "<group>"; };
 		75E4CA78232D0B0F00EB6805 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/AboutVC.strings; sourceTree = "<group>"; };
@@ -2331,8 +2329,6 @@
 		75ED429323133DEF003DE72E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/SettingsBackupTimeoutPickerVC.storyboard; sourceTree = "<group>"; };
 		75ED429623133DF3003DE72E /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/SettingsBackupTimeoutPickerVC.strings; sourceTree = "<group>"; };
 		75ED429A2313A1E5003DE72E /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/SettingsVC.strings; sourceTree = "<group>"; };
-		75ED429E2313A3EF003DE72E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/SettingsDatabaseTimeoutVC.storyboard; sourceTree = "<group>"; };
-		75ED42A32313AAAB003DE72E /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/SettingsDatabaseTimeoutVC.strings; sourceTree = "<group>"; };
 		75ED42A52313C0BB003DE72E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/SettingsClipboardTimeoutVC.storyboard; sourceTree = "<group>"; };
 		75ED42A82313C0C5003DE72E /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/SettingsClipboardTimeoutVC.strings; sourceTree = "<group>"; };
 		75ED42AF2313C267003DE72E /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/SettingsDataProtectionVC.strings; sourceTree = "<group>"; };
@@ -2361,7 +2357,6 @@
 		75FCA9402638010D0070405A /* th */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = th; path = th.lproj/DatabasePickerVC.strings; sourceTree = "<group>"; };
 		75FCA9422638010D0070405A /* th */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = th; path = th.lproj/DatabaseUnlockerVC.strings; sourceTree = "<group>"; };
 		75FCA9432638010D0070405A /* th */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = th; path = th.lproj/EntryViewerPagesVC.strings; sourceTree = "<group>"; };
-		75FCA9442638010D0070405A /* th */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = th; path = th.lproj/SettingsDatabaseTimeoutVC.strings; sourceTree = "<group>"; };
 		75FCA9452638010D0070405A /* th */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = th; path = th.lproj/GroupViewerVC.strings; sourceTree = "<group>"; };
 		75FCA9462638010D0070405A /* th */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = th; path = th.lproj/EntryFinderVC.strings; sourceTree = "<group>"; };
 		75FCA9472638010D0070405A /* th */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = th; path = th.lproj/KeyFilePickerVC.strings; sourceTree = "<group>"; };
@@ -2399,7 +2394,6 @@
 		75FDEF2D233ABE9A00F17C26 /* cs */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = cs; path = cs.lproj/SettingsDataProtectionVC.strings; sourceTree = "<group>"; };
 		75FDEF2F233ABE9A00F17C26 /* cs */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = cs; path = cs.lproj/DatabaseUnlockerVC.strings; sourceTree = "<group>"; };
 		75FDEF30233ABE9A00F17C26 /* cs */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = cs; path = cs.lproj/EntryViewerPagesVC.strings; sourceTree = "<group>"; };
-		75FDEF33233ABE9A00F17C26 /* cs */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = cs; path = cs.lproj/SettingsDatabaseTimeoutVC.strings; sourceTree = "<group>"; };
 		75FDEF34233ABE9A00F17C26 /* cs */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = cs; path = cs.lproj/EntryFinderVC.strings; sourceTree = "<group>"; };
 		75FDEF35233ABE9A00F17C26 /* cs */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = cs; path = cs.lproj/GroupViewerVC.strings; sourceTree = "<group>"; };
 		75FDEF38233ABE9A00F17C26 /* cs */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = cs; path = cs.lproj/SettingsAppTimeoutVC.strings; sourceTree = "<group>"; };
@@ -2430,7 +2424,6 @@
 		75FDEF59233ABEEC00F17C26 /* sv */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sv; path = sv.lproj/SettingsBackupVC.strings; sourceTree = "<group>"; };
 		75FDEF5B233ABEEC00F17C26 /* sv */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sv; path = sv.lproj/DatabaseUnlockerVC.strings; sourceTree = "<group>"; };
 		75FDEF5C233ABEEC00F17C26 /* sv */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sv; path = sv.lproj/EntryViewerPagesVC.strings; sourceTree = "<group>"; };
-		75FDEF5F233ABEEC00F17C26 /* sv */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sv; path = sv.lproj/SettingsDatabaseTimeoutVC.strings; sourceTree = "<group>"; };
 		75FDEF60233ABEEC00F17C26 /* sv */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sv; path = sv.lproj/EntryFinderVC.strings; sourceTree = "<group>"; };
 		75FDEF61233ABEEC00F17C26 /* sv */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sv; path = sv.lproj/GroupViewerVC.strings; sourceTree = "<group>"; };
 		75FDEF64233ABEEC00F17C26 /* sv */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sv; path = sv.lproj/SettingsAppTimeoutVC.strings; sourceTree = "<group>"; };
@@ -2454,6 +2447,7 @@
 		F33F2C502B32DD61009EFB18 /* TagSelectorVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagSelectorVC.swift; sourceTree = "<group>"; };
 		F33F2C532B32E059009EFB18 /* TagSelectorCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagSelectorCoordinator.swift; sourceTree = "<group>"; };
 		F34010A22AA1E540005FDF55 /* ExposureCountFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExposureCountFormatter.swift; sourceTree = "<group>"; };
+		F34AB0702BAF1C7D00BB50A3 /* GoogleDriveConnectionSetupCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoogleDriveConnectionSetupCoordinator.swift; sourceTree = "<group>"; };
 		F34B0DC92B21D10C001F7500 /* FreeBadgeAccessory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreeBadgeAccessory.swift; sourceTree = "<group>"; };
 		F34B0DCD2B22673F001F7500 /* AppHistoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppHistoryTests.swift; sourceTree = "<group>"; };
 		F35232A92B36FE6200F17F13 /* LString+tags.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LString+tags.swift"; sourceTree = "<group>"; };
@@ -2486,6 +2480,7 @@
 		F3C71AAD2AFFAD7A00EEAC8E /* GroupEditorTitleCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupEditorTitleCell.swift; sourceTree = "<group>"; };
 		F3D011472B77B96800A9AF96 /* SearchQueryParsingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchQueryParsingTests.swift; sourceTree = "<group>"; };
 		F3D011492B77CEFB00A9AF96 /* SearchHelperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchHelperTests.swift; sourceTree = "<group>"; };
+		F3E194672BCF23DB00FD03EE /* DeleteWordlistAccessory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteWordlistAccessory.swift; sourceTree = "<group>"; };
 		F3F72EEF2AB32C8900C804FC /* Favicon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Favicon.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -2747,7 +2742,6 @@
 				752ED68C2235547D00C20D3E /* SettingsDataProtectionVC.swift */,
 				751E0CE82309AE5D0088BB10 /* SettingsDataProtectionVC.storyboard */,
 				757D336020EF382D000A47F0 /* SettingsDatabaseTimeoutVC.swift */,
-				75ED429F2313A3EF003DE72E /* SettingsDatabaseTimeoutVC.storyboard */,
 				757D336220EF5081000A47F0 /* SettingsClipboardTimeoutVC.swift */,
 				75ED42A62313C0BB003DE72E /* SettingsClipboardTimeoutVC.storyboard */,
 			);
@@ -3084,15 +3078,16 @@
 		7588B6C02627319700F5D372 /* password-generator */ = {
 			isa = PBXGroup;
 			children = (
+				75FC842D2AC87B9E005021F1 /* Coordinator+passGen.swift */,
+				F3E194672BCF23DB00FD03EE /* DeleteWordlistAccessory.swift */,
+				75AF1922282B0DBF00FA4BB5 /* InclusionCondition+extensions.swift */,
+				75AF191F282B0D6D00FA4BB5 /* PasswordGeneratorCells.swift */,
 				757E78D92824135D009017BF /* PasswordGeneratorCoordinator.swift */,
+				75BF195F283EE1B8006A9826 /* PasswordGeneratorLabel.swift */,
+				75AF1931282E621600FA4BB5 /* PasswordGeneratorLengthCell.swift */,
+				75A94C4228441C5F00A94B94 /* PasswordGeneratorQuickSheetVC.swift */,
 				757E78DF282414D5009017BF /* PasswordGeneratorVC.storyboard */,
 				757E78E22824150B009017BF /* PasswordGeneratorVC.swift */,
-				75AF191F282B0D6D00FA4BB5 /* PasswordGeneratorCells.swift */,
-				75AF1931282E621600FA4BB5 /* PasswordGeneratorLengthCell.swift */,
-				75AF1922282B0DBF00FA4BB5 /* InclusionCondition+extensions.swift */,
-				75BF195F283EE1B8006A9826 /* PasswordGeneratorLabel.swift */,
-				75A94C4228441C5F00A94B94 /* PasswordGeneratorQuickSheetVC.swift */,
-				75FC842D2AC87B9E005021F1 /* Coordinator+passGen.swift */,
 			);
 			path = "password-generator";
 			sourceTree = "<group>";
@@ -3127,6 +3122,7 @@
 		758FF6C828FC1867007DE8EB /* remote-files */ = {
 			isa = PBXGroup;
 			children = (
+				F34AB06F2BAF1C7100BB50A3 /* googledrive */,
 				F31114A62B9B83A700236632 /* dropbox */,
 				75D21BD72B642BDD0065D95E /* onedrive */,
 				750C0D5F2B640A0900821CA4 /* webdav */,
@@ -3380,6 +3376,14 @@
 			path = tags;
 			sourceTree = "<group>";
 		};
+		F34AB06F2BAF1C7100BB50A3 /* googledrive */ = {
+			isa = PBXGroup;
+			children = (
+				F34AB0702BAF1C7D00BB50A3 /* GoogleDriveConnectionSetupCoordinator.swift */,
+			);
+			path = googledrive;
+			sourceTree = "<group>";
+		};
 		F35DBC802AED5B0800B33757 /* encryption-settings */ = {
 			isa = PBXGroup;
 			children = (
@@ -3427,6 +3431,8 @@
 				F3B5B2DC2A88FC2A0059F2D1 /* PasswordQualityTests.swift */,
 				F3D011472B77B96800A9AF96 /* SearchQueryParsingTests.swift */,
 				F3D011492B77CEFB00A9AF96 /* SearchHelperTests.swift */,
+				751C7D4F2BDFE3A0006A58F4 /* XMLParsingSanityTests.swift */,
+				751C7D532BE03582006A58F4 /* XMLParsingCompletenessTests.swift */,
 			);
 			path = KeePassiumTests;
 			sourceTree = "<group>";
@@ -3749,6 +3755,7 @@
 				751E0D382309B0120088BB10 /* KeyFilePickerVC.storyboard in Resources */,
 				75BF5AF02768106B00809654 /* ParameterValueCell.xib in Resources */,
 				751E0D262309AFBA0088BB10 /* FileInfoVC.storyboard in Resources */,
+				757D82752C091CDB006C8B96 /* PrivacyInfo.xcprivacy in Resources */,
 				7572665624CB18520099B6E1 /* HelpViewerVC.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3823,7 +3830,6 @@
 				75C38045217A3204006F74C2 /* PlaceholderVC.storyboard in Resources */,
 				756FC99B24F45B13007F9920 /* perpetual-fallback-license.html in Resources */,
 				7572665524CB18520099B6E1 /* HelpViewerVC.storyboard in Resources */,
-				75ED429D2313A3EF003DE72E /* SettingsDatabaseTimeoutVC.storyboard in Resources */,
 				758FC17B24CEF72000BAD35C /* appicon-atom-black_iPhoneApp_60@3x.png in Resources */,
 				758FC14724CEF72000BAD35C /* appicon-atom-white_iPadApp_76.png in Resources */,
 				758FC11324CEF72000BAD35C /* appicon-keepass_iPhoneApp_60@3x.png in Resources */,
@@ -3910,7 +3916,6 @@
 				75B38C70233E5B7C006BDEFC /* PlaceholderVC.storyboard in Resources */,
 				756FC99D24F45B13007F9920 /* perpetual-fallback-license.html in Resources */,
 				7572665724CB18520099B6E1 /* HelpViewerVC.storyboard in Resources */,
-				75B38C71233E5B7C006BDEFC /* SettingsDatabaseTimeoutVC.storyboard in Resources */,
 				758FC17C24CEF72000BAD35C /* appicon-atom-black_iPhoneApp_60@3x.png in Resources */,
 				758FC14824CEF72000BAD35C /* appicon-atom-white_iPadApp_76.png in Resources */,
 				758FC11424CEF72000BAD35C /* appicon-keepass_iPhoneApp_60@3x.png in Resources */,
@@ -4007,7 +4012,6 @@
 				75D076BD28B639D200F02E39 /* perpetual-fallback-license.html in Resources */,
 				75D076BE28B639D200F02E39 /* HelpViewerVC.storyboard in Resources */,
 				75D076BF28B639D200F02E39 /* (null) in Resources */,
-				75D076C028B639D200F02E39 /* SettingsDatabaseTimeoutVC.storyboard in Resources */,
 				75D076C128B639D200F02E39 /* appicon-atom-black_iPhoneApp_60@3x.png in Resources */,
 				75D076C228B639D200F02E39 /* appicon-atom-white_iPadApp_76.png in Resources */,
 				75D076C328B639D200F02E39 /* appicon-keepass_iPhoneApp_60@3x.png in Resources */,
@@ -4049,6 +4053,7 @@
 				75D7DFB9233E5E310029AD87 /* KeyFilePickerVC.storyboard in Resources */,
 				75BF5AEF2768106A00809654 /* ParameterValueCell.xib in Resources */,
 				75D7DFBA233E5E310029AD87 /* FileInfoVC.storyboard in Resources */,
+				757D82742C091CDA006C8B96 /* PrivacyInfo.xcprivacy in Resources */,
 				7572665824CB18520099B6E1 /* HelpViewerVC.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -4123,6 +4128,7 @@
 				750CFBCB21BA9ACD00E62B09 /* CredentialProviderViewController.swift in Sources */,
 				75A5312423C0D35500900ED1 /* NavigationRouter.swift in Sources */,
 				75EEC22227484DD90092505F /* QuickAutoFillPrompt.swift in Sources */,
+				F3E194692BCF23DB00FD03EE /* DeleteWordlistAccessory.swift in Sources */,
 				758FF6D028FC2C9C007DE8EB /* SubtitleCell.swift in Sources */,
 				7526404128455DD80003DDFA /* PasswordGeneratorCells.swift in Sources */,
 				7572665124CB17410099B6E1 /* HelpViewerVC.swift in Sources */,
@@ -4219,6 +4225,7 @@
 				75A2677E22904E0D0097C693 /* PremiumFeature+extension.swift in Sources */,
 				750CFBDE21BAD7FF00E62B09 /* UIViewController+storyboard.swift in Sources */,
 				75FCCF852631D1F70025E86C /* HardwareKeyPickerCoordinator.swift in Sources */,
+				F34AB0752BAF1E7D00BB50A3 /* GoogleDriveConnectionSetupCoordinator.swift in Sources */,
 				7524E73C2888A3F500ECBEC8 /* WebDAVConnectionSetupVC.swift in Sources */,
 				75E60AE625CF5E090089219C /* DatabaseIconSet+assets.swift in Sources */,
 				758544652351FE8D000D5E5E /* UIFont+extensions.swift in Sources */,
@@ -4234,6 +4241,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				75061ECC257EE4F7003EF34A /* Clipboard+extensions.swift in Sources */,
+				F3E194682BCF23DB00FD03EE /* DeleteWordlistAccessory.swift in Sources */,
 				75679ACE22FD897000372301 /* NewsCenter.swift in Sources */,
 				758BF0DD20D220B300897C83 /* WatchdogAwareTextField.swift in Sources */,
 				751A565224CCD3CD001227D6 /* AppIconPicker.swift in Sources */,
@@ -4295,6 +4303,7 @@
 				75A94C4328441C5F00A94B94 /* PasswordGeneratorQuickSheetVC.swift in Sources */,
 				750433AF2274CDD5000FE96B /* DatabaseCreatorCoordinator.swift in Sources */,
 				7516B0D527292A130042F40E /* UIMenu+extensions.swift in Sources */,
+				F34AB0712BAF1C7D00BB50A3 /* GoogleDriveConnectionSetupCoordinator.swift in Sources */,
 				75BF5AED27680D4600809654 /* ParameterValueCell.swift in Sources */,
 				75DE6779268F6F69003D4DCC /* BiometricsHelper.swift in Sources */,
 				75679ACB22F8095F00372301 /* AppInfo.swift in Sources */,
@@ -4470,6 +4479,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				75061ECD257EE4F7003EF34A /* Clipboard+extensions.swift in Sources */,
+				F3E1946A2BCF23DB00FD03EE /* DeleteWordlistAccessory.swift in Sources */,
 				F3340BC92B2B3E2C00604AED /* OnboardingStep.swift in Sources */,
 				75B38BF3233E5B7C006BDEFC /* NewsCenter.swift in Sources */,
 				75B38BF4233E5B7C006BDEFC /* WatchdogAwareTextField.swift in Sources */,
@@ -4531,6 +4541,7 @@
 				75B38C08233E5B7C006BDEFC /* Attachment+extensions.swift in Sources */,
 				758FC18E24CF254000BAD35C /* AppIcon.swift in Sources */,
 				75B38C09233E5B7C006BDEFC /* DatabaseCreatorCoordinator.swift in Sources */,
+				F34AB0742BAF1E7D00BB50A3 /* GoogleDriveConnectionSetupCoordinator.swift in Sources */,
 				75A94C4528441C5F00A94B94 /* PasswordGeneratorQuickSheetVC.swift in Sources */,
 				75B38C0A233E5B7C006BDEFC /* AppInfo.swift in Sources */,
 				7516B0D727292A130042F40E /* UIMenu+extensions.swift in Sources */,
@@ -4775,6 +4786,7 @@
 				75D075EA28B639D200F02E39 /* UIColor+namedColors.swift in Sources */,
 				75D075EB28B639D200F02E39 /* DiagnosticsViewerCoordinator.swift in Sources */,
 				75D075EC28B639D200F02E39 /* PasswordGeneratorVC.swift in Sources */,
+				F34AB0722BAF1E7C00BB50A3 /* GoogleDriveConnectionSetupCoordinator.swift in Sources */,
 				75D075ED28B639D200F02E39 /* MainCoordinator.swift in Sources */,
 				75D075EE28B639D200F02E39 /* ViewableEntryFieldFactory.swift in Sources */,
 				F32141572A934ABA007A8D4E /* PasswordAuditVC.swift in Sources */,
@@ -4868,6 +4880,7 @@
 				7505F6C62B8640F400EA9BFD /* ManagedAppConfig+extensions.swift in Sources */,
 				F3B69FCE2B078917006FC966 /* EntryExtraViewerVC.swift in Sources */,
 				75D0763528B639D200F02E39 /* FileAddingHelper.swift in Sources */,
+				F3E1946C2BCF23DB00FD03EE /* DeleteWordlistAccessory.swift in Sources */,
 				75D0763628B639D200F02E39 /* SettingsAutoFillVC.swift in Sources */,
 				75D0763728B639D200F02E39 /* AppProtectionSettingsCoordinator.swift in Sources */,
 				F31114A92B9B84E000236632 /* DropboxConnectionSetupCoordinator.swift in Sources */,
@@ -4970,6 +4983,7 @@
 				75D7DF81233E5E310029AD87 /* CredentialProviderViewController.swift in Sources */,
 				75A5312623C0D35500900ED1 /* NavigationRouter.swift in Sources */,
 				75EEC22427484DD90092505F /* QuickAutoFillPrompt.swift in Sources */,
+				F3E1946B2BCF23DB00FD03EE /* DeleteWordlistAccessory.swift in Sources */,
 				758FF6D228FC2C9C007DE8EB /* SubtitleCell.swift in Sources */,
 				7526404228455DD80003DDFA /* PasswordGeneratorCells.swift in Sources */,
 				7572665324CB17410099B6E1 /* HelpViewerVC.swift in Sources */,
@@ -5066,6 +5080,7 @@
 				75D7DFA4233E5E310029AD87 /* PremiumFeature+extension.swift in Sources */,
 				75D7DFA6233E5E310029AD87 /* UIViewController+storyboard.swift in Sources */,
 				75FCCF872631D1F70025E86C /* HardwareKeyPickerCoordinator.swift in Sources */,
+				F34AB0732BAF1E7C00BB50A3 /* GoogleDriveConnectionSetupCoordinator.swift in Sources */,
 				7524E73E2888A3F500ECBEC8 /* WebDAVConnectionSetupVC.swift in Sources */,
 				75E60AE825CF5E090089219C /* DatabaseIconSet+assets.swift in Sources */,
 				758544672351FE8D000D5E5E /* UIFont+extensions.swift in Sources */,
@@ -5080,9 +5095,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				751C7D542BE03582006A58F4 /* XMLParsingCompletenessTests.swift in Sources */,
 				F321414C2A90D2CD007A8D4E /* PasswordAuditServiceTests.swift in Sources */,
 				F37CAA4E2A88F8D10000EF64 /* DumpEquatable.swift in Sources */,
 				F37CAA432A88F74E0000EF64 /* HIBPServiceTests.swift in Sources */,
+				751C7D502BDFE3A0006A58F4 /* XMLParsingSanityTests.swift in Sources */,
 				F3D0114A2B77CEFB00A9AF96 /* SearchHelperTests.swift in Sources */,
 				F3B5B2DD2A88FC2A0059F2D1 /* PasswordQualityTests.swift in Sources */,
 				F3D011482B77B96800A9AF96 /* SearchQueryParsingTests.swift in Sources */,
@@ -6064,33 +6081,6 @@
 			name = SettingsBackupTimeoutPickerVC.storyboard;
 			sourceTree = "<group>";
 		};
-		75ED429F2313A3EF003DE72E /* SettingsDatabaseTimeoutVC.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				75ED429E2313A3EF003DE72E /* Base */,
-				75ED42A32313AAAB003DE72E /* ru */,
-				75AC53602326FE6E000AA4FB /* nl */,
-				75AC538B2326FF7E000AA4FB /* zh-Hant */,
-				75AC53B62327674B000AA4FB /* zh-Hans */,
-				75E4CA71232D0B0F00EB6805 /* de */,
-				75FDEF33233ABE9A00F17C26 /* cs */,
-				75FDEF5F233ABEEC00F17C26 /* sv */,
-				75AC35D023549DE700B60614 /* es */,
-				756B2447243F74E000AA121A /* fr */,
-				754A323F24426AA300632B39 /* it */,
-				7532822D24A8049F00A71F87 /* ja */,
-				754ABEB225AB8A5900B98A63 /* ar */,
-				754ABEE625AB95D300B98A63 /* pl */,
-				754ABF1425AB969000B98A63 /* pt-BR */,
-				7533956C263800AA00341D24 /* sk */,
-				75319127263800DC000A1119 /* tr */,
-				75FCA9442638010D0070405A /* th */,
-				753438102643FE6F0032D284 /* ko */,
-				751C41E42700E4260002FB8F /* uk */,
-			);
-			name = SettingsDatabaseTimeoutVC.storyboard;
-			sourceTree = "<group>";
-		};
 		75ED42A62313C0BB003DE72E /* SettingsClipboardTimeoutVC.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -6181,7 +6171,7 @@
 				CODE_SIGN_ENTITLEMENTS = "KeePassium AutoFill/KeePassium_AutoFill.entitlements";
 				"CODE_SIGN_ENTITLEMENTS[sdk=macosx*]" = "KeePassium AutoFill/KeePassium_AutoFill-macOS.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 149;
+				CURRENT_PROJECT_VERSION = 150;
 				DEVELOPMENT_TEAM = 84W4PHXS24;
 				INFOPLIST_FILE = "KeePassium AutoFill/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "$(TARGET_NAME)";
@@ -6218,7 +6208,7 @@
 				CODE_SIGN_ENTITLEMENTS = "KeePassium AutoFill/KeePassium_AutoFill.entitlements";
 				"CODE_SIGN_ENTITLEMENTS[sdk=macosx*]" = "KeePassium AutoFill/KeePassium_AutoFill-macOS.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 149;
+				CURRENT_PROJECT_VERSION = 150;
 				DEVELOPMENT_TEAM = 84W4PHXS24;
 				INFOPLIST_FILE = "KeePassium AutoFill/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "$(TARGET_NAME)";
@@ -6386,12 +6376,13 @@
 				CODE_SIGN_ENTITLEMENTS = KeePassium/KeePassium.entitlements;
 				"CODE_SIGN_ENTITLEMENTS[sdk=macosx*]" = "KeePassium/KeePassium-macOS.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 149;
+				CURRENT_PROJECT_VERSION = 150;
 				DEVELOPMENT_TEAM = 84W4PHXS24;
 				"ENABLE_HARDENED_RUNTIME[sdk=macosx*]" = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_OPTIMIZATION_LEVEL = fast;
 				GCC_UNROLL_LOOPS = YES;
+				GOOGLE_OAUTH_SCHEME = "com.googleusercontent.apps.563540931668-qep200es3dnjajnjcnk1dgfsdnm1v9f2";
 				HEADER_SEARCH_PATHS = "../YubiKit/**";
 				INFOPLIST_FILE = KeePassium/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "$(TARGET_NAME)";
@@ -6425,12 +6416,13 @@
 				CODE_SIGN_ENTITLEMENTS = KeePassium/KeePassium.entitlements;
 				"CODE_SIGN_ENTITLEMENTS[sdk=macosx*]" = "KeePassium/KeePassium-macOS.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 149;
+				CURRENT_PROJECT_VERSION = 150;
 				DEVELOPMENT_TEAM = 84W4PHXS24;
 				"ENABLE_HARDENED_RUNTIME[sdk=macosx*]" = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_OPTIMIZATION_LEVEL = fast;
 				GCC_UNROLL_LOOPS = YES;
+				GOOGLE_OAUTH_SCHEME = "com.googleusercontent.apps.563540931668-qep200es3dnjajnjcnk1dgfsdnm1v9f2";
 				HEADER_SEARCH_PATHS = "../YubiKit/**";
 				INFOPLIST_FILE = KeePassium/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "$(TARGET_NAME)";
@@ -6464,11 +6456,12 @@
 				CODE_SIGN_ENTITLEMENTS = KeePassium/KeePassium.entitlements;
 				"CODE_SIGN_ENTITLEMENTS[sdk=macosx*]" = "KeePassium/KeePassium-macOS.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 149;
+				CURRENT_PROJECT_VERSION = 150;
 				DEVELOPMENT_TEAM = 84W4PHXS24;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_OPTIMIZATION_LEVEL = fast;
 				GCC_UNROLL_LOOPS = YES;
+				GOOGLE_OAUTH_SCHEME = "com.googleusercontent.apps.563540931668-ig832ojb8oiko83l9no222ah4lqv7031";
 				HEADER_SEARCH_PATHS = "../YubiKit/**";
 				INFOPLIST_FILE = "$(SRCROOT)/KeePassium/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "$(TARGET_NAME)";
@@ -6502,11 +6495,12 @@
 				CODE_SIGN_ENTITLEMENTS = KeePassium/KeePassium.entitlements;
 				"CODE_SIGN_ENTITLEMENTS[sdk=macosx*]" = "KeePassium/KeePassium-macOS.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 149;
+				CURRENT_PROJECT_VERSION = 150;
 				DEVELOPMENT_TEAM = 84W4PHXS24;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_OPTIMIZATION_LEVEL = fast;
 				GCC_UNROLL_LOOPS = YES;
+				GOOGLE_OAUTH_SCHEME = "com.googleusercontent.apps.563540931668-ig832ojb8oiko83l9no222ah4lqv7031";
 				HEADER_SEARCH_PATHS = "../YubiKit/**";
 				INFOPLIST_FILE = "$(SRCROOT)/KeePassium/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "$(TARGET_NAME)";
@@ -6540,12 +6534,13 @@
 				CODE_SIGN_ENTITLEMENTS = KeePassium/KeePassiumOrg.entitlements;
 				"CODE_SIGN_ENTITLEMENTS[sdk=macosx*]" = "KeePassium/KeePassiumOrg-macOS.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 149;
+				CURRENT_PROJECT_VERSION = 150;
 				DEVELOPMENT_TEAM = 84W4PHXS24;
 				ENABLE_BITCODE = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_OPTIMIZATION_LEVEL = fast;
 				GCC_UNROLL_LOOPS = YES;
+				GOOGLE_OAUTH_SCHEME = "com.googleusercontent.apps.563540931668-j6uf253opkpmu9jbtuk19r9n1cqe65si";
 				HEADER_SEARCH_PATHS = "../YubiKit/**";
 				INFOPLIST_FILE = "$(SRCROOT)/KeePassium/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "KeePassium Org";
@@ -6581,12 +6576,13 @@
 				CODE_SIGN_ENTITLEMENTS = KeePassium/KeePassiumOrg.entitlements;
 				"CODE_SIGN_ENTITLEMENTS[sdk=macosx*]" = "KeePassium/KeePassiumOrg-macOS.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 149;
+				CURRENT_PROJECT_VERSION = 150;
 				DEVELOPMENT_TEAM = 84W4PHXS24;
 				ENABLE_BITCODE = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_OPTIMIZATION_LEVEL = fast;
 				GCC_UNROLL_LOOPS = YES;
+				GOOGLE_OAUTH_SCHEME = "com.googleusercontent.apps.563540931668-j6uf253opkpmu9jbtuk19r9n1cqe65si";
 				HEADER_SEARCH_PATHS = "../YubiKit/**";
 				INFOPLIST_FILE = "$(SRCROOT)/KeePassium/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "KeePassium Org";
@@ -6622,7 +6618,7 @@
 				CODE_SIGN_ENTITLEMENTS = "KeePassium AutoFill/KeePassium_AutoFill.entitlements";
 				"CODE_SIGN_ENTITLEMENTS[sdk=macosx*]" = "KeePassium AutoFill/KeePassium_AutoFill-macOS.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 149;
+				CURRENT_PROJECT_VERSION = 150;
 				DEVELOPMENT_TEAM = 84W4PHXS24;
 				INFOPLIST_FILE = "$(SRCROOT)/KeePassium AutoFill/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "$(TARGET_NAME)";
@@ -6659,7 +6655,7 @@
 				CODE_SIGN_ENTITLEMENTS = "KeePassium AutoFill/KeePassium_AutoFill.entitlements";
 				"CODE_SIGN_ENTITLEMENTS[sdk=macosx*]" = "KeePassium AutoFill/KeePassium_AutoFill-macOS.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 149;
+				CURRENT_PROJECT_VERSION = 150;
 				DEVELOPMENT_TEAM = 84W4PHXS24;
 				INFOPLIST_FILE = "$(SRCROOT)/KeePassium AutoFill/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "$(TARGET_NAME)";

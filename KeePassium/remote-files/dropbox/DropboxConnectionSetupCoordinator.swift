@@ -38,19 +38,22 @@ final class DropboxConnectionSetupCoordinator: NSObject, RemoteDataSourceSetupCo
     let manager = DropboxManager.shared
 
     var token: OAuthToken?
-    private var accountInfo: DropboxAccountInfo?
+    var accountInfo: DropboxAccountInfo?
 
     weak var firstVC: UIViewController?
+    private var oldRef: URLReference?
 
     weak var delegate: DropboxConnectionSetupCoordinatorDelegate?
 
     init(
         router: NavigationRouter,
         stateIndicator: BusyStateIndicating,
+        oldRef: URLReference?,
         selectionMode: RemoteItemSelectionMode = .file
     ) {
         self.router = router
         self.stateIndicator = stateIndicator
+        self.oldRef = oldRef
         self.selectionMode = selectionMode
     }
 
@@ -60,65 +63,58 @@ final class DropboxConnectionSetupCoordinator: NSObject, RemoteDataSourceSetupCo
     }
 
     func start() {
-        accountInfo = nil
         startSignIn()
     }
 
-    func onAuthorized(token: OAuthToken) {
-        stateIndicator.indicateState(isBusy: true)
-        manager.getAccountInfo(freshToken: token) { [weak self] result in
+    func onAccountInfoAcquired(_ accountInfo: DropboxAccountInfo) {
+        self.accountInfo = accountInfo
+        if let oldRef,
+           let url = oldRef.url,
+           oldRef.fileProvider == .keepassiumDropbox
+        {
+            trySelectFile(url, onFailure: { [weak self] in
+                guard let self else { return }
+                self.oldRef = nil
+                self.onAccountInfoAcquired(accountInfo)
+            })
+        }
+        maybeSuggestPremium(isCorporateStorage: accountInfo.type.isCorporate) { [weak self] _ in
             guard let self else { return }
-            self.stateIndicator.indicateState(isBusy: false)
-            switch result {
-            case .success(let accountInfo):
-                onAccountInfoAcquired(accountInfo)
-            case .failure(let error):
-                router.navigationController.showErrorAlert(error)
-            }
+            self.showFolder(
+                folder: DropboxItem.root(info: accountInfo),
+                stateIndicator: self.stateIndicator
+            )
         }
     }
 
-    private func onAccountInfoAcquired(_ accountInfo: DropboxAccountInfo) {
-        self.accountInfo = accountInfo
-        maybeSuggestPremium(isCorporateStorage: accountInfo.type.isCorporate) { [weak self] presenter in
-            self?.showFolder(folder: DropboxItem.root(info: accountInfo), presenter: presenter)
+    private func trySelectFile(_ fileURL: URL, onFailure: @escaping () -> Void) {
+        guard let token,
+              let item = DropboxItem.fromURL(fileURL)
+        else {
+            onFailure()
+            return
+        }
+        manager.getItemInfo(item, token: token, tokenUpdater: nil) { [self, onFailure] result in
+            switch result {
+            case .success:
+                Diag.info("Old file reference reinstated successfully")
+                delegate?.didPickRemoteFile(url: fileURL, oauthToken: token, stateIndicator: stateIndicator, in: self)
+            case .failure(let remoteError):
+                Diag.debug("Failed to reinstate old file reference [message: \(remoteError.localizedDescription)]")
+                onFailure()
+            }
         }
     }
 }
 
 extension DropboxConnectionSetupCoordinator: RemoteFolderViewerDelegate {
     func didSelectItem(_ item: RemoteFileItem, in viewController: RemoteFolderViewerVC) {
-        guard let token else {
-            Diag.warning("Not signed into any Dropbox account, cancelling")
-            assertionFailure()
-            return
-        }
-        guard let dropboxItem = item as? DropboxItem else {
-            Diag.warning("Unexpected type of selected item")
-            assertionFailure()
-            return
-        }
-
-        if item.isFolder {
-            showFolder(folder: dropboxItem, presenter: viewController)
-            return
-        }
-
-        let handleSelection = { [weak self] in
+        selectItem(item, in: viewController) { [weak self] fileURL, token in
             guard let self = self else {
                 return
             }
-            let fileURL = dropboxItem.toURL()
             self.delegate?.didPickRemoteFile(url: fileURL, oauthToken: token, stateIndicator: stateIndicator, in: self)
             self.dismiss()
-        }
-
-        if dropboxItem.info.type.isCorporate {
-            performPremiumActionOrOfferUpgrade(for: .canUseBusinessClouds, in: viewController) {
-                handleSelection()
-            }
-        } else {
-            handleSelection()
         }
     }
 
