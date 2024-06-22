@@ -24,7 +24,7 @@ final class GroupEditorCoordinator: Coordinator {
     private let database: Database
     private let parent: Group
     private let originalGroup: Group?
-    private let isSupportTags: Bool
+    private let canSupportTags: Bool
 
     private let groupEditorVC: GroupEditorVC
 
@@ -50,18 +50,14 @@ final class GroupEditorCoordinator: Coordinator {
         }
         group.touch(.accessed)
 
-        if let db2 = database as? Database2 {
-            isSupportTags = db2.formatVersion.supports(.groupTags)
-        } else {
-            isSupportTags = false
-        }
+        canSupportTags = database is Database2
 
         let groupProperties = GroupEditorVC.Property.makeAll(for: group, parent: parent)
         groupEditorVC = GroupEditorVC(
             group: group,
             parent: parent,
             properties: groupProperties,
-            showTags: isSupportTags
+            showTags: canSupportTags
         )
         groupEditorVC.delegate = self
         if originalGroup == nil {
@@ -152,13 +148,12 @@ extension GroupEditorCoordinator: GroupEditorDelegate {
 
     func didPressDone(in groupEditor: GroupEditorVC) {
         groupEditor.resignFirstResponder()
-        guard isSupportTags else {
+        if canSupportTags && group.tags.count > 0 {
+            requestFormatUpgradeIfNecessary(in: groupEditor, for: database, and: .groupTags) { [weak self] in
+                self?.saveChangesAndDismiss()
+            }
+        } else {
             saveChangesAndDismiss()
-            return
-        }
-        requestFormatUpgradeIfNecessary(in: groupEditor, for: database, and: .groupTags) {
-            [weak self] in
-            self?.saveChangesAndDismiss()
         }
     }
 
@@ -174,9 +169,10 @@ extension GroupEditorCoordinator: GroupEditorDelegate {
         let tagsCoordinator = TagSelectorCoordinator(
             item: group,
             parent: originalGroup?.parent,
-            database: database,
+            databaseFile: databaseFile,
             router: router
         )
+        tagsCoordinator.delegate = self
         tagsCoordinator.dismissHandler = { [weak self, tagsCoordinator] coordinator in
             self?.group.tags = tagsCoordinator.selectedTags
             self?.refresh()
@@ -197,6 +193,13 @@ extension GroupEditorCoordinator: PasswordGeneratorCoordinatorDelegate {
         }
         textInput.replaceText(in: textInput.selectedOrFullTextRange, withText: password)
         refresh()
+    }
+}
+
+extension GroupEditorCoordinator: TagSelectorCoordinatorDelegate {
+    func didUpdateTags(in coordinator: TagSelectorCoordinator) {
+        refresh()
+        delegate?.didUpdateGroup(group, in: self)
     }
 }
 

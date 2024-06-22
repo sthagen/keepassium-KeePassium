@@ -74,19 +74,12 @@ final class EntryFieldEditorCoordinator: Coordinator {
             entry.rawUserName = (database as? Database2)?.defaultUserName ?? ""
             entry.rawTitle = LString.defaultNewEntryName
         }
-        entry.touch(.accessed)
-        fields = EditableFieldFactory.makeAll(from: entry, in: database)
-        if database is Database2,
-           let (entryField, _) = ViewableEntryFieldFactory.makeTags(
-                from: entry,
-                parent: originalEntry?.parent,
-                includeEmpty: true)
-        {
-            self.tagsField = entryField
-            fields.append(EditableField(field: entryField))
-        }
 
         fieldEditorVC = EntryFieldEditorVC.instantiateFromStoryboard()
+
+        entry.touch(.accessed)
+        (fields, tagsField) = setupFields(entry: entry)
+
         fieldEditorVC.delegate = self
         fieldEditorVC.fields = fields
         fieldEditorVC.entryIcon = UIImage.kpIcon(forEntry: entry)
@@ -94,6 +87,21 @@ final class EntryFieldEditorCoordinator: Coordinator {
         fieldEditorVC.allowsFaviconDownload = database is Database2
         fieldEditorVC.itemCategory = ItemCategory.get(for: entry)
         fieldEditorVC.shouldFocusOnTitleField = isCreationMode
+    }
+
+    private func setupFields(entry: Entry) -> ([EditableField], EntryField?) {
+        var fields = EditableFieldFactory.makeAll(from: entry, in: database)
+        var tagsField: EntryField?
+        if database is Database2,
+           let (entryField, _) = ViewableEntryFieldFactory.makeTags(
+                from: entry,
+                parent: originalEntry?.parent,
+                includeEmpty: true)
+        {
+            tagsField = entryField
+            fields.append(EditableField(field: entryField))
+        }
+        return (fields, tagsField)
     }
 
     deinit {
@@ -156,7 +164,7 @@ final class EntryFieldEditorCoordinator: Coordinator {
         isModified = true
 
         if !fields.contains(where: { $0.internalName == EntryField.otp }) {
-            fields = EditableFieldFactory.makeAll(from: entry, in: database)
+            (fields, tagsField) = setupFields(entry: entry)
             fieldEditorVC.fields = fields
         }
         refresh()
@@ -412,9 +420,10 @@ extension EntryFieldEditorCoordinator: EntryFieldEditorDelegate {
         let tagsCoordinator = TagSelectorCoordinator(
             item: entry,
             parent: originalEntry?.parent,
-            database: database,
+            databaseFile: databaseFile,
             router: router
         )
+        tagsCoordinator.delegate = self
         tagsCoordinator.dismissHandler = { [weak self, tagsCoordinator] coordinator in
             self?.applyTags(tags: tagsCoordinator.selectedTags)
             self?.removeChildCoordinator(coordinator)
@@ -425,7 +434,15 @@ extension EntryFieldEditorCoordinator: EntryFieldEditorDelegate {
 
     private func applyTags(tags: [String]) {
         assert(database is Database2)
+        guard entry.tags != tags else {
+            return
+        }
         entry.tags = tags
+        isModified = true
+        refreshTags()
+    }
+
+    private func refreshTags() {
         guard let (updatedField, _) = ViewableEntryFieldFactory.makeTags(
             from: entry,
             parent: originalEntry?.parent,
@@ -437,10 +454,15 @@ extension EntryFieldEditorCoordinator: EntryFieldEditorDelegate {
         guard updatedField.value != tagsField?.value else {
             return
         }
-
-        isModified = true
         tagsField?.value = updatedField.value
         fieldEditorVC.refresh()
+    }
+}
+
+extension EntryFieldEditorCoordinator: TagSelectorCoordinatorDelegate {
+    func didUpdateTags(in coordinator: TagSelectorCoordinator) {
+        refreshTags()
+        delegate?.didUpdateEntry(entry, in: self)
     }
 }
 
