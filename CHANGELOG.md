@@ -1,5 +1,33 @@
 #CHANGELOG
 
+## [1.53.153] - 2024-07-20
+
+### Fixed
+
+- Crash when starting search (fixes #379) [thanks, everyone]
+
+
+## [1.53.152] - 2024-07-18
+
+### Added
+
+- Reordering of groups and entries
+- Multi-select and bulk operations on groups and entries
+- Support for smart groups (#8, #190, #264)
+
+### Improved
+
+- AutoFill will auto-insert perfect-match entry even if there are partial matches, too (#76) [thanks, BoKKeR111]
+
+### Fixed
+
+- Direct Dropbox connection sometimes failed with "network connection lost" (fixes #377)
+- Processing WebDAV file lists with custom namespaces (fixes #378) [thanks, QueenGit]
+- Better protection of file references and user activity timestamp (#299) [thanks, eonist]
+- Localization of app and DB icon settings [thanks, katullo11]
+- Minor UI fixes here and there
+
+
 ## [1.52.151] - 2024-06-21
 
 ### Improved

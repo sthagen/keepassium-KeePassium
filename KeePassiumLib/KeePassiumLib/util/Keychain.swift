@@ -12,6 +12,7 @@ import LocalAuthentication
 public enum KeychainError: LocalizedError {
     case generic(code: Int)
     case unexpectedFormat
+    case serializationError
 
     public var errorDescription: String? {
         switch self {
@@ -29,6 +30,8 @@ public enum KeychainError: LocalizedError {
                 bundle: Bundle.framework,
                 value: "Keychain error: unexpected data format",
                 comment: "Error message about system keychain.")
+        case .serializationError:
+            return "Data serialization error"
         }
     }
 }
@@ -41,6 +44,7 @@ public class Keychain {
         case general = "KeePassium"
         case databaseSettings = "KeePassium.dbSettings"
         case premium = "KeePassium.premium"
+        case fileReferences = "KeePassium.fileRefs"
         case networkCredentials = "KeePassium.networkCredentials"
         case timestamps = "KeePassium.timestamps"
     }
@@ -49,6 +53,7 @@ public class Keychain {
     private let biometricControlAccount = "biometricControlItem"
     private let premiumPurchaseHistory = "premiumPurchaseHistory"
     private let deviceBootTimestamp = "deviceBootTimestamp"
+    private let userActivityTimestamp = "userActivityTimestamp"
 
     private let premiumExpiryDateAccount = "premiumExpiryDate"
     private let premiumProductAccount = "premiumProductID"
@@ -198,8 +203,9 @@ public class Keychain {
         }
         return success
     }
+}
 
-
+extension Keychain {
     public func setAppPasscode(_ passcode: String) throws {
         let dataHash = ByteArray(utf8String: passcode).sha256.asData
         try set(service: .general, account: appPasscodeAccount, data: dataHash) 
@@ -225,8 +231,9 @@ public class Keychain {
         try remove(service: .general, account: appPasscodeAccount) 
         Settings.current.notifyAppLockEnabledChanged()
     }
+}
 
-
+extension Keychain {
     internal func getDatabaseSettings(
         for descriptor: URLReference.Descriptor
     ) throws -> DatabaseSettings? {
@@ -259,8 +266,9 @@ public class Keychain {
             try setDatabaseSettings(dbSettings, for: descriptor)
         }
     }
+}
 
-
+extension Keychain {
     private func isMemoryProtectionKeyExist() -> Bool {
         let query: [String: Any] = [
             kSecClass as String: kSecClassKey,
@@ -336,8 +344,9 @@ public class Keychain {
         }
         return privateKey
     }
+}
 
-
+extension Keychain {
     public func setPurchaseHistory(_ purchaseHistory: PurchaseHistory) throws {
         let encodedHistoryData: Data
         do {
@@ -411,6 +420,50 @@ public class Keychain {
     }
 }
 
+extension Keychain {
+    func getFileReferences(of category: URLReference.Category) throws -> [URLReference] {
+        guard let data = try get(service: .fileReferences, account: category.rawValue) else {
+            return []
+        }
+        do {
+            let decoder = JSONDecoder()
+            let array = try decoder.decode([URLReference].self, from: data)
+            return array
+        } catch {
+            let nsError = error as NSError
+            Diag.error("Failed to decode [category: \(category), message: \(nsError.debugDescription)]")
+            throw KeychainError.serializationError
+        }
+    }
+
+    func setFileReferences(_ refs: [URLReference], for category: URLReference.Category) throws {
+        let data: Data
+        do {
+            let encoder = JSONEncoder()
+            data = try encoder.encode(refs)
+        } catch {
+            let nsError = error as NSError
+            Diag.error("Failed to encode [category: \(category), message: \(nsError.debugDescription)]")
+            throw KeychainError.serializationError
+        }
+        try set(service: .fileReferences, account: category.rawValue, data: data)
+    }
+
+    func getFileReference(of category: URLReference.Category) throws -> URLReference? {
+        let refs = try getFileReferences(of: category)
+        assert(refs.count <= 1)
+        return refs.first
+    }
+
+    func setFileReference(_ fileRef: URLReference?, for category: URLReference.Category) throws {
+        if let fileRef {
+            try setFileReferences([fileRef], for: category)
+        } else {
+            try setFileReferences([], for: category)
+        }
+    }
+}
+
 internal extension Keychain {
 
     func getNetworkCredential(for url: URL) throws -> NetworkCredential? {
@@ -439,7 +492,23 @@ internal extension Keychain {
 
 extension Keychain {
     public func getDeviceBootTimestamp() throws -> Date? {
-        guard let data = try get(service: .timestamps, account: deviceBootTimestamp) else {
+        return try getTimestamp(account: deviceBootTimestamp)
+    }
+
+    public func setDeviceBootTimestamp(_ timestamp: Date) throws {
+        try setTimestamp(timestamp, account: deviceBootTimestamp)
+    }
+
+    internal func getUserActivityTimestamp() throws -> Date? {
+        return try getTimestamp(account: userActivityTimestamp)
+    }
+
+    internal func setUserActivityTimestamp(_ timestamp: Date) throws {
+        try setTimestamp(timestamp, account: userActivityTimestamp)
+    }
+
+    private func getTimestamp(account: String) throws -> Date? {
+        guard let data = try get(service: .timestamps, account: account) else {
             return nil
         }
         guard let timeIntervalBitPattern = UInt64(data: ByteArray(data: data)) else {
@@ -450,10 +519,10 @@ extension Keychain {
         return Date(timeIntervalSinceReferenceDate: timeInterval)
     }
 
-    public func setDeviceBootTimestamp(_ timestamp: Date) throws {
+    private func setTimestamp(_ timestamp: Date, account: String) throws {
         let timeIntervalBitPattern = timestamp.timeIntervalSinceReferenceDate.bitPattern
         let timeIntervalData = timeIntervalBitPattern.data.asData
-        try set(service: .timestamps, account: deviceBootTimestamp, data: timeIntervalData)
+        try set(service: .timestamps, account: account, data: timeIntervalData)
     }
 }
 
