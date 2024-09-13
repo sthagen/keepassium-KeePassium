@@ -60,14 +60,16 @@ final class WebDAVInfoRequest: WebDAVRequestBase {
 """)
         let contentLength = Int(contentLengthString) ?? -1
         let lastModifiedDate = Date.parse(httpHeaderValue: lastModifiedString)
+        let eTag = response.value(forHTTPHeaderField: "Etag")
 
         let fileInfo = FileInfo(
             fileName: url.lastPathComponent,
             fileSize: Int64(contentLength),
             creationDate: nil,
             modificationDate: lastModifiedDate,
-            isExcludedFromBackup: nil,
-            isInTrash: false
+            attributes: [:],
+            isInTrash: false,
+            hash: eTag
         )
         completionQueue.addOperation {
             self.completion(.success(fileInfo))

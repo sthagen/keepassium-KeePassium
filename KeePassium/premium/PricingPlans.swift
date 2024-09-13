@@ -94,15 +94,15 @@ struct PricingPlanBenefit {
         title: LString.premiumBenefitPasswordAuditTitle,
         description: LString.premiumBenefitPasswordAuditDescription
     )
-    static let viewFieldReferences = PricingPlanBenefit(
-        symbolName: .premiumBenefitFieldReferences,
-        title: LString.premiumBenefitFieldReferecesTitle,
-        description: LString.premiumBenefitFieldReferencesDescription
-    )
     static let quickAutoFill = PricingPlanBenefit(
         symbolName: .premiumBenefitQuickAutoFill,
         title: LString.premiumBenefitQuickAutoFillTitle,
         description: LString.premiumBenefitQuickAutoFillDescription
+    )
+    static let linkedDatabases = PricingPlanBenefit(
+        symbolName: .premiumBenefitLinkedDatabases,
+        title: LString.premiumBenefitLinkedDatabasesTitle,
+        description: LString.premiumBenefitLinkedDatabasesDescription
     )
 }
 
@@ -129,7 +129,8 @@ class PricingPlanFactory {
              .version96,
              .version99,
              .version120,
-             .version139:
+             .version139,
+             .version154:
             return PricingPlanVersionPurchase(product)
         case .donationSmall,
              .donationMedium,
@@ -192,7 +193,7 @@ class FreePricingPlan: PricingPlan {
             PricingPlanBenefit.yubikeyChallengeResponse,
             PricingPlanBenefit.passwordAudit,
             PricingPlanBenefit.businessClouds,
-            PricingPlanBenefit.viewFieldReferences,
+            PricingPlanBenefit.linkedDatabases,
         ]
         self.smallPrint = nil
     }
@@ -254,7 +255,7 @@ class PricingPlanPremiumMonthly: RealPricingPlan {
             PricingPlanBenefit.yubikeyChallengeResponse,
             PricingPlanBenefit.passwordAudit,
             PricingPlanBenefit.businessClouds,
-            PricingPlanBenefit.viewFieldReferences,
+            PricingPlanBenefit.linkedDatabases,
         ]
         self.smallPrint = LString.subscriptionConditions
         self.maybeOfferTrial() 
@@ -283,7 +284,7 @@ class PricingPlanPremiumYearly: RealPricingPlan {
             PricingPlanBenefit.yubikeyChallengeResponse,
             PricingPlanBenefit.passwordAudit,
             PricingPlanBenefit.businessClouds,
-            PricingPlanBenefit.viewFieldReferences,
+            PricingPlanBenefit.linkedDatabases,
         ]
         self.smallPrint = LString.subscriptionConditions
         self.maybeOfferTrial() 
@@ -310,7 +311,7 @@ class PricingPlanVersionPurchase: RealPricingPlan {
             PricingPlanBenefit.yubikeyChallengeResponse,
             PricingPlanBenefit.passwordAudit,
             PricingPlanBenefit.businessClouds,
-            PricingPlanBenefit.viewFieldReferences,
+            PricingPlanBenefit.linkedDatabases,
         ]
         self.smallPrint = nil
     }
@@ -336,7 +337,7 @@ class PricingPlanPremiumForever: RealPricingPlan {
             PricingPlanBenefit.yubikeyChallengeResponse,
             PricingPlanBenefit.passwordAudit,
             PricingPlanBenefit.businessClouds,
-            PricingPlanBenefit.viewFieldReferences,
+            PricingPlanBenefit.linkedDatabases,
         ]
         self.smallPrint = nil
     }

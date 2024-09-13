@@ -92,6 +92,8 @@ final class SettingsVC: UITableViewController, Refreshable {
         super.viewDidLoad()
         clearsSelectionOnViewWillAppear = true
 
+        title = LString.titleSettings
+
         if BusinessModel.type == .prepaid || LicenseManager.shared.hasActiveBusinessLicense() {
             isPremiumSectionHidden = true
             premiumSectionFooter = nil
@@ -391,7 +393,8 @@ final class SettingsVC: UITableViewController, Refreshable {
              .version96,
              .version99,
              .version120,
-             .version139:
+             .version139,
+             .version154:
             premiumStatusText = ""
             assertionFailure("Cannot be subscribed to a version purchase")
         case .donationSmall,

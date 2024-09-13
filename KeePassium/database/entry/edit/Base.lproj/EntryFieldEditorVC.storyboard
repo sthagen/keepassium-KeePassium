@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="22505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="dyC-HY-kh4">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="32700.99.1234" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="dyC-HY-kh4">
     <device id="retina5_5" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22504"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22684"/>
         <capability name="Image references" minToolsVersion="12.0"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Edit Entry-->
+        <!--Entry Field EditorVC-->
         <scene sceneID="dEd-KK-5Fq">
             <objects>
                 <tableViewController storyboardIdentifier="EntryFieldEditorVC" id="dyC-HY-kh4" customClass="EntryFieldEditorVC" customModule="KeePassium" customModuleProvider="target" sceneMemberID="viewController">
@@ -415,7 +415,7 @@
                                                 <fragment content="Equivalent to KeePass' own `Enable in-memory protection' for custom entry fields."/>
                                             </attributedString>
                                         </switch>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="749" text="In-memory Protection" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0pb-xb-fuf">
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="749" text="{Protected Field}" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0pb-xb-fuf">
                                             <rect key="frame" x="20" y="217.33333333333334" width="317" height="20.333333333333343"/>
                                             <accessibility key="accessibilityConfiguration">
                                                 <bool key="isElement" value="NO"/>
@@ -423,9 +423,6 @@
                                             <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                             <color key="textColor" name="PrimaryText"/>
                                             <nil key="highlightedColor"/>
-                                            <attributedString key="userComments">
-                                                <fragment content="Label for a switch, equivalent to KeePass' own `Enable in-memory protection` for custom entry fields."/>
-                                            </attributedString>
                                         </label>
                                         <button opaque="NO" contentMode="center" horizontalHuggingPriority="251" horizontalCompressionResistancePriority="751" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" role="destructive" translatesAutoresizingMaskIntoConstraints="NO" id="s6z-wf-7l2">
                                             <rect key="frame" x="367" y="10" width="35" height="38"/>
@@ -463,6 +460,7 @@
                                     <outlet property="deleteButton" destination="s6z-wf-7l2" id="UtB-nr-8tQ"/>
                                     <outlet property="nameTextField" destination="ecN-Xd-ff5" id="CnH-83-W6v"/>
                                     <outlet property="protectionSwitch" destination="eox-My-Hns" id="uu4-Aw-Frn"/>
+                                    <outlet property="protectionSwitchLabel" destination="0pb-xb-fuf" id="Hy0-lB-S3O"/>
                                     <outlet property="valueTextView" destination="7iU-ut-hd7" id="SO3-fk-v0n"/>
                                 </connections>
                             </tableViewCell>
@@ -472,7 +470,7 @@
                             <outlet property="delegate" destination="dyC-HY-kh4" id="tQJ-WP-lgN"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Edit Entry" id="l3s-Bv-fA1" userLabel="Edit Entry">
+                    <navigationItem key="navigationItem" id="l3s-Bv-fA1" userLabel="Edit Entry">
                         <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="pJ7-8j-CZA">
                             <connections>
                                 <action selector="didPressCancel:" destination="dyC-HY-kh4" id="bFu-Eh-1kr"/>

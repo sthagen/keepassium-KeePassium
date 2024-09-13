@@ -53,4 +53,23 @@ extension String {
             return self + "/"
         }
     }
+
+    public func matchesCaseInsensitive(wildcard pattern: String) -> Bool {
+        let predicate = NSComparisonPredicate(format: "self LIKE[c] %@", pattern)
+        return predicate.evaluate(with: self)
+    }
+
+    public var isOpenableURL: Bool {
+        guard let url = URL(string: self) else {
+            return false
+        }
+        guard url.scheme != nil else {
+            return false
+        }
+        if let appShared = AppGroup.applicationShared {
+            return appShared.canOpenURL(url)
+        } else {
+            return true
+        }
+    }
 }

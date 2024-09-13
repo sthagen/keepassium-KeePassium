@@ -170,6 +170,29 @@ extension LString {
         value: "Re-add File",
         comment: "Title: what to do when a cloud-stored file cannot be loaded. (For example: `If File is Unreachable: Re-add File`.)")
 
+    public static let titleIfDatabaseModifiedExternally = NSLocalizedString(
+        "[Database/Settings/ExternalChanges/title]",
+        bundle: Bundle.framework,
+        value: "Database Modified Externally",
+        comment: "File settings parameter: what to do when file was changed by another app/device. (For example: `Database Modified Externally: Notify`)")
+
+    public static let titleIfDatabaseModifiedExternallyDontCheck = NSLocalizedString(
+        "[Database/Settings/ExternalChanges/dontCheck]",
+        bundle: Bundle.framework,
+        value: "Don't check",
+        comment: "File settings parameter: what to do when file was changed by another app/device. (For example: `Database Modified Externally: Don't check`)")
+
+    public static let titleIfDatabaseModifiedExternallyNotify = NSLocalizedString(
+        "[Database/Settings/ExternalChanges/notify]",
+        bundle: Bundle.framework,
+        value: "Notify",
+        comment: "File settings parameter: what to do when file was changed by another app/device. (For example: `Database Modified Externally: Notify`)")
+
+    public static let titleIfDatabaseModifiedExternallyReload = NSLocalizedString(
+        "[Database/Settings/ExternalChanges/reload]",
+        bundle: Bundle.framework,
+        value: "Reload Automatically",
+        comment: "File settings parameter: what to do when file was changed by another app/device. (For example: `Database Modified Externally: Reload Automatically`)")
 
     public static let actionChangeEncryptionSettings = NSLocalizedString(
         "[Database/EncryptionSettings/Change/action]",
@@ -250,6 +273,21 @@ extension LString {
         bundle: Bundle.framework,
         value: "Sort Order",
         comment: "Title of a settings section: sort order of groups and entries in a list")
+    public static let titleSortByNone = NSLocalizedString(
+        "[SortBy/None]",
+        bundle: Bundle.framework,
+        value: "None",
+        comment: "List sorting option, when no sorting is selected. Example: 'Sort by: None'")
+    public static let titleSortOrderCustom = NSLocalizedString(
+        "[SortOrder/Custom]",
+        bundle: Bundle.framework,
+        value: "Custom",
+        comment: "List sorting option, when items are manually ordered by the user. Example: 'Sort order: Custom'")
+    public static let titleSortByFileName = NSLocalizedString(
+        "[SortBy/FileName]",
+        bundle: Bundle.framework,
+        value: "Name",
+        comment: "List sorting option (for file names). Example: 'Sort by: Name'")
     public static let titleListSettings = NSLocalizedString(
         "[Settings/ListSettings/title]",
         bundle: Bundle.framework,
@@ -306,6 +344,17 @@ extension LString {
         value: "Previous Versions",
         comment: "Title of a list with previous versions/revisions of an entry.")
 
+
+    public static let titleDatabases = NSLocalizedString(
+        "[Database/List/title]",
+        bundle: Bundle.framework,
+        value: "Databases",
+        comment: "Title of the database picker list")
+    public static let messageLocalFilesMissing = NSLocalizedString(
+        "[Database/List/LocalMissing/message]",
+        bundle: Bundle.framework,
+        value: "If some local files are not listed, launch the main KeePassium app first.",
+        comment: "Recommendation for solving a problem with a list of files.")
 
     public static let titleShowBackupFiles = NSLocalizedString(
         "Show Backup Files",
@@ -364,5 +413,11 @@ extension LString {
         bundle: Bundle.framework,
         value: "Edited",
         comment: "Status of a database item (entry or group) after it was edited.")
+
+    public static let titleEntryPointsToDatabase = NSLocalizedString(
+        "[Database/Entry/LinkedDatabase/message]",
+        bundle: Bundle.framework,
+        value: "This entry points to another database.",
+        comment: "Info message for entries that contain information for opening a different database.")
 }
 // swiftlint:enable line_length

@@ -100,8 +100,12 @@ final class MainCoordinator: Coordinator {
         removeAllChildCoordinators()
     }
 
-    func start(hasIncomingURL: Bool) {
+    func start(hasIncomingURL: Bool, proposeReset: Bool) {
         Diag.info(AppInfo.description)
+        guard !proposeReset else {
+            showAppResetPrompt()
+            return
+        }
         PremiumManager.shared.startObservingTransactions()
 
         FileKeeper.shared.delegate = self
@@ -138,6 +142,22 @@ final class MainCoordinator: Coordinator {
         #endif
 
         runAfterStartTasks()
+    }
+
+    private func showAppResetPrompt() {
+        Diag.info("Proposing app reset")
+        let alert = UIAlertController(
+            title: AppInfo.name,
+            message: LString.confirmAppReset,
+            preferredStyle: .alert
+        )
+        alert.addAction(title: LString.actionResetApp, style: .destructive, preferred: false) { [weak self] _ in
+            self?.resetApp()
+        }
+        alert.addAction(title: LString.actionCancel, style: .cancel) { [weak self] _ in
+            self?.start(hasIncomingURL: false, proposeReset: false)
+        }
+        getPresenterForModals().present(alert, animated: true)
     }
 
     private func runAfterStartTasks() {
@@ -370,6 +390,18 @@ extension MainCoordinator {
 
 extension MainCoordinator {
 
+    private func resetApp() {
+        Keychain.shared.reset()
+        UserDefaults.eraseAppGroupShared()
+        FileKeeper.shared.deleteBackupFiles(
+            olderThan: -TimeInterval.infinity,
+            keepLatest: false,
+            completionQueue: .main
+        ) { [weak self] in
+            self?.start(hasIncomingURL: false, proposeReset: false)
+        }
+    }
+
     private func setDatabase(
         _ databaseRef: URLReference?,
         autoOpenWith context: DatabaseReloadContext? = nil
@@ -582,7 +614,7 @@ extension MainCoordinator {
 
     private func reloadDatabase(
         _ databaseFile: DatabaseFile,
-        originalRef: URLReference,
+        targetRef: URLReference,
         from databaseViewerCoordinator: DatabaseViewerCoordinator
     ) {
         let context = DatabaseReloadContext(for: databaseFile.database)
@@ -595,7 +627,25 @@ extension MainCoordinator {
             animated: true
         ) { [weak self] in
             guard let self else { return }
-            setDatabase(originalRef, autoOpenWith: context)
+            setDatabase(targetRef, autoOpenWith: context)
+        }
+    }
+
+    private func switchToDatabase(
+        _ fileRef: URLReference,
+        key: CompositeKey,
+        in databaseViewerCoordinator: DatabaseViewerCoordinator
+    ) {
+        let context = DatabaseReloadContext(key: key)
+
+        isReloadingDatabase = true
+        databaseViewerCoordinator.closeDatabase(
+            shouldLock: false,
+            reason: .userRequest,
+            animated: true
+        ) { [weak self] in
+            guard let self else { return }
+            setDatabase(fileRef, autoOpenWith: context)
         }
     }
 }
@@ -804,7 +854,7 @@ extension MainCoordinator: WatchdogDelegate {
 
     func mustCloseDatabase(_ sender: Watchdog, animate: Bool) {
         databaseViewerCoordinator?.closeDatabase(
-            shouldLock: Settings.current.premiumIsLockDatabasesOnTimeout,
+            shouldLock: Settings.current.isLockDatabasesOnTimeout,
             reason: .databaseTimeout,
             animated: animate,
             completion: nil
@@ -1089,6 +1139,14 @@ extension MainCoordinator: DatabaseViewerCoordinatorDelegate {
         originalRef: URLReference,
         in coordinator: DatabaseViewerCoordinator
     ) {
-        reloadDatabase(databaseFile, originalRef: originalRef, from: coordinator)
+        reloadDatabase(databaseFile, targetRef: originalRef, from: coordinator)
+    }
+
+    func didPressSwitchTo(
+        databaseRef: URLReference,
+        compositeKey: CompositeKey,
+        in coordinator: DatabaseViewerCoordinator
+    ) {
+        switchToDatabase(databaseRef, key: compositeKey, in: coordinator)
     }
 }

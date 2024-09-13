@@ -30,8 +30,6 @@
 		75060C6C2B8CEC35006C7B50 /* MacUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75060C692B8CEC35006C7B50 /* MacUtils.swift */; };
 		75060C6D2B8CEC35006C7B50 /* MacUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75060C692B8CEC35006C7B50 /* MacUtils.swift */; };
 		75060C6F2B8CECB4006C7B50 /* MacUtilsImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75060C6E2B8CECB4006C7B50 /* MacUtilsImpl.swift */; };
-		75061ECC257EE4F7003EF34A /* Clipboard+extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75061ECB257EE4F7003EF34A /* Clipboard+extensions.swift */; };
-		75061ECD257EE4F7003EF34A /* Clipboard+extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75061ECB257EE4F7003EF34A /* Clipboard+extensions.swift */; };
 		75065A3522C41B5200958243 /* SettingsAutoFillVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75065A3422C41B5200958243 /* SettingsAutoFillVC.swift */; };
 		750C0D542B64067600821CA4 /* WebDAVConnectionSetupCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750C0D532B64067600821CA4 /* WebDAVConnectionSetupCoordinator.swift */; };
 		750C0D552B64067600821CA4 /* WebDAVConnectionSetupCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750C0D532B64067600821CA4 /* WebDAVConnectionSetupCoordinator.swift */; };
@@ -199,7 +197,6 @@
 		753FE83624C1A9A400063FBB /* UIViewController+alerts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 753FE83424C1A9A400063FBB /* UIViewController+alerts.swift */; };
 		753FE83724C1A9A400063FBB /* UIViewController+alerts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 753FE83424C1A9A400063FBB /* UIViewController+alerts.swift */; };
 		753FE83824C1A9A400063FBB /* UIViewController+alerts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 753FE83424C1A9A400063FBB /* UIViewController+alerts.swift */; };
-		7542D2422129640F00C8A926 /* String+extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7542D2412129640F00C8A926 /* String+extensions.swift */; };
 		754313B128B82EAA00D5F252 /* IntuneEnrollmentDelegateImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 754313B028B82EAA00D5F252 /* IntuneEnrollmentDelegateImpl.swift */; };
 		754313B328B830F500D5F252 /* IntunePolicyDelegateImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 754313B228B830F500D5F252 /* IntunePolicyDelegateImpl.swift */; };
 		7544A187261610DE000C0492 /* PhotoPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7544A184261610DE000C0492 /* PhotoPicker.swift */; };
@@ -242,6 +239,12 @@
 		755B862E23054FA200E9FC83 /* AboutVC.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 755B863023054FA200E9FC83 /* AboutVC.storyboard */; };
 		755B863123054FAD00E9FC83 /* PasscodeInputVC.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 755B863423054FAD00E9FC83 /* PasscodeInputVC.storyboard */; };
 		755B863223054FAD00E9FC83 /* PasscodeInputVC.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 755B863423054FAD00E9FC83 /* PasscodeInputVC.storyboard */; };
+		755E33C32C529C4D0041A199 /* AutoFillSetupMessageVC.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 755E33C22C529C4D0041A199 /* AutoFillSetupMessageVC.storyboard */; };
+		755E33C42C529C4D0041A199 /* AutoFillSetupMessageVC.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 755E33C22C529C4D0041A199 /* AutoFillSetupMessageVC.storyboard */; };
+		755E33C62C52A13C0041A199 /* AutoFillSetupMessageVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 755E33C52C52A13C0041A199 /* AutoFillSetupMessageVC.swift */; };
+		755E33C72C52A13C0041A199 /* AutoFillSetupMessageVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 755E33C52C52A13C0041A199 /* AutoFillSetupMessageVC.swift */; };
+		755E33CC2C53B9A40041A199 /* ContentSizedTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 755E33CB2C53B9A40041A199 /* ContentSizedTableView.swift */; };
+		755E33CD2C53B9A40041A199 /* ContentSizedTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 755E33CB2C53B9A40041A199 /* ContentSizedTableView.swift */; };
 		755E7D99232008300010E199 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 755E7D97232008300010E199 /* InfoPlist.strings */; };
 		755E7D9C232008300010E199 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 755E7D9A232008300010E199 /* InfoPlist.strings */; };
 		755E7D9F232008300010E199 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 755E7D9D232008300010E199 /* Localizable.strings */; };
@@ -619,7 +622,6 @@
 		75B38C28233E5B7C006BDEFC /* DatabasePickerVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75EA64172098FC0500DDB941 /* DatabasePickerVC.swift */; };
 		75B38C29233E5B7C006BDEFC /* FileInfoReloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75DDB5E3228BF88C0018A50F /* FileInfoReloader.swift */; };
 		75B38C2A233E5B7C006BDEFC /* EntryFileViewerVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75C94C5E20B4BAB0004FA29D /* EntryFileViewerVC.swift */; };
-		75B38C2B233E5B7C006BDEFC /* String+extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7542D2412129640F00C8A926 /* String+extensions.swift */; };
 		75B38C2C233E5B7C006BDEFC /* ProgressOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75E371932108CA08002602BD /* ProgressOverlay.swift */; };
 		75B38C2D233E5B7C006BDEFC /* LAContext+biometrics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75C11F1D22208D6B0042FB2B /* LAContext+biometrics.swift */; };
 		75B38C2E233E5B7C006BDEFC /* ValidatingTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7561850420E0379F00EEFAEE /* ValidatingTextView.swift */; };
@@ -761,7 +763,6 @@
 		75CF52252B18A60500FF3A3F /* Coordinator+databaseUpgrade.swift in Sources */ = {isa = PBXBuildFile; fileRef = F35538902B08DDF600D9F95D /* Coordinator+databaseUpgrade.swift */; };
 		75CFBE2A21C2BDDF0029A80A /* DatabaseUnlockerVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75CFBE2921C2BDDF0029A80A /* DatabaseUnlockerVC.swift */; };
 		75CFBE2D21C2FE340029A80A /* UIView+extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75F5CACC20BD18320056C969 /* UIView+extension.swift */; };
-		75D075B128B639D200F02E39 /* Clipboard+extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75061ECB257EE4F7003EF34A /* Clipboard+extensions.swift */; };
 		75D075B228B639D200F02E39 /* NewsCenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75679ACD22FD896F00372301 /* NewsCenter.swift */; };
 		75D075B328B639D200F02E39 /* WatchdogAwareTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 758BF0DC20D220B300897C83 /* WatchdogAwareTextField.swift */; };
 		75D075B428B639D200F02E39 /* AppIconPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 751A565124CCD3CD001227D6 /* AppIconPicker.swift */; };
@@ -866,7 +867,6 @@
 		75D0761A28B639D200F02E39 /* FileInfoReloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75DDB5E3228BF88C0018A50F /* FileInfoReloader.swift */; };
 		75D0761B28B639D200F02E39 /* ItemIconPickerCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75BE091E2509905300C436C2 /* ItemIconPickerCoordinator.swift */; };
 		75D0761C28B639D200F02E39 /* EntryFileViewerVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75C94C5E20B4BAB0004FA29D /* EntryFileViewerVC.swift */; };
-		75D0761D28B639D200F02E39 /* String+extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7542D2412129640F00C8A926 /* String+extensions.swift */; };
 		75D0761E28B639D200F02E39 /* CollectionViewControllerWithContextActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75B7870D261F916E005BE7B7 /* CollectionViewControllerWithContextActions.swift */; };
 		75D0762028B639D200F02E39 /* AnnouncementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 759ADB86285A22CD00D93BD4 /* AnnouncementView.swift */; };
 		75D0762128B639D200F02E39 /* ProgressOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75E371932108CA08002602BD /* ProgressOverlay.swift */; };
@@ -1450,7 +1450,6 @@
 		75060C682B8CEC34006C7B50 /* MacUtils-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "MacUtils-Bridging-Header.h"; sourceTree = "<group>"; };
 		75060C692B8CEC35006C7B50 /* MacUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacUtils.swift; sourceTree = "<group>"; };
 		75060C6E2B8CECB4006C7B50 /* MacUtilsImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacUtilsImpl.swift; sourceTree = "<group>"; };
-		75061ECB257EE4F7003EF34A /* Clipboard+extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Clipboard+extensions.swift"; sourceTree = "<group>"; };
 		75065A3422C41B5200958243 /* SettingsAutoFillVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsAutoFillVC.swift; sourceTree = "<group>"; };
 		750BA15224BE624B00BDF1CC /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		750C0D532B64067600821CA4 /* WebDAVConnectionSetupCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebDAVConnectionSetupCoordinator.swift; sourceTree = "<group>"; };
@@ -1733,7 +1732,6 @@
 		753DF2C0263C4B7F0046F185 /* EntryViewerCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntryViewerCoordinator.swift; sourceTree = "<group>"; };
 		753F924D2290705D005E496F /* SKProduct+extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SKProduct+extension.swift"; sourceTree = "<group>"; };
 		753FE83424C1A9A400063FBB /* UIViewController+alerts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+alerts.swift"; sourceTree = "<group>"; };
-		7542D2412129640F00C8A926 /* String+extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+extensions.swift"; sourceTree = "<group>"; };
 		754313B028B82EAA00D5F252 /* IntuneEnrollmentDelegateImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntuneEnrollmentDelegateImpl.swift; sourceTree = "<group>"; };
 		754313B228B830F500D5F252 /* IntunePolicyDelegateImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntunePolicyDelegateImpl.swift; sourceTree = "<group>"; };
 		7544A184261610DE000C0492 /* PhotoPicker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoPicker.swift; sourceTree = "<group>"; };
@@ -1889,6 +1887,9 @@
 		755B435A26BC894200C24386 /* TipBoxCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TipBoxCoordinator.swift; sourceTree = "<group>"; };
 		755B862F23054FA200E9FC83 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/AboutVC.storyboard; sourceTree = "<group>"; };
 		755B863323054FAD00E9FC83 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/PasscodeInputVC.storyboard; sourceTree = "<group>"; };
+		755E33C22C529C4D0041A199 /* AutoFillSetupMessageVC.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = AutoFillSetupMessageVC.storyboard; sourceTree = "<group>"; };
+		755E33C52C52A13C0041A199 /* AutoFillSetupMessageVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoFillSetupMessageVC.swift; sourceTree = "<group>"; };
+		755E33CB2C53B9A40041A199 /* ContentSizedTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentSizedTableView.swift; sourceTree = "<group>"; };
 		755E7D98232008300010E199 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		755E7D9B232008300010E199 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		755E7D9E232008300010E199 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -2905,7 +2906,6 @@
 				75838480268B55BF000D2E8B /* UIViewController+subviews.swift */,
 				753FE83424C1A9A400063FBB /* UIViewController+alerts.swift */,
 				F35538902B08DDF600D9F95D /* Coordinator+databaseUpgrade.swift */,
-				7542D2412129640F00C8A926 /* String+extensions.swift */,
 				7523F71C21C98D620025C706 /* SupportEmailComposer.swift */,
 				75CD364021537A310018AF46 /* AppStoreHelper.swift */,
 				75C11F1D22208D6B0042FB2B /* LAContext+biometrics.swift */,
@@ -2920,7 +2920,6 @@
 				75BFB1452481D19B0017B980 /* FileProvider+extensions.swift */,
 				759BC62B2487FE5200E88111 /* URLReference+extensions.swift */,
 				758FC18C24CF254000BAD35C /* AppIcon.swift */,
-				75061ECB257EE4F7003EF34A /* Clipboard+extensions.swift */,
 				75BE05F925DAA5A200B34CC0 /* URLOpener.swift */,
 				75814FD125F3D70B00B52A57 /* UIApplication+extensions.swift */,
 				75DDA56525F3E19900708750 /* UIWindow+extensions.swift */,
@@ -3212,6 +3211,7 @@
 				7575B24822D8476300B84B3F /* SearchHelper+extensions.swift */,
 				75EEC22027484DD90092505F /* QuickAutoFillPrompt.swift */,
 				756DBE2D275994B800E4270B /* ASExtensionError+extensions.swift */,
+				755E33CB2C53B9A40041A199 /* ContentSizedTableView.swift */,
 			);
 			path = util;
 			sourceTree = "<group>";
@@ -3285,6 +3285,8 @@
 				75B24DB921C3CADB003C9486 /* EntryFinderVC.swift */,
 				751E0D372309AFFC0088BB10 /* EntryFinderVC.storyboard */,
 				758D272326867931006764C0 /* EntryFinderCoordinator.swift */,
+				755E33C22C529C4D0041A199 /* AutoFillSetupMessageVC.storyboard */,
+				755E33C52C52A13C0041A199 /* AutoFillSetupMessageVC.swift */,
 			);
 			path = controllers;
 			sourceTree = "<group>";
@@ -3758,6 +3760,7 @@
 				751E0D2C2309AFE90088BB10 /* FirstSetupVC.storyboard in Resources */,
 				7526403C28455DBA0003DDFA /* PasswordGeneratorVC.storyboard in Resources */,
 				751E0D382309B0120088BB10 /* KeyFilePickerVC.storyboard in Resources */,
+				755E33C32C529C4D0041A199 /* AutoFillSetupMessageVC.storyboard in Resources */,
 				75BF5AF02768106B00809654 /* ParameterValueCell.xib in Resources */,
 				751E0D262309AFBA0088BB10 /* FileInfoVC.storyboard in Resources */,
 				757D82752C091CDB006C8B96 /* PrivacyInfo.xcprivacy in Resources */,
@@ -4056,6 +4059,7 @@
 				75D7DFB8233E5E310029AD87 /* FirstSetupVC.storyboard in Resources */,
 				7526403D28455DBA0003DDFA /* PasswordGeneratorVC.storyboard in Resources */,
 				75D7DFB9233E5E310029AD87 /* KeyFilePickerVC.storyboard in Resources */,
+				755E33C42C529C4D0041A199 /* AutoFillSetupMessageVC.storyboard in Resources */,
 				75BF5AEF2768106A00809654 /* ParameterValueCell.xib in Resources */,
 				75D7DFBA233E5E310029AD87 /* FileInfoVC.storyboard in Resources */,
 				757D82742C091CDA006C8B96 /* PrivacyInfo.xcprivacy in Resources */,
@@ -4111,6 +4115,7 @@
 				F30D03702A7BE8A00047525F /* PasswordQuality.swift in Sources */,
 				753F924F2290705D005E496F /* SKProduct+extension.swift in Sources */,
 				75838482268B55BF000D2E8B /* UIViewController+subviews.swift in Sources */,
+				755E33CC2C53B9A40041A199 /* ContentSizedTableView.swift in Sources */,
 				756DBE2E275994B800E4270B /* ASExtensionError+extensions.swift in Sources */,
 				75BF1966283F9C51006A9826 /* AccessibleStepper.swift in Sources */,
 				75CBABA521C1C2D100B8AFE2 /* FileInfoVC.swift in Sources */,
@@ -4223,6 +4228,7 @@
 				75D99DEA269CED7D00D0E9D7 /* NSLayoutContraint+extensions.swift in Sources */,
 				753DF2D0263E0EF20046F185 /* PlaceholderVC.swift in Sources */,
 				75BFB1472481D19B0017B980 /* FileProvider+extensions.swift in Sources */,
+				755E33C62C52A13C0041A199 /* AutoFillSetupMessageVC.swift in Sources */,
 				75151D3423268AB300F3C411 /* UILabel+extensions.swift in Sources */,
 				75D21BD32B642BB20065D95E /* OneDriveConnectionSetupCoordinator.swift in Sources */,
 				7572665B24CB1B500099B6E1 /* HelpArticle.swift in Sources */,
@@ -4245,7 +4251,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				75061ECC257EE4F7003EF34A /* Clipboard+extensions.swift in Sources */,
 				F3E194682BCF23DB00FD03EE /* DeleteWordlistAccessory.swift in Sources */,
 				75679ACE22FD897000372301 /* NewsCenter.swift in Sources */,
 				758BF0DD20D220B300897C83 /* WatchdogAwareTextField.swift in Sources */,
@@ -4386,7 +4391,6 @@
 				75C94C5F20B4BAB0004FA29D /* EntryFileViewerVC.swift in Sources */,
 				75B7870E261F916E005BE7B7 /* CollectionViewControllerWithContextActions.swift in Sources */,
 				F3C71AAF2AFFAD7A00EEAC8E /* GroupEditorTitleCell.swift in Sources */,
-				7542D2422129640F00C8A926 /* String+extensions.swift in Sources */,
 				759ADB87285A22CD00D93BD4 /* AnnouncementView.swift in Sources */,
 				F30D035D2A7BD3CF0047525F /* PasswordQualityIndicatorView.swift in Sources */,
 				75E371942108CA08002602BD /* ProgressOverlay.swift in Sources */,
@@ -4484,7 +4488,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				75061ECD257EE4F7003EF34A /* Clipboard+extensions.swift in Sources */,
 				F3E1946A2BCF23DB00FD03EE /* DeleteWordlistAccessory.swift in Sources */,
 				F3340BC92B2B3E2C00604AED /* OnboardingStep.swift in Sources */,
 				75B38BF3233E5B7C006BDEFC /* NewsCenter.swift in Sources */,
@@ -4624,7 +4627,6 @@
 				75B38C2A233E5B7C006BDEFC /* EntryFileViewerVC.swift in Sources */,
 				F3C0A6352B6D777A007F4D9E /* LargeTypeVC.swift in Sources */,
 				F3C71AB02AFFAD7A00EEAC8E /* GroupEditorTitleCell.swift in Sources */,
-				75B38C2B233E5B7C006BDEFC /* String+extensions.swift in Sources */,
 				75B78710261F916E005BE7B7 /* CollectionViewControllerWithContextActions.swift in Sources */,
 				7527601B2B7A5C8F0016B528 /* OnboardingPagesVC.swift in Sources */,
 				759ADB89285A22CD00D93BD4 /* AnnouncementView.swift in Sources */,
@@ -4723,7 +4725,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				75D075B128B639D200F02E39 /* Clipboard+extensions.swift in Sources */,
 				75D075B228B639D200F02E39 /* NewsCenter.swift in Sources */,
 				751ABACD2915B70E008C18DE /* RemoteFolderViewerVC.swift in Sources */,
 				75D075B328B639D200F02E39 /* WatchdogAwareTextField.swift in Sources */,
@@ -4851,7 +4852,6 @@
 				75D0761B28B639D200F02E39 /* ItemIconPickerCoordinator.swift in Sources */,
 				75D21BD62B642BB20065D95E /* OneDriveConnectionSetupCoordinator.swift in Sources */,
 				75D0761C28B639D200F02E39 /* EntryFileViewerVC.swift in Sources */,
-				75D0761D28B639D200F02E39 /* String+extensions.swift in Sources */,
 				75D0761E28B639D200F02E39 /* CollectionViewControllerWithContextActions.swift in Sources */,
 				75D0762028B639D200F02E39 /* AnnouncementView.swift in Sources */,
 				75CA661029B8E00A0094CBAA /* DatabasePrintFormatter.swift in Sources */,
@@ -4969,6 +4969,7 @@
 				F30D03722A7BE8A10047525F /* PasswordQuality.swift in Sources */,
 				F31114B02B9B894C00236632 /* DropboxConnectionSetupCoordinator.swift in Sources */,
 				75D7DF7C233E5E310029AD87 /* SKProduct+extension.swift in Sources */,
+				755E33CD2C53B9A40041A199 /* ContentSizedTableView.swift in Sources */,
 				75838484268B55BF000D2E8B /* UIViewController+subviews.swift in Sources */,
 				756DBE2F275994B800E4270B /* ASExtensionError+extensions.swift in Sources */,
 				75BF1968283F9C51006A9826 /* AccessibleStepper.swift in Sources */,
@@ -5081,6 +5082,7 @@
 				756F364D260E96A1005A35DA /* KeyFilePickerCoordinator.swift in Sources */,
 				75BFB1492481D19B0017B980 /* FileProvider+extensions.swift in Sources */,
 				756D94742BA2F2CA0084BDF5 /* MFIKeyActionSheetView.swift in Sources */,
+				755E33C72C52A13C0041A199 /* AutoFillSetupMessageVC.swift in Sources */,
 				75D7DFA3233E5E310029AD87 /* UILabel+extensions.swift in Sources */,
 				75D21BD52B642BB20065D95E /* OneDriveConnectionSetupCoordinator.swift in Sources */,
 				7572665D24CB1B500099B6E1 /* HelpArticle.swift in Sources */,
@@ -6179,7 +6181,7 @@
 				CODE_SIGN_ENTITLEMENTS = "KeePassium AutoFill/KeePassium_AutoFill.entitlements";
 				"CODE_SIGN_ENTITLEMENTS[sdk=macosx*]" = "KeePassium AutoFill/KeePassium_AutoFill-macOS.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 153;
+				CURRENT_PROJECT_VERSION = 154;
 				DEVELOPMENT_TEAM = 84W4PHXS24;
 				INFOPLIST_FILE = "KeePassium AutoFill/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "$(TARGET_NAME)";
@@ -6216,7 +6218,7 @@
 				CODE_SIGN_ENTITLEMENTS = "KeePassium AutoFill/KeePassium_AutoFill.entitlements";
 				"CODE_SIGN_ENTITLEMENTS[sdk=macosx*]" = "KeePassium AutoFill/KeePassium_AutoFill-macOS.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 153;
+				CURRENT_PROJECT_VERSION = 154;
 				DEVELOPMENT_TEAM = 84W4PHXS24;
 				INFOPLIST_FILE = "KeePassium AutoFill/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "$(TARGET_NAME)";
@@ -6384,7 +6386,7 @@
 				CODE_SIGN_ENTITLEMENTS = KeePassium/KeePassium.entitlements;
 				"CODE_SIGN_ENTITLEMENTS[sdk=macosx*]" = "KeePassium/KeePassium-macOS.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 153;
+				CURRENT_PROJECT_VERSION = 154;
 				DEVELOPMENT_TEAM = 84W4PHXS24;
 				"ENABLE_HARDENED_RUNTIME[sdk=macosx*]" = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -6424,7 +6426,7 @@
 				CODE_SIGN_ENTITLEMENTS = KeePassium/KeePassium.entitlements;
 				"CODE_SIGN_ENTITLEMENTS[sdk=macosx*]" = "KeePassium/KeePassium-macOS.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 153;
+				CURRENT_PROJECT_VERSION = 154;
 				DEVELOPMENT_TEAM = 84W4PHXS24;
 				"ENABLE_HARDENED_RUNTIME[sdk=macosx*]" = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -6464,7 +6466,7 @@
 				CODE_SIGN_ENTITLEMENTS = KeePassium/KeePassium.entitlements;
 				"CODE_SIGN_ENTITLEMENTS[sdk=macosx*]" = "KeePassium/KeePassium-macOS.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 153;
+				CURRENT_PROJECT_VERSION = 154;
 				DEVELOPMENT_TEAM = 84W4PHXS24;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_OPTIMIZATION_LEVEL = fast;
@@ -6503,7 +6505,7 @@
 				CODE_SIGN_ENTITLEMENTS = KeePassium/KeePassium.entitlements;
 				"CODE_SIGN_ENTITLEMENTS[sdk=macosx*]" = "KeePassium/KeePassium-macOS.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 153;
+				CURRENT_PROJECT_VERSION = 154;
 				DEVELOPMENT_TEAM = 84W4PHXS24;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_OPTIMIZATION_LEVEL = fast;
@@ -6542,7 +6544,7 @@
 				CODE_SIGN_ENTITLEMENTS = KeePassium/KeePassiumOrg.entitlements;
 				"CODE_SIGN_ENTITLEMENTS[sdk=macosx*]" = "KeePassium/KeePassiumOrg-macOS.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 153;
+				CURRENT_PROJECT_VERSION = 154;
 				DEVELOPMENT_TEAM = 84W4PHXS24;
 				ENABLE_BITCODE = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -6584,7 +6586,7 @@
 				CODE_SIGN_ENTITLEMENTS = KeePassium/KeePassiumOrg.entitlements;
 				"CODE_SIGN_ENTITLEMENTS[sdk=macosx*]" = "KeePassium/KeePassiumOrg-macOS.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 153;
+				CURRENT_PROJECT_VERSION = 154;
 				DEVELOPMENT_TEAM = 84W4PHXS24;
 				ENABLE_BITCODE = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -6626,7 +6628,7 @@
 				CODE_SIGN_ENTITLEMENTS = "KeePassium AutoFill/KeePassium_AutoFill.entitlements";
 				"CODE_SIGN_ENTITLEMENTS[sdk=macosx*]" = "KeePassium AutoFill/KeePassium_AutoFill-macOS.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 153;
+				CURRENT_PROJECT_VERSION = 154;
 				DEVELOPMENT_TEAM = 84W4PHXS24;
 				INFOPLIST_FILE = "$(SRCROOT)/KeePassium AutoFill/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "$(TARGET_NAME)";
@@ -6663,7 +6665,7 @@
 				CODE_SIGN_ENTITLEMENTS = "KeePassium AutoFill/KeePassium_AutoFill.entitlements";
 				"CODE_SIGN_ENTITLEMENTS[sdk=macosx*]" = "KeePassium AutoFill/KeePassium_AutoFill-macOS.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 153;
+				CURRENT_PROJECT_VERSION = 154;
 				DEVELOPMENT_TEAM = 84W4PHXS24;
 				INFOPLIST_FILE = "$(SRCROOT)/KeePassium AutoFill/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "$(TARGET_NAME)";

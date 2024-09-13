@@ -8,6 +8,12 @@
 
 // swiftlint:disable line_length
 extension LString {
+    public static let titleSettings = NSLocalizedString(
+        "[Settings/title]",
+        bundle: Bundle.framework,
+        value: "Settings",
+        comment: "Title of the app settings screen")
+
     public static let actionRestoreDefaults = NSLocalizedString(
         "[Settings/RestoreDefaults/action]",
         bundle: Bundle.framework,
@@ -390,11 +396,26 @@ extension LString {
         value: "About KeePassium",
         comment: "Menu item that shows info about KeePassium app")
 
+    public static let actionResetApp = NSLocalizedString(
+        "[App/ResetEverything/action]",
+        bundle: Bundle.framework,
+        value: "Reset",
+        comment: "Action which resets the app as if it was just installed.")
+    public static let confirmAppReset = NSLocalizedString(
+        "[App/ResetEverything/title]",
+        bundle: Bundle.framework,
+        value: "Reset the app?",
+        comment: "Confirmation message before resetting the app to just-installed state.")
 
     public static let thisSettingIsManaged = NSLocalizedString(
         "[Settings/Managed/notification]",
         bundle: Bundle.framework,
         value: "This setting is managed by your organization.",
         comment: "Notification when corporate user tries to change an app setting controlled by organization's IT department.")
+    public static let thisFeatureIsBlockedByOrg = NSLocalizedString(
+        "[Settings/Managed/BlockedFeature/notification]",
+        bundle: Bundle.framework,
+        value: "This feature is blocked by your organization.",
+        comment: "Notification when corporate user tries to use a feature forbidden by organization's IT department.")
 }
 // swiftlint:enable line_length

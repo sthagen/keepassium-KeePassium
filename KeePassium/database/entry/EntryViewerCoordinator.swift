@@ -12,6 +12,7 @@ import QuickLook
 protocol EntryViewerCoordinatorDelegate: AnyObject {
     func didUpdateEntry(_ entry: Entry, in coordinator: EntryViewerCoordinator)
     func didRelocateDatabase(_ databaseFile: DatabaseFile, to url: URL)
+    func didPressOpenLinkedDatabase(_ info: LinkedDatabaseInfo, in coordinator: EntryViewerCoordinator)
 }
 
 final class EntryViewerCoordinator: NSObject, Coordinator, Refreshable {
@@ -42,7 +43,8 @@ final class EntryViewerCoordinator: NSObject, Coordinator, Refreshable {
     private let historyViewerVC: EntryHistoryViewerVC
     private let extraViewerVC: EntryExtraViewerVC
 
-    private var previewController: QLPreviewController? 
+    private let specialEntryParser = SpecialEntryParser()
+    private var previewController: QLPreviewController?
     private var temporaryAttachmentURLs = [TemporaryFileURL]()
     private var photoPicker: PhotoPicker? 
 
@@ -120,7 +122,7 @@ final class EntryViewerCoordinator: NSObject, Coordinator, Refreshable {
                 self.dismissHandler?(self)
             }
         )
-        refresh()
+        setEntry(entry, isHistoryEntry: isHistoryEntry, canEditEntry: canEditEntry)
     }
 
     public func dismiss(animated: Bool) {
@@ -166,6 +168,7 @@ final class EntryViewerCoordinator: NSObject, Coordinator, Refreshable {
             fields,
             category: category,
             tags: entry.resolvingTags(),
+            linkedDBInfo: specialEntryParser.extractLinkedDatabaseInfo(from: entry),
             isHistoryEntry: isHistoryEntry,
             canEditEntry: canEditEntry)
         fileViewerVC.setContents(
@@ -586,7 +589,7 @@ extension EntryViewerCoordinator {
 
     private func copyText(text: String) {
         entry.touch(.accessed)
-        Clipboard.general.insert(text)
+        Clipboard.general.copyWithTimeout(text)
     }
 }
 
@@ -630,7 +633,7 @@ extension EntryViewerCoordinator: EntryFieldViewerDelegate {
             assertionFailure("Tried to create a reference to non-referenceable field")
             return
         }
-        Clipboard.general.insert(refString)
+        Clipboard.general.copyWithTimeout(refString)
         HapticFeedback.play(.copiedToClipboard)
         viewController.showNotification(LString.fieldReferenceCopiedToClipboard)
     }
@@ -642,6 +645,13 @@ extension EntryViewerCoordinator: EntryFieldViewerDelegate {
         in viewController: EntryFieldViewerVC
     ) {
         showLargeType(text: text, at: popoverAnchor, in: viewController)
+    }
+
+    func didPressOpenLinkedDatabase(_ info: LinkedDatabaseInfo, in viewController: EntryFieldViewerVC) {
+        performPremiumActionOrOfferUpgrade(for: .canOpenLinkedDatabases, in: viewController) { [weak self] in
+            guard let self else { return }
+            delegate?.didPressOpenLinkedDatabase(info, in: self)
+        }
     }
 }
 
@@ -694,21 +704,14 @@ extension EntryViewerCoordinator: EntryFileViewerDelegate {
         saveDatabase()
     }
 
-    func canPreviewFiles(in viewController: EntryFileViewerVC) -> Bool {
-        return PremiumManager.shared.isAvailable(feature: .canPreviewAttachments)
-    }
-
     func didPressView(
         file attachment: Attachment,
         at popoverAnchor: PopoverAnchor,
         in viewController: EntryFileViewerVC
     ) {
-        if canPreviewFiles(in: viewController) {
-            showPreview(for: [attachment], at: popoverAnchor, in: viewController)
-        } else {
-            showExportDialog(for: attachment, at: popoverAnchor, in: viewController)
-        }
+        showPreview(for: [attachment], at: popoverAnchor, in: viewController)
     }
+
     func didPressViewAll(
         files attachments: [Attachment],
         at popoverAnchor: PopoverAnchor,
@@ -889,6 +892,13 @@ extension EntryViewerCoordinator: EntryViewerCoordinatorDelegate {
 
     func didUpdateEntry(_ entry: Entry, in coordinator: EntryViewerCoordinator) {
         assertionFailure("History entries cannot be modified")
+    }
+
+    func didPressOpenLinkedDatabase(
+        _ info: LinkedDatabaseInfo,
+        in coordinator: EntryViewerCoordinator
+    ) {
+        delegate?.didPressOpenLinkedDatabase(info, in: self)
     }
 }
 

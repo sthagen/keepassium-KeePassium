@@ -282,48 +282,6 @@ extension LString {
         value: "Add multiple databases and quickly switch between them.",
         comment: "Explanation of the premium feature")
 
-    public static let premiumFeatureLongDatabaseTimeoutsTitle = NSLocalizedString(
-            "[PremiumFeature/LongDBTimeouts/title] Long Database Timeouts",
-            bundle: Bundle.framework,
-            value: "Long Database Timeouts",
-            comment: "Title of a premium feature: ability to set long delays in Database Lock Timeout settings (In Title Case)")
-    public static let premiumFeatureLongDatabaseTimeoutsDescription = NSLocalizedString(
-        "[PremiumFeature/LongDBTimeouts/description] Save time entering your complex master passwords — keep your database open longer in the premium version.",
-        bundle: Bundle.framework,
-        value: "Save time entering your complex master passwords — keep your database open longer in the premium version.",
-        comment: "Description/advertisement for the `Long Database Timeouts` premium feature")
-    public static let premiumBenefitLongDatabaseTimeoutsTitle = NSLocalizedString(
-        "[Premium/Benefits/DatabaseTimeout/title]",
-        bundle: Bundle.framework,
-        value: "Save your time",
-        comment: "Title of a premium feature")
-    public static let premiumBenefitLongDatabaseTimeoutsDescription = NSLocalizedString(
-        "[Premium/Benefits/DatabaseTimeout/details]",
-        bundle: Bundle.framework,
-        value: "Tired of typing your master password? Keep your database open longer and unlock it with one tap.",
-        comment: "Explanation of the premium feature")
-
-    public static let premiumFeaturePreviewAttachmentsTitle = NSLocalizedString(
-            "[PremiumFeature/Preview/title] Preview Attachments",
-            bundle: Bundle.framework,
-            value: "Preview Attachments",
-            comment: "Title of a premium feature: ability to preview some attached files directly in the app (In Title Case)")
-    public static let premiumFeaturePreviewAttachmentsDescription = NSLocalizedString(
-        "[PremiumFeature/Preview/description] Preview images and documents directly in the app, in the premium version.",
-        bundle: Bundle.framework,
-        value: "Preview images and documents directly in the app, in the premium version.",
-        comment: "Description/advertisement for the `Preview Attachments` premium feature")
-    public static let premiumBenefitPreviewAttachmentsTitle = NSLocalizedString(
-        "[Premium/Benefits/AttachmentPreview/title]",
-        bundle: Bundle.framework,
-        value: "Preview without a trace",
-        comment: "Title of a premium feature")
-    public static let premiumBenefitPreviewAttachmentsDescription = NSLocalizedString(
-        "[Premium/Benefits/AttachmentPreview/details]",
-        bundle: Bundle.framework,
-        value: "Preview attached files directly in KeePassium and leave no traces in other apps. (Works with images, documents, archives and more.)",
-        comment: "Explanation of the premium feature")
-
     public static let premiumFeatureHardwareKeysTitle = NSLocalizedString(
             "[PremiumFeature/HardwareKeys/title] Hardware Keys",
             bundle: Bundle.framework,
@@ -344,33 +302,6 @@ extension LString {
         bundle: Bundle.framework,
         value: "Protect your secrets with a hardware key, such as YubiKey.",
         comment: "Explanation of the premium feature")
-
-    public static let premiumFeatureChangeAppIconTitle = NSLocalizedString(
-        "[PremiumFeature/CustomAppIcons/title]",
-        bundle: Bundle.framework,
-        value: "Custom App Icons",
-        comment: "Title of a premium feature: ability to change the app icon")
-    public static let premiumBenefitChangeAppIconTitle = NSLocalizedString(
-        "[Premium/Benefits/CustomAppIcon/title]",
-        bundle: Bundle.framework,
-        value: "Change app icon",
-        comment: "Title of a premium feature")
-    public static let premiumBenefitChangeAppIconDescription = NSLocalizedString(
-        "[Premium/Benefits/CustomAppIcon/details]",
-        bundle: Bundle.framework,
-        value: "Make KeePassium look unique, familiar, or disguise it as a calculator — the choice is yours.",
-        comment: "Explanation of a premium feature")
-
-    public static let premiumBenefitFieldReferecesTitle = NSLocalizedString(
-        "[Premium/Benefits/ViewFieldReferences/title]",
-        bundle: Bundle.framework,
-        value: "Show field references",
-        comment: "Title of a premium feature")
-    public static let premiumBenefitFieldReferencesDescription = NSLocalizedString(
-        "[Premium/Benefits/ViewFieldReferences/details]",
-        bundle: Bundle.framework,
-        value: "Use field references to show information from other entries, instead of creating multiple copies of the same information.",
-        comment: "Explanation of a premium feature")
 
     public static let premiumFeatureQuickAutoFillTitle = NSLocalizedString(
         "[PremiumFeature/QuickAutoFill/title]",
@@ -419,5 +350,25 @@ extension LString {
         comment: "Title of a premium feature")
     public static let premiumBenefitPasswordAuditDescription = premiumFeaturePasswordAuditDescription
 
+    public static let premiumFeatureLinkedDatabasesTitle = NSLocalizedString(
+        "[PremiumFeature/LinkedDatabases/title]",
+        bundle: Bundle.framework,
+        value: "Linked Databases",
+        comment: "Title of a premium feature: ability to open databases referenced in another database (In Title Case)")
+    public static let premiumFeatureLinkedDatabasesDescription = NSLocalizedString(
+        "[PremiumFeature/LinkedDatabases/description]",
+        bundle: Bundle.framework,
+        value: "Upgrade to premium and open linked databases in one step.",
+        comment: "Description/advertisement for the `Linked Databases` premium feature")
+    public static let premiumBenefitLinkedDatabasesTitle = NSLocalizedString(
+        "[Premium/Benefits/LinkedDatabases/title]",
+        bundle: Bundle.framework,
+        value: "Open linked databases",
+        comment: "Title of a premium feature")
+    public static let premiumBenefitLinkedDatabasesDescription = NSLocalizedString(
+        "[Premium/Benefits/LinkedDatabases/details]",
+        bundle: Bundle.framework,
+        value: "Open another database in one step — using credentials stored in an entry.",
+        comment: "Explanation of the premium feature")
 }
 // swiftlint:enable line_length

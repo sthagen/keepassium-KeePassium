@@ -28,6 +28,7 @@ class AutoFillCoordinator: NSObject, Coordinator {
 
     private var hasUI = false
     private var isStarted = false
+    private var isInDeviceAutoFillSettings = false
 
     private var databasePickerCoordinator: DatabasePickerCoordinator!
     private var entryFinderCoordinator: EntryFinderCoordinator?
@@ -77,6 +78,7 @@ class AutoFillCoordinator: NSObject, Coordinator {
         BusinessModel.isIntuneEdition = false
         #endif
 
+        Swizzler.swizzle()
         SettingsMigrator.processAppLaunch(with: Settings.current)
         Diag.info(AppInfo.description)
 
@@ -104,6 +106,11 @@ class AutoFillCoordinator: NSObject, Coordinator {
         watchdog.didBecomeActive()
     }
 
+    func prepareConfigurationUI() {
+        log.trace("Coordinator prepares configuration UI")
+        isInDeviceAutoFillSettings = true
+    }
+
     func start() {
         guard !isStarted else {
             return
@@ -111,6 +118,14 @@ class AutoFillCoordinator: NSObject, Coordinator {
         isStarted = true
 
         log.trace("Coordinator is starting the UI")
+        if isInDeviceAutoFillSettings {
+            rootController.showChildViewController(router.navigationController)
+            DispatchQueue.main.async { [weak self] in
+                self?.showUncheckKeychainMessage()
+            }
+            return
+        }
+
         if !isAppLockVisible {
             rootController.showChildViewController(router.navigationController)
             if isNeedsOnboarding() {
@@ -196,10 +211,7 @@ class AutoFillCoordinator: NSObject, Coordinator {
         watchdog.restart()
 
         if let otpString = getOTPForClipboard(for: entry) {
-            let isCopied = Clipboard.general.insert(
-                text: otpString,
-                timeout: TimeInterval(Settings.current.clipboardTimeout.seconds)
-            )
+            let isCopied = Clipboard.general.copyWithTimeout(otpString)
             let formattedOTP = OTPCodeFormatter.decorate(otpCode: otpString)
             if isCopied {
                 LocalNotifications.showTOTPNotification(
@@ -219,7 +231,9 @@ class AutoFillCoordinator: NSObject, Coordinator {
             password: entry.resolvedPassword)
         extensionContext.completeRequest(
             withSelectedCredential: passwordCredential,
-            completionHandler: nil
+            completionHandler: { [self] expired in
+                log.debug("Did return credentials (exp: \(expired))")
+            }
         )
         if hasUI {
             HapticFeedback.play(.credentialsPasted)
@@ -257,6 +271,14 @@ extension AutoFillCoordinator {
         let firstSetupVC = FirstSetupVC.make(delegate: self)
         firstSetupVC.navigationItem.hidesBackButton = true
         router.present(firstSetupVC, animated: false, completion: nil)
+    }
+
+    private func showUncheckKeychainMessage() {
+        let setupMessageVC = AutoFillSetupMessageVC.instantiateFromStoryboard()
+        setupMessageVC.completionHanlder = { [weak self] in
+            self?.extensionContext.completeExtensionConfigurationRequest()
+        }
+        router.push(setupMessageVC, animated: true, onPop: nil)
     }
 
     private func showCrashReport() {
@@ -519,7 +541,7 @@ extension AutoFillCoordinator: WatchdogDelegate {
     }
 
     func mustCloseDatabase(_ sender: Watchdog, animate: Bool) {
-        if Settings.current.premiumIsLockDatabasesOnTimeout {
+        if Settings.current.isLockDatabasesOnTimeout {
             entryFinderCoordinator?.lockDatabase()
         } else {
             entryFinderCoordinator?.stop(animated: animate, completion: nil)

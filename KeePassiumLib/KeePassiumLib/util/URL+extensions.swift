@@ -6,6 +6,7 @@
 //  by the Free Software Foundation: https://www.gnu.org/licenses/).
 //  For commercial licensing, please contact the author.
 
+import CryptoKit
 import Foundation
 
 public extension URL {
@@ -15,11 +16,6 @@ public extension URL {
     }
 
     var isRemoteURL: Bool { !isFileURL }
-
-    var isExcludedFromBackup: Bool? {
-        let res = try? resourceValues(forKeys: [.isExcludedFromBackupKey])
-        return res?.isExcludedFromBackup
-    }
 
     var isInTrashDirectory: Bool {
         do {
@@ -33,19 +29,28 @@ public extension URL {
         }
     }
 
+    func getFileAttribute(_ attribute: FileInfo.Attribute) -> Bool? {
+        assert(isFileURL)
+        let res = try? resourceValues(forKeys: [attribute.asURLResourceKey])
+        return attribute.fromURLResourceValues(res)
+    }
+
     @discardableResult
-    mutating func setExcludedFromBackup(_ isExcluded: Bool) -> Bool {
-        var values = URLResourceValues()
-        values.isExcludedFromBackup = isExcluded
+    mutating func setFileAttribute(_ attribute: FileInfo.Attribute, to value: Bool) -> Bool {
+        assert(isFileURL)
+        var resourceValues = URLResourceValues()
+        attribute.apply(value, to: &resourceValues)
         do {
-            try setResourceValues(values)
-            if isExcludedFromBackup != nil && isExcludedFromBackup! == isExcluded {
-                return true
+            try setResourceValues(resourceValues)
+            guard let newValue = getFileAttribute(attribute),
+                  newValue == value
+            else {
+                Diag.warning("Failed to change attribute, the change did not last. [attr: \(attribute)]")
+                return false
             }
-            Diag.warning("Failed to change backup attribute: the modification did not last.")
-            return false
+            return true
         } catch {
-            Diag.warning("Failed to change backup attribute [reason: \(error.localizedDescription)]")
+            Diag.warning("Failed to change attribute [attr: \(attribute), reason: \(error.localizedDescription)]")
             return false
         }
     }
@@ -62,6 +67,7 @@ public extension URL {
             .creationDateKey,
             .contentModificationDateKey,
             .isExcludedFromBackupKey,
+            .isHiddenKey
         ]
 
         var targetURL = self
@@ -84,13 +90,19 @@ public extension URL {
             return
         }
 
+        let contentHash = try? FileHasher.sha256(fileURL: self).asHexString
         let latestInfo = FileInfo(
             fileName: targetURL.lastPathComponent,
             fileSize: Int64(attributes.fileSize ?? -1),
             creationDate: attributes.creationDate,
             modificationDate: attributes.contentModificationDate,
-            isExcludedFromBackup: attributes.isExcludedFromBackup ?? false,
-            isInTrash: self.isInTrashDirectory)
+            attributes: [
+                .excludedFromBackup: attributes.isExcludedFromBackup,
+                .hidden: attributes.isHidden
+            ],
+            isInTrash: self.isInTrashDirectory,
+            hash: contentHash
+        )
         completionQueue.addOperation {
             completion(.success(latestInfo))
         }

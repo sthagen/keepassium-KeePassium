@@ -9,47 +9,39 @@
 public enum PremiumFeature: Int {
     public static let all: [PremiumFeature] = [
         .canUseMultipleDatabases,
-        .canUseLongDatabaseTimeouts,
-        .canPreviewAttachments,
         .canUseHardwareKeys,
-        .canKeepMasterKeyOnDatabaseTimeout,
-        .canChangeAppIcon,
-        .canViewFieldReferences,
         .canRelocateAcrossDatabases,
         .canUseQuickTypeAutoFill,
         .canUseBusinessClouds,
         .canAuditPasswords,
+        .canOpenLinkedDatabases
+
     ]
     public static let introductionDate: [PremiumFeature: Date] = [
         .canUseMultipleDatabases: Date(iso8601string: "2019-07-31T00:00:00Z")!,
-        .canUseLongDatabaseTimeouts: Date(iso8601string: "2019-07-31T00:00:00Z")!,
-        .canPreviewAttachments: Date(iso8601string: "2019-07-31T00:00:00Z")!,
         .canUseHardwareKeys: Date(iso8601string: "2020-01-14T00:00:00Z")!,
-        .canKeepMasterKeyOnDatabaseTimeout: Date(iso8601string: "2020-07-14T00:00:00Z")!,
-        .canChangeAppIcon: Date(iso8601string: "2020-08-04T00:00:00Z")!,
-        .canUseExpressUnlock: Date(iso8601string: "2020-10-01T00:00:00Z")!,
-        .canViewFieldReferences: Date(iso8601string: "2020-11-12T00:00:00Z")!,
         .canRelocateAcrossDatabases: Date(iso8601string: "2021-10-08T00:00:00Z")!,
         .canUseQuickTypeAutoFill: Date(iso8601string: "2021-11-19T00:00:00Z")!,
         .canUseBusinessClouds: Date(iso8601string: "2022-10-20T00:00:00Z")!,
         .canAuditPasswords: Date(iso8601string: "2023-09-08T00:00:00Z")!,
+        .canOpenLinkedDatabases: Date(iso8601string: "2024-07-22T00:00:00Z")!,
     ]
 
     case canUseMultipleDatabases = 0
 
-    case canUseLongDatabaseTimeouts = 2
+    /* case canUseLongDatabaseTimeouts = 2 */
 
-    case canPreviewAttachments = 3
+    /* case canPreviewAttachments = 3 */
 
     case canUseHardwareKeys = 4
 
-    case canKeepMasterKeyOnDatabaseTimeout = 5
+    /* case canKeepMasterKeyOnDatabaseTimeout = 5 */
 
-    case canChangeAppIcon = 6
+    /* case canChangeAppIcon = 6 */
 
-    case canUseExpressUnlock = 7
+    /* case canUseExpressUnlock = 7 */
 
-    case canViewFieldReferences = 8
+    /* case canViewFieldReferences = 8 */
 
     case canRelocateAcrossDatabases = 9
 
@@ -59,6 +51,8 @@ public enum PremiumFeature: Int {
 
     case canAuditPasswords = 12
 
+    case canOpenLinkedDatabases = 13
+
     public func isAvailable(in status: PremiumManager.Status, fallbackDate: Date?) -> Bool {
         let isEntitled = status == .subscribed ||
             status == .lapsed ||
@@ -67,20 +61,12 @@ public enum PremiumFeature: Int {
         switch self {
         case .canUseMultipleDatabases,
              .canUseHardwareKeys,
-             .canViewFieldReferences,
              .canRelocateAcrossDatabases,
              .canUseQuickTypeAutoFill,
              .canUseBusinessClouds,
-             .canAuditPasswords:
+             .canAuditPasswords,
+             .canOpenLinkedDatabases:
             return isEntitled
-        case .canChangeAppIcon,
-             .canUseLongDatabaseTimeouts,
-             .canKeepMasterKeyOnDatabaseTimeout:
-            return true
-        case .canPreviewAttachments:
-            return true 
-        case .canUseExpressUnlock:
-            return true 
         }
     }
 

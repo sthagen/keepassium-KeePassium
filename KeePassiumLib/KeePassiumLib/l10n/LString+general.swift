@@ -231,6 +231,12 @@ extension LString {
         value: "Learn more…",
         comment: "Action/button to view more help/info about some topic"
     )
+    public static let actionViewHelpArticle = NSLocalizedString(
+        "[Generic/ViewHelpArticle/action]",
+        bundle: Bundle.framework,
+        value: "View help article",
+        comment: "Action/button to open an online support article (about a specific error)"
+    )
     public static let actionFixThis = NSLocalizedString(
         "[Generic] Fix this",
         bundle: Bundle.framework,
@@ -256,11 +262,23 @@ extension LString {
         value: "Upgrade to Premium",
         comment: "Action/button to start choosing premium versions and possibly buying one")
 
+    public static let titleTools = NSLocalizedString(
+        "[Generic/Tools/title]",
+        bundle: Bundle.framework,
+        value: "Tools",
+        comment: "Title of a menu with various utilities"
+    )
     public static let titleMoreActions = NSLocalizedString(
         "[Generic] More Actions",
         bundle: Bundle.framework,
         value: "More Actions",
         comment: "Checkbox/Button to show additional actions"
+    )
+    public static let titleViewOptions = NSLocalizedString(
+        "[Generic/ViewOptions/title]",
+        bundle: Bundle.framework,
+        value: "View Options",
+        comment: "Title of a screen/list view configuration: sort order, visible items, etc"
     )
     public static let titlePresets = NSLocalizedString(
         "[Generic/Presets]",
@@ -452,18 +470,6 @@ extension LString {
         value: "The database is unreachable.\nThis is its latest local copy.",
         comment: "Message shown after we show a cached local database instead of the (unavailable) original database."
     )
-    public static let titleDatabaseOperations = NSLocalizedString(
-        "[Database/Operations/title]",
-        bundle: Bundle.framework,
-        value: "Database Operations",
-        comment: "Title of a list with database-related actions (e.g. lock database, change master key, etc)"
-    )
-    public static let actionLockDatabase = NSLocalizedString(
-        "[Database/Opened/action] Lock Database",
-        bundle: Bundle.framework,
-        value: "Lock Database",
-        comment: "Action/button to lock current database (the next time, it will ask for the master key)."
-    )
     public static let databaseStatusPreparingPrintPreview = NSLocalizedString(
         "[Database/Print/preparingPreview]",
         bundle: Bundle.framework,
@@ -502,12 +508,19 @@ extension LString {
         comment: "Message to confirm removal of database file from the app. (This keeps the file, but removes its reference from the app.)"
     )
 
-    public static let titleCreateDatabase = NSLocalizedString(
-        "[Database/Create/title] Create Database",
+    public static let titleDatabaseOperations = NSLocalizedString(
+        "[Database/Operations/title]",
         bundle: Bundle.framework,
-        value: "Create Database",
-        comment: "Title of a form for creating a database"
+        value: "Database Operations",
+        comment: "Title of a list with database-related actions (e.g. lock database, change master key, etc)"
     )
+    public static let actionLockDatabase = NSLocalizedString(
+        "[Database/Opened/action] Lock Database",
+        bundle: Bundle.framework,
+        value: "Lock Database",
+        comment: "Action/button to lock current database (the next time, it will ask for the master key)."
+    )
+
     public static let actionChangeMasterKey = NSLocalizedString(
         "[Database/MasterKey/Change/action]",
         bundle: Bundle.framework,
@@ -550,12 +563,26 @@ extension LString {
         value: "New Group",
         comment: "Default name of a new group"
     )
-    public static let titleCreateGroup = NSLocalizedString(
-        "[Group/Create/title] Create Group",
+    public static let defaultNewSmartGroupName = NSLocalizedString(
+        "[Group/Smart/New/defaultName]",
         bundle: Bundle.framework,
-        value: "Create Group",
-        comment: "Title of a form for creating a group"
+        value: "New Smart Group",
+        comment: "Default name of a new smart group"
     )
+    public static let titleGroup = NSLocalizedString(
+        "[Group/title]",
+        bundle: Bundle.framework,
+        value: "Group",
+        comment: "Glossary term: noun, a group in database."
+    )
+    public static let titleSmartGroup = NSLocalizedString(
+        "[Group/Smart/title]",
+        bundle: Bundle.framework,
+        value: "Smart Group",
+        comment: "Glossary term: noun, a smart group in database."
+    )
+    public static let titleNewGroup = defaultNewGroupName
+    public static let titleNewSmartGroup = defaultNewSmartGroupName
     public static let titleEditGroup = NSLocalizedString(
         "[Group/Edit/title] Edit Group",
         bundle: Bundle.framework,
@@ -592,12 +619,36 @@ extension LString {
         value: "About smart groups…",
         comment: "Action/button to show a help article"
     )
+    public static let titleSmartGroupAllEntries = NSLocalizedString(
+        "[Group/Smart/Preset/allEntries]",
+        bundle: Bundle.framework,
+        value: "All Entries",
+        comment: "Title of a list: all entries in the database"
+    )
+    public static let titleSmartGroupOTPEntries = NSLocalizedString(
+        "[Group/Smart/Preset/otpEntries]",
+        bundle: Bundle.framework,
+        value: "Entries with OTP",
+        comment: "Title of a list: entries with one-time passwords (OTP)"
+    )
+    public static let titleSmartGroupExpiredEntries = NSLocalizedString(
+        "[Group/Smart/Preset/expiredEntries]",
+        bundle: Bundle.framework,
+        value: "Expired Entries",
+        comment: "Title of a list: entries that are beyond their expiration date."
+    )
 
     public static let actionCreateEntry = NSLocalizedString(
         "[Entry/Create/action] Create Entry",
         bundle: Bundle.framework,
         value: "Create Entry",
         comment: "Action/button to create a new entry in the current group"
+    )
+    public static let actionEditEntry = NSLocalizedString(
+        "[Entry/Edit/action]",
+        bundle: Bundle.framework,
+        value: "Edit Entry",
+        comment: "Action/button to modify an entry"
     )
     public static let actionAddAttachment = NSLocalizedString(
         "[Entry/Attachment/add]",
@@ -641,6 +692,13 @@ extension LString {
         value: "Show in Large Type",
         comment: "Action: display text using large font"
     )
+    public static let titleEntry = NSLocalizedString(
+        "[Entry/title]",
+        bundle: Bundle.framework,
+        value: "Entry",
+        comment: "Glossary term: noun, an entry in database."
+    )
+    public static let titleNewEntry = defaultNewEntryName
     public static let defaultNewEntryName = NSLocalizedString(
         "[Entry/New/defaultTitle] New Entry",
         bundle: Bundle.framework,
@@ -652,6 +710,12 @@ extension LString {
         bundle: Bundle.framework,
         value: "Field Name",
         comment: "Default name of a newly created entry field"
+    )
+    public static let titleProtectedField = NSLocalizedString(
+        "[Entry/Field/Protected/title]",
+        bundle: Bundle.framework,
+        value: "Protected Field",
+        comment: "Title of a setting: whether the entry's field is protected (shown as asterisks)."
     )
     public static let defaultNewPhotoAttachmentName = NSLocalizedString(
         "[Entry/Attachment/Photo/defaultName]",
@@ -677,6 +741,19 @@ extension LString {
         bundle: Bundle.framework,
         value: "%@, Smart group",
         comment: "VoiceOver description of a smart group [groupTitle: String]"
+    )
+
+    public static let sectionGroups = NSLocalizedString(
+        "[Group/Section/Groups/title]",
+        bundle: Bundle.framework,
+        value: "Groups",
+        comment: "Title of the Groups section visible while editing"
+    )
+    public static let sectionEntries = NSLocalizedString(
+        "[Group/Section/Entries/title]",
+        bundle: Bundle.framework,
+        value: "Entries",
+        comment: "Title of the Entries section visible while editing"
     )
 
     public static let fieldIcon = NSLocalizedString(
@@ -851,6 +928,11 @@ extension LString {
         bundle: Bundle.framework,
         value: "Last Modification Date",
         comment: "Title of a field with entry's last modification date and time")
+    public static let itemModificationDate = NSLocalizedString(
+        "[Entry/History] Modification Date",
+        bundle: Bundle.framework,
+        value: "Modification Date",
+        comment: "Title of a field with entry's modification date and time")
     public static let itemLastAccessDate = NSLocalizedString(
         "[Entry/History] Last Access Date",
         bundle: Bundle.framework,
@@ -877,7 +959,24 @@ extension LString {
         value: "Backup",
         comment: "Section header: file backup settings"
     )
-
+    public static let titleFileAttributes = NSLocalizedString(
+        "[FileInfo/Attributes/header]",
+        bundle: Bundle.framework,
+        value: "File Attributes",
+        comment: "Section header for attributes of a file (e.g. hidden, excluded from backup, etc)"
+    )
+    public static let titleHiddenFileAttribute = NSLocalizedString(
+        "[FileInfo/Attributes/Hidden/title]",
+        bundle: Bundle.framework,
+        value: "Hidden",
+        comment: "Title of a setting: is the file hidden"
+    )
+    public static let descriptionHiddenFileAttribute = NSLocalizedString(
+        "[FileInfo/Attributes/Hidden/warning]",
+        bundle: Bundle.framework,
+        value: "Hidden files are less visible to a casual user, but don't improve data security.",
+        comment: "Warning message for 'hidden' files."
+    )
     public static let errorFailedToChangeFileAttributes = NSLocalizedString(
         "[FileInfo/Error/failed to change attributes]",
         bundle: Bundle.framework,
@@ -892,6 +991,11 @@ extension LString {
         value: "Help",
         comment: "Generic title of in-app help article")
 
+    public static let titleNewDatabase = NSLocalizedString(
+        "[Database/New/title]",
+        bundle: Bundle.framework,
+        value: "New Database",
+        comment: "Title of database creation dialog")
     public static let actionCreateDatabase = NSLocalizedString(
         "[Database/Create/action] Create Database",
         bundle: Bundle.framework,
@@ -923,6 +1027,11 @@ extension LString {
         value: "Try connecting to your remote storage directly from KeePassium.",
         comment: "Suggested solution/call to action when intermediate sync app fails.")
 
+    public static let titleMasterKey = NSLocalizedString(
+        "[Database/MasterKey/title]",
+        bundle: Bundle.framework,
+        value: "Master Key",
+        comment: "Glossary term: noun, a master key for encrypting the database")
     public static let masterKeySuccessfullyChanged = NSLocalizedString(
         "[Database/MasterKey/changed] Master key successfully changed",
         bundle: Bundle.framework,
@@ -1129,5 +1238,32 @@ extension LString {
         bundle: Bundle.framework,
         value: "©Andrei Popleteev",
         comment: "Copyright notice")
+
+    public static let statusCheckingDatabaseForExternalChanges = NSLocalizedString(
+        "[Database/ExternalChange/Status/checkInProgress]",
+        bundle: Bundle.framework,
+        value: "Checking for changes…",
+        comment: "Status message: checking if currently loaded database is the latest version"
+    )
+
+    public static let statusDatabaseFileUpdateFailed = NSLocalizedString(
+        "[Database/ExternalChange/Status/failed]",
+        bundle: Bundle.framework,
+        value: "Refresh failed",
+        comment: "Status message: failed to check if currently loaded database is the latest version"
+    )
+    public static let statusDatabaseFileIsUpToDate = NSLocalizedString(
+        "[Database/ExternalChange/Status/upToDate]",
+        bundle: Bundle.framework,
+        value: "Up to date",
+        comment: "Status message: currently loaded database is the latest version"
+    )
+
+    public static let databaseChangedExternallyMessage = NSLocalizedString(
+        "[Database/ExternalChange/notification]",
+        bundle: Bundle.framework,
+        value: "Database file has changed. Reload?",
+        comment: "Notification message about external changes to the loaded file."
+    )
 }
 // swiftlint:enable line_length

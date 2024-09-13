@@ -9,6 +9,20 @@
 import UIKit
 
 extension URL {
+    public enum Prefs {
+        private static let autoFillPreferencesURL_macOS =
+            URL(string: "x-apple.systempreferences:com.apple.Passwords-Settings.extension?Options")!
+
+        private static let autoFillPreferencesURL_iOS = URL(string: "App-prefs:PASSWORDS&path=PASSWORD_OPTIONS")!
+
+        public static var autoFillPreferences: URL {
+            if ProcessInfo.isRunningOnMac {
+                return autoFillPreferencesURL_macOS
+            } else {
+                return autoFillPreferencesURL_iOS
+            }
+        }
+    }
     public enum AppHelp {
         public static let helpIndex = URL(string: "https://keepassium.com/apphelp/")!
 
@@ -37,14 +51,18 @@ extension URL {
 
         public static let yubikeySetup = URL(string: "https://keepassium.com/apphelp/yubikey-setup/")!
 
-        public static let invalidDatabasePassword = URL(string: "https://keepassium.com/apphelp/invalid-database-password/")!
-
         public static let databaseFileIsInTrashWarning = URL(string: "https://keepassium.com/apphelp/database-recently-deleted-warning/")!
         public static let temporaryBackupDatabaseWarning = URL(string: "https://keepassium.com/apphelp/temporary-backup-database-warning/")!
 
         public static let hibpMoreInfoURLString = "https://www.troyhunt.com/ive-just-launched-pwned-passwords-version-2/#cloudflareprivacyandkanonymity"
 
         public static let smartGroups = URL(string: "https://keepassium.com/apphelp/smart-groups/")!
+
+        public static let linkedDatabases = URL(string: "https://keepassium.com/apphelp/linked-databases/")!
+
+        public static let invalidDatabasePassword = URL(string: "https://keepassium.com/apphelp/invalid-database-password/")!
+        public static let fileDoesNotExist = URL(string: "https://keepassium.com/apphelp/does-not-exist/")!
+        public static let fileProviderUnresponsive = URL(string: "https://keepassium.com/apphelp/file-provider-unresponsive/")!
     }
 
 }
