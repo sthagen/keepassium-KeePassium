@@ -34,6 +34,7 @@ final class EntryViewerPagesVC: UIViewController, Refreshable {
     private var entryIcon: UIImage?
     private var resolvedEntryTitle = ""
     private var isEntryExpired = false
+    private var hasAttachments = false
     private var entryLastModificationTime = Date.distantPast
 
     private var titleView = DatabaseItemTitleView()
@@ -60,10 +61,7 @@ final class EntryViewerPagesVC: UIViewController, Refreshable {
             pagesViewController.dataSource = self
         }
 
-        pageSelector.setTitle(LString.titleEntryTabGeneral, forSegmentAt: 0)
-        pageSelector.setTitle(LString.titleEntryTabFiles, forSegmentAt: 1)
-        pageSelector.setTitle(LString.titleEntryTabHistory, forSegmentAt: 2)
-        pageSelector.setTitle(LString.titleEntryTabMore, forSegmentAt: 3)
+        updateSegments()
 
         addChild(pagesViewController)
         pagesViewController.view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
@@ -71,6 +69,14 @@ final class EntryViewerPagesVC: UIViewController, Refreshable {
         containerView.addSubview(pagesViewController.view)
         pagesViewController.didMove(toParent: self)
 
+        registerForTraitChanges([
+            UITraitUserInterfaceStyle.self,
+            UITraitVerticalSizeClass.self,
+            UITraitHorizontalSizeClass.self,
+            UITraitPreferredContentSizeCategory.self
+        ]) { (self: Self, _) in
+            self.refresh()
+        }
         view.addInteraction(UIDropInteraction(delegate: self))
     }
 
@@ -101,18 +107,31 @@ final class EntryViewerPagesVC: UIViewController, Refreshable {
         }
     }
 
-    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-        super.traitCollectionDidChange(previousTraitCollection)
-        refresh()
+    private func updateSegments() {
+        pageSelector.setImage(
+            UIImage.symbol(.key, accessibilityLabel: LString.titleEntryTabGeneral),
+            forSegmentAt: 0)
+        pageSelector.setImage(
+            UIImage.symbol(
+                hasAttachments ? .paperclipBadgeEllipsis : .paperclip,
+                accessibilityLabel: LString.titleEntryTabFiles),
+            forSegmentAt: 1)
+        pageSelector.setImage(
+            UIImage.symbol(.clock, accessibilityLabel: LString.titleEntryTabHistory),
+            forSegmentAt: 2)
+        pageSelector.setImage(
+            UIImage.symbol(.ellipsis, accessibilityLabel: LString.titleEntryTabMore),
+            forSegmentAt: 3)
     }
 
-    public func setContents(from entry: Entry, isHistoryEntry: Bool, canEditEntry: Bool) {
+    public func setContents(from entry: Entry, hasAttachments: Bool, isHistoryEntry: Bool, canEditEntry: Bool) {
         entryIcon = UIImage.kpIcon(forEntry: entry)
         resolvedEntryTitle = entry.resolvedTitle
         isEntryExpired = entry.isExpired
         entryLastModificationTime = entry.lastModificationTime
         self.isHistoryEntry = isHistoryEntry
         self.canEditEntry = canEditEntry
+        self.hasAttachments = hasAttachments
         refresh()
     }
 
@@ -166,6 +185,7 @@ final class EntryViewerPagesVC: UIViewController, Refreshable {
 
     func refresh() {
         guard isViewLoaded else { return }
+        updateSegments()
         titleView.titleLabel.setText(resolvedEntryTitle, strikethrough: isEntryExpired)
         titleView.iconView.image = entryIcon
         if isHistoryEntry {

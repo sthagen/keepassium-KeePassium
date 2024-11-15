@@ -12,31 +12,25 @@ import Zxcvbn
 private let zxcvbn = DBZxcvbn()
 
 extension ManagedAppConfig {
-    func isAcceptable(databasePassword: String) -> Bool {
-        guard let minRequredEntropy = ManagedAppConfig.shared.minimumDatabasePasswordEntropy else {
-            return true
+    func isAcceptableDatabasePassword(length: Int, entropy: Float) -> Bool {
+        var isGoodEnough = true
+        if let minRequredEntropy = ManagedAppConfig.shared.minimumDatabasePasswordEntropy {
+            isGoodEnough = isGoodEnough && entropy >= Float(minRequredEntropy)
         }
-        guard let entropyString = zxcvbn.passwordStrength(databasePassword).entropy,
-              let entropy = Float(entropyString)
-        else {
-            Diag.warning("Failed to estimate password complexity")
-            assertionFailure()
-            return false
+        if let minRequiredLength = ManagedAppConfig.shared.minimumDatabasePasswordLength {
+            isGoodEnough = isGoodEnough && length >= minRequiredLength
         }
-        return entropy >= Float(minRequredEntropy)
+        return isGoodEnough
     }
 
-    func isAcceptable(appPasscode: String) -> Bool {
-        guard let minRequiredEntropy = ManagedAppConfig.shared.minimumAppPasscodeEntropy else {
-            return true
+    func isAcceptableAppPasscode(length: Int, entropy: Float) -> Bool {
+        var isGoodEnough = true
+        if let minRequiredEntropy = ManagedAppConfig.shared.minimumAppPasscodeEntropy {
+            isGoodEnough = isGoodEnough && entropy >= Float(minRequiredEntropy)
         }
-        guard let entropyString = zxcvbn.passwordStrength(appPasscode).entropy,
-              let entropy = Float(entropyString)
-        else {
-            Diag.warning("Failed to estimate passcode complexity")
-            assertionFailure()
-            return false
+        if let minRequiredLength = ManagedAppConfig.shared.minimumAppPasscodeLength {
+            isGoodEnough = isGoodEnough && length >= minRequiredLength
         }
-        return entropy >= Float(minRequiredEntropy)
+        return isGoodEnough
     }
 }

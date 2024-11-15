@@ -40,21 +40,6 @@ final public class QuickTypeAutoFillStorage {
         }
     }
 
-    public static func removeIdentities(in databaseFile: DatabaseFile) {
-        let identities = getCredentialIdentities(from: databaseFile)
-        removeIdentities(identities)
-    }
-
-    public static func removeIdentities(_ identities: [ASPasswordCredentialIdentity]) {
-        ASCredentialIdentityStore.shared.removeCredentialIdentities(identities) { success, error in
-            if let error = error {
-                Diag.error("Failed to remove QuickType AutoFill data [message: \(error.localizedDescription)]")
-            } else {
-                Diag.debug("QuickType AutoFill data removed")
-            }
-        }
-    }
-
     static func saveIdentities(from databaseFile: DatabaseFile, replaceExisting: Bool) {
         guard Settings.current.isQuickTypeEnabled else {
             Diag.debug("QuickType AutoFill disabled, skipping")
@@ -75,7 +60,7 @@ final public class QuickTypeAutoFillStorage {
                 }
             }
             if replaceExisting {
-                store.replaceCredentialIdentities(with: identities, completion: completion)
+                store.replaceCredentialIdentities(identities, completion: completion)
             } else {
                 store.saveCredentialIdentities(identities, completion: completion)
             }
@@ -84,8 +69,8 @@ final public class QuickTypeAutoFillStorage {
 
     private static func getCredentialIdentities(
         from databaseFile: DatabaseFile
-    ) -> [ASPasswordCredentialIdentity] {
-        var result = [ASPasswordCredentialIdentity]()
+    ) -> [ASCredentialIdentity] {
+        var result = [ASCredentialIdentity]()
         let rootGroup = databaseFile.database.root
         rootGroup?.applyToAllChildren(groupHandler: nil, entryHandler: { entry in
             let parentGroup2 = entry.parent as? Group2
@@ -97,14 +82,21 @@ final public class QuickTypeAutoFillStorage {
             if entry.isDeleted || entry.isHiddenFromSearch || entry.isExpired {
                 return
             }
+
+            let record = QuickTypeAutoFillRecord(context: databaseFile, itemID: entry.uuid)
+            let recordID = record.recordIdentifier
             if let serviceIDs = entry.extractSearchableData()?.toCredentialServiceIdentifiers() {
-                let recordID = QuickTypeAutoFillRecord(context: databaseFile, itemID: entry.uuid)
-                let entryCredentialIdentities = makeCredentialIdentities(
+                 let passwordAndOTPIdentities = makeCredentialIdentities(
                     userName: "\(entry.resolvedUserName) | \(entry.resolvedTitle)",
                     services: serviceIDs,
-                    record: recordID
+                    containsTOTP: entry.containsTOTP,
+                    recordID: recordID
                 )
-                result.append(contentsOf: entryCredentialIdentities)
+                result.append(contentsOf: passwordAndOTPIdentities)
+            }
+            if let passkey = Passkey.make(from: entry) {
+                let passkeyCredentialIdentity = passkey.asCredentialIdentity(recordIdentifier: recordID)
+                result.append(passkeyCredentialIdentity)
             }
         })
         return result
@@ -113,19 +105,33 @@ final public class QuickTypeAutoFillStorage {
     private static func makeCredentialIdentities(
         userName: String,
         services: [ASCredentialServiceIdentifier],
-        record: QuickTypeAutoFillRecord
-    ) -> [ASPasswordCredentialIdentity] {
+        containsTOTP: Bool,
+        recordID: String
+    ) -> [ASCredentialIdentity] {
         guard userName.isNotEmpty else {
             return []
         }
-        let recordIdentifier = record.toString()
-        return services.map {
+
+        var result = [ASCredentialIdentity]()
+        result.append(contentsOf: services.map {
             ASPasswordCredentialIdentity(
                 serviceIdentifier: $0,
                 user: userName,
-                recordIdentifier: recordIdentifier
+                recordIdentifier: recordID
             )
+        })
+        if #available(iOS 18.0, *),
+            containsTOTP
+        {
+            result.append(contentsOf: services.map {
+                ASOneTimeCodeCredentialIdentity(
+                    serviceIdentifier: $0,
+                    label: userName,
+                    recordIdentifier: recordID
+                )
+            })
         }
+        return result
     }
 }
 
@@ -173,5 +179,9 @@ extension Entry {
         result.addAll(urls: customURLs)
 
         return result
+    }
+
+    fileprivate var containsTOTP: Bool {
+        return TOTPGeneratorFactory.makeGenerator(for: self) != nil
     }
 }

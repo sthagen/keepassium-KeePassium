@@ -19,10 +19,22 @@ class ProtectedTextField: ValidatingTextField {
     private var originalContentType: UITextContentType?
     private var originalAutocorrectionType: UITextAutocorrectionType = .default
 
+    private var qualityIndicator: UIProgressView!
+
+    public var quality: PasswordQuality? {
+        didSet {
+            updateQualityIndicator()
+        }
+    }
+
     override var isSecureTextEntry: Bool {
         didSet {
             toggleButton?.isSelected = !isSecureTextEntry
         }
+    }
+    var isToggleEnabled: Bool {
+        get { toggleButton.isEnabled }
+        set { toggleButton.isEnabled = newValue }
     }
 
     override init(frame: CGRect) {
@@ -51,6 +63,8 @@ class ProtectedTextField: ValidatingTextField {
         buttonConfig.imagePadding = 2
         buttonConfig.imageReservation = 32
         buttonConfig.baseBackgroundColor = .clear
+        buttonConfig.background.backgroundColor = .clear
+        buttonConfig.background.backgroundColorTransformer = nil
         buttonConfig.imagePlacement = .all
         buttonConfig.preferredSymbolConfigurationForImage = .init(textStyle: .body, scale: .medium)
         toggleButton = UIButton(configuration: buttonConfig)
@@ -74,6 +88,34 @@ class ProtectedTextField: ValidatingTextField {
         self.rightViewMode = .always
     }
 
+    private func updateQualityIndicator() {
+        guard let quality else {
+            qualityIndicator?.removeFromSuperview()
+            qualityIndicator = nil
+            return
+        }
+
+        if qualityIndicator == nil {
+            qualityIndicator = UIProgressView(frame: .zero)
+            qualityIndicator.trackTintColor = .clear
+            qualityIndicator.translatesAutoresizingMaskIntoConstraints = false
+            addSubview(qualityIndicator)
+
+            let d = ProcessInfo.isRunningOnMac ? 4.0 : 2.0
+            NSLayoutConstraint.activate([
+                qualityIndicator.leadingAnchor.constraint(equalTo: leadingAnchor, constant: d),
+                qualityIndicator.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -d),
+                qualityIndicator.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -d),
+                qualityIndicator.heightAnchor.constraint(equalToConstant: d),
+            ])
+        }
+        qualityIndicator.progressTintColor = quality.strengthColor
+        qualityIndicator.progress = min(
+            Float(quality.entropy) / Float(PasswordQuality.highestEntropyCutoff),
+            1.0
+        )
+    }
+
     override func rightViewRect(forBounds bounds: CGRect) -> CGRect {
         return CGRect(
             x: bounds.maxX - hideImage.size.width - 2 * horizontalInsets,
@@ -93,9 +135,6 @@ class ProtectedTextField: ValidatingTextField {
     }
 
     func allowAutoFillPrompt(_ allowed: Bool) {
-        guard #available(iOS 12, *) else {
-            return
-        }
         if allowed {
             if textContentType == .oneTimeCode {
                 textContentType = originalContentType

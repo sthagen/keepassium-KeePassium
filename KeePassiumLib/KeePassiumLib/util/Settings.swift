@@ -114,6 +114,8 @@ public class Settings {
         case hideAppLockSetupReminder
         case textScale
         case entryTextFontDescriptor
+
+        case keyFileEntryProtected
     }
 
     fileprivate enum Notifications {
@@ -1344,7 +1346,12 @@ public class Settings {
             let stored = UserDefaults.appGroupShared
                 .object(forKey: Keys.copyTOTPOnAutoFill.rawValue)
                 as? Bool
-            return stored ?? true
+
+            if #available(iOS 18, *) {
+                return stored ?? false
+            } else {
+                return stored ?? true
+            }
         }
         set {
             updateAndNotify(
@@ -1420,7 +1427,7 @@ public class Settings {
 
     public var isHideAppLockSetupReminder: Bool {
         get {
-            if let managedValue = ManagedAppConfig.shared.getBoolIfLicensed(.hideAppLockSetupReminder) {
+            if let managedValue = ManagedAppConfig.shared.isHideAppProtectionReminder {
                 return managedValue
             }
             let stored = UserDefaults.appGroupShared
@@ -1534,6 +1541,23 @@ public class Settings {
         }
     }
 
+    public var isKeyFileInputProtected: Bool {
+        get {
+            if let managedValue = ManagedAppConfig.shared.getBoolIfLicensed(.protectKeyFileInput) {
+                return managedValue
+            }
+            let stored = UserDefaults.appGroupShared
+                .object(forKey: Keys.keyFileEntryProtected.rawValue) as? Bool
+            return stored ?? true
+        }
+        set {
+            updateAndNotify(
+                oldValue: isKeyFileInputProtected,
+                newValue: newValue,
+                key: .keyFileEntryProtected
+            )
+        }
+    }
 
     private init() {
         #if DEBUG
