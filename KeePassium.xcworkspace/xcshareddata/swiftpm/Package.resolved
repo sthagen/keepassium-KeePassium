@@ -1,5 +1,5 @@
 {
-  "originHash" : "aa8541a92cdf3aae03bb03172ea3bc1f1cd2f8e2cfdfe17862541d1cdb83a158",
+  "originHash" : "7f5b2f481ce083b4b27ca9bfc941bdd488b028105752a5a62d1afca50f3a5f43",
   "pins" : [
     {
       "identity" : "asn1swift",
@@ -15,8 +15,17 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/keepassium/microsoft-authentication-library-for-objc/",
       "state" : {
-        "branch" : "keepassium-155",
-        "revision" : "b0ef73fa18ec203ac08dcaa1367c4e6af5334a9a"
+        "branch" : "keepassium-156",
+        "revision" : "091019691f11d87ac9a06e31c7ce3f5f5ed91f8f"
+      }
+    },
+    {
+      "identity" : "swiftcbor",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/keepassium/SwiftCBOR.git",
+      "state" : {
+        "branch" : "keepassium-156",
+        "revision" : "04ccff117f6549121d5721ec84fdf0162122b90e"
       }
     },
     {
@@ -42,8 +51,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/keepassium/yubikit-ios.git",
       "state" : {
-        "branch" : "keepassium",
-        "revision" : "9c710563699a087a233b4659039c9a65f080d1dc"
+        "branch" : "keepassium-156",
+        "revision" : "36537977b644dc70155fbe9862835eb6b82b303b"
       }
     },
     {
