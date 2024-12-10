@@ -18,8 +18,10 @@ protocol EntryFinderCoordinatorDelegate: AnyObject {
 
     func didPressReinstateDatabase(_ fileRef: URLReference, in coordinator: EntryFinderCoordinator)
 
-    @available(iOS 18, *)
-    func didPressCreatePasskey(with params: PasskeyRegistrationParams, in coordinator: EntryFinderCoordinator)
+    func didPressCreatePasskey(
+        with params: PasskeyRegistrationParams,
+        presenter: UIViewController,
+        in coordinator: EntryFinderCoordinator)
 }
 
 final class EntryFinderCoordinator: Coordinator {
@@ -116,18 +118,8 @@ extension EntryFinderCoordinator {
     }
 
     private func updateCallerID() {
-        if serviceIdentifiers.isEmpty {
-            entryFinderVC.callerID = nil
-            return
-        }
-
-        var callerID = serviceIdentifiers
-            .map { $0.identifier }
-            .joined(separator: " | ")
-        if let passkeyRelyingParty {
-            callerID += "\nrpID: \(passkeyRelyingParty)"
-        }
-        entryFinderVC.callerID = callerID
+        let serviceID = serviceIdentifiers.first?.identifier
+        entryFinderVC.callerID = serviceID ?? passkeyRelyingParty
     }
 
     private func showInitialMessages() {
@@ -137,11 +129,6 @@ extension EntryFinderCoordinator {
         }
 
         if let passkeyRegistrationParams {
-            guard #available(iOS 18, *) else {
-                Diag.error("Tried to register passkey before iOS 18")
-                assertionFailure()
-                return
-            }
             showPasskeyRegistration(passkeyRegistrationParams)
         }
     }
@@ -163,13 +150,14 @@ extension EntryFinderCoordinator {
             database: database,
             serviceIdentifiers: serviceIdentifiers,
             passkeyRelyingParty: passkeyRelyingParty)
-        if results.isEmpty {
+        if results.isEmpty && autoFillMode != .passkeyRegistration {
             entryFinderVC.activateManualSearch(query: autoFillMode?.query)
             return
         }
 
         if let perfectMatch = results.perfectMatch,
-           Settings.current.autoFillPerfectMatch
+           Settings.current.autoFillPerfectMatch,
+           autoFillMode != .passkeyRegistration
         {
             delegate?.didSelectEntry(perfectMatch, in: self)
         } else {
@@ -185,7 +173,6 @@ extension EntryFinderCoordinator {
         entryFinderVC.setSearchResults(searchResults)
     }
 
-    @available(iOS 18, *)
     private func showPasskeyRegistration(_ params: PasskeyRegistrationParams) {
         let creatorVC = PasskeyCreatorVC.make(with: params)
         creatorVC.modalPresentationStyle = .pageSheet
@@ -293,11 +280,11 @@ extension EntryFinderCoordinator: EntryFinderDelegate {
     }
 }
 
-@available(iOS 18, *)
 extension EntryFinderCoordinator: PasskeyCreatorDelegate {
     func didPressCreatePasskey(with params: PasskeyRegistrationParams, in viewController: PasskeyCreatorVC) {
-        viewController.dismiss(animated: true)
-        delegate?.didPressCreatePasskey(with: params, in: self)
+        viewController.dismiss(animated: true) { [self] in
+            delegate?.didPressCreatePasskey(with: params, presenter: entryFinderVC, in: self)
+        }
     }
 }
 

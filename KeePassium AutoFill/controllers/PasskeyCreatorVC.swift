@@ -9,12 +9,10 @@
 import KeePassiumLib
 import UIKit
 
-@available(iOS 18, *)
 protocol PasskeyCreatorDelegate: AnyObject {
     func didPressCreatePasskey(with params: PasskeyRegistrationParams, in viewController: PasskeyCreatorVC)
 }
 
-@available(iOS 18, *)
 final class PasskeyCreatorVC: UIViewController {
     @IBOutlet private weak var titleLabel: UILabel!
     @IBOutlet private weak var relyingPartyLabel: UILabel!
@@ -51,6 +49,11 @@ final class PasskeyCreatorVC: UIViewController {
         secondaryButton.isEnabled = false
     }
 
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        becomeFirstResponder()
+    }
+
     func detents() -> [UISheetPresentationController.Detent] {
         let customDetent = UISheetPresentationController.Detent.custom(identifier: .init("detent")) { _ in
             self.secondaryButton.frame.maxY + 16
@@ -73,5 +76,10 @@ extension LString {
         "[Database/Passkey/AddToExisting/action]",
         value: "Add Passkey to Existing Entry",
         comment: "Action: create a passkey and add it to existing entry"
+    )
+    public static let titleConfirmReplacingExistingPasskey = NSLocalizedString(
+        "[Database/Passkey/AddToExisting/confirm]",
+        value: "This entry already has a passkey. Replace it?",
+        comment: "Confirmation message before replacing an existing passkey."
     )
 }

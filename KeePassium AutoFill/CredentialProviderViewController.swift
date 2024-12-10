@@ -15,7 +15,7 @@ class CredentialProviderViewController: ASCredentialProviderViewController {
     var autoFillCoordinator: AutoFillCoordinator! 
 
     override func viewDidLoad() {
-        log.trace("I live again /3")
+        log.trace("I live again /6")
         super.viewDidLoad()
         autoFillCoordinator = AutoFillCoordinator(rootController: self, context: extensionContext)
     }
@@ -26,10 +26,6 @@ class CredentialProviderViewController: ASCredentialProviderViewController {
         autoFillCoordinator?.cleanup()
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        autoFillCoordinator?.handleMemoryWarning()
-    }
 }
 
 extension CredentialProviderViewController {

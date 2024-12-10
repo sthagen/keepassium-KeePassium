@@ -35,9 +35,10 @@ final class EntryFinderCell: UITableViewCell {
 
     private var theButton: UIButton!
 
-    @IBOutlet weak var titleLabel: UILabel!
-    @IBOutlet weak var subtitleLabel: UILabel!
-    @IBOutlet weak var iconView: UIImageView!
+    @IBOutlet private weak var titleLabel: UILabel!
+    @IBOutlet private weak var subtitleLabel: UILabel!
+    @IBOutlet private weak var iconView: UIImageView!
+    @IBOutlet private weak var passkeyIndicator: UIImageView!
 
     fileprivate var entry: Entry? {
         didSet {
@@ -45,11 +46,13 @@ final class EntryFinderCell: UITableViewCell {
                 titleLabel?.text = ""
                 subtitleLabel?.text = ""
                 iconView?.image = nil
+                passkeyIndicator.setVisible(false)
                 return
             }
             titleLabel?.text = entry.getField(EntryField.title)?.decoratedResolvedValue
             subtitleLabel?.text = entry.getField(EntryField.userName)?.decoratedResolvedValue
             iconView?.image = UIImage.kpIcon(forEntry: entry)
+            passkeyIndicator.setVisible(Passkey.probablyPresent(in: entry))
         }
     }
 
@@ -171,7 +174,7 @@ final class EntryFinderVC: UITableViewController {
         callerIDView.copyButton.isHidden = !hasCallerID
         let callerIDText = self.callerID ?? "?"
         callerIDView.textLabel.text = String.localizedStringWithFormat(
-            LString.autoFillCallerIDTemplate,
+            LString.autoFillContextTemplate,
             callerIDText
         )
         callerIDView.copyHandler = { (view: CallerIDView) in
@@ -502,10 +505,15 @@ extension EntryFinderVC: UISearchResultsUpdating {
 
 extension LString {
     // swiftlint:disable line_length
+
     public static let autoFillCallerIDTemplate = NSLocalizedString(
         "[AutoFill/Search/callerID]",
         value: "Caller ID: %@",
         comment: "An identifier of the app that called AutoFill. The term is intentionally similar to https://ru.wikipedia.org/wiki/Caller_ID. [callerID: String]")
+    public static let autoFillContextTemplate = NSLocalizedString(
+        "[AutoFill/Search/context]",
+        value: "Context: %@",
+        comment: "Status message, shows which app or webpage launched AutoFill. For example: `Context: google.com`")
 
     public static let callToActionSelectField = NSLocalizedString(
         "[AutoFill/InsertText/select]",

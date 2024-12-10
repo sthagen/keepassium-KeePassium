@@ -316,6 +316,12 @@ extension LString {
         value: "Search",
         comment: "Title of a search field (a noun, not verb)"
     )
+    public static let titleFileExport = NSLocalizedString(
+        "[Generic/File/Export/title]",
+        bundle: Bundle.framework,
+        value: "File Export",
+        comment: "Title of a generic file export screen."
+    )
     public static let titleFileImportError = NSLocalizedString(
         "[Generic/File/title] Import Error",
         bundle: Bundle.framework,
@@ -520,6 +526,12 @@ extension LString {
         value: "Lock Database",
         comment: "Action/button to lock current database (the next time, it will ask for the master key)."
     )
+    public static let titlePlainTextDatabaseExport = NSLocalizedString(
+        "[Database/Export/PlainText/warning]",
+        bundle: Bundle.framework,
+        value: "The exported file will contain your data in plaintext, without any protection.",
+        comment: "Notification message before database export."
+    )
 
     public static let actionChangeMasterKey = NSLocalizedString(
         "[Database/MasterKey/Change/action]",
@@ -630,6 +642,12 @@ extension LString {
         bundle: Bundle.framework,
         value: "Entries with OTP",
         comment: "Title of a list: entries with one-time passwords (OTP)"
+    )
+    public static let titleSmartGroupPasskeyEntries = NSLocalizedString(
+        "[Group/Smart/Preset/passkeyEntries]",
+        bundle: Bundle.framework,
+        value: "Entries with Passkeys",
+        comment: "Title of a list: entries that contain passkeys"
     )
     public static let titleSmartGroupExpiredEntries = NSLocalizedString(
         "[Group/Smart/Preset/expiredEntries]",
@@ -779,6 +797,12 @@ extension LString {
         bundle: Bundle.framework,
         value: "Password",
         comment: "Name of an entry field"
+    )
+    public static let fieldPasskey = NSLocalizedString(
+        "[Entry/Field/name] Passkey",
+        bundle: Bundle.framework,
+        value: "Passkey",
+        comment: "Title of an entry field"
     )
     public static let fieldURL = NSLocalizedString(
         "[Entry/Field/name] URL",

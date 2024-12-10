@@ -100,6 +100,8 @@ extension SearchQuery {
             case entry
             case group
             case expired
+            case passkey
+            case large
         }
 
         private let qualifier: Qualifier
@@ -128,6 +130,12 @@ extension SearchQuery {
                 return (searchable is Group)
             case .expired:
                 return searchable.isExpired
+            case .passkey:
+                guard let entry = searchable as? Entry else { return false }
+                return Passkey.probablyPresent(in: entry)
+            case .large:
+                let underestimatedSize = searchable.getUnderestimatedSize()
+                return underestimatedSize > 100_000
             }
         }
     }

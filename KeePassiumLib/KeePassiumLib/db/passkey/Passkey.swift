@@ -43,8 +43,8 @@ public class Passkey {
 
     let credentialID: Data
     private(set) var privateKeyPEM: String
-    let relyingParty: String
-    let username: String
+    public let relyingParty: String
+    public let username: String
     let userHandle: Data
 
     init(
@@ -88,6 +88,29 @@ public class Passkey {
             username: username,
             userHandle: userHandle
         )
+    }
+
+    public static func probablyPresent(in entry: Entry) -> Bool {
+        guard let entry2 = entry as? Entry2 else { return false }
+
+        guard let credentialID = entry2.getField(EntryField.passkeyCredentialID)?.resolvedValue,
+              let privateKeyPEM = entry2.getField(EntryField.passkeyPrivateKeyPEM)?.resolvedValue,
+              let relyingParty = entry2.getField(EntryField.passkeyRelyingParty)?.resolvedValue,
+              let userHandle = entry2.getField(EntryField.passkeyUserHandle)?.resolvedValue,
+              let username = entry2.getField(EntryField.passkeyUsername)?.resolvedValue
+        else {
+            return false
+        }
+
+        guard credentialID.isNotEmpty,
+              privateKeyPEM.isNotEmpty,
+              relyingParty.isNotEmpty,
+              userHandle.isNotEmpty,
+              username.isNotEmpty
+        else {
+            return false
+        }
+        return true
     }
 
     public func asCredentialIdentity(recordIdentifier: String?) -> ASPasskeyCredentialIdentity {
@@ -245,7 +268,6 @@ public class NewPasskey: Passkey {
             userHandle: params.identity.userHandle)
     }
 
-    @available(iOS 18.0, *)
     public func makeRegistrationCredential(clientDataHash: Data) -> ASPasskeyRegistrationCredential {
         let attestationObject = makeAttestationObject()
         let credential = ASPasskeyRegistrationCredential(
