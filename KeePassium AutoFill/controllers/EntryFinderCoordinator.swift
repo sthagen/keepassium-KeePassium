@@ -20,6 +20,7 @@ protocol EntryFinderCoordinatorDelegate: AnyObject {
 
     func didPressCreatePasskey(
         with params: PasskeyRegistrationParams,
+        target entry: Entry?,
         presenter: UIViewController,
         in coordinator: EntryFinderCoordinator)
 }
@@ -43,6 +44,7 @@ final class EntryFinderCoordinator: Coordinator {
     private var passkeyRelyingParty: String?
     private let passkeyRegistrationParams: PasskeyRegistrationParams?
     private let searchHelper = SearchHelper()
+    private var isSelectingPasskeyCreationTarget = false
 
     private let vcAnimationDuration = 0.3
 
@@ -174,6 +176,10 @@ extension EntryFinderCoordinator {
     }
 
     private func showPasskeyRegistration(_ params: PasskeyRegistrationParams) {
+        guard !databaseFile.status.contains(.readOnly) else {
+            Diag.warning("Database is read-only, cancelling")
+            return
+        }
         let creatorVC = PasskeyCreatorVC.make(with: params)
         creatorVC.modalPresentationStyle = .pageSheet
         creatorVC.delegate = self
@@ -192,7 +198,13 @@ extension EntryFinderCoordinator {
         if databaseFile.status.contains(.localFallback) {
             announcements.append(makeFallbackDatabaseAnnouncement(for: entryFinderVC))
         }
-        if let qafAnnouncment = maybeMakeQuickAutoFillAnnouncment(for: entryFinderVC) {
+        if databaseFile.status.contains(.readOnly) {
+            announcements.append(makeReadOnlyDatabaseAnnouncement(for: entryFinderVC))
+        }
+
+        if announcements.isEmpty,
+           let qafAnnouncment = maybeMakeQuickAutoFillAnnouncment(for: entryFinderVC)
+        {
             announcements.append(qafAnnouncment)
         }
         entryFinderVC.refreshAnnouncements()
@@ -246,6 +258,17 @@ extension EntryFinderCoordinator {
         )
         return announcement
     }
+
+    private func makeReadOnlyDatabaseAnnouncement(
+        for viewController: EntryFinderVC
+    ) -> AnnouncementItem {
+        return AnnouncementItem(
+            title: nil,
+            body: LString.databaseIsReadOnly,
+            actionTitle: nil,
+            image: nil
+        )
+    }
 }
 
 extension EntryFinderCoordinator: EntryFinderDelegate {
@@ -263,7 +286,20 @@ extension EntryFinderCoordinator: EntryFinderDelegate {
     }
 
     func didSelectEntry(_ entry: Entry, in viewController: EntryFinderVC) {
-        delegate?.didSelectEntry(entry, in: self)
+        if isSelectingPasskeyCreationTarget {
+            guard let passkeyRegistrationParams else {
+                assertionFailure()
+                return
+            }
+            delegate?.didPressCreatePasskey(
+                with: passkeyRegistrationParams,
+                target: entry,
+                presenter: viewController,
+                in: self
+            )
+        } else {
+            delegate?.didSelectEntry(entry, in: self)
+        }
     }
 
     func didPressLockDatabase(in viewController: EntryFinderVC) {
@@ -283,8 +319,16 @@ extension EntryFinderCoordinator: EntryFinderDelegate {
 extension EntryFinderCoordinator: PasskeyCreatorDelegate {
     func didPressCreatePasskey(with params: PasskeyRegistrationParams, in viewController: PasskeyCreatorVC) {
         viewController.dismiss(animated: true) { [self] in
-            delegate?.didPressCreatePasskey(with: params, presenter: entryFinderVC, in: self)
+            delegate?.didPressCreatePasskey(with: params, target: nil, presenter: entryFinderVC, in: self)
         }
+    }
+    func didPressAddPasskeyToEntry(
+        with params: PasskeyRegistrationParams,
+        in viewController: PasskeyCreatorVC
+    ) {
+        viewController.dismiss(animated: true)
+        isSelectingPasskeyCreationTarget = true
+        entryFinderVC.setPasskeyTargetSelectionMode()
     }
 }
 

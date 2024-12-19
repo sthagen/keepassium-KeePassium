@@ -26,7 +26,11 @@ class AutoFillCoordinator: NSObject, Coordinator {
     let extensionContext: ASCredentialProviderExtensionContext
     var router: NavigationRouter
 
-    var autoFillMode: AutoFillMode?
+    var autoFillMode: AutoFillMode? {
+        didSet {
+            Diag.debug("Mode: \(autoFillMode?.debugDescription ?? "nil")")
+        }
+    }
 
     private var hasUI = false
     private var isServicesInitialized = false
@@ -202,7 +206,8 @@ class AutoFillCoordinator: NSObject, Coordinator {
         #endif
 
         if Settings.current.isAutoFillFinishedOK {
-            databasePickerCoordinator.shouldSelectDefaultDatabase = true
+            let areLocalFilesAvailable = FileKeeper.shared.canActuallyAccessAppSandbox
+            databasePickerCoordinator.shouldSelectDefaultDatabase = areLocalFilesAvailable
         } else {
             showCrashReport()
         }
@@ -225,7 +230,7 @@ class AutoFillCoordinator: NSObject, Coordinator {
 
 extension AutoFillCoordinator {
     private func isNeedsOnboarding() -> Bool {
-        if FileKeeper.canAccessAppSandbox {
+        if FileKeeper.canPossiblyAccessAppSandbox {
             return false
         }
 
@@ -361,7 +366,12 @@ extension AutoFillCoordinator {
         }
     }
 
-    func registerPasskey(with params: PasskeyRegistrationParams, in databaseFile: DatabaseFile) {
+    private func startPasskeyRegistration(
+        with params: PasskeyRegistrationParams,
+        target entry: Entry?,
+        in databaseFile: DatabaseFile,
+        presenter: UIViewController
+    ) {
         let presenter = router.navigationController
         guard let db2 = databaseFile.database as? Database2,
               let rootGroup = db2.root as? Group2
@@ -379,11 +389,51 @@ extension AutoFillCoordinator {
             presenter.showErrorAlert(error.localizedDescription)
             return
         }
-        _ = rootGroup.createPasskeyEntry(with: passkey)
-        Settings.current.isAutoFillFinishedOK = false
-        saveDatabase(databaseFile, onSuccess: { [weak self, passkey] in
-            self?.returnPasskeyRegistration(passkey: passkey)
-        })
+
+        guard let targetEntry = entry as? Entry2 else {
+            Diag.debug("Creating a new passkey entry")
+            _ = rootGroup.createPasskeyEntry(with: passkey)
+            finishPasskeyRegistration(passkey, in: databaseFile, presenter: presenter)
+            return
+        }
+        guard let _ = Passkey.make(from: targetEntry) else {
+            Diag.debug("Adding passkey to existing entry")
+            db2.setPasskey(passkey, for: targetEntry)
+            finishPasskeyRegistration(passkey, in: databaseFile, presenter: presenter)
+            return
+        }
+
+        let overwriteConfirmationAlert = UIAlertController.make(
+            title: LString.fieldPasskey,
+            message: LString.titleConfirmReplacingExistingPasskey,
+            dismissButtonTitle: LString.actionCancel)
+        overwriteConfirmationAlert.addAction(
+            title: LString.actionReplace,
+            style: .destructive,
+            preferred: false,
+            handler: { [weak self, weak databaseFile, weak presenter] _ in
+                guard let self, let databaseFile, let presenter else { return }
+                Diag.debug("Replacing passkey in existing entry")
+                db2.setPasskey(passkey, for: targetEntry)
+                finishPasskeyRegistration(passkey, in: databaseFile, presenter: presenter)
+            }
+        )
+        presenter.present(overwriteConfirmationAlert, animated: true)
+    }
+
+    private func finishPasskeyRegistration(
+        _ passkey: NewPasskey,
+        in databaseFile: DatabaseFile,
+        presenter: UIViewController
+    ) {
+        maybeWarnAboutExcessiveMemory(presenter: presenter) { [weak self] in
+            guard let self else { return }
+
+            Settings.current.isAutoFillFinishedOK = false
+            saveDatabase(databaseFile, onSuccess: { [weak self, passkey] in
+                self?.returnPasskeyRegistration(passkey: passkey)
+            })
+        }
     }
 }
 
@@ -417,14 +467,16 @@ extension AutoFillCoordinator: DatabaseLoaderDelegate {
     }
 
     public func startPasskeyAssertionUI(
-        _ passkeyRequest: ASPasskeyCredentialRequestParameters,
+        allowPasswords: Bool,
+        clientDataHash: Data,
+        relyingParty: String,
         forServices serviceIdentifiers: [ASCredentialServiceIdentifier]
     ) {
         log.trace("Starting passkey assertion UI")
         self.serviceIdentifiers = serviceIdentifiers
-        self.autoFillMode = .passkeyAssertion
-        self.passkeyClientDataHash = passkeyRequest.clientDataHash
-        self.passkeyRelyingParty = passkeyRequest.relyingPartyIdentifier
+        self.autoFillMode = .passkeyAssertion(allowPasswords)
+        self.passkeyClientDataHash = clientDataHash
+        self.passkeyRelyingParty = relyingParty
         start()
     }
 
@@ -447,7 +499,7 @@ extension AutoFillCoordinator: DatabaseLoaderDelegate {
     ) {
         self.passkeyClientDataHash = clientDataHash
         self.passkeyRelyingParty = credentialIdentity.relyingPartyIdentifier
-        provideWithoutUI(forIdentity: credentialIdentity, mode: .passkeyAssertion)
+        provideWithoutUI(forIdentity: credentialIdentity, mode: .passkeyAssertion(false))
     }
 
     func provideWithoutUI(forIdentity credentialIdentity: ASCredentialIdentity, mode: AutoFillMode) {
@@ -541,8 +593,13 @@ extension AutoFillCoordinator {
                 assertionFailure()
                 cancelRequest(.failed)
             }
-        case .passkeyAssertion:
-            returnPasskeyAssertion(from: entry)
+        case .passkeyAssertion(let allowPasswords):
+            let passkeyReturned = maybeReturnPasskeyAssertion(from: entry)
+            guard passkeyReturned || allowPasswords else {
+                cancelRequest(.credentialIdentityNotFound)
+                return
+            }
+            returnCredentials(from: entry)
         default:
             let mode = autoFillMode?.debugDescription ?? "nil"
             log.error("Unexpected AutoFillMode value `\(mode, privacy: .public)`, cancelling")
@@ -644,25 +701,25 @@ extension AutoFillCoordinator {
         cleanup()
     }
 
-    private func returnPasskeyAssertion(from entry: Entry) {
+    private func maybeReturnPasskeyAssertion(from entry: Entry) -> Bool {
+        guard let passkeyClientDataHash else {
+            log.error("Passkey request parameters missing")
+            return false
+        }
+        guard let passkey = Passkey.make(from: entry) else {
+            log.error("Selected entry does not have passkeys")
+            return false
+        }
+        returnPasskeyAssertion(passkey: passkey, clientDataHash: passkeyClientDataHash)
+        return true
+    }
+
+    private func returnPasskeyAssertion(passkey: Passkey, clientDataHash: Data) {
         log.trace("Will return passkey")
         watchdog.restart()
-        guard let passkeyClientDataHash else {
-            log.error("Passkey request parameters unexpectedly missing, cancelling")
-            assertionFailure()
-            cancelRequest(.failed)
-            return
-        }
-
-        guard let passkey = Passkey.make(from: entry) else {
-            log.error("Selected entry does not have passkeys, cancelling")
-            assertionFailure()
-            cancelRequest(.credentialIdentityNotFound)
-            return
-        }
 
         guard let passkeyCredential =
-                passkey.makeAssertionCredential(clientDataHash: passkeyClientDataHash)
+                passkey.makeAssertionCredential(clientDataHash: clientDataHash)
         else {
             log.error("Failed to make passkey credential, cancelling")
             assertionFailure()
@@ -1085,13 +1142,16 @@ extension AutoFillCoordinator: EntryFinderCoordinatorDelegate {
 
     func didPressCreatePasskey(
         with params: PasskeyRegistrationParams,
+        target entry: Entry?,
         presenter: UIViewController,
         in coordinator: EntryFinderCoordinator
     ) {
-        maybeWarnAboutExcessiveMemory(presenter: presenter) { [weak self, weak coordinator] in
-            guard let self, let coordinator else { return }
-            registerPasskey(with: params, in: coordinator.databaseFile)
-        }
+        startPasskeyRegistration(
+            with: params,
+            target: entry,
+            in: coordinator.databaseFile,
+            presenter: presenter
+        )
     }
 }
 
