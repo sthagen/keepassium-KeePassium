@@ -77,15 +77,33 @@ final class MainCoordinator: UIResponder, Coordinator {
         window.rootViewController = rootSplitVC
 
         #if targetEnvironment(macCatalyst)
-        let titlebar = UIApplication.shared.currentScene?.titlebar
+        initMacUI()
+        #endif
+
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(handleShakeGesture),
+            name: UIDevice.deviceDidShakeNotification,
+            object: nil)
+    }
+
+#if targetEnvironment(macCatalyst)
+    private func initMacUI() {
+        guard let scene = UIApplication.shared.currentScene else {
+            assertionFailure()
+            return
+        }
         let toolbar = NSToolbar(identifier: "main")
         toolbarDelegate = ToolbarDelegate(mainCoordinator: self)
         toolbar.delegate = toolbarDelegate
         toolbar.displayMode = .iconOnly
+
+        let titlebar = scene.titlebar
         titlebar?.toolbar = toolbar
         titlebar?.toolbarStyle = .automatic
-        #endif
+        scene.sizeRestrictions?.minimumSize = CGSize(width: 400, height: 600)
     }
+#endif
 
     deinit {
         NotificationCenter.default.removeObserver(self)
@@ -362,8 +380,7 @@ extension MainCoordinator {
             return
         }
 
-        let dbUnlocker = showDatabaseUnlocker(databaseRef)
-        dbUnlocker.reloadingContext = context
+        let dbUnlocker = showDatabaseUnlocker(databaseRef, context: context)
         dbUnlocker.setDatabase(databaseRef)
     }
 
@@ -393,11 +410,16 @@ extension MainCoordinator {
         deallocateDatabaseUnlocker()
     }
 
-    private func showDatabaseUnlocker(_ databaseRef: URLReference) -> DatabaseUnlockerCoordinator {
+    private func showDatabaseUnlocker(
+        _ databaseRef: URLReference,
+        context: DatabaseReloadContext?
+    ) -> DatabaseUnlockerCoordinator {
         if let databaseUnlockerRouter = databaseUnlockerRouter {
             rootSplitVC.setDetailRouter(databaseUnlockerRouter)
             if let existingDBUnlocker = childCoordinators.first(where: { $0 is DatabaseUnlockerCoordinator }) {
-                return existingDBUnlocker as! DatabaseUnlockerCoordinator
+                let dbUnlocker = existingDBUnlocker as! DatabaseUnlockerCoordinator
+                dbUnlocker.reloadingContext = context
+                return dbUnlocker
             } else {
                 Diag.warning("Internal inconsistency: router without coordinator")
                 assertionFailure()
@@ -416,6 +438,7 @@ extension MainCoordinator {
             self?.databaseUnlockerRouter = nil
         }
         newDBUnlockerCoordinator.delegate = self
+        newDBUnlockerCoordinator.reloadingContext = context
         newDBUnlockerCoordinator.start()
         addChildCoordinator(newDBUnlockerCoordinator)
 
@@ -615,6 +638,56 @@ extension MainCoordinator {
             guard let self else { return }
             setDatabase(fileRef, autoOpenWith: context)
         }
+    }
+}
+
+extension MainCoordinator {
+    @objc private func handleShakeGesture() {
+        Diag.debug("Device shaken")
+        HapticFeedback.play(.deviceShaken)
+
+        let action = Settings.current.shakeGestureAction
+        switch action {
+        case .nothing:
+            break
+        case .lockAllDatabases:
+            maybeConfirmShakeAction(action) { [weak self] in
+                DatabaseSettingsManager.shared.eraseAllMasterKeys()
+                self?.lockDatabase()
+            }
+        case .lockApp:
+            guard Settings.current.isAppLockEnabled else {
+                Diag.debug("Nothing to lock, ignoring")
+                return
+            }
+            maybeConfirmShakeAction(action) { [weak self] in
+                self?.showAppLockScreen()
+            }
+        case .quitApp:
+            maybeConfirmShakeAction(action) {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                    exit(-1)
+                }
+            }
+        }
+    }
+
+    private func maybeConfirmShakeAction(
+        _ action: Settings.ShakeGestureAction,
+        confirmed: @escaping () -> Void
+    ) {
+        guard Settings.current.isConfirmShakeGestureAction && !isAppLockVisible else {
+            confirmed()
+            return
+        }
+
+        let alert = UIAlertController
+            .make(title: action.shortTitle, message: nil, dismissButtonTitle: LString.actionCancel)
+            .addAction(title: LString.actionContinue, style: .default) { _ in
+                confirmed()
+            }
+        Diag.debug("Presenting shake gesture confirmation")
+        getPresenterForModals().present(alert, animated: true)
     }
 }
 
@@ -1127,7 +1200,9 @@ extension MainCoordinator {
     }
 
     override func buildMenu(with builder: UIMenuBuilder) {
-        guard builder.system == UIMenuSystem.main else {
+        guard builder.system == UIMenuSystem.main,
+              ProcessInfo.isRunningOnMac
+        else {
             return
         }
 
@@ -1237,7 +1312,7 @@ extension MainCoordinator {
 
     private func insertPreferencesCommand(to builder: UIMenuBuilder) {
         let preferencesCommand = UIKeyCommand(
-            title: builder.menu(for: .preferences)?.children.first?.title ?? LString.titlePreferences,
+            title: builder.menu(for: .preferences)?.children.first?.title ?? LString.menuSettingsMacOS,
             action: #selector(kpmShowSettingsScreen),
             hotkey: .appPreferences)
         let preferencesMenu = UIMenu(
