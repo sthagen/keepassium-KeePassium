@@ -13,7 +13,8 @@
                 {
                     "title": "Added: Support for OnlyKey challenge-response",
                     "os": "macos",
-                    "credits": "everyone"
+                    "credits": "everyone",
+                    "type": 2
                 },
                 {
                     "title": "Added: Support for extra URLs (KP2A_URL_*)",
