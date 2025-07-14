@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2024 KeePassium Labs <info@keepassium.com>
+//  Copyright © 2018-2025 KeePassium Labs <info@keepassium.com>
 // 
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -103,8 +103,8 @@ public class Group2: Group {
         return parent2.resolvingIsAutoTypeEnabled()
     }
 
-    override public func createEntry(detached: Bool = false) -> Entry {
-        let newEntry = Entry2(database: database)
+    override public func createEntry(creationDate: Date = Date(), detached: Bool = false) -> Entry {
+        let newEntry = Entry2(database: database, creationDate: creationDate)
         newEntry.uuid = UUID()
         newEntry.isDeleted = self.isDeleted
 

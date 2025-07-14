@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2024 KeePassium Labs <info@keepassium.com>
+//  Copyright © 2018-2025 KeePassium Labs <info@keepassium.com>
 // 
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -67,9 +67,9 @@ public class Entry1: Entry {
             (rawTitle == MetaStreamID.title)
     }
 
-    override init(database: Database?) {
+    override init(database: Database?, creationDate: Date = Date()) {
         groupID = 0
-        super.init(database: database)
+        super.init(database: database, creationDate: creationDate)
 
         canExpire = false
     }

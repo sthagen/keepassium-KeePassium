@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018-2024 KeePassium Labs <info@keepassium.com>
+//  Copyright © 2018-2025 KeePassium Labs <info@keepassium.com>
 //
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -18,4 +18,5 @@ extension UIMenu.Identifier {
     static let fileSortOrder = UIMenu.Identifier("com.keepassium.menu.fileSortOrder")
     static let itemsSortOrder = UIMenu.Identifier("com.keepassium.menu.itemsSortOrder")
     static let reloadDatabase = UIMenu.Identifier("com.keepassium.menu.reloadDatabase")
+    static let importDatabase = UIMenu.Identifier("com.keepassium.menu.importDatabase")
 }

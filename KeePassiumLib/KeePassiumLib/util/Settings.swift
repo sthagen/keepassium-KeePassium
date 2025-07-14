@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2024 KeePassium Labs <info@keepassium.com>
+//  Copyright © 2018-2025 KeePassium Labs <info@keepassium.com>
 // 
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -75,9 +75,12 @@ public class Settings {
         case recentUserActivityTimestamp
         case appLockTimeout
         case lockAppOnLaunch
+        case lockAppOnScreenLock
         case databaseLockTimeout
         case lockDatabasesOnTimeout
         case lockDatabasesOnReboot
+        case lockDatabasesOnScreenLock
+        case passcodeAttemptsBeforeAppReset
         case passcodeKeyboardType
 
         case clipboardTimeout
@@ -90,6 +93,7 @@ public class Settings {
         case groupSortOrder
         case entryListDetail
         case entryViewerPage
+        case rememberEntryViewerPage
         case hideProtectedFields
         case collapseNotesField
 
@@ -114,9 +118,13 @@ public class Settings {
 
         case networkAccessAllowed
 
+        case autoDownloadFaviconsEnabled
+
         case hideAppLockSetupReminder
         case textScale
         case entryTextFontDescriptor
+        case fieldMenuMode
+        case primaryPaneWidthFraction
 
         case keyFileEntryProtected
     }
@@ -133,28 +141,45 @@ public class Settings {
             case appMinimized
         }
 
-        public static let allValues = [
-            immediately,
-            after3seconds, after15seconds, after30seconds,
-            after1minute, after2minutes, after5minutes]
+        public static var allValues: [Self] = {
+            if ProcessInfo.isRunningOnMac {
+                return [
+                    after10seconds, after15seconds, after30seconds,
+                    after1minute, after2minutes, after5minutes]
+            } else {
+                return [
+                    immediately,
+                    after3seconds, after15seconds, after30seconds,
+                    after1minute, after2minutes, after5minutes]
+            }
+        }()
 
         case never = -1 
         case immediately = 0
         case almostImmediately = 2 /* workaround for some bugs with `immediately` */
         case after3seconds = 3
+        case after5seconds = 5
+        case after10seconds = 10
         case after15seconds = 15
         case after30seconds = 30
         case after1minute = 60
         case after2minutes = 120
         case after5minutes = 300
 
-        public var seconds: Int {
-            return self.rawValue
+        private static let screenLockAdjustment = 1.0
+        public var seconds: TimeInterval {
+            if self.rawValue >= 30 {
+                /* Prevents device lock disruption by app lock / biometric prompt.
+                   https://github.com/keepassium/KeePassium/issues/19 */
+                return TimeInterval(self.rawValue) + Self.screenLockAdjustment
+            } else {
+                return TimeInterval(self.rawValue)
+            }
         }
 
         static func nearest(forSeconds seconds: Int) -> AppLockTimeout {
             let result = Self.allValues.min(by: { item1, item2 in
-                return abs(item1.seconds - seconds) < abs(item2.seconds - seconds)
+                return abs(item1.rawValue - seconds) < abs(item2.rawValue - seconds)
             })
             return result! 
         }
@@ -168,53 +193,6 @@ public class Settings {
                 return .appMinimized
             default:
                 return .userIdle
-            }
-        }
-
-        public var fullTitle: String {
-            switch self {
-            case .never:
-                return LString.appProtectionTimeoutNeverFull
-            case .immediately:
-                return LString.appProtectionTimeoutImmediatelyFull
-            default:
-                let formatter = DateComponentsFormatter()
-                formatter.allowedUnits = [.hour, .minute, .second]
-                formatter.collapsesLargestUnit = true
-                formatter.maximumUnitCount = 2
-                formatter.unitsStyle = .full
-                guard let result = formatter.string(from: TimeInterval(self.rawValue)) else {
-                    assertionFailure()
-                    return "?"
-                }
-                return result
-            }
-        }
-        public var shortTitle: String {
-            switch self {
-            case .never:
-                return LString.appProtectionTimeoutNeverShort
-            case .immediately:
-                return LString.appProtectionTimeoutImmediatelyShort
-            default:
-                let formatter = DateComponentsFormatter()
-                formatter.allowedUnits = [.hour, .minute, .second]
-                formatter.collapsesLargestUnit = true
-                formatter.maximumUnitCount = 2
-                formatter.unitsStyle = .brief
-                guard let result = formatter.string(from: TimeInterval(self.rawValue)) else {
-                    assertionFailure()
-                    return "?"
-                }
-                return result
-            }
-        }
-        public var description: String? {
-            switch triggerMode {
-            case .appMinimized:
-                return LString.appProtectionTimeoutAfterLeavingApp
-            case .userIdle:
-                return LString.appProtectionTimeoutAfterLastInteraction
             }
         }
     }
@@ -257,58 +235,11 @@ public class Settings {
         public static func < (a: DatabaseLockTimeout, b: DatabaseLockTimeout) -> Bool {
             return a.seconds < b.seconds
         }
-
-        public var fullTitle: String {
-            switch self {
-            case .never:
-                return LString.databaseLockTimeoutNeverFull
-            case .immediately:
-                return LString.databaseLockTimeoutImmediatelyFull
-            default:
-                let formatter = DateComponentsFormatter()
-                formatter.allowedUnits = [.weekOfMonth, .day, .hour, .minute, .second]
-                formatter.collapsesLargestUnit = true
-                formatter.maximumUnitCount = 2
-                formatter.unitsStyle = .full
-                guard let result = formatter.string(from: TimeInterval(self.rawValue)) else {
-                    assertionFailure()
-                    return "?"
-                }
-                return result
-            }
-        }
-        public var shortTitle: String {
-            switch self {
-            case .never:
-                return LString.databaseLockTimeoutNeverShort
-            case .immediately:
-                return LString.databaseLockTimeoutImmediatelyShort
-            default:
-                let formatter = DateComponentsFormatter()
-                formatter.allowedUnits = [.weekOfMonth, .day, .hour, .minute, .second]
-                formatter.collapsesLargestUnit = true
-                formatter.maximumUnitCount = 2
-                formatter.unitsStyle = .brief
-                guard let result = formatter.string(from: TimeInterval(self.rawValue)) else {
-                    assertionFailure()
-                    return "?"
-                }
-                return result
-            }
-        }
-        public var description: String? {
-            switch self {
-            case .immediately:
-                return LString.databaseLockTimeoutWhenLeavingApp
-            default:
-                return nil
-            }
-        }
     }
 
     public enum ClipboardTimeout: Int, CaseIterable {
         public static let visibleValues = [
-            after10seconds, after20seconds, after30seconds, after1minute, after2minutes,
+            after10seconds, after20seconds, after30seconds, after1minute, after90seconds, after2minutes,
             after3minutes, after5minutes, after10minutes, after20minutes, never]
         case never = -1
         case immediately = 0
@@ -316,6 +247,7 @@ public class Settings {
         case after20seconds = 20
         case after30seconds = 30
         case after1minute = 60
+        case after90seconds = 90
         case after2minutes = 120
         case after3minutes = 180
         case after5minutes = 300
@@ -333,48 +265,6 @@ public class Settings {
             return result! 
         }
 
-        public var fullTitle: String {
-            switch self {
-            case .never:
-                return NSLocalizedString(
-                    "[Settings/ClipboardTimeout/fullTitle] Never",
-                    bundle: Bundle.framework,
-                    value: "Never",
-                    comment: "An option in Settings. Will be shown as 'Clipboard Timeout: Never'")
-            default:
-                let formatter = DateComponentsFormatter()
-                formatter.allowedUnits = [.hour, .minute, .second]
-                formatter.collapsesLargestUnit = true
-                formatter.maximumUnitCount = 2
-                formatter.unitsStyle = .full
-                guard let result = formatter.string(from: TimeInterval(self.rawValue)) else {
-                    assertionFailure()
-                    return "?"
-                }
-                return result
-            }
-        }
-        public var shortTitle: String {
-            switch self {
-            case .never:
-                return NSLocalizedString(
-                    "[Settings/ClipboardTimeout/shortTitle] Never",
-                    bundle: Bundle.framework,
-                    value: "Never",
-                    comment: "An option in Settings. Will be shown as 'Clipboard Timeout: Never'")
-            default:
-                let formatter = DateComponentsFormatter()
-                formatter.allowedUnits = [.hour, .minute, .second]
-                formatter.collapsesLargestUnit = true
-                formatter.maximumUnitCount = 2
-                formatter.unitsStyle = .brief
-                guard let result = formatter.string(from: TimeInterval(self.rawValue)) else {
-                    assertionFailure()
-                    return "?"
-                }
-                return result
-            }
-        }
     }
 
     public enum BackupKeepingDuration: Int {
@@ -405,33 +295,6 @@ public class Settings {
                 return abs(item1.rawValue - seconds) < abs(item2.rawValue - seconds)
             })
             return result! 
-        }
-
-        public var shortTitle: String {
-            switch self {
-            case .forever:
-                return NSLocalizedString(
-                    "[Settings/BackupKeepingDuration/shortTitle] Forever",
-                    bundle: Bundle.framework,
-                    value: "Forever",
-                    comment: "An option in Settings. Please keep it short. Will be shown as 'Keep Backup Files: Forever'")
-                    // swiftlint:disable:previous line_length
-            default:
-                let formatter = DateComponentsFormatter()
-                formatter.allowedUnits = [.year, .month, .day, .hour]
-                formatter.collapsesLargestUnit = true
-                formatter.maximumUnitCount = 1
-                formatter.unitsStyle = .full
-                guard let result = formatter.string(from: TimeInterval(self.rawValue)) else {
-                    assertionFailure()
-                    return "?"
-                }
-                return result
-            }
-        }
-
-        public var fullTitle: String {
-            return shortTitle
         }
     }
 
@@ -470,6 +333,11 @@ public class Settings {
             }
             // swiftlint:enable line_length
         }
+    }
+
+    public enum FieldMenuMode: Int, CaseIterable {
+        case full = 0
+        case compact = 1
     }
 
     public enum GroupSortOrder: Int {
@@ -722,6 +590,18 @@ public class Settings {
             default:
                 return nil
             }
+        }
+    }
+
+    public enum PasscodeAttemptsBeforeAppReset: Int, CaseIterable {
+        case never = 0
+        case after1 = 1
+        case after3 = 3
+        case after5 = 5
+        case after10 = 10
+
+        public static var allCases: [PasscodeAttemptsBeforeAppReset] {
+            [after1, after3, after5, after10, never]
         }
     }
 
@@ -1022,7 +902,10 @@ public class Settings {
             {
                 return maybeFixAutoFillBiometricIDLoop(timeout)
             }
-            return maybeFixAutoFillBiometricIDLoop(AppLockTimeout.immediately)
+
+            return maybeFixAutoFillBiometricIDLoop(
+                ProcessInfo.isRunningOnMac ? .after10seconds : .immediately
+            )
         }
         set {
             let oldValue = appLockTimeout
@@ -1048,6 +931,22 @@ public class Settings {
                 oldValue: isLockAppOnLaunch,
                 newValue: newValue,
                 key: .lockAppOnLaunch)
+        }
+    }
+
+    public var isLockAppOnScreenLock: Bool {
+        get {
+            let stored = UserDefaults.appGroupShared
+                .object(forKey: Keys.lockAppOnScreenLock.rawValue)
+                as? Bool
+            return stored ?? true
+        }
+        set {
+            updateAndNotify(
+                oldValue: isLockAppOnScreenLock,
+                newValue: newValue,
+                key: .lockAppOnScreenLock
+            )
         }
     }
 
@@ -1110,6 +1009,62 @@ public class Settings {
                 oldValue: isLockDatabasesOnReboot,
                 newValue: newValue,
                 key: .lockDatabasesOnReboot)
+        }
+    }
+
+    public var isLockDatabasesOnScreenLock: Bool {
+        get {
+            let stored = UserDefaults.appGroupShared
+                .object(forKey: Keys.lockDatabasesOnScreenLock.rawValue)
+                as? Bool
+            return stored ?? false
+        }
+        set {
+            updateAndNotify(
+                oldValue: isLockDatabasesOnScreenLock,
+                newValue: newValue,
+                key: .lockDatabasesOnScreenLock
+            )
+        }
+    }
+
+    public var passcodeKeyboardType: PasscodeKeyboardType {
+        get {
+            if let rawValue = UserDefaults.appGroupShared
+                    .object(forKey: Keys.passcodeKeyboardType.rawValue) as? Int,
+               let keyboardType = PasscodeKeyboardType(rawValue: rawValue)
+            {
+                return keyboardType
+            }
+            return PasscodeKeyboardType.numeric
+        }
+        set {
+            let oldValue = passcodeKeyboardType
+            UserDefaults.appGroupShared.set(newValue.rawValue, forKey: Keys.passcodeKeyboardType.rawValue)
+            if newValue != oldValue {
+                postChangeNotification(changedKey: Keys.passcodeKeyboardType)
+            }
+        }
+    }
+
+    public var passcodeAttemptsBeforeAppReset: PasscodeAttemptsBeforeAppReset {
+        get {
+            if let rawValue = UserDefaults.appGroupShared
+                    .object(forKey: Keys.passcodeAttemptsBeforeAppReset.rawValue) as? Int,
+               let value = PasscodeAttemptsBeforeAppReset(rawValue: rawValue)
+            {
+                return value
+            }
+            return .never
+        }
+        set {
+            let oldValue = passcodeAttemptsBeforeAppReset
+            UserDefaults.appGroupShared.set(
+                newValue.rawValue,
+                forKey: Keys.passcodeAttemptsBeforeAppReset.rawValue)
+            if newValue != oldValue {
+                postChangeNotification(changedKey: Keys.passcodeAttemptsBeforeAppReset)
+            }
         }
     }
 
@@ -1256,6 +1211,21 @@ public class Settings {
                 oldValue: entryViewerPage,
                 newValue: newValue,
                 key: Keys.entryViewerPage)
+        }
+    }
+
+    public var isRememberEntryViewerPage: Bool {
+        get {
+            let stored = UserDefaults.appGroupShared
+                .object(forKey: Keys.rememberEntryViewerPage.rawValue)
+                as? Bool
+            return stored ?? true
+        }
+        set {
+            updateAndNotify(
+                oldValue: isRememberEntryViewerPage,
+                newValue: newValue,
+                key: .rememberEntryViewerPage)
         }
     }
 
@@ -1541,7 +1511,7 @@ public class Settings {
         }
     }
 
-    public let textScaleAllowedRange: ClosedRange<CGFloat> = 0.5...2.0
+    public static let textScaleAllowedRange: ClosedRange<CGFloat> = 0.5...2.0
 
     public var textScale: CGFloat {
         get {
@@ -1549,7 +1519,7 @@ public class Settings {
                 .object(forKey: Keys.textScale.rawValue)
                 as? CGFloat
             if let value = storedValueOrNil {
-                return value.clamped(to: textScaleAllowedRange)
+                return value.clamped(to: Self.textScaleAllowedRange)
             } else {
                 return 1.0
             }
@@ -1557,7 +1527,7 @@ public class Settings {
         set {
             updateAndNotify(
                 oldValue: textScale,
-                newValue: newValue.clamped(to: textScaleAllowedRange),
+                newValue: newValue.clamped(to: Self.textScaleAllowedRange),
                 key: .textScale)
         }
     }
@@ -1579,6 +1549,37 @@ public class Settings {
         }
     }
 
+    public var fieldMenuMode: FieldMenuMode {
+        get {
+            if let rawValue = UserDefaults.appGroupShared
+                    .object(forKey: Keys.fieldMenuMode.rawValue) as? Int,
+               let storedMode = FieldMenuMode(rawValue: rawValue)
+            {
+                return storedMode
+            }
+            return .full
+        }
+        set {
+            updateAndNotify(
+                oldValue: fieldMenuMode.rawValue,
+                newValue: newValue.rawValue,
+                key: .fieldMenuMode)
+        }
+    }
+
+    public var primaryPaneWidthFraction: CGFloat {
+        get {
+            let storedValue = UserDefaults.appGroupShared
+                .object(forKey: Keys.primaryPaneWidthFraction.rawValue) as? CGFloat
+            return storedValue ?? UISplitViewController.automaticDimension
+        }
+        set {
+            updateAndNotify(
+                oldValue: primaryPaneWidthFraction,
+                newValue: newValue,
+                key: .primaryPaneWidthFraction)
+        }
+    }
 
     public var passwordGeneratorConfig: PasswordGeneratorParams {
         get {
@@ -1601,26 +1602,6 @@ public class Settings {
 
     }
 
-    public var passcodeKeyboardType: PasscodeKeyboardType {
-        get {
-            if let rawValue = UserDefaults.appGroupShared
-                    .object(forKey: Keys.passcodeKeyboardType.rawValue) as? Int,
-               let keyboardType = PasscodeKeyboardType(rawValue: rawValue)
-            {
-                return keyboardType
-            }
-            return PasscodeKeyboardType.numeric
-        }
-        set {
-            let oldValue = passcodeKeyboardType
-            UserDefaults.appGroupShared.set(newValue.rawValue, forKey: Keys.passcodeKeyboardType.rawValue)
-            if newValue != oldValue {
-                postChangeNotification(changedKey: Keys.passcodeKeyboardType)
-            }
-        }
-    }
-
-
     public var isNetworkAccessAllowed: Bool {
         get {
             if let managedValue = ManagedAppConfig.shared.getBoolIfLicensed(.allowNetworkAccess) {
@@ -1636,6 +1617,27 @@ public class Settings {
                 newValue: newValue,
                 key: .networkAccessAllowed
             )
+        }
+    }
+
+    public var isAutoDownloadFaviconsEnabled: Bool {
+        get {
+            if let managedValue = ManagedAppConfig.shared.getBoolIfLicensed(.allowFaviconDownload),
+               !managedValue
+            {
+                return false
+            }
+
+            let stored = UserDefaults.appGroupShared
+                .object(forKey: Keys.autoDownloadFaviconsEnabled.rawValue)
+                as? Bool
+            return stored ?? false
+        }
+        set {
+            updateAndNotify(
+                oldValue: isAutoDownloadFaviconsEnabled,
+                newValue: newValue,
+                key: .autoDownloadFaviconsEnabled)
         }
     }
 

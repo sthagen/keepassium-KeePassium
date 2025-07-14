@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2024 KeePassium Labs <info@keepassium.com>
+//  Copyright © 2018-2025 KeePassium Labs <info@keepassium.com>
 // 
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -385,7 +385,7 @@ extension PremiumManager: SKProductsRequestDelegate {
     ) {
         Diag.debug("Received list of in-app purchases")
         DispatchQueue.main.async { [weak self] in
-            guard let self = self else { return }
+            guard let self else { return }
             self.availableProducts = response.products
             self.productsRequestHandler?(self.availableProducts, nil)
             self.productsRequest = nil
@@ -396,7 +396,7 @@ extension PremiumManager: SKProductsRequestDelegate {
     public func request(_ request: SKRequest, didFailWithError error: Error) {
         Diag.warning("Failed to acquire list of in-app purchases [message: \(error.localizedDescription)]")
         DispatchQueue.main.async { [weak self] in
-            guard let self = self else { return }
+            guard let self else { return }
             self.availableProducts = nil
             self.productsRequestHandler?(nil, error)
             self.productsRequest = nil

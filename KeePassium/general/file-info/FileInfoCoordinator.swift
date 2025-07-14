@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2024 KeePassium Labs <info@keepassium.com>
+//  Copyright © 2018-2025 KeePassium Labs <info@keepassium.com>
 //
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -12,13 +12,9 @@ protocol FileInfoCoordinatorDelegate: AnyObject {
     func didEliminateFile(_ fileRef: URLReference, in coordinator: FileInfoCoordinator)
 }
 
-final class FileInfoCoordinator: Coordinator {
-    var childCoordinators = [Coordinator]()
-    var dismissHandler: CoordinatorDismissHandler?
-
+final class FileInfoCoordinator: BaseCoordinator {
     weak var delegate: FileInfoCoordinatorDelegate?
 
-    private let router: NavigationRouter
     private let fileRef: URLReference
     private let fileType: FileType
     private let canExport: Bool
@@ -27,59 +23,31 @@ final class FileInfoCoordinator: Coordinator {
     private var fileInfo: FileInfo?
 
     init(fileRef: URLReference, fileType: FileType, allowExport: Bool, router: NavigationRouter) {
-        self.router = router
         self.fileRef = fileRef
         self.fileType = fileType
         self.canExport = allowExport
         fileInfoVC = FileInfoVC.instantiateFromStoryboard()
+        super.init(router: router)
+
         fileInfoVC.delegate = self
         fileInfoVC.fileRef = fileRef
         fileInfoVC.fileType = fileType
-        fileInfoVC.canExport = false 
+        fileInfoVC.canExport = allowExport
     }
 
-    deinit {
-        assert(childCoordinators.isEmpty)
-        removeAllChildCoordinators()
-    }
-
-    func start() {
-        setupCloseButton()
-        router.push(fileInfoVC, animated: true, onPop: { [weak self] in
-            guard let self = self else { return }
-            self.removeAllChildCoordinators()
-            self.dismissHandler?(self)
-        })
+    override func start() {
+        super.start()
+        _pushInitialViewController(fileInfoVC, dismissButtonStyle: .close, animated: true)
         refresh()
     }
 
-    func dismiss() {
-        router.pop(viewController: fileInfoVC, animated: true)
-    }
-
-    private func setupCloseButton() {
-        guard router.navigationController.topViewController == nil else {
-            return
-        }
-
-        let closeButton = UIBarButtonItem(
-            barButtonSystemItem: .close,
-            target: self,
-            action: #selector(didPressDismiss))
-        fileInfoVC.navigationItem.leftBarButtonItem = closeButton
-    }
-
-    @objc
-    private func didPressDismiss(_ sender: Any) {
-        dismiss()
-    }
-
-    func refresh() {
+    override func refresh() {
+        super.refresh()
         fileInfoVC.showBusyIndicator(true, animated: true)
         fileInfoVC.updateFileInfo(fileInfo, error: nil)
 
         fileRef.refreshInfo { [weak self] result in
-            guard let self = self else { return }
+            guard let self else { return }
             let fileInfoVC = self.fileInfoVC
             fileInfoVC.showBusyIndicator(false, animated: true)
             switch result {
@@ -134,8 +102,10 @@ extension FileInfoCoordinator: FileInfoDelegate {
             at: popoverAnchor,
             parent: viewController,
             completion: { [weak self] success in
+                guard let self else { return }
                 if success {
-                    self?.dismiss()
+                    delegate?.didEliminateFile(fileRef, in: self)
+                    dismiss()
                 } else {
                 }
             }

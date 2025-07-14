@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2024 KeePassium Labs <info@keepassium.com>
+//  Copyright © 2018-2025 KeePassium Labs <info@keepassium.com>
 //
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -9,8 +9,28 @@
 // swiftlint:disable line_length
 extension LString {
 
+    public static let titleKeyFiles = NSLocalizedString(
+        "[KeyFile/List/title]",
+        bundle: Bundle.framework,
+        value: "Key Files",
+        comment: "Title of the list with key files.")
+    public static let titleNoKeyFiles = NSLocalizedString(
+        "[KeyFile/List/empty]",
+        bundle: Bundle.framework,
+        value: "No key files",
+        comment: "Placeholder shown when there are no key files available")
+    public static let titleNoKeyFile = NSLocalizedString(
+        "[KeyFile/None/title]",
+        bundle: Bundle.framework,
+        value: "No Key File",
+        comment: "Title: don't use key file")
+    public static let noKeyFileDescription = NSLocalizedString(
+        "[KeyFile/None/description]",
+        bundle: Bundle.framework,
+        value: "Use only password",
+        comment: "Description of the 'No Key File' option.")
     public static let keyFileErrorTemplate = NSLocalizedString(
-        "[Database/Unlock] Key file error: %@",
+        "[KeyFile/error]",
         bundle: Bundle.framework,
         value: "Key file error: %@",
         comment: "Error message related to key file. [errorDetails: String]")
@@ -140,6 +160,12 @@ extension LString {
         bundle: Bundle.framework,
         value: "Consider File Unreachable",
         comment: "File settings parameter: time after which file will be considered unreachable. Example: `Consider File Unreachable: in 10 seconds`.)")
+
+    public static let titleConsiderUnreachableImmediately = NSLocalizedString(
+        "[Database/Settings/ConsiderFileUnreachable/Immediately]",
+        bundle: Bundle.framework,
+        value: "Immediately",
+        comment: "File access parameter. Will be shown as 'Consider File Unreachable: Immediately'")
 
     public static let titleIfFileIsUnreachable = NSLocalizedString(
         "[Database/Settings/FallbackStrategy/title]",
@@ -351,27 +377,26 @@ extension LString {
         bundle: Bundle.framework,
         value: "Databases",
         comment: "Title of the database picker list")
+    public static let titleNoDatabaseFiles = NSLocalizedString(
+        "[Database/List/empty]",
+        bundle: Bundle.framework,
+        value: "No database files",
+        comment: "Placeholder shown when there are no database files available")
     public static let messageLocalFilesMissing = NSLocalizedString(
         "[Database/List/LocalMissing/message]",
         bundle: Bundle.framework,
         value: "If some local files are not listed, launch the main KeePassium app first.",
         comment: "Recommendation for solving a problem with a list of files.")
+    public static let callToActionOpenTheMainApp = NSLocalizedString(
+        "[Database/List/LocalMissing/callToAction]",
+        bundle: Bundle.framework,
+        value: "Open the app",
+        comment: "Call to action. 'Open' here is used as 'launch'.")
     public static let titleSortFilesBy = NSLocalizedString(
         "[Menu/Sort] Sort Files By",
         bundle: Bundle.framework,
         value: "Sort Files By",
         comment: "Title of a menu: sort order of files in a list")
-    public static let titleShowBackupFiles = NSLocalizedString(
-        "Show Backup Files",
-        bundle: Bundle.framework,
-        value: "Show Backup Files",
-        comment: "Settings switch: whether to include backup copies in the file list"
-    )
-    public static let titleNoDatabaseFiles = NSLocalizedString(
-        "No database files",
-        bundle: Bundle.framework,
-        value: "No database files",
-        comment: "Placeholder shown when there are no database files available")
 
 
     public static let databaseLastEditedByTemplate = NSLocalizedString(
@@ -394,7 +419,6 @@ extension LString {
         bundle: Bundle.framework,
         value: "Close Database",
         comment: "Action: lock database")
-
 
     public static let titleDatabaseFormatVersionUpgrade = NSLocalizedString(
         "[Database/FormatVersion/Upgrade/title]",

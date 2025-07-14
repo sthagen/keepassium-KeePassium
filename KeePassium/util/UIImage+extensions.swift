@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2024 KeePassium Labs <info@keepassium.com>
+//  Copyright © 2018-2025 KeePassium Labs <info@keepassium.com>
 // 
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -7,7 +7,7 @@
 //  For commercial licensing, please contact the author.
 
 import KeePassiumLib
-import UIKit
+import LocalAuthentication.LAContext
 
 enum ImageAsset: String {
     case appCoverPattern = "app-cover-pattern" 
@@ -17,15 +17,17 @@ enum ImageAsset: String {
     case yubikeyMFIPhone = "yubikey-mfi-phone"
     case yubikeyMFIKey = "yubikey-mfi-key"
 
+    case noDatabases = "no-databases"
+
     public func asColor() -> UIColor? {
         return UIColor(patternImage: UIImage(asset: self))
     }
 }
 
-public enum SymbolName: String {
-    public static let keyFile = Self.keyDocHorizontal
+public enum SymbolName: String, Equatable {
+    public static let keyFile = Self.keyHorizontal
     public static let actionRestore = Self.clockArrowCirclepath
-    public static let appProtection = Self.lock
+    public static let appPasscode = Self.entryLeverKeypad
     public static let autoFill = Self.return
     public static let fieldReference = Self.arrowRightCircle
     public static let largeType = Self.characterMagnify
@@ -60,6 +62,9 @@ public enum SymbolName: String {
     case arrowUpArrowDown = "arrow.up.arrow.down"
     case arrowUpCircleFill = "arrow.up.circle.fill"
     case asterisk = "asterisk"
+    case at = "at"
+    case atom = "atom"
+    case autoStartStop = "autostartstop"
     case bellSlash = "bell.slash"
     case bolt = "bolt"
     case bookClosed = "book.closed"
@@ -82,7 +87,8 @@ public enum SymbolName: String {
     case docTextMagnifyingGlass = "doc.text.magnifyingglass"
     case ellipsis = "ellipsis"
     case ellipsisCircle = "ellipsis.circle"
-    case externalLink = "external-link" 
+    case entryLeverKeypad = "entry.lever.keypad"
+    case externalLink = "external-link"
     case exclamationMarkOctagonFill = "exclamationmark.octagon.fill"
     case exclamationMarkTriangle = "exclamationmark.triangle" 
     case exclamationMarkTriangleFill = "exclamationmark.triangle.fill"
@@ -94,6 +100,7 @@ public enum SymbolName: String {
     case folderBadgePlus = "folder.badge.plus"
     case folderGridBadgePlus = "square.grid.3x1.folder.badge.plus"
     case gear = "gear"
+    case gearshape = "gearshape"
     case gearshape2 = "gearshape.2"
     case globe = "globe"
     case heart = "heart"
@@ -106,19 +113,19 @@ public enum SymbolName: String {
     case iPhone = "iphone"
     case iPhoneHomeButton = "iphone.homebutton"
     case key = "key.diagonal"
-    case keyDoc = "key.doc"
-    case keyDocHorizontal = "key.doc.horizontal"
     case keyHorizontal = "key.horizontal"
     case keyboard = "keyboard"
     case listBullet = "list.bullet"
-    case link = "link"
     case lock = "lock"
     case lockShield = "lock.shield"
+    case magnifyingGlass = "magnifyingglass"
     case minus = "minus"
     case network = "network"
     case networkBadgeShield = "network.badge.shield"
+    case newspaper = "newspaper"
     case nosign = "nosign"
     case noteText = "note.text"
+    case paintbrush = "paintbrush"
     case paperclip = "paperclip"
     case paperclipBadgeEllipsis = "paperclip.badge.ellipsis"
     case pencil = "pencil"
@@ -132,7 +139,9 @@ public enum SymbolName: String {
     case printer = "printer"
     case qrcode = "qrcode"
     case questionmarkBubble = "questionmark.bubble"
+    case questionmarkFolder = "questionmark.folder"
     case rectangleStack = "rectangle.stack"
+    case rectangleCompressVertical = "rectangle.compress.vertical"
     case `return` = "return"
     case shieldBadgePlus = "shield.badge.plus"
     case sliderVertical3 = "slider.vertical.3"
@@ -147,6 +156,7 @@ public enum SymbolName: String {
     case trashBadgeClock = "trash.badge.clock"
     case usbDongle = "usb.dongle"
     case wandAndStars = "wand.and.stars"
+    case waveformPathEcg = "waveform.path.ecg"
     case wifiSlash = "wifi.slash"
     case xmark = "xmark"
     case xmarkICloud = "xmark.icloud"
@@ -172,6 +182,12 @@ extension UIImage {
         UIImage.symbol(.starFill)?
             .applyingSymbolConfiguration(UIImage.SymbolConfiguration(scale: .large))?
             .withTintColor(.systemYellow, renderingMode: .alwaysOriginal)
+    }
+}
+
+extension SymbolName {
+    static var appProtection: SymbolName {
+        LAContext.getBiometryType().symbolName ?? .appPasscode
     }
 }
 

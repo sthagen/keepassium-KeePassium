@@ -1,6 +1,6 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2024 KeePassium Labs <info@keepassium.com>
-// 
+//  Copyright © 2018-2025 KeePassium Labs <info@keepassium.com>
+//
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
 //  by the Free Software Foundation: https://www.gnu.org/licenses/).
@@ -13,14 +13,15 @@ protocol EntryFieldEditorDelegate: AnyObject {
     func didPressCancel(in viewController: EntryFieldEditorVC)
     func didPressDone(in viewController: EntryFieldEditorVC)
 
-    func didPressAddField(in viewController: EntryFieldEditorVC)
+    func didPressAddField(name: String?, in viewController: EntryFieldEditorVC) -> EntryField?
+    func didPressAddURLField(in viewController: EntryFieldEditorVC) -> EntryField?
     func didPressDeleteField(_ field: EditableField, in viewController: EntryFieldEditorVC)
 
     func didModifyContent(in viewController: EntryFieldEditorVC)
 
     func isTOTPSetupAvailable(_ viewController: EntryFieldEditorVC) -> Bool
-    func isQRScannerAvailable(_ viewController: EntryFieldEditorVC) -> Bool
-    func didPressQRCodeOTPSetup(in viewController: EntryFieldEditorVC)
+    func shouldProvideAvailableQRSources(for viewController: EntryFieldEditorVC) -> Set<QRCodeSource>
+    func didPressPickOTPQRCode(from source: QRCodeSource, in viewController: EntryFieldEditorVC)
     func didPressManualOTPSetup(in viewController: EntryFieldEditorVC)
 
     func getUserNameGeneratorMenu(
@@ -47,7 +48,6 @@ protocol EntryFieldEditorDelegate: AnyObject {
 final class EntryFieldEditorVC: UITableViewController, Refreshable {
     @IBOutlet private weak var addFieldButton: UIBarButtonItem!
     @IBOutlet private weak var doneButton: UIBarButtonItem!
-    @IBOutlet private weak var otpSetupButton: UIButton!
 
     public var shouldFocusOnTitleField = true
 
@@ -61,6 +61,8 @@ final class EntryFieldEditorVC: UITableViewController, Refreshable {
     var allowsCustomFields = false
     var supportsFaviconDownload = true
 
+    var mostCommonCustomFields: [String] = []
+
     private weak var iconButton: UIButton?
 
 
@@ -69,7 +71,10 @@ final class EntryFieldEditorVC: UITableViewController, Refreshable {
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 44.0
 
-        configureOTPSetupButton()
+        configureAddMenu()
+        tableView.register(
+            EntryFieldEditorSingleLineCell.self,
+            forCellReuseIdentifier: EntryFieldEditorSingleLineCell.reuseIdentifier)
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -95,10 +100,14 @@ final class EntryFieldEditorVC: UITableViewController, Refreshable {
 
     private func refreshControls() {
         addFieldButton.isEnabled = allowsCustomFields
+        sortFields()
+        revalidate()
+    }
+
+    private func sortFields() {
         fields.sort {
             itemCategory.compare($0.internalName, $1.internalName)
         }
-        revalidate()
     }
 
     func revalidate() {
@@ -127,21 +136,90 @@ final class EntryFieldEditorVC: UITableViewController, Refreshable {
         cell.selectNameText()
     }
 
-    private func configureOTPSetupButton() {
-        let isOTPSetupSupported = delegate?.isTOTPSetupAvailable(self) ?? false
-        guard isOTPSetupSupported else {
-            tableView.tableFooterView = nil
+    private func selectCustomFieldValue(at indexPath: IndexPath) {
+        guard let cell = tableView.cellForRow(at: indexPath) as? EntryFieldEditorCustomFieldCell else {
             return
         }
+        cell.selectValueText()
+    }
 
-        let isQRScannerAvailable = delegate?.isQRScannerAvailable(self) ?? false
-        let qrCodeSetupAction = UIAction(
+    private func configureAddMenu() {
+        let addCustomFieldAction = UIAction(
+            title: LString.titleCustomField,
+            image: .symbol(.plus)
+        ) { [weak self] _ in
+            self?.didPressAddField()
+        }
+
+        let addURLFieldAction = UIAction(
+            title: LString.fieldURL,
+            image: .symbol(.globe)
+        ) { [weak self] _ in
+            self?.didPressAddURLField()
+        }
+
+        var staticActions: [UIMenuElement] = [
+            addCustomFieldAction,
+            addURLFieldAction
+        ]
+        if let otpSetupMenu = makeOTPSetupMenu() {
+            staticActions.append(otpSetupMenu)
+        }
+
+        let commonFieldsMenu: UIMenu?
+        if mostCommonCustomFields.count > 0 {
+            commonFieldsMenu = UIMenu(
+                title: LString.titleFrequentlyUsedFields,
+                children: mostCommonCustomFields.map { fieldName in
+                    UIAction(title: EntryField.getVisibleName(for: fieldName)) { [weak self] _ in
+                        self?.didPressAddField(name: fieldName)
+                    }
+                }
+            )
+        } else {
+            commonFieldsMenu = nil
+        }
+
+        addFieldButton.menu = UIMenu.make(
+            children: [
+                UIMenu.make(options: .displayInline, children: staticActions),
+                commonFieldsMenu
+            ]
+        )
+        addFieldButton.accessibilityLabel = LString.actionAddField
+    }
+
+    private func makeOTPSetupMenu() -> UIMenu? {
+        let isOTPSetupSupported = delegate?.isTOTPSetupAvailable(self) ?? false
+        guard isOTPSetupSupported else {
+            return nil
+        }
+
+        let availableQRSources = delegate?.shouldProvideAvailableQRSources(for: self) ?? []
+        let scanQRCodeAction = UIAction(
             title: LString.otpSetupScanQRCode,
             image: .symbol(.qrcode),
-            attributes: isQRScannerAvailable ? [] : [.disabled]
+            attributes: availableQRSources.contains(.camera) ? [] : [.disabled]
         ) { [weak self] _ in
-            self?.didPressQRCodeOTPSetup()
+            self?.didPressPickOTPQRCode(from: .camera)
         }
+
+        let pickQRPhotoAction = UIAction(
+            title: LString.otpSetupScanQRPhoto,
+            image: .symbol(.photo),
+            attributes: availableQRSources.contains(.imageLibrary) ? [] : [.disabled]
+        ) { [weak self] _ in
+            self?.didPressPickOTPQRCode(from: .imageLibrary)
+        }
+
+        let pickQRImageFileAction = UIAction(
+            title: LString.otpSetupScanQRImageFile,
+            image: .symbol(.folder),
+            attributes: availableQRSources.contains(.files) ? [] : [.disabled]
+        ) { [weak self] _ in
+            self?.didPressPickOTPQRCode(from: .files)
+        }
+
         let manualSetupAction = UIAction(
             title: LString.otpSetupEnterManually,
             image: .symbol(.keyboard)
@@ -149,13 +227,13 @@ final class EntryFieldEditorVC: UITableViewController, Refreshable {
             self?.didPressManualOTPSetup()
         }
 
-        otpSetupButton.setTitle(LString.otpSetUpOTPAction, for: .normal)
+        let actions: [UIAction]
         if ProcessInfo.isRunningOnMac {
-            otpSetupButton.addAction(manualSetupAction, for: .touchUpInside)
+            actions = [scanQRCodeAction, pickQRImageFileAction, manualSetupAction]
         } else {
-            otpSetupButton.showsMenuAsPrimaryAction = true
-            otpSetupButton.menu = UIMenu(children: [qrCodeSetupAction, manualSetupAction])
+            actions = [scanQRCodeAction, pickQRPhotoAction, pickQRImageFileAction, manualSetupAction]
         }
+        return UIMenu(title: LString.fieldOTP, image: .symbol(.clock), children: actions)
     }
 
 
@@ -179,20 +257,11 @@ final class EntryFieldEditorVC: UITableViewController, Refreshable {
         present(choiceAlert, animated: true, completion: nil)
     }
 
-    private func didPressQRCodeOTPSetup() {
-        guard let isTOTPSetupSupported = delegate?.isTOTPSetupAvailable(self),
-              let isQRScannerAvailable = delegate?.isQRScannerAvailable(self),
-              isTOTPSetupSupported,
-              isQRScannerAvailable
-        else {
-            assertionFailure("Tried to use an unavailable TOTP setup option")
-            return
-        }
+    private func didPressPickOTPQRCode(from source: QRCodeSource) {
         confirmOverwritingOTPConfig { [weak self] in
             guard let self else { return }
-            self.delegate?.didPressQRCodeOTPSetup(in: self)
+            delegate?.didPressPickOTPQRCode(from: source, in: self)
         }
-
     }
 
     private func didPressManualOTPSetup() {
@@ -216,19 +285,30 @@ final class EntryFieldEditorVC: UITableViewController, Refreshable {
         delegate?.didPressDone(in: self)
     }
 
-    @IBAction private func didPressAddField(_ sender: Any) {
-        assert(allowsCustomFields)
-        let fieldCountBefore = fields.count
-        delegate?.didPressAddField(in: self) 
-        let fieldCountAfter = fields.count
+    private func didPressAddField(name: String? = nil) {
+        addField(maker: { $0.delegate?.didPressAddField(name: name, in: $0) }, selectValue: name != nil)
+    }
 
-        guard fieldCountAfter > fieldCountBefore else {
+    private func didPressAddURLField() {
+        addField(maker: { $0.delegate?.didPressAddURLField(in: $0) }, selectValue: true)
+    }
+
+    private func addField(maker: (EntryFieldEditorVC) -> EntryField?, selectValue: Bool) {
+        assert(allowsCustomFields)
+
+        guard let addedField = maker(self) else {
             Diag.warning("Field was not added")
             assertionFailure()
             return
         }
 
-        let newIndexPath = IndexPath(row: fields.count - 1, section: 0)
+        sortFields()
+        guard let newFieldIndex = fields.firstIndex(where: { $0.field === addedField }) else {
+            Diag.warning("Could not find just added field")
+            assertionFailure()
+            return
+        }
+        let newIndexPath = IndexPath(row: newFieldIndex, section: 0)
         tableView.beginUpdates()
         tableView.insertRows(at: [newIndexPath], with: .fade)
         tableView.endUpdates()
@@ -240,7 +320,11 @@ final class EntryFieldEditorVC: UITableViewController, Refreshable {
             },
             completion: { [weak self] _ in
                 self?.focusOnCell(at: newIndexPath)
-                self?.selectCustomFieldName(at: newIndexPath)
+                if selectValue {
+                    self?.selectCustomFieldValue(at: newIndexPath)
+                } else {
+                    self?.selectCustomFieldName(at: newIndexPath)
+                }
             }
         )
         refreshControls()
@@ -248,6 +332,10 @@ final class EntryFieldEditorVC: UITableViewController, Refreshable {
 
     func didPressDeleteField(at indexPath: IndexPath) {
         assert(allowsCustomFields)
+        tableView.beginUpdates()
+        defer {
+            tableView.endUpdates()
+        }
         let fieldIndex = indexPath.row
         let field = fields[fieldIndex]
         let fieldCountBefore = fields.count
@@ -259,10 +347,8 @@ final class EntryFieldEditorVC: UITableViewController, Refreshable {
             assertionFailure()
             return
         }
-
-        tableView.beginUpdates()
         tableView.deleteRows(at: [indexPath], with: .fade)
-        tableView.endUpdates()
+
         refreshControls()
     }
 
@@ -359,6 +445,12 @@ extension EntryFieldEditorVC {
         tableView: UITableView,
         at indexPath: IndexPath
     ) -> EditableFieldCell & UITableViewCell {
+        let entryField = field.field
+        if entryField?.isExtraURL ?? false {
+            let cell = configureURLCell(field: field, tableView: tableView, at: indexPath)
+            cell.isTitleHidden = true
+            return cell
+        }
         return configureCustomFieldCell(field: field, tableView: tableView, at: indexPath)
     }
 
@@ -400,7 +492,7 @@ extension EntryFieldEditorVC {
         at indexPath: IndexPath
     ) -> EntryFieldEditorSingleLineCell {
         let cell = tableView.dequeueReusableCell(
-            withIdentifier: EntryFieldEditorSingleLineCell.storyboardID,
+            withIdentifier: EntryFieldEditorSingleLineCell.reuseIdentifier,
             for: indexPath)
             as! EntryFieldEditorSingleLineCell
         cell.field = field
@@ -421,6 +513,7 @@ extension EntryFieldEditorVC {
     ) -> EntryFieldEditorSingleLineCell {
         let cell = configureSingleLineCell(field: field, tableView: tableView, at: indexPath)
         cell.textField.keyboardType = .URL
+        cell.isTitleHidden = false
         return cell
     }
 
@@ -430,7 +523,7 @@ extension EntryFieldEditorVC {
         at indexPath: IndexPath
     ) -> EntryFieldEditorSingleLineCell {
         let cell = tableView.dequeueReusableCell(
-            withIdentifier: EntryFieldEditorSingleLineCell.storyboardID,
+            withIdentifier: EntryFieldEditorSingleLineCell.reuseIdentifier,
             for: indexPath)
             as! EntryFieldEditorSingleLineCell
         cell.field = field
@@ -556,9 +649,9 @@ extension EntryFieldEditorVC: EditableFieldCellDelegate {
         return (sameNameCount == 1)
     }
 
-    func getActionConfiguration(for field: EditableField) -> EntryFieldActionConfiguration {
+    func getActionConfiguration(for field: EditableField) -> EditableFieldActionConfiguration {
         var menu: UIMenu?
-        var state = Set<EntryFieldActionConfiguration.State>()
+        var state = Set<EditableFieldActionConfiguration.State>()
         switch field.internalName {
         case EntryField.title:
             if isDownloadingFavicon {
@@ -576,7 +669,7 @@ extension EntryFieldEditorVC: EditableFieldCellDelegate {
         default:
             state = [.hidden]
         }
-        return EntryFieldActionConfiguration(state: state, menu: menu)
+        return EditableFieldActionConfiguration(state: state, menu: menu)
     }
 
     private func makeIconButtonMenu() -> UIMenu {

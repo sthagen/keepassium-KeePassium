@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2024 KeePassium Labs <info@keepassium.com>
+//  Copyright © 2018-2025 KeePassium Labs <info@keepassium.com>
 // 
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -84,6 +84,8 @@ final public class URLReference:
     public static let defaultTimeoutDuration: TimeInterval = 10.0
 
     public var visibleFileName: String { return url?.lastPathComponent ?? "?" }
+
+    public let runtimeUUID = UUID()
 
     public private(set) var error: FileAccessError?
     public var hasError: Bool { return error != nil}
@@ -245,7 +247,7 @@ final public class URLReference:
 
     public func hash(into hasher: inout Hasher) {
         hasher.combine(location)
-        guard let originalURL = originalURL else {
+        guard let originalURL else {
             assertionFailure()
             return
         }
@@ -323,7 +325,7 @@ final public class URLReference:
     ) {
         guard !data.isEmpty else {
             callbackQueue.addOperation { [self] in
-                if let originalURL = originalURL {
+                if let originalURL {
                     callback(.success(originalURL))
                 } else {
                     Diag.error("Both reference data and original URL are empty")
@@ -414,7 +416,7 @@ final public class URLReference:
     ) {
         registerInfoRefreshRequest(.added)
         resolveAsync(timeout: timeout, callbackQueue: completionQueue) { [weak self] result in
-            guard let self = self else { return }
+            guard let self else { return }
 
             assert(completionQueue.isCurrent)
             switch result {
@@ -448,7 +450,7 @@ final public class URLReference:
             timeout: timeout,
             completionQueue: completionQueue,
             completion: { [weak self] result in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.registerInfoRefreshRequest(.completed)
                 switch result {
                 case .success(let fileInfo):
@@ -475,7 +477,7 @@ final public class URLReference:
         }
 
         if Settings.current.isNetworkAccessAllowed,
-           let originalURL = originalURL,
+           let originalURL,
            originalURL.isRemoteURL
         {
             self.resolvedURL = originalURL
@@ -645,7 +647,7 @@ final public class URLReference:
             return FileProvider(rawValue: fileProviderID)
         }
 
-        if let url = url,
+        if let url,
            let fileProviderDedicatedToSuchURLs = DataSourceFactory.findInAppFileProvider(for: url)
         {
             return fileProviderDedicatedToSuchURLs

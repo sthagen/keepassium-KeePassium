@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2024 KeePassium Labs <info@keepassium.com>
+//  Copyright © 2018-2025 KeePassium Labs <info@keepassium.com>
 // 
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -614,7 +614,7 @@ public class Database2: Database {
             return nil
         }
 
-        guard let root = root else {
+        guard let root else {
             Diag.warning("Tried to get RecycleBin group without the root one")
             assertionFailure()
             return nil

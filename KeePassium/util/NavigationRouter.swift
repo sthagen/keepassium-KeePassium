@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2024 KeePassium Labs <info@keepassium.com>
+//  Copyright © 2018-2025 KeePassium Labs <info@keepassium.com>
 //
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -60,7 +60,7 @@ final public class RouterNavigationController: UINavigationController {
 
     @objc
     private func didPressEscapeKey() {
-        if let router = router, router.canPopTopViewControllerFromKeyboard() {
+        if let router, router.canPopTopViewControllerFromKeyboard() {
             router.pop(animated: true)
         }
     }
@@ -97,6 +97,10 @@ final public class NavigationRouter: NSObject {
         set {
             navigationController.isModalInPresentation = newValue
         }
+    }
+
+    public var isEmpty: Bool {
+        return navigationController.viewControllers.isEmpty
     }
 
     public var isHorizontallyCompact: Bool {
@@ -434,7 +438,7 @@ extension NavigationRouter: ProgressViewHost {
         navigationController.isModalInPresentation = wasModalInPresentation
 
         progressOverlay?.dismiss(animated: animated) { [weak self] _ in
-            guard let self = self else { return }
+            guard let self else { return }
             self.progressOverlay?.removeFromSuperview()
             self.progressOverlay = nil
         }

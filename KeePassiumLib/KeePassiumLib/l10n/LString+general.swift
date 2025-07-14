@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2024 KeePassium Labs <info@keepassium.com>
+//  Copyright © 2018-2025 KeePassium Labs <info@keepassium.com>
 // 
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -18,8 +18,13 @@ extension LString {
     public static let itemsSelectedCountTemplate = NSLocalizedString(
           "[Generic/Count/ItemsSelected]",
           bundle: Bundle.framework,
-          comment: "Number of list items selected. For example: 'No items selected', '1 entry selected'. IMPORTANT: Please fill out all the plural forms."
-      )
+          comment: "Number of list items selected. For example: 'No items selected', '1 item selected'. IMPORTANT: Please fill out all the plural forms."
+    )
+    public static let itemsCountTemplate = NSLocalizedString(
+        "[Generic/Count/Items]",
+        bundle: Bundle.framework,
+        comment: "Number of items in a list, search results, etc. For example: '0 items', '1 item'. IMPORTANT: Please fill out all the plural forms."
+    )
 
     public static let bitCountTemplate = NSLocalizedString(
         "[Generic/Count/Bits]",
@@ -31,6 +36,13 @@ extension LString {
         "[Generic/Count/Threads]",
         bundle: Bundle.framework,
         comment: "Number of computation threads. For example: '4 threads'. IMPORTANT: Please fill out all the plural forms."
+    )
+
+    public static let importEntriesCountTemplate = NSLocalizedString(
+        "[Generic/Count/ImportedEntries]",
+        bundle: Bundle.framework,
+        value: "Entries found: %d",
+        comment: "Number of entries found in an incoming file. For example: 'Found entries: 42' [itemCount: Int]"
     )
 
     public static let actionOK = NSLocalizedString(
@@ -196,6 +208,12 @@ extension LString {
         value: "Export",
         comment: "Action/button to export an item to another app"
     )
+    public static let actionImport = NSLocalizedString(
+        "[Generic] Import",
+        bundle: Bundle.framework,
+        value: "Import",
+        comment: "Action/button to import an item to another app"
+    )
     public static let actionRefreshList = NSLocalizedString(
         "[Generic/RefreshList/action]",
         bundle: Bundle.framework,
@@ -262,6 +280,42 @@ extension LString {
         bundle: Bundle.framework,
         value: "Upgrade to Premium",
         comment: "Action/button to start choosing premium versions and possibly buying one")
+
+    public static let actionAutoType = NSLocalizedString(
+        "[AutoType/action]",
+        bundle: Bundle.framework,
+        value: "Perform Auto-Type",
+        comment: "Action: send key presses to 'type in' entry data into another app")
+
+    public static let titleAutoTypeAccessibility = NSLocalizedString(
+        "[AutoType/AccessibilityPrompt/title]",
+        bundle: Bundle.framework,
+        value: "KeePassium needs your permission",
+        comment: "Title of a dialog asking user to provide a security permission")
+
+    public static let messageAutoTypeAccessibilityNeeded1 = NSLocalizedString(
+        "[AutoType/AccessibilityPrompt/message]",
+        bundle: Bundle.framework,
+        value: "KeePassium needs your permission to send key presses to other apps.",
+        comment: "Message explaining why accessibility permission is needed")
+    public static let messageAutoTypeAccessibilityNeeded2 = NSLocalizedString(
+        "[AutoType/AccessibilityPrompt/callToAction]",
+        bundle: Bundle.framework,
+        value: "Open system settings → Privacy & Security → Accessibility and enable KeePassium there.",
+        comment: "Call to action / instruction on how to enable accessibility permission")
+
+    public static let actionOpenAccessibilitySettings = actionOpenSystemSettings
+    public static let actionOpenSystemSettings = NSLocalizedString(
+        "[AutoType/Action/OpenSettings]",
+        bundle: Bundle.framework,
+        value: "Open Settings",
+        comment: "Button to open system settings (accessibility, permissions, etc)")
+
+    public static let titleAutoTypeFailed = NSLocalizedString(
+        "[AutoType/Error/Title]",
+        bundle: Bundle.framework,
+        value: "Auto-type Failed",
+        comment: "Title for error when auto-type fails")
 
     public static let titleTools = NSLocalizedString(
         "[Generic/Tools/title]",
@@ -401,6 +455,12 @@ extension LString {
         bundle: Bundle.framework,
         value: "Unlock KeePassium",
         comment: "Call to action in the passcode input dialog."
+    )
+    public static let eraseDataAfterFailedAttemptsTitle = NSLocalizedString(
+        "[AppLock/EraseData/title]",
+        bundle: Bundle.framework,
+        value: "Erase Data",
+        comment: "Title for setting to erase all data after failed passcode attempts"
     )
 
     public static let actionCopyToClipboardTemplate = NSLocalizedString(
@@ -670,6 +730,12 @@ extension LString {
         value: "Edit Entry",
         comment: "Action/button to modify an entry"
     )
+    public static let actionAddField = NSLocalizedString(
+        "[Entry/Field/Add/action]",
+        bundle: Bundle.framework,
+        value: "Add Field",
+        comment: "Action/button to add a new field to the entry"
+    )
     public static let actionAddAttachment = NSLocalizedString(
         "[Entry/Attachment/add]",
         bundle: Bundle.framework,
@@ -712,6 +778,18 @@ extension LString {
         value: "Show in Large Type",
         comment: "Action: display text using large font"
     )
+    public static let actionShowAsQRCode = NSLocalizedString(
+        "[Entry/Field/QRCode/action]",
+        bundle: Bundle.framework,
+        value: "Show as QR Code",
+        comment: "Action: display text using QR code"
+    )
+    public static let titleFieldMenuCompactView = NSLocalizedString(
+        "[Entry/Field/CompactMenu/title]",
+        bundle: Bundle.framework,
+        value: "Compact View",
+        comment: "On/off state: whether to show full-size or compact menu"
+    )
     public static let titleEntry = NSLocalizedString(
         "[Entry/title]",
         bundle: Bundle.framework,
@@ -736,6 +814,24 @@ extension LString {
         bundle: Bundle.framework,
         value: "Protected Field",
         comment: "Title of a setting: whether the entry's field is protected (shown as asterisks)."
+    )
+    public static let titleFrequentlyUsedFields = NSLocalizedString(
+        "[Entry/FrequentlyUsedFields/title]",
+        bundle: Bundle.framework,
+        value: "Frequently Used",
+        comment: "Title of a list with frequently used entry fields."
+    )
+    public static let titleCustomField = NSLocalizedString(
+        "[Entry/Field/Custom/title]",
+        bundle: Bundle.framework,
+        value: "Custom Field",
+        comment: "Title for a generic user-defined entry field."
+    )
+    public static let titleExtraURLTitleTemplate = NSLocalizedString(
+        "[Entry/Field/URL/Extra/title]",
+        bundle: Bundle.framework,
+        value: "URL (%d)",
+        comment: "Title of an alternative URL, with a number [number: String]"
     )
     public static let defaultNewPhotoAttachmentName = NSLocalizedString(
         "[Entry/Attachment/Photo/defaultName]",
@@ -1075,7 +1171,12 @@ extension LString {
         bundle: Bundle.framework,
         value: "keyfile.dat",
         comment: "Default name for new key files. Should match the `key file` term in the glossary.")
-    public static let importKeyFileAction = NSLocalizedString(
+    public static let actionAddKeyFile = NSLocalizedString(
+        "[KeyFile/Add/action]",
+        bundle: Bundle.framework,
+        value: "Add Key File",
+        comment: "Action: add a key file into the app, by importing or creating one. `Key file` is a glossary term.")
+    public static let actionImportKeyFile = NSLocalizedString(
         "[KeyFile/Import/action]",
         bundle: Bundle.framework,
         value: "Import Key File",
@@ -1085,7 +1186,7 @@ extension LString {
         bundle: Bundle.framework,
         value: "Add file to the app",
         comment: "Description of the `Import Key File` action.")
-    public static let useKeyFileAction = NSLocalizedString(
+    public static let actionUseKeyFile = NSLocalizedString(
         "[KeyFile/Use/action]",
         bundle: Bundle.framework,
         value: "Select Key File",
@@ -1106,23 +1207,11 @@ extension LString {
         bundle: Bundle.framework,
         value: "No Hardware Key",
         comment: "Master key/unlock option: don't use hardware keys")
-    public static let yubikeySlotNTemplate = NSLocalizedString(
-        "[HardwareKey/YubiKey/Slot] YubiKey Slot #%d",
+    public static let hardwareKeySlotNTemplate = NSLocalizedString(
+        "[HardwareKey/Slot/title]",
         bundle: Bundle.framework,
-        value: "YubiKey Slot %d",
-        comment: "Master key/unlock option: use given slot of YubiKey")
-
-    public static let dontUseYubikey = NSLocalizedString(
-        "[YubiKey] Don't use YubiKey",
-        bundle: Bundle.framework,
-        value: "Without YubiKey",
-        comment: "Selector choice: don't use YubiKey to encrypt/decrypt database")
-
-    public static let useYubikeySlotN = NSLocalizedString(
-        "[YubiKey] Use YubiKey Slot %d",
-        bundle: Bundle.framework,
-        value: "Use YubiKey Slot %d",
-        comment: "Selector choice: use YubiKey to encrypt/decrypt database. For example: `Use YubiKey Slot 1`. [slotID: Int]")
+        value: "%@ Slot %d",
+        comment: "Title of a slot of a hardware key. For example: `YubiKey Slot 1`.")
 
     public static let insertMFIYubikey = NSLocalizedString(
         "[YubiKey] Insert the key",
@@ -1146,13 +1235,25 @@ extension LString {
     public static let otpSetupScanQRCode = NSLocalizedString(
         "[OTP/Setup/ScanQRCode]",
         bundle: Bundle.framework,
-        value: "Scan QR code",
+        value: "Scan QR Code",
         comment: "Button/action: proceed with QR code based OTP setup"
+    )
+    public static let otpSetupScanQRPhoto = NSLocalizedString(
+        "[OTP/Setup/ScanQRPhoto]",
+        bundle: Bundle.framework,
+        value: "Scan QR from Photo",
+        comment: "Action: pick a photo (from gallery) to scan as QR code"
+    )
+    public static let otpSetupScanQRImageFile = NSLocalizedString(
+        "[OTP/Setup/ScanQRImageFile]",
+        bundle: Bundle.framework,
+        value: "Scan QR from File",
+        comment: "Action: pick an image (from files) to scan as QR code"
     )
     public static let otpSetupEnterManually = NSLocalizedString(
         "[OTP/Setup/EnterManually]",
         bundle: Bundle.framework,
-        value: "Enter manually",
+        value: "Enter Manually",
         comment: "Button/action: proceed with manual OTP setup"
     )
 
@@ -1220,11 +1321,25 @@ extension LString {
         comment: "Notification when some custom icons are not used by any group or entry [iconCount: Int]"
     )
 
+    public static let titleAllCustomIconsCountTemplate = NSLocalizedString(
+        "[Database/CustomIcon/All/count]",
+        bundle: Bundle.framework,
+        value: "All custom icons: %d",
+        comment: "Notification when some custom icons are about to be deleted [iconCount: Int]"
+    )
+
     public static let actionDeleteUnusedIcons = NSLocalizedString(
         "[Database/CustomIcon/deleteUnused]",
         bundle: Bundle.framework,
         value: "Delete Unused Icons",
         comment: "Action: delete unused icons"
+    )
+
+    public static let actionDeleteAllCustomIcons = NSLocalizedString(
+        "[Database/CustomIcon/deleteAll]",
+        bundle: Bundle.framework,
+        value: "Delete All",
+        comment: "Action: delete all custom icons"
     )
 
     public static let actionAddCustomIcon = NSLocalizedString(

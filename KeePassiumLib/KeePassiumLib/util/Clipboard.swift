@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2024 KeePassium Labs <info@keepassium.com>
+//  Copyright © 2018-2025 KeePassium Labs <info@keepassium.com>
 // 
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -50,7 +50,7 @@ public class Clipboard {
         }
 
         let isLocalOnly = !Settings.current.isUniversalClipboardEnabled
-        if let timeout = timeout, timeout > 0.0 {
+        if let timeout, timeout > 0.0 {
             UIPasteboard.general.setItems(
                 [pasteboardItem],
                 options: [
@@ -71,7 +71,7 @@ public class Clipboard {
 
     private func scheduleCleanup(text: String, after timeout: TimeInterval?) {
         guard ProcessInfo.isRunningOnMac,
-              let timeout = timeout,
+              let timeout,
               timeout > 0
         else {
             return

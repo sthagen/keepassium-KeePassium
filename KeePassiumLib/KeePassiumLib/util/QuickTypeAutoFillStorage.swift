@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2024 KeePassium Labs <info@keepassium.com>
+//  Copyright © 2018-2025 KeePassium Labs <info@keepassium.com>
 //
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -31,7 +31,7 @@ final public class QuickTypeAutoFillStorage {
                 return
             }
             store.removeAllCredentialIdentities { _, error in
-                if let error = error {
+                if let error {
                     Diag.error("Failed to remove identities [message: \(error.localizedDescription)]")
                 } else {
                     Diag.debug("QuickType AutoFill data removed")
@@ -53,7 +53,7 @@ final public class QuickTypeAutoFillStorage {
             }
             let identities = self.getCredentialIdentities(from: databaseFile)
             let completion: ((Bool, Error?) -> Void) = { success, error in
-                if let error = error {
+                if let error {
                     Diag.error("Failed to save QuickType AutoFill data [message: \(error.localizedDescription)]")
                 } else {
                     Diag.debug("QuickType AutoFill data saved")

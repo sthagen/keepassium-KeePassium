@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2024 KeePassium Labs <info@keepassium.com>
+//  Copyright © 2018-2025 KeePassium Labs <info@keepassium.com>
 //
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -54,7 +54,7 @@ extension FileAccessError {
         // swiftlint:disable line_length
         switch self {
         case .timeout(let fileProvider):
-            if let fileProvider = fileProvider {
+            if let fileProvider {
                 return String.localizedStringWithFormat(
                     NSLocalizedString(
                         "[FileAccessError/Timeout/knownFileProvider]",
@@ -80,7 +80,7 @@ extension FileAccessError {
                 value: "Internal KeePassium error, please tell us about it.",
                 comment: "Error message shown when there's internal inconsistency in KeePassium.")
         case .fileProviderDoesNotRespond(let fileProvider):
-            if let fileProvider = fileProvider {
+            if let fileProvider {
                 return String.localizedStringWithFormat(
                     NSLocalizedString(
                         "[FileAccessError/NoResponse/knownFileProvider]",
@@ -97,7 +97,7 @@ extension FileAccessError {
                     comment: "Error message: storage provider app (e.g. Google Drive) does not respond to requests.")
             }
         case .fileProviderNotFound(let fileProvider):
-            if let fileProvider = fileProvider {
+            if let fileProvider {
                 switch fileProvider {
                 case .smbShare:
                     return NSLocalizedString(
@@ -206,8 +206,8 @@ extension FileAccessError {
              (NSCocoaErrorDomain, CocoaError.Code.xpcConnectionInvalid.rawValue): 
             return .fileProviderDoesNotRespond(fileProvider: fileProvider)
 
-        case (NSCocoaErrorDomain, CocoaError.Code.fileWriteNoPermission.rawValue): 
-            if let fileProvider = fileProvider {
+        case (NSCocoaErrorDomain, CocoaError.Code.fileWriteNoPermission.rawValue):
+            if let fileProvider {
                 return .targetFileIsReadOnly(fileProvider: fileProvider)
             } else {
                 return .systemError(originalError)

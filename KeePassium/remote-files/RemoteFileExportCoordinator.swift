@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018-2024 KeePassium Labs <info@keepassium.com>
+//  Copyright © 2018-2025 KeePassium Labs <info@keepassium.com>
 //
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -9,7 +9,6 @@
 import KeePassiumLib
 
 protocol RemoteFileExportCoordinatorDelegate: AnyObject {
-    func didCancelExport(in coordinator: RemoteFileExportCoordinator)
     func didFinishExport(
         to remoteURL: URL,
         credential: NetworkCredential,
@@ -17,13 +16,9 @@ protocol RemoteFileExportCoordinatorDelegate: AnyObject {
     )
 }
 
-final class RemoteFileExportCoordinator: Coordinator {
-    var childCoordinators = [Coordinator]()
-    var dismissHandler: CoordinatorDismissHandler?
-
+final class RemoteFileExportCoordinator: BaseCoordinator {
     weak var delegate: RemoteFileExportCoordinatorDelegate?
 
-    private let router: NavigationRouter
     private let data: ByteArray
     private let fileName: String
     private let connectionTypePicker: ConnectionTypePickerVC
@@ -31,38 +26,30 @@ final class RemoteFileExportCoordinator: Coordinator {
     init(data: ByteArray, fileName: String, router: NavigationRouter) {
         self.data = data
         self.fileName = fileName
-        self.router = router
         connectionTypePicker = ConnectionTypePickerVC.make()
+        super.init(router: router)
         connectionTypePicker.delegate = self
         connectionTypePicker.showsOtherLocations = false
     }
 
-    deinit {
-        assert(childCoordinators.isEmpty)
-        removeAllChildCoordinators()
+    override func start() {
+        super.start()
+        _pushInitialViewController(connectionTypePicker, animated: true)
     }
 
-    func start() {
-        router.push(connectionTypePicker, animated: true, onPop: { [weak self] in
-            guard let self else { return }
-            self.removeAllChildCoordinators()
-            self.dismissHandler?(self)
-        })
-    }
-
-    private func upload<Coordinator: RemoteDataSourceSetupCoordinator>(
-        _ folder: Coordinator.Manager.ItemType,
+    private func upload<Manager: RemoteDataSourceManager> (
+        _ folder: Manager.ItemType,
         oauthToken: OAuthToken,
         timeout: Timeout,
-        manager: Coordinator.Manager,
+        manager: Manager,
         stateIndicator: BusyStateIndicating?,
-        coordinator: Coordinator
+        alertPresenter: RemoteConnectionSetupAlertPresenting
     ) {
         Diag.debug("Will upload new file")
         stateIndicator?.indicateState(isBusy: true)
         manager.getItems(in: folder, token: oauthToken, tokenUpdater: nil, timeout: timeout, completionQueue: .main) {
-            [weak self, weak coordinator, weak stateIndicator] result in
-            guard let self, let coordinator else { return }
+            [weak self, weak alertPresenter, weak stateIndicator] result in
+            guard let self, let alertPresenter else { return }
             stateIndicator?.indicateState(isBusy: false)
             switch result {
             case .success(let existingItems):
@@ -72,13 +59,122 @@ final class RemoteFileExportCoordinator: Coordinator {
                     existingItems: existingItems,
                     oauthToken: oauthToken,
                     timeout: timeout,
-                    stateIndicator: stateIndicator,
                     manager: manager,
-                    presenter: coordinator.getModalPresenter()
+                    stateIndicator: stateIndicator,
+                    alertPresenter: alertPresenter
                 )
             case .failure(let error):
                 Diag.debug("Failed to get existing items [message: \(error.localizedDescription)]")
-                coordinator.getModalPresenter().showErrorAlert(error)
+                alertPresenter.showErrorAlert(error)
+            }
+        }
+    }
+
+    private func upload(
+        folder: WebDAVItem,
+        credential: NetworkCredential,
+        timeout: Timeout,
+        stateIndicator: BusyStateIndicating?,
+        alertPresenter: RemoteConnectionSetupAlertPresenting
+    ) {
+        Diag.debug("Will upload new file to WebDAV")
+        stateIndicator?.indicateState(isBusy: true)
+
+        let webDAVManager = WebDAVManager.shared
+        webDAVManager.getItems(
+            in: folder,
+            credential: credential,
+            timeout: timeout,
+            completionQueue: .main
+        ) { [weak self, weak stateIndicator, weak alertPresenter] result in
+            guard let self, let alertPresenter else { return }
+            stateIndicator?.indicateState(isBusy: false)
+
+            switch result {
+            case .success(let existingItems):
+                self.handleExistingWebDAVItemsAndUpload(
+                    existingItems: existingItems,
+                    in: folder,
+                    credential: credential,
+                    timeout: timeout,
+                    webDAVManager: webDAVManager,
+                    stateIndicator: stateIndicator,
+                    alertPresenter: alertPresenter
+                )
+            case .failure(let error):
+                Diag.debug("Failed to get WebDAV folder contents [message: \(error.localizedDescription)]")
+                alertPresenter.showErrorAlert(error)
+            }
+        }
+    }
+
+    private func handleExistingWebDAVItemsAndUpload(
+        existingItems: [WebDAVItem],
+        in folder: WebDAVItem,
+        credential: NetworkCredential,
+        timeout: Timeout,
+        webDAVManager: WebDAVManager,
+        stateIndicator: BusyStateIndicating?,
+        alertPresenter: RemoteConnectionSetupAlertPresenting
+    ) {
+        let fileAlreadyExists = existingItems.contains { !$0.isFolder && $0.name == self.fileName }
+        if !fileAlreadyExists {
+            performWebDAVUpload(
+                to: folder,
+                credential: credential,
+                timeout: timeout,
+                webDAVManager: webDAVManager,
+                stateIndicator: stateIndicator,
+                alertPresenter: alertPresenter
+            )
+            return
+        }
+
+        alertPresenter.showOverwriteConfirmation(fileName: fileName, onConfirm: {
+            [weak self, weak stateIndicator, weak alertPresenter] _ in
+            guard let self, let alertPresenter else { return }
+            performWebDAVUpload(
+                to: folder,
+                credential: credential,
+                timeout: timeout,
+                webDAVManager: webDAVManager,
+                stateIndicator: stateIndicator,
+                alertPresenter: alertPresenter
+            )
+        })
+    }
+
+    private func performWebDAVUpload(
+        to folder: WebDAVItem,
+        credential: NetworkCredential,
+        timeout: Timeout,
+        webDAVManager: WebDAVManager,
+        stateIndicator: BusyStateIndicating?,
+        alertPresenter: RemoteConnectionSetupAlertPresenting
+    ) {
+        stateIndicator?.indicateState(isBusy: true)
+        let url = folder.url.appendingPathComponent(self.fileName)
+
+        webDAVManager.uploadFile(
+            data: self.data,
+            url: url,
+            credential: credential,
+            timeout: timeout,
+            completionQueue: .main
+        ) { [weak self, weak stateIndicator, weak alertPresenter] result in
+            guard let self, let alertPresenter else { return }
+            stateIndicator?.indicateState(isBusy: false)
+            switch result {
+            case .success:
+                Diag.debug("File created successfully on WebDAV")
+                self.delegate?.didFinishExport(
+                    to: WebDAVFileURL.build(nakedURL: url),
+                    credential: credential,
+                    in: self
+                )
+            case .failure(let error):
+                Diag.debug("Failed to get WebDAV folder contents [message: \(error.localizedDescription)]")
+                alertPresenter.showErrorAlert(error)
             }
         }
     }
@@ -89,11 +185,11 @@ final class RemoteFileExportCoordinator: Coordinator {
         existingItems: [ItemType],
         oauthToken: OAuthToken,
         timeout: Timeout,
-        stateIndicator: BusyStateIndicating?,
         manager: some RemoteDataSourceManager<ItemType>,
-        presenter: UIViewController
+        stateIndicator: BusyStateIndicating?,
+        alertPresenter: RemoteConnectionSetupAlertPresenting
     ) {
-        let doCreateFile = { [weak presenter] in
+        let doCreateFile = { [weak alertPresenter] in
             stateIndicator?.indicateState(isBusy: true)
             manager.createFile(
                 in: folder,
@@ -113,7 +209,7 @@ final class RemoteFileExportCoordinator: Coordinator {
                         self.delegate?.didFinishExport(to: itemURL, credential: credential, in: self)
                     case .failure(let error):
                         Diag.debug("File creation failed [message: \(error.localizedDescription)]")
-                        presenter?.showErrorAlert(error)
+                        alertPresenter?.showErrorAlert(error)
                     }
                 }
             )
@@ -127,15 +223,9 @@ final class RemoteFileExportCoordinator: Coordinator {
             return
         }
 
-        let overwriteAlert = UIAlertController(
-            title: LString.fileAlreadyExists,
-            message: fileName,
-            preferredStyle: .alert)
-        overwriteAlert.addAction(title: LString.actionOverwrite, style: .destructive) { _ in
+        alertPresenter.showOverwriteConfirmation(fileName: fileName, onConfirm: { _ in
             doCreateFile()
-        }
-        overwriteAlert.addAction(title: LString.actionCancel, style: .cancel, handler: nil)
-        presenter.present(overwriteAlert, animated: true)
+        })
     }
 }
 
@@ -144,7 +234,7 @@ extension RemoteFileExportCoordinator: ConnectionTypePickerDelegate {
         _ connectionType: RemoteConnectionType,
         in viewController: ConnectionTypePickerVC
     ) -> Bool {
-        return connectionType != .webdav
+        return true
     }
 
     func willSelect(
@@ -166,7 +256,7 @@ extension RemoteFileExportCoordinator: ConnectionTypePickerDelegate {
             guard let self else { return }
             switch connectionType {
             case .webdav:
-                assertionFailure("Not implemented yet")
+                startWebDAVSetup(stateIndicator: viewController)
             case .oneDrivePersonal, .oneDriveForBusiness:
                 startOneDriveSetup(stateIndicator: viewController)
             case .dropbox, .dropboxBusiness:
@@ -185,17 +275,14 @@ extension RemoteFileExportCoordinator: ConnectionTypePickerDelegate {
 extension RemoteFileExportCoordinator: GoogleDriveConnectionSetupCoordinatorDelegate {
     private func startGoogleDriveSetup(stateIndicator: BusyStateIndicating) {
         let setupCoordinator = GoogleDriveConnectionSetupCoordinator(
-            router: router,
+            router: _router,
             stateIndicator: stateIndicator,
             oldRef: nil,
             selectionMode: .folder
         )
         setupCoordinator.delegate = self
-        setupCoordinator.dismissHandler = { [weak self] coordinator in
-            self?.removeChildCoordinator(coordinator)
-        }
         setupCoordinator.start()
-        addChildCoordinator(setupCoordinator)
+        addChildCoordinator(setupCoordinator, onDismiss: nil)
     }
 
     func didPickRemoteFile(
@@ -219,7 +306,7 @@ extension RemoteFileExportCoordinator: GoogleDriveConnectionSetupCoordinatorDele
             timeout: Timeout(duration: FileDataProvider.defaultTimeoutDuration),
             manager: GoogleDriveManager.shared,
             stateIndicator: stateIndicator,
-            coordinator: coordinator
+            alertPresenter: coordinator
         )
     }
 }
@@ -227,17 +314,14 @@ extension RemoteFileExportCoordinator: GoogleDriveConnectionSetupCoordinatorDele
 extension RemoteFileExportCoordinator: DropboxConnectionSetupCoordinatorDelegate {
     private func startDropboxSetup(stateIndicator: BusyStateIndicating) {
         let setupCoordinator = DropboxConnectionSetupCoordinator(
-            router: router,
+            router: _router,
             stateIndicator: stateIndicator,
             oldRef: nil,
             selectionMode: .folder
         )
         setupCoordinator.delegate = self
-        setupCoordinator.dismissHandler = { [weak self] coordinator in
-            self?.removeChildCoordinator(coordinator)
-        }
         setupCoordinator.start()
-        addChildCoordinator(setupCoordinator)
+        addChildCoordinator(setupCoordinator, onDismiss: nil)
     }
 
     func didPickRemoteFile(
@@ -261,7 +345,7 @@ extension RemoteFileExportCoordinator: DropboxConnectionSetupCoordinatorDelegate
             timeout: Timeout(duration: FileDataProvider.defaultTimeoutDuration),
             manager: DropboxManager.shared,
             stateIndicator: stateIndicator,
-            coordinator: coordinator
+            alertPresenter: coordinator
         )
     }
 }
@@ -272,14 +356,11 @@ extension RemoteFileExportCoordinator: OneDriveConnectionSetupCoordinatorDelegat
             stateIndicator: stateIndicator,
             selectionMode: .folder,
             oldRef: nil,
-            router: router
+            router: _router
         )
         setupCoordinator.delegate = self
-        setupCoordinator.dismissHandler = { [weak self] coordinator in
-            self?.removeChildCoordinator(coordinator)
-        }
         setupCoordinator.start()
-        addChildCoordinator(setupCoordinator)
+        addChildCoordinator(setupCoordinator, onDismiss: nil)
     }
 
     func didPickRemoteFile(
@@ -303,7 +384,42 @@ extension RemoteFileExportCoordinator: OneDriveConnectionSetupCoordinatorDelegat
             timeout: Timeout(duration: FileDataProvider.defaultTimeoutDuration),
             manager: OneDriveManager.shared,
             stateIndicator: stateIndicator,
-            coordinator: coordinator
+            alertPresenter: coordinator
+        )
+    }
+}
+
+extension RemoteFileExportCoordinator: WebDAVConnectionSetupCoordinatorDelegate {
+    private func startWebDAVSetup(stateIndicator: BusyStateIndicating) {
+        let setupCoordinator = WebDAVConnectionSetupCoordinator(
+            router: _router,
+            selectionMode: .folder
+        )
+        setupCoordinator.delegate = self
+        setupCoordinator.start()
+        addChildCoordinator(setupCoordinator, onDismiss: nil)
+    }
+
+    func didPickRemoteFile(
+        url: URL,
+        credential: NetworkCredential,
+        in coordinator: WebDAVConnectionSetupCoordinator
+    ) {
+        assertionFailure("Expected didPickRemoteFolder instead")
+    }
+
+    func didPickRemoteFolder(
+        _ folder: WebDAVItem,
+        credential: NetworkCredential,
+        stateIndicator: BusyStateIndicating?,
+        in coordinator: WebDAVConnectionSetupCoordinator
+    ) {
+        upload(
+            folder: folder,
+            credential: credential,
+            timeout: Timeout(duration: FileDataProvider.defaultTimeoutDuration),
+            stateIndicator: stateIndicator,
+            alertPresenter: coordinator
         )
     }
 }

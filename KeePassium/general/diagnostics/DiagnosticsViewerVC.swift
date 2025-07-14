@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2024 KeePassium Labs <info@keepassium.com>
+//  Copyright © 2018-2025 KeePassium Labs <info@keepassium.com>
 // 
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -91,8 +91,10 @@ class DiagnosticsViewerVC: UITableViewController, Refreshable {
     private func didPressContactSupport(_ sender: Any) {
         Watchdog.shared.restart()
         let logText = Diag.toString()
-        let popoverAnchor = PopoverAnchor(barButtonItem: contactSupportButtonItem)
-        delegate?.didPressContactSupport(text: logText, at: popoverAnchor, in: self)
+        delegate?.didPressContactSupport(
+            text: logText,
+            at: contactSupportButtonItem.asPopoverAnchor,
+            in: self)
     }
 
 

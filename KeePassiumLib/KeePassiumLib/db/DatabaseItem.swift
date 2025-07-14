@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2024 KeePassium Labs <info@keepassium.com>
+//  Copyright © 2018-2025 KeePassium Labs <info@keepassium.com>
 //
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -10,6 +10,7 @@ open class DatabaseItem: Taggable {
     public enum TouchMode {
         case accessed
         case modified
+        case modifiedAt(_ date: Date)
     }
 
     public weak var parent: Group?

@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2024 KeePassium Labs <info@keepassium.com>
+//  Copyright © 2018-2025 KeePassium Labs <info@keepassium.com>
 // 
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -32,7 +32,7 @@ public extension Date {
     static internal let secondsBetweenSwiftAndDotNetReferenceDates = Int64(63113904000)
 
     init?(iso8601string string: String?) {
-        guard let string = string else { return nil }
+        guard let string else { return nil }
         if let date = Date.iso8601DateFormatter.date(from: string) {
             self = date
         } else if let date = Date.iso8601DateFormatterWithFractionalSeconds.date(from: string) {

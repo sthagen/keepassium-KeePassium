@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2024 KeePassium Labs <info@keepassium.com>
+//  Copyright © 2018-2025 KeePassium Labs <info@keepassium.com>
 //
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -238,11 +238,15 @@ extension OneDriveManager {
 
     private func parseFileHash(json: [String: Any]) -> String? {
         guard let file = json[OneDriveAPI.Keys.file] as? [String: Any],
-              let hashes = file[OneDriveAPI.Keys.hashes] as? [String: Any],
-              let hash = hashes[OneDriveAPI.Keys.hash] as? String else {
+              let hashes = file[OneDriveAPI.Keys.hashes] as? [String: Any]
+        else {
             return nil
         }
-        return hash
+        let xorHash = hashes[OneDriveAPI.Keys.quickXorHash] as? String
+        let sha256 = hashes[OneDriveAPI.Keys.sha256hash] as? String
+        let sha1   = hashes[OneDriveAPI.Keys.sha1hash] as? String
+        let crc32  = hashes[OneDriveAPI.Keys.crc32Hash] as? String
+        return xorHash ?? sha256 ?? sha1 ?? crc32
     }
 
     private func updateWithRemoteItemInfo(
@@ -280,7 +284,7 @@ extension OneDriveManager {
         } else {
             fileItem.parent = OneDriveSharedFolder(
                 driveID: remoteDriveID,
-                itemID: "", 
+                itemID: "",
                 name: remotePath ?? ""
             )
         }
@@ -484,14 +488,14 @@ extension OneDriveManager {
         urlRequest.timeoutInterval = timeout.duration
 
         let dataTask = urlSession.dataTask(with: urlRequest) { data, response, error in
-            if let error = error {
+            if let error {
                 completionQueue.addOperation {
                     Diag.error("Failed to download file [message: \(error.localizedDescription)]")
                     completion(.failure(.general(error: error)))
                 }
                 return
             }
-            guard let data = data else {
+            guard let data else {
                 completionQueue.addOperation {
                     Diag.error("Failed to download file: no data returned")
                     completion(.failure(.emptyResponse))

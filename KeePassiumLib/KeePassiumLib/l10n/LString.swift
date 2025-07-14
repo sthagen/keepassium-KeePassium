@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2024 KeePassium Labs <info@keepassium.com>
+//  Copyright © 2018-2025 KeePassium Labs <info@keepassium.com>
 //
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -81,6 +81,12 @@ public enum LString {
             bundle: Bundle.framework,
             value: "Not a file URL",
             comment: "Error message: tried to import URL which does not point to a file")
+        public static let webDAVExportNeedsFolder = NSLocalizedString(
+            "[WebDAV/Export/NeedsFolder]",
+            bundle: Bundle.framework,
+            value: "Please select path to a folder",
+            comment: "Error shown when user selects a file path instead of folder path in WebDAV."
+        )
     }
 
 

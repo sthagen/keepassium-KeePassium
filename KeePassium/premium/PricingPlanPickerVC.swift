@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2024 KeePassium Labs <info@keepassium.com>
+//  Copyright © 2018-2025 KeePassium Labs <info@keepassium.com>
 //
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -51,6 +51,7 @@ class PricingPlanPickerVC: UIViewController {
         collectionView.dataSource = self
         collectionView.delegate = self
         collectionView.decelerationRate = .fast
+        collectionView.allowsFocus = true
 
         statusLabel.text = LString.statusContactingAppStore
         activityIndcator.isHidden = false
@@ -238,6 +239,13 @@ extension PricingPlanPickerVC: UICollectionViewDataSource {
 }
 
 extension PricingPlanPickerVC: PricingPlanCollectionCellDelegate {
+    func didSelectCell(_ cell: PricingPlanCollectionCell) {
+        guard let indexPath = collectionView.indexPath(for: cell) else {
+            return
+        }
+        collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
+    }
+
     func didPressPurchaseButton(in cell: PricingPlanCollectionCell, with pricingPlan: PricingPlan) {
         guard let realPricingPlan = pricingPlan as? RealPricingPlan else {
             assert(pricingPlan.isFree)
@@ -252,9 +260,7 @@ extension PricingPlanPickerVC: PricingPlanCollectionCellDelegate {
         in cell: PricingPlanConditionCell,
         with pricingPlan: PricingPlan
     ) {
-        let popoverAnchor = PopoverAnchor(
-            sourceView: cell.detailButton,
-            sourceRect: cell.detailButton.bounds)
+        let popoverAnchor = cell.detailButton.asPopoverAnchor
         delegate?.didPressHelpLink(url: url, at: popoverAnchor, in: self)
     }
 }

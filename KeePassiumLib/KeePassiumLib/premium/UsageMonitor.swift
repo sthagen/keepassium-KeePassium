@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2024 KeePassium Labs <info@keepassium.com>
+//  Copyright © 2018-2025 KeePassium Labs <info@keepassium.com>
 //
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -79,7 +79,7 @@ public class UsageMonitor {
     }
 
     @objc public func stopInterval() {
-        guard let startTime = startTime else { return }
+        guard let startTime else { return }
         let endTime = Date.now
         let secondsElapsed = abs(endTime.timeIntervalSince(startTime))
         self.startTime = nil 

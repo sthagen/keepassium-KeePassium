@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2024 KeePassium Labs <info@keepassium.com>
+//  Copyright © 2018-2025 KeePassium Labs <info@keepassium.com>
 // 
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -109,7 +109,7 @@ final class FileInfoVC: UITableViewController, Refreshable {
     public func updateFileInfo(_ fileInfo: FileInfo?, error: FileAccessError?) {
         attributes = fileInfo?.attributes ?? [:]
         var newFields = makeFields(fileInfo: fileInfo)
-        if let error = error {
+        if let error {
             newFields.append(FileInfoField(
                 name: LString.FileInfo.fieldError,
                 value: error.localizedDescription
@@ -137,9 +137,8 @@ final class FileInfoVC: UITableViewController, Refreshable {
             primaryAction: UIAction(
                 title: exportActionTitle,
                 handler: { [weak self] _ in
-                    guard let self = self else { return }
-                    let popoverAnchor = PopoverAnchor(barButtonItem: self.exportBarButton)
-                    self.delegate?.didPressExport(at: popoverAnchor, in: self)
+                    guard let self else { return }
+                    delegate?.didPressExport(at: exportBarButton.asPopoverAnchor, in: self)
                 }
             )
         )
@@ -153,9 +152,8 @@ final class FileInfoVC: UITableViewController, Refreshable {
                 title: eliminationActionTitle,
                 attributes: .destructive,
                 handler: { [weak self] _ in
-                    guard let self = self else { return }
-                    let popoverAnchor = PopoverAnchor(barButtonItem: self.eliminateBarButton)
-                    self.delegate?.didPressEliminate(at: popoverAnchor, in: self)
+                    guard let self else { return }
+                    delegate?.didPressEliminate(at: eliminateBarButton.asPopoverAnchor, in: self)
                 }
             )
         )
@@ -178,7 +176,7 @@ final class FileInfoVC: UITableViewController, Refreshable {
             value: fileRef.getLocationDescription()
         ))
 
-        guard let fileInfo = fileInfo else { 
+        guard let fileInfo else {
             return fields
         }
 

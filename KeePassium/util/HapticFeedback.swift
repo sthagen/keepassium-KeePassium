@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2024 KeePassium Labs <info@keepassium.com>
+//  Copyright © 2018-2025 KeePassium Labs <info@keepassium.com>
 //
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -11,6 +11,7 @@ import UIKit
 
 class HapticFeedback {
     enum Kind {
+        case selectionChanged
         case appUnlocked
         case databaseUnlocked
         case contextMenuOpened
@@ -23,7 +24,7 @@ class HapticFeedback {
         case deviceShaken
     }
 
-    static func play(_ kind: Kind) {
+    static func play(_ kind: Kind?) {
         guard Settings.current.isHapticFeedbackEnabled else { return }
 
         switch kind {
@@ -33,7 +34,8 @@ class HapticFeedback {
              .passwordGenerated:
             let tactileGenerator = UIImpactFeedbackGenerator()
             tactileGenerator.impactOccurred()
-        case .copiedToClipboard:
+        case .selectionChanged,
+             .copiedToClipboard:
             let tactileGenerator = UISelectionFeedbackGenerator()
             tactileGenerator.selectionChanged()
         case .credentialsPasted:
@@ -51,6 +53,8 @@ class HapticFeedback {
         case .deviceShaken:
             let tactileGenerator = UINotificationFeedbackGenerator()
             tactileGenerator.notificationOccurred(.warning)
+        case .none:
+            return
         }
     }
 

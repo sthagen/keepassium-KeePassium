@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2024 KeePassium Labs <info@keepassium.com>
+//  Copyright © 2018-2025 KeePassium Labs <info@keepassium.com>
 //
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -324,7 +324,7 @@ extension FileDataProvider {
                 return
             }
 
-            if let coordinatorError = coordinatorError {
+            if let coordinatorError {
                 completionQueue.addOperation {
                     let nsError = coordinatorError as NSError
                     Diag.error("File coordination failed [message: \(nsError.debugDescription)]")

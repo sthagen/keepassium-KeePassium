@@ -1,6 +1,6 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2024 KeePassium Labs <info@keepassium.com>
-// 
+//  Copyright © 2018-2025 KeePassium Labs <info@keepassium.com>
+//
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
 //  by the Free Software Foundation: https://www.gnu.org/licenses/).
@@ -10,7 +10,7 @@
 import KeePassiumLib
 import UIKit
 
-struct EntryFieldActionConfiguration {
+struct EditableFieldActionConfiguration {
     static let hidden = Self(state: [.hidden], menu: nil)
 
     enum State {
@@ -41,7 +41,7 @@ internal protocol EditableFieldCellDelegate: AnyObject {
         at popoverAnchor: PopoverAnchor,
         in cell: EditableFieldCell)
 
-    func getActionConfiguration(for field: EditableField) -> EntryFieldActionConfiguration
+    func getActionConfiguration(for field: EditableField) -> EditableFieldActionConfiguration
 }
 
 internal protocol EditableFieldCell: AnyObject {
@@ -118,7 +118,7 @@ class EntryFieldEditorTitleCell:
     }
 
     func validatingTextField(_ sender: ValidatingTextField, textDidChange text: String) {
-        guard let field = field else { return }
+        guard let field else { return }
         field.value = titleTextField.text ?? ""
         field.isValid = field.value?.isNotEmpty ?? false
         delegate?.didChangeField(field, in: self)
@@ -129,109 +129,13 @@ class EntryFieldEditorTitleCell:
     }
 
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        guard let field = field else { return false }
+        guard let field else { return false }
         delegate?.didPressReturn(for: field, in: self)
         return false
     }
 
     func textInputDidRequestRandomizer(_ textInput: TextInputView) {
         guard textInput === titleTextField else { return }
-        delegate?.didPressRandomize(for: textInput, viaMenu: true, in: self)
-    }
-
-    func textField(
-        _ textField: UITextField,
-        editMenuForCharactersIn range: NSRange,
-        suggestedActions: [UIMenuElement]
-    ) -> UIMenu? {
-        return textField.addRandomizerEditMenu(to: suggestedActions)
-    }
-}
-
-class EntryFieldEditorSingleLineCell:
-    UITableViewCell,
-    EditableFieldCell,
-    ValidatingTextFieldDelegate,
-    TextInputEditMenuDelegate,
-    UITextFieldDelegate
-{
-    public static let storyboardID = "SingleLineCell"
-    @IBOutlet weak var textField: ValidatingTextField!
-    @IBOutlet weak var titleLabel: UILabel!
-    @IBOutlet weak var actionButton: UIButton!
-
-    weak var delegate: EditableFieldCellDelegate? {
-        didSet {
-            refreshActionButton()
-        }
-    }
-    weak var field: EditableField? {
-        didSet {
-            titleLabel.text = field?.visibleName
-            textField.text = field?.value
-            textField.isSecureTextEntry =
-                (field?.isProtected ?? false) && Settings.current.isHideProtectedFields
-            textField.accessibilityLabel = field?.visibleName
-            textField.textContentType = field?.textContentType
-            refreshActionButton()
-        }
-    }
-
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        titleLabel.font = UIFont.preferredFont(forTextStyle: .subheadline)
-        titleLabel.adjustsFontForContentSizeCategory = true
-        textField.font = UIFont.entryTextFont()
-        textField.adjustsFontForContentSizeCategory = true
-
-        textField.validityDelegate = self
-        textField.delegate = self
-
-    }
-
-    private func refreshActionButton() {
-        guard let field = field else {
-            return
-        }
-        let actionConfig = delegate?.getActionConfiguration(for: field) ?? .hidden
-        actionConfig.apply(to: actionButton)
-    }
-
-    override func becomeFirstResponder() -> Bool {
-        super.becomeFirstResponder()
-        return textField.becomeFirstResponder()
-    }
-
-    func validate() {
-        textField.validate()
-        refreshActionButton()
-    }
-
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        guard let field = field else { return false }
-        delegate?.didPressReturn(for: field, in: self)
-        return false
-    }
-
-    func validatingTextField(_ sender: ValidatingTextField, textDidChange text: String) {
-        guard let field = field else { return }
-        field.value = textField.text ?? ""
-        delegate?.didChangeField(field, in: self)
-        refreshActionButton()
-    }
-
-    func validatingTextFieldShouldValidate(_ sender: ValidatingTextField) -> Bool {
-        return field?.isValid ?? false
-    }
-
-    @IBAction private func didPressActionButton(_ sender: Any) {
-        guard let field = field else { return }
-        let popoverAnchor = PopoverAnchor(sourceView: actionButton, sourceRect: actionButton.bounds)
-        delegate?.didPressButton(for: field, at: popoverAnchor, in: self)
-    }
-
-    func textInputDidRequestRandomizer(_ textInput: TextInputView) {
-        guard textInput === textField else { return }
         delegate?.didPressRandomize(for: textInput, viaMenu: true, in: self)
     }
 
@@ -292,7 +196,7 @@ final class PasswordEntryFieldCell:
     }
 
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        guard let field = field else { return false }
+        guard let field else { return false }
         delegate?.didPressReturn(for: field, in: self)
         return false
     }
@@ -306,7 +210,7 @@ final class PasswordEntryFieldCell:
     }
 
     func validatingTextField(_ sender: ValidatingTextField, textDidChange text: String) {
-        guard let field = field else { return }
+        guard let field else { return }
         field.value = textField.text ?? ""
         passwordQualityIndicatorView.quality = .init(password: textField.text)
         delegate?.didChangeField(field, in: self)
@@ -409,7 +313,7 @@ class EntryFieldEditorMultiLineCell:
     }
 
     func validatingTextView(_ sender: ValidatingTextView, textDidChange text: String) {
-        guard let field = field else { return }
+        guard let field else { return }
         field.value = textView.text ?? ""
         delegate?.didChangeField(field, in: self)
     }
@@ -489,6 +393,11 @@ class EntryFieldEditorCustomFieldCell:
     func selectNameText() {
         nameTextField.selectAll(nil)
     }
+
+    func selectValueText() {
+        valueTextView.selectAll(nil)
+    }
+
     func validate() {
         nameTextField.validate()
         valueTextView.validate()
@@ -496,7 +405,7 @@ class EntryFieldEditorCustomFieldCell:
 
     func validatingTextField(_ sender: ValidatingTextField, textDidChange text: String) {
         guard sender == nameTextField else { assertionFailure(); return }
-        guard let field = field else { return }
+        guard let field else { return }
         field.internalName = text
         field.isValid = nameTextField.isValid
         delegate?.didChangeField(field, in: self)
@@ -509,7 +418,7 @@ class EntryFieldEditorCustomFieldCell:
 
     func validatingTextView(_ sender: ValidatingTextView, textDidChange text: String) {
         guard sender == valueTextView else { assertionFailure(); return }
-        guard let field = field else { return }
+        guard let field else { return }
         field.value = valueTextView.text ?? ""
         delegate?.didChangeField(field, in: self)
     }
@@ -542,14 +451,14 @@ class EntryFieldEditorCustomFieldCell:
 
     @objc
     private func protectionDidChange() {
-        guard let field = field else { return }
+        guard let field else { return }
         field.isProtected = protectionSwitch.isOn
         delegate?.didChangeField(field, in: self)
     }
 
     @objc
     private func didPressDelete() {
-        guard let field = field else { return }
+        guard let field else { return }
         delegate?.didPressDelete(field, in: self)
     }
 }

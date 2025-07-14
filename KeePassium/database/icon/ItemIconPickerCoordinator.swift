@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2024 KeePassium Labs <info@keepassium.com>
+//  Copyright © 2018-2025 KeePassium Labs <info@keepassium.com>
 //
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -16,14 +16,10 @@ protocol ItemIconPickerCoordinatorDelegate: AnyObject {
     func didRelocateDatabase(_ databaseFile: DatabaseFile, to url: URL)
 }
 
-class ItemIconPickerCoordinator: Coordinator {
-    var childCoordinators = [Coordinator]()
-    var dismissHandler: CoordinatorDismissHandler?
-
+class ItemIconPickerCoordinator: BaseCoordinator {
     weak var delegate: ItemIconPickerCoordinatorDelegate?
     weak var item: DatabaseItem?
 
-    private let router: NavigationRouter
     private let databaseFile: DatabaseFile
     private let database: Database
     private let iconPicker: ItemIconPicker
@@ -32,38 +28,29 @@ class ItemIconPickerCoordinator: Coordinator {
 
     var databaseSaver: DatabaseSaver?
     var fileExportHelper: FileExportHelper?
-    var savingProgressHost: ProgressViewHost? { return router }
+    var savingProgressHost: ProgressViewHost? { return _router }
     var saveSuccessHandler: (() -> Void)?
 
     let faviconDownloader: FaviconDownloader
 
     init(router: NavigationRouter, databaseFile: DatabaseFile, customFaviconUrl: URL?) {
-        self.router = router
         self.databaseFile = databaseFile
         self.database = databaseFile.database
         self.faviconDownloader = FaviconDownloader()
         self.customFaviconUrl = customFaviconUrl
         iconPicker = ItemIconPicker.instantiateFromStoryboard()
+        super.init(router: router)
         iconPicker.delegate = self
     }
 
-    deinit {
-        assert(childCoordinators.isEmpty)
-        removeAllChildCoordinators()
-    }
-
-    func start() {
+    override func start() {
         refresh()
         iconPicker.selectIcon(for: item)
-
-        router.push(iconPicker, animated: true, onPop: { [weak self] in
-            guard let self = self else { return }
-            self.removeAllChildCoordinators()
-            self.dismissHandler?(self)
-        })
+        _pushInitialViewController(iconPicker, animated: true)
     }
 
-    private func refresh() {
+    override func refresh() {
+        super.refresh()
         let supportsCustomIcons = database is Database2
         let unusedCustomIcons = findUnusedCustomIcons()
         iconPicker.isImportAllowed = supportsCustomIcons
@@ -75,6 +62,9 @@ class ItemIconPickerCoordinator: Coordinator {
 
         if let db2 = database as? Database2 {
             iconPicker.customIcons = db2.customIcons
+            iconPicker.isDeleteAllowed = !db2.customIcons.isEmpty
+        } else {
+            iconPicker.isDeleteAllowed = false
         }
         iconPicker.refresh()
     }
@@ -94,8 +84,8 @@ class ItemIconPickerCoordinator: Coordinator {
 
         saveDatabase(databaseFile, onSuccess: { [weak self] in
             guard let self else { return }
-            self.delegate?.didSelectIcon(customIcon: newIcon.uuid, in: self)
-            self.router.pop(animated: true)
+            delegate?.didSelectIcon(customIcon: newIcon.uuid, in: self)
+            _router.pop(animated: true)
         })
     }
 
@@ -159,6 +149,22 @@ class ItemIconPickerCoordinator: Coordinator {
         viewController.present(confirmationAlert, animated: true)
     }
 
+    private func confirmDeleteCustomIcons(_ iconUUIDs: Set<UUID>, in viewController: UIViewController) {
+        let confirmationAlert = UIAlertController.make(
+            title: LString.itemIconPickerCustomIcons,
+            message: String.localizedStringWithFormat(
+                LString.titleAllCustomIconsCountTemplate,
+                iconUUIDs.count),
+            dismissButtonTitle: LString.actionCancel
+        )
+        confirmationAlert.addAction(title: LString.actionDelete, style: .destructive) {
+            [weak self, weak viewController] _ in
+            guard let self, let viewController else { return }
+            deleteCustomIcons(iconUUIDs, in: viewController)
+        }
+        viewController.present(confirmationAlert, animated: true)
+    }
+
     private func deleteUnusedCustomIcons(_ unusedIconUUIDs: Set<UUID>, in viewController: UIViewController) {
         guard let db2 = database as? Database2 else {
             assertionFailure()
@@ -171,21 +177,41 @@ class ItemIconPickerCoordinator: Coordinator {
         refresh()
         saveDatabase(databaseFile)
     }
+
+    private func deleteCustomIcons(_ iconUUIDs: Set<UUID>, in viewController: UIViewController) {
+        guard let db2 = database as? Database2 else {
+            assertionFailure()
+            return
+        }
+        iconUUIDs.forEach {
+            db2.deleteCustomIcon(uuid: $0)
+        }
+        refresh()
+        switch item {
+        case let entry as Entry2 where iconUUIDs.contains(entry.customIconUUID):
+            delegate?.didDeleteIcon(customIcon: entry.customIconUUID, in: self)
+        case let group as Group2 where iconUUIDs.contains(group.customIconUUID):
+            delegate?.didDeleteIcon(customIcon: group.customIconUUID, in: self)
+        default:
+            break
+        }
+        saveDatabase(databaseFile)
+    }
 }
 
 extension ItemIconPickerCoordinator: ItemIconPickerDelegate {
     func didPressCancel(in viewController: ItemIconPicker) {
-        router.pop(animated: true)
+        _router.pop(animated: true)
     }
 
     func didSelect(standardIcon iconID: IconID, in viewController: ItemIconPicker) {
         delegate?.didSelectIcon(standardIcon: iconID, in: self)
-        router.pop(animated: true)
+        _router.pop(animated: true)
     }
 
     func didSelect(customIcon uuid: UUID, in viewController: ItemIconPicker) {
         delegate?.didSelectIcon(customIcon: uuid, in: self)
-        router.pop(animated: true)
+        _router.pop(animated: true)
     }
 
     func didDelete(customIcon uuid: UUID, in viewController: ItemIconPicker) {
@@ -194,10 +220,10 @@ extension ItemIconPickerCoordinator: ItemIconPickerDelegate {
 
     func didPressImportIcon(in viewController: ItemIconPicker, at popoverAnchor: PopoverAnchor) {
         if photoPicker == nil {
-            photoPicker = PhotoPickerFactory.makePhotoPicker()
+            photoPicker = GalleryPhotoPicker()
         }
         photoPicker?.pickImage(from: iconPicker) { [weak self] result in
-            guard let self = self else { return }
+            guard let self else { return }
             switch result {
             case .success(let pickerImage):
                 if let iconImage = pickerImage?.image {
@@ -224,6 +250,25 @@ extension ItemIconPickerCoordinator: ItemIconPickerDelegate {
     func didPressDeleteUnusedIcons(in viewController: ItemIconPicker, at popoverAnchor: PopoverAnchor) {
         confirmDeleteUnusedCustomIcons(in: viewController)
     }
+
+    func didPressDeleteAllIcons(
+        in viewController: ItemIconPicker,
+        at popoverAnchor: PopoverAnchor
+    ) {
+        guard let db2 = database as? Database2, !db2.customIcons.isEmpty else {
+            assertionFailure("Should have been blocked in UI")
+            return
+        }
+        confirmDeleteCustomIcons(Set(db2.customIcons.map { $0.uuid }), in: viewController)
+    }
+
+    func didPressDeleteIcons(
+        icons uuids: Set<UUID>,
+        in viewController: ItemIconPicker,
+        at popoverAnchor: PopoverAnchor
+    ) {
+        confirmDeleteCustomIcons(uuids, in: viewController)
+    }
 }
 
 extension ItemIconPickerCoordinator: DatabaseSaving {
@@ -240,5 +285,5 @@ extension ItemIconPickerCoordinator: DatabaseSaving {
 }
 
 extension ItemIconPickerCoordinator: FaviconDownloading {
-    var faviconDownloadingProgressHost: ProgressViewHost? { return router }
+    var faviconDownloadingProgressHost: ProgressViewHost? { return _router }
 }

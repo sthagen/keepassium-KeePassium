@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2024 KeePassium Labs <info@keepassium.com>
+//  Copyright © 2018-2025 KeePassium Labs <info@keepassium.com>
 // 
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -49,47 +49,7 @@ public class FileKeeper {
         case overwrite
     }
 
-    public static let platformSupportsSharedReferences: Bool = {
-        if ProcessInfo.isRunningOnMac {
-            return false 
-        }
-        return true
-    }()
-
-    public static var canPossiblyAccessAppSandbox: Bool {
-        if platformSupportsSharedReferences {
-            return true
-        } else {
-            return AppGroup.isMainApp
-        }
-    }
-
-    public var canActuallyAccessAppSandbox: Bool {
-        guard AppGroup.isAppExtension else {
-            return true
-        }
-        guard Self.platformSupportsSharedReferences else {
-            return false
-        }
-        let extensionSandboxURL = FileManager.default
-            .urls(for: .documentDirectory, in: .userDomainMask)
-            .first!
-            .standardizedFileURL
-        let gotTheRightURL = (docDirURL != extensionSandboxURL)
-        guard gotTheRightURL else {
-            return false
-        }
-        do {
-            try FileManager.default.contentsOfDirectory(
-                at: docDirURL,
-                includingPropertiesForKeys: [.isReadableKey],
-                options: [])
-            return true
-        } catch {
-            return false
-        }
-    }
-
+    private static let docDirPlaceholder = "_"
     private static let documentsDirectoryName = "Documents"
     private static let inboxDirectoryName = "Inbox"
     private static let backupDirectoryName = "Backup"
@@ -328,7 +288,7 @@ public class FileKeeper {
         let internalDocumentFiles = scanLocalDirectory(docDirURL, fileType: fileType)
         result.append(contentsOf: internalDocumentFiles)
 
-        if includeBackup {
+        if includeBackup && fileType == .database {
             let backupFileRefs = scanLocalDirectory(backupDirURL, fileType: fileType)
             result.append(contentsOf: backupFileRefs)
         }
@@ -352,6 +312,9 @@ public class FileKeeper {
                 includingPropertiesForKeys: nil,
                 options: [])
             for url in dirContents {
+                if url.lastPathComponent == Self.docDirPlaceholder {
+                    continue
+                }
                 let isFileTypeMatch = isIgnoreFileType || FileType(for: url) == fileType
                 if isFileTypeMatch && !url.isDirectory {
                     let urlRef = try URLReference(from: url, location: location)
@@ -500,9 +463,6 @@ public class FileKeeper {
             return false 
         }
 
-        if fileType == .database {
-            Settings.current.startupDatabase = existingRef
-        }
         Diag.info("Added already known external file, deduplicating.")
         FileKeeperNotifier.notifyFileAdded(urlRef: existingRef, fileType: fileType)
         completionQueue.addOperation {
@@ -601,9 +561,6 @@ public class FileKeeper {
                 URLReference.create(for: url, location: location) { refResult in
                     switch refResult {
                     case .success(let urlRef):
-                        if fileType == .database {
-                            Settings.current.startupDatabase = urlRef
-                        }
                         Diag.info("Inbox file added successfully [fileType: \(fileType)]")
                         FileKeeperNotifier.notifyFileAdded(urlRef: urlRef, fileType: fileType)
                         completionQueue.addOperation {
@@ -637,9 +594,6 @@ public class FileKeeper {
         URLReference.create(for: sourceURL, location: location) { result in
             switch result {
             case .success(let urlRef):
-                if fileType == .database {
-                    Settings.current.startupDatabase = urlRef
-                }
                 Diag.info("Internal file processed successfully [fileType: \(fileType), location: \(location)]")
                 FileKeeperNotifier.notifyFileAdded(urlRef: urlRef, fileType: fileType)
                 completionQueue.addOperation {
@@ -667,7 +621,7 @@ public class FileKeeper {
         let location = getLocation(for: sourceURL)
         assert(!location.isInternal, "Must be an external or remote location")
         URLReference.create(for: sourceURL, location: location) { [weak self] result in
-            guard let self = self else { return }
+            guard let self else { return }
             switch result {
             case .success(let newRef):
                 var storedRefs = self.getStoredReferences(
@@ -849,6 +803,32 @@ public class FileKeeper {
         }
     }
 
+    public func createPlaceholderInDocumentsDir() throws {
+        let fileURL = docDirURL.appendingPathComponent(Self.docDirPlaceholder)
+        try Data().write(to: fileURL, options: [.completeFileProtection, .withoutOverwriting])
+    }
+
+    public func deleteAllInternalFiles(
+        completionQueue: OperationQueue = .main,
+        completion: (() -> Void)?
+    ) {
+        operationQueue.addOperation { [self] in
+            let fileManager = FileManager()
+            let targetDirectories = [docDirURL, backupDirURL, inboxDirURL, fileManager.temporaryDirectory]
+            for targetDir in targetDirectories {
+                let files = try? fileManager.contentsOfDirectory(
+                    at: targetDir,
+                    includingPropertiesForKeys: nil)
+                files?.forEach {
+                    try? fileManager.removeItem(at: $0)
+                }
+            }
+            if let completion {
+                FileKeeperNotifier.notifyFileListUpdated()
+                completionQueue.addOperation(completion)
+            }
+        }
+    }
 
     enum BackupMode {
         case overwriteLatest
@@ -911,7 +891,7 @@ public class FileKeeper {
 
             let isExcludeFromBackup = Settings.current.isExcludeBackupFilesFromSystemBackup
             backupFileURL.setFileAttribute(.excludedFromBackup, to: isExcludeFromBackup)
-            if let newlyTimestampedSHA256 = newlyTimestampedSHA256 {
+            if let newlyTimestampedSHA256 {
                 do {
                     try backupFileURL.setExtendedAttribute(
                         name: lastTimestampedSHA256Attribute,
@@ -1078,7 +1058,7 @@ public class FileKeeper {
         completion: (() -> Void)?
     ) {
         operationQueue.addOperation { [weak self] in
-            self?.deleteBackupFilesAsync(
+            self?.deleteBackupFilesSync(
                 olderThan: maxAge,
                 keepLatest: keepLatest,
                 completionQueue: completionQueue,
@@ -1087,7 +1067,7 @@ public class FileKeeper {
         }
     }
 
-    private func deleteBackupFilesAsync(
+    private func deleteBackupFilesSync(
         olderThan maxAge: TimeInterval,
         keepLatest: Bool,
         completionQueue: OperationQueue,
@@ -1101,8 +1081,8 @@ public class FileKeeper {
                 continue
             }
             getBackupFileDate(fileRef) { [weak self] fileDate in
-                guard let self = self else { return }
-                guard let fileDate = fileDate else {
+                guard let self else { return }
+                guard let fileDate else {
                     Diag.warning("Failed to get backup file age.")
                     return
                 }
@@ -1121,6 +1101,80 @@ public class FileKeeper {
             completion?()
         }
     }
+}
+
+extension FileKeeper {
+    public static let platformSupportsSharedReferences: Bool = {
+        if ProcessInfo.isRunningOnMac {
+            return false
+        }
+        return true
+    }()
+
+    public static var canPossiblyAccessAppSandbox: Bool {
+        if platformSupportsSharedReferences {
+            return true
+        } else {
+            return AppGroup.isMainApp
+        }
+    }
+
+    public var canActuallyAccessAppSandbox: Bool {
+        guard AppGroup.isAppExtension else {
+            return true
+        }
+        guard Self.platformSupportsSharedReferences else {
+            return false
+        }
+        let extensionSandboxURL = FileManager.default
+            .urls(for: .documentDirectory, in: .userDomainMask)
+            .first!
+            .standardizedFileURL
+        let gotTheRightURL = (docDirURL != extensionSandboxURL)
+        guard gotTheRightURL else {
+            return false
+        }
+        do {
+            try FileManager.default.contentsOfDirectory(
+                at: docDirURL,
+                includingPropertiesForKeys: [.isReadableKey],
+                options: [])
+            Diag.info("App sandbox is reachable")
+            return true
+        } catch {
+            let nsError = error as NSError
+            Diag.error("Failed to access app documents [errorCode: \(nsError.code)]")
+            return false
+        }
+    }
+
+    private func isAppSandboxLikelyEmpty() -> Bool {
+        do {
+            let value = try docDirURL.resourceValues(forKeys: [.directoryEntryCountKey])
+            guard let childrenCount = value.directoryEntryCount else {
+                Diag.warning("App sandbox status unknown, assuming non-empty")
+                return false
+            }
+            if childrenCount > 0 {
+                Diag.debug("App sandbox contains files")
+                return false
+            } else {
+                Diag.debug("App sandbox is empty")
+                return true
+            }
+        } catch {
+            let nsError = error as NSError
+            Diag.warning("App sandbox status unavailable, assuming non-empty [message: \(nsError.description)]")
+            return false
+        }
+    }
+
+    public func areSandboxFilesLikelyMissing() -> Bool {
+        return FileKeeper.canPossiblyAccessAppSandbox
+               && !FileKeeper.shared.isAppSandboxLikelyEmpty()
+               && !FileKeeper.shared.canActuallyAccessAppSandbox
+    }
+
 }
 
 extension FileKeeper {

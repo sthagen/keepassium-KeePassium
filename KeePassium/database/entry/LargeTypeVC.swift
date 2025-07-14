@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018-2024 KeePassium Labs <info@keepassium.com>
+//  Copyright © 2018-2025 KeePassium Labs <info@keepassium.com>
 //
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -68,6 +68,10 @@ final class LargeTypeVC: UICollectionViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
@@ -76,6 +80,12 @@ final class LargeTypeVC: UICollectionViewController {
 
         registerCellClasses(collectionView)
         computePreferredSize()
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(refresh),
+            name: UIAccessibility.differentiateWithoutColorDidChangeNotification,
+            object: nil
+        )
     }
 
     private func registerCellClasses(_ collectionView: UICollectionView) {
@@ -106,6 +116,11 @@ final class LargeTypeVC: UICollectionViewController {
     func getEstimatedRowCount(atSize size: CGSize) -> Int {
         computePreferredSize()
         return rows
+    }
+
+    @objc
+    private func refresh() {
+        collectionView.reloadData()
     }
 
     func detents(for size: CGSize) -> [UISheetPresentationController.Detent] {

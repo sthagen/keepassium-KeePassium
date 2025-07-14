@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2024 KeePassium Labs <info@keepassium.com>
+//  Copyright © 2018-2025 KeePassium Labs <info@keepassium.com>
 //
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -80,13 +80,14 @@ struct AppHistory: Decodable {
 
         let title: String
         let type: ItemType
+        let github: String?
         let credits: [String]
         let edition: [Edition]
         let change: Change
         let os: [OS]
 
         enum CodingKeys: String, CodingKey {
-            case title, type, credits, edition, os
+            case title, type, github, credits, edition, os
         }
 
         init(from decoder: Decoder) throws {
@@ -101,13 +102,14 @@ struct AppHistory: Decodable {
             type = try container.decodeIfPresent(ItemType.self, forKey: .type) ?? .default
             os = try array(.os)?.compactMap({ OS(rawValue: $0) }) ?? OS.allCases
             edition = try array(.edition)?.compactMap({ Edition(rawValue: $0) }) ?? Edition.allCases
+            github = try container.decodeIfPresent(String.self, forKey: .github)
             credits = try array(.credits) ?? []
 
             let title = try container.decode(String.self, forKey: .title)
             let change = Change.allCases.first(where: { title.hasPrefix($0.rawValue) })
             self.change = change ?? .default
 
-            if let change = change {
+            if let change {
                 self.title = title.dropFirst(change.rawValue.count + 1).trimmingCharacters(in: .whitespaces)
             } else {
                 self.title = title

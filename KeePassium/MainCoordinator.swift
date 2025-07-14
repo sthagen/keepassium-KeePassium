@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2024 KeePassium Labs <info@keepassium.com>
+//  Copyright © 2018-2025 KeePassium Labs <info@keepassium.com>
 //
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -16,7 +16,7 @@ import MSAL
 final class MainCoordinator: UIResponder, Coordinator {
     var childCoordinators = [Coordinator]()
 
-    var dismissHandler: CoordinatorDismissHandler? {
+    var _dismissHandler: CoordinatorDismissHandler? {
         didSet {
             fatalError("Don't set dismiss handler in MainCoordinator, it is never called.")
         }
@@ -54,8 +54,11 @@ final class MainCoordinator: UIResponder, Coordinator {
 
     private var toolbarDelegate: ToolbarDelegate?
 
-    init(window: UIWindow) {
+    private let autoTypeHelper: AutoTypeHelper?
+
+    init(window: UIWindow, autoTypeHelper: AutoTypeHelper?) {
         self.mainWindow = window
+        self.autoTypeHelper = autoTypeHelper
         self.rootSplitVC = RootSplitVC()
 
         let primaryNavVC = RouterNavigationController()
@@ -77,7 +80,7 @@ final class MainCoordinator: UIResponder, Coordinator {
         window.rootViewController = rootSplitVC
 
         #if targetEnvironment(macCatalyst)
-        initMacUI()
+        setupMacToolbar()
         #endif
 
         NotificationCenter.default.addObserver(
@@ -88,7 +91,7 @@ final class MainCoordinator: UIResponder, Coordinator {
     }
 
 #if targetEnvironment(macCatalyst)
-    private func initMacUI() {
+    private func setupMacToolbar() {
         guard let scene = UIApplication.shared.currentScene else {
             assertionFailure()
             return
@@ -96,12 +99,23 @@ final class MainCoordinator: UIResponder, Coordinator {
         let toolbar = NSToolbar(identifier: "main")
         toolbarDelegate = ToolbarDelegate(mainCoordinator: self)
         toolbar.delegate = toolbarDelegate
-        toolbar.displayMode = .iconOnly
+        if #available(macCatalyst 18.0, *) {
+            toolbar.autosavesConfiguration = toolbar.allowsDisplayModeCustomization
+        } else {
+            toolbar.displayMode = .iconOnly
+        }
 
         let titlebar = scene.titlebar
         titlebar?.toolbar = toolbar
         titlebar?.toolbarStyle = .automatic
+        titlebar?.titleVisibility = .visible
         scene.sizeRestrictions?.minimumSize = CGSize(width: 400, height: 600)
+    }
+
+    private func removeMacToolbar() {
+        let titlebar = UIApplication.shared.currentScene?.titlebar
+        titlebar?.titleVisibility = .hidden
+        titlebar?.toolbar = nil
     }
 #endif
 
@@ -127,21 +141,13 @@ final class MainCoordinator: UIResponder, Coordinator {
         assert(databasePickerCoordinator == nil)
         databasePickerCoordinator = DatabasePickerCoordinator(router: primaryRouter, mode: .full)
         databasePickerCoordinator.delegate = self
-        databasePickerCoordinator.dismissHandler = { [weak self] coordinator in
-            self?.removeChildCoordinator(coordinator)
-        }
         databasePickerCoordinator.start()
-        addChildCoordinator(databasePickerCoordinator)
+        addChildCoordinator(databasePickerCoordinator, onDismiss: nil)
 
         showPlaceholder()
 
-        guard !hasIncomingURL else {
-            databasePickerCoordinator.shouldSelectDefaultDatabase = false
-            return
-        }
-
         #if INTUNE
-        setupIntune()
+        setupIntune(hasIncomingURL: hasIncomingURL)
         guard let currentUser = IntuneMAMEnrollmentManager.instance().enrolledAccountId(),
               !currentUser.isEmpty
         else {
@@ -152,7 +158,7 @@ final class MainCoordinator: UIResponder, Coordinator {
         Diag.info("Intune account is enrolled")
         #endif
 
-        runAfterStartTasks()
+        runAfterStartTasks(hasIncomingURL: hasIncomingURL)
     }
 
     private func showAppResetPrompt() {
@@ -162,8 +168,11 @@ final class MainCoordinator: UIResponder, Coordinator {
             message: LString.confirmAppReset,
             preferredStyle: .alert
         )
-        alert.addAction(title: LString.actionResetApp, style: .destructive, preferred: false) { [weak self] _ in
-            self?.resetApp()
+        alert.addAction(title: LString.actionResetApp, style: .destructive, preferred: false) {
+            [unowned self] _ in
+            AppEraser.resetApp { [unowned self] in
+                start(hasIncomingURL: false, proposeReset: false)
+            }
         }
         alert.addAction(title: LString.actionCancel, style: .cancel) { [weak self] _ in
             self?.start(hasIncomingURL: false, proposeReset: false)
@@ -171,7 +180,7 @@ final class MainCoordinator: UIResponder, Coordinator {
         getPresenterForModals().present(alert, animated: true)
     }
 
-    private func runAfterStartTasks() {
+    private func runAfterStartTasks(hasIncomingURL: Bool) {
         #if INTUNE
         applyIntuneAppConfig()
 
@@ -180,12 +189,41 @@ final class MainCoordinator: UIResponder, Coordinator {
             return
         }
         #endif
-        DispatchQueue.main.async { [weak self] in
-            self?.maybeShowOnboarding()
+
+        if Settings.current.isFirstLaunch {
+            ensureAppDocumentsVisible()
         }
 
-        let isAutoUnlockStartupDatabase = Settings.current.isAutoUnlockStartupDatabase
-        databasePickerCoordinator.shouldSelectDefaultDatabase = isAutoUnlockStartupDatabase
+        if hasIncomingURL {
+            Diag.info("Skipping other tasks for incoming URL")
+            return
+        }
+
+        DispatchQueue.main.async { [self] in
+            if !maybeOpenInitialDatabase() {
+                maybeShowOnboarding()
+            }
+        }
+    }
+
+    private func maybeOpenInitialDatabase() -> Bool {
+        if Settings.current.isAutoUnlockStartupDatabase,
+           let startDatabaseRef = Settings.current.startupDatabase,
+           databasePickerCoordinator.isKnownDatabase(startDatabaseRef)
+        {
+            if startDatabaseRef.hasError || startDatabaseRef.needsReinstatement {
+                setDatabase(startDatabaseRef, andThen: .doNothing)
+            } else {
+                setDatabase(startDatabaseRef, andThen: .unlock)
+            }
+            return true
+        }
+        if rootSplitVC.isCollapsed {
+            return false
+        }
+        let defaultDB = databasePickerCoordinator.getFirstListedDatabase()
+        setDatabase(defaultDB, andThen: .focus)
+        return false
     }
 
     private func getPresenterForModals() -> UIViewController {
@@ -195,7 +233,7 @@ final class MainCoordinator: UIResponder, Coordinator {
 
 #if INTUNE
 extension MainCoordinator {
-    private func setupIntune() {
+    private func setupIntune(hasIncomingURL: Bool) {
         assert(policyDelegate == nil && enrollmentDelegate == nil, "Repeated call to Intune setup")
 
         policyDelegate = IntunePolicyDelegateImpl()
@@ -203,17 +241,16 @@ extension MainCoordinator {
 
         enrollmentDelegate = IntuneEnrollmentDelegateImpl(
             onEnrollment: { [weak self] enrollmentResult in
-                guard let self = self else { return }
+                guard let self else { return }
                 switch enrollmentResult {
                 case .success:
                     Diag.info("Intune enrollment successful")
-                    self.runAfterStartTasks()
+                    self.runAfterStartTasks(hasIncomingURL: hasIncomingURL)
                 case .cancelledByUser:
                     let message = [
                             LString.Intune.orgNeedsToManage,
                             LString.Intune.personalVersionInAppStore
-                        ].joined(separator: "\n\n")
-                    // swiftlint:disable:previous literal_expression_end_indentation
+                    ].joined(separator: "\n\n")
                     Diag.error("Intune enrollment cancelled")
                     self.showIntuneMessageAndRestartEnrollment(message)
                 case .failure(let errorMessage):
@@ -268,8 +305,7 @@ extension MainCoordinator {
         let message = [
                 LString.Intune.orgLicenseMissing,
                 LString.Intune.hintContactYourAdmin,
-            ].joined(separator: "\n\n")
-        // swiftlint:disable:previous literal_expression_end_indentation
+        ].joined(separator: "\n\n")
         Diag.error(message)
         let alert = UIAlertController(
             title: "",
@@ -277,13 +313,13 @@ extension MainCoordinator {
             preferredStyle: .alert
         )
         alert.addAction(title: LString.actionRetry, style: .default) { [weak self] _ in
-            self?.runAfterStartTasks()
+            self?.runAfterStartTasks(hasIncomingURL: false)
         }
         alert.addAction(title: LString.titleDiagnosticLog, style: .default) { [weak self] _ in
             guard let self else { return }
             DispatchQueue.main.async {
-                self.showDiagnostics(onDismiss: { [weak self] in
-                    self?.runAfterStartTasks()
+                self.showDiagnostics(in: self.getPresenterForModals(), onDismiss: { [weak self] in
+                    self?.runAfterStartTasks(hasIncomingURL: false)
                 })
             }
         }
@@ -306,7 +342,7 @@ extension MainCoordinator {
         }
         #endif
         Diag.info("Will process incoming URL [inPlace: \(String(describing: openInPlace)), URL: \(url.redacted)]")
-        guard let databaseViewerCoordinator = databaseViewerCoordinator else {
+        guard let databaseViewerCoordinator else {
             handleIncomingURL(url, openInPlace: openInPlace ?? true)
             return true
         }
@@ -327,20 +363,14 @@ extension MainCoordinator {
             return
         }
 
-        FileKeeper.shared.addFile(
-            url: url,
-            fileType: nil, 
-            mode: openInPlace ? .openInPlace : .import,
-            completion: { [weak self] result in
-                switch result {
-                case .success:
-                    break
-                case .failure(let fileKeeperError):
-                    Diag.error(fileKeeperError.localizedDescription)
-                    self?.getPresenterForModals().showErrorAlert(fileKeeperError)
-                }
-            }
-        )
+        if rootSplitVC.isCollapsed {
+            rootSplitVC.ensurePrimaryVisible()
+            primaryRouter.dismissModals(animated: false, completion: { [weak databasePickerCoordinator] in
+                databasePickerCoordinator?.addDatabaseURL(url)
+            })
+        } else {
+            databasePickerCoordinator.addDatabaseURL(url)
+        }
     }
 
     private func processDeepLink(_ url: URL) {
@@ -357,31 +387,32 @@ extension MainCoordinator {
 }
 
 extension MainCoordinator {
+    private func ensureAppDocumentsVisible() {
+        if ProcessInfo.isRunningOnMac { return }
+        guard FileProvider.localStorage.isAllowed else { return }
 
-    private func resetApp() {
-        Keychain.shared.reset()
-        UserDefaults.eraseAppGroupShared()
-        FileKeeper.shared.deleteBackupFiles(
-            olderThan: -TimeInterval.infinity,
-            keepLatest: false,
-            completionQueue: .main
-        ) { [weak self] in
-            self?.start(hasIncomingURL: false, proposeReset: false)
+        do {
+            try FileKeeper.shared.createPlaceholderInDocumentsDir()
+            Diag.info("Made app folder visible in Files app (via placeholder file)")
+        } catch {
+            Diag.warning("Failed to create placeholder file in app folder: \(error)")
         }
     }
 
     private func setDatabase(
         _ databaseRef: URLReference?,
-        autoOpenWith context: DatabaseReloadContext? = nil
+        autoOpenWith context: DatabaseReloadContext? = nil,
+        andThen activation: DatabaseUnlockerActivationType = .doNothing
     ) {
         self.selectedDatabaseRef = databaseRef
-        guard let databaseRef = databaseRef else {
+        databasePickerCoordinator.selectDatabase(databaseRef, animated: false)
+        guard let databaseRef else {
             showPlaceholder()
             return
         }
 
         let dbUnlocker = showDatabaseUnlocker(databaseRef, context: context)
-        dbUnlocker.setDatabase(databaseRef)
+        dbUnlocker.setDatabase(databaseRef, andThen: activation)
     }
 
     private func maybeShowOnboarding() {
@@ -393,12 +424,9 @@ extension MainCoordinator {
 
         let modalRouter = NavigationRouter.createModal(style: .formSheet)
         let onboardingCoordinator = OnboardingCoordinator(router: modalRouter)
-        onboardingCoordinator.dismissHandler = { [weak self] coordinator in
-            self?.removeChildCoordinator(coordinator)
-        }
         onboardingCoordinator.delegate = self
         onboardingCoordinator.start()
-        addChildCoordinator(onboardingCoordinator)
+        addChildCoordinator(onboardingCoordinator, onDismiss: nil)
 
         rootSplitVC.present(modalRouter, animated: true, completion: nil)
     }
@@ -414,7 +442,7 @@ extension MainCoordinator {
         _ databaseRef: URLReference,
         context: DatabaseReloadContext?
     ) -> DatabaseUnlockerCoordinator {
-        if let databaseUnlockerRouter = databaseUnlockerRouter {
+        if let databaseUnlockerRouter {
             rootSplitVC.setDetailRouter(databaseUnlockerRouter)
             if let existingDBUnlocker = childCoordinators.first(where: { $0 is DatabaseUnlockerCoordinator }) {
                 let dbUnlocker = existingDBUnlocker as! DatabaseUnlockerCoordinator
@@ -433,14 +461,12 @@ extension MainCoordinator {
             router: router,
             databaseRef: databaseRef
         )
-        newDBUnlockerCoordinator.dismissHandler = { [weak self] coordinator in
-            self?.removeChildCoordinator(coordinator)
-            self?.databaseUnlockerRouter = nil
-        }
         newDBUnlockerCoordinator.delegate = self
         newDBUnlockerCoordinator.reloadingContext = context
         newDBUnlockerCoordinator.start()
-        addChildCoordinator(newDBUnlockerCoordinator)
+        addChildCoordinator(newDBUnlockerCoordinator, onDismiss: { [weak self] _ in
+            self?.databaseUnlockerRouter = nil
+        })
 
         rootSplitVC.setDetailRouter(router)
 
@@ -459,16 +485,15 @@ extension MainCoordinator {
             originalRef: fileRef, 
             databaseFile: databaseFile, 
             context: context,
-            loadingWarnings: warnings
+            loadingWarnings: warnings,
+            autoTypeHelper: autoTypeHelper
         )
-        databaseViewerCoordinator.dismissHandler = { [weak self] coordinator in
-            self?.removeChildCoordinator(coordinator)
-            self?.databaseViewerCoordinator = nil
-            UIMenu.rebuildMainMenu()
-        }
         databaseViewerCoordinator.delegate = self
         databaseViewerCoordinator.start()
-        addChildCoordinator(databaseViewerCoordinator)
+        addChildCoordinator(databaseViewerCoordinator, onDismiss: { [weak self] _ in
+            self?.databaseViewerCoordinator = nil
+            UIMenu.rebuildMainMenu()
+        })
         self.databaseViewerCoordinator = databaseViewerCoordinator
 
         deallocateDatabaseUnlocker()
@@ -501,41 +526,48 @@ extension MainCoordinator {
     private func showDonationScreen(in viewController: UIViewController) {
         let modalRouter = NavigationRouter.createModal(style: .formSheet)
         let tipBoxCoordinator = TipBoxCoordinator(router: modalRouter)
-        tipBoxCoordinator.dismissHandler = { [weak self] coordinator in
-            self?.removeChildCoordinator(coordinator)
-        }
         tipBoxCoordinator.start()
-        addChildCoordinator(tipBoxCoordinator)
+        addChildCoordinator(tipBoxCoordinator, onDismiss: nil)
 
         viewController.present(modalRouter, animated: true, completion: nil)
     }
 
-    func showAboutScreen() {
-        let popoverAnchor = PopoverAnchor(sourceView: mainWindow, sourceRect: mainWindow.bounds)
-        self.databasePickerCoordinator.showAboutScreen(at: popoverAnchor, in: self.rootSplitVC)
+    func showAboutScreen(
+        at popoverAnchor: PopoverAnchor?,
+        in viewController: UIViewController
+    ) {
+        let popoverAnchor = popoverAnchor ?? mainWindow.asPopoverAnchor
+        let modalRouter = NavigationRouter.createModal(
+            style: ProcessInfo.isRunningOnMac ? .formSheet : .popover,
+            at: popoverAnchor)
+        let aboutCoordinator = AboutCoordinator(router: modalRouter)
+        aboutCoordinator.start()
+        addChildCoordinator(aboutCoordinator, onDismiss: nil)
+        viewController.present(modalRouter, animated: true, completion: nil)
     }
 
-    func showSettingsScreen() {
-        let popoverAnchor = PopoverAnchor(sourceView: mainWindow, sourceRect: mainWindow.bounds)
-        self.databasePickerCoordinator.showAppSettings(at: popoverAnchor, in: self.rootSplitVC)
+    func showSettingsScreen(in viewController: UIViewController) {
+        let modalRouter = NavigationRouter.createModal(style: .formSheet)
+        let settingsCoordinator = MainSettingsCoordinator(router: modalRouter)
+        settingsCoordinator.start()
+        addChildCoordinator(settingsCoordinator, onDismiss: nil)
+        viewController.present(modalRouter, animated: true, completion: nil)
     }
 
-    func showDiagnostics(onDismiss: (() -> Void)? = nil) {
+    func showDiagnostics(in viewController: UIViewController, onDismiss: (() -> Void)? = nil) {
         let modalRouter = NavigationRouter.createModal(style: .formSheet)
         let diagnosticsViewerCoordinator = DiagnosticsViewerCoordinator(router: modalRouter)
-        diagnosticsViewerCoordinator.dismissHandler = { [weak self] coordinator in
-            self?.removeChildCoordinator(coordinator)
-            onDismiss?()
-        }
         diagnosticsViewerCoordinator.start()
 
-        getPresenterForModals().present(modalRouter, animated: true, completion: nil)
-        addChildCoordinator(diagnosticsViewerCoordinator)
+        viewController.present(modalRouter, animated: true, completion: nil)
+        addChildCoordinator(diagnosticsViewerCoordinator, onDismiss: { [onDismiss] _ in
+            onDismiss?()
+        })
     }
 
     func createDatabase() {
         guard let dbViewer = databaseViewerCoordinator else {
-            databasePickerCoordinator.maybeCreateDatabase(presenter: rootSplitVC)
+            databasePickerCoordinator.paywalledStartDatabaseCreator(presenter: rootSplitVC)
             return
         }
         dbViewer.closeDatabase(
@@ -543,15 +575,15 @@ extension MainCoordinator {
             reason: .appLevelOperation,
             animated: true,
             completion: { [weak self] in
-                guard let self = self else { return }
-                self.databasePickerCoordinator.maybeCreateDatabase(presenter: self.rootSplitVC)
+                guard let self else { return }
+                databasePickerCoordinator.paywalledStartDatabaseCreator(presenter: rootSplitVC)
             }
         )
     }
 
     func openDatabase() {
         guard let dbViewer = databaseViewerCoordinator else {
-            databasePickerCoordinator.maybeAddExternalDatabase(presenter: rootSplitVC)
+            databasePickerCoordinator.paywalledStartExternalDatabasePicker(presenter: rootSplitVC)
             return
         }
         dbViewer.closeDatabase(
@@ -559,15 +591,17 @@ extension MainCoordinator {
             reason: .appLevelOperation,
             animated: true,
             completion: { [weak self] in
-                guard let self = self else { return }
-                self.databasePickerCoordinator.maybeAddExternalDatabase(presenter: self.rootSplitVC)
+                guard let self else { return }
+                databasePickerCoordinator.paywalledStartExternalDatabasePicker(presenter: rootSplitVC)
             }
         )
     }
 
     func connectToServer() {
         guard let dbViewer = databaseViewerCoordinator else {
-            databasePickerCoordinator.maybeAddRemoteDatabase(bypassPaywall: true, presenter: rootSplitVC)
+            databasePickerCoordinator.paywalledStartRemoteDatabasePicker(
+                bypassPaywall: true,
+                presenter: rootSplitVC)
             return
         }
         dbViewer.closeDatabase(
@@ -575,8 +609,11 @@ extension MainCoordinator {
             reason: .appLevelOperation,
             animated: true,
             completion: { [weak self] in
-                guard let self = self else { return }
-                self.databasePickerCoordinator.maybeAddRemoteDatabase(bypassPaywall: true, presenter: self.rootSplitVC)
+                guard let self else { return }
+                databasePickerCoordinator.paywalledStartRemoteDatabasePicker(
+                    bypassPaywall: true,
+                    presenter: rootSplitVC
+                )
             }
         )
     }
@@ -594,9 +631,9 @@ extension MainCoordinator {
     private func reinstateDatabase(_ fileRef: URLReference) {
         switch fileRef.location {
         case .external:
-            databasePickerCoordinator.addExternalDatabase(fileRef, presenter: getPresenterForModals())
+            databasePickerCoordinator.startExternalDatabasePicker(fileRef, presenter: getPresenterForModals())
         case .remote:
-            databasePickerCoordinator.addRemoteDatabase(fileRef, presenter: getPresenterForModals())
+            databasePickerCoordinator.startRemoteDatabasePicker(fileRef, presenter: getPresenterForModals())
         case .internalBackup, .internalDocuments, .internalInbox:
             assertionFailure("Should not be here. Can reinstate only external or remote files.")
             return
@@ -618,7 +655,7 @@ extension MainCoordinator {
             animated: true
         ) { [weak self] in
             guard let self else { return }
-            setDatabase(targetRef, autoOpenWith: context)
+            setDatabase(targetRef, autoOpenWith: context, andThen: .unlock)
         }
     }
 
@@ -636,7 +673,7 @@ extension MainCoordinator {
             animated: true
         ) { [weak self] in
             guard let self else { return }
-            setDatabase(fileRef, autoOpenWith: context)
+            setDatabase(fileRef, autoOpenWith: context, andThen: .unlock)
         }
     }
 }
@@ -730,15 +767,18 @@ extension MainCoordinator: UISplitViewControllerDelegate {
 
 extension MainCoordinator: WatchdogDelegate {
     var isAppCoverVisible: Bool {
+        if ProcessInfo.isRunningOnMac { return false }
         return appCoverWindow != nil
     }
     var isAppLockVisible: Bool {
         return appLockWindow != nil || isBiometricAuthShown
     }
     func showAppCover(_ sender: Watchdog) {
+        if ProcessInfo.isRunningOnMac { return }
         showAppCoverScreen()
     }
     func hideAppCover(_ sender: Watchdog) {
+        if ProcessInfo.isRunningOnMac { return }
         hideAppCoverScreen()
     }
     func showAppLock(_ sender: Watchdog) {
@@ -770,7 +810,7 @@ extension MainCoordinator: WatchdogDelegate {
     }
 
     private func hideAppCoverScreen() {
-        guard let appCoverWindow = appCoverWindow else { return }
+        guard let appCoverWindow else { return }
         appCoverWindow.isHidden = true
         self.appCoverWindow = nil
         print("App cover hidden")
@@ -789,6 +829,11 @@ extension MainCoordinator: WatchdogDelegate {
 
     private func showAppLockScreen() {
         guard !isAppLockVisible else { return }
+        #if targetEnvironment(macCatalyst)
+        removeMacToolbar()
+        rootSplitVC.dismiss(animated: false)
+        #endif
+
         let isRepeatedLockOnMac = ProcessInfo.isRunningOnMac && !isInitialAppLock
         isInitialAppLock = false
         if canUseBiometrics() && !isRepeatedLockOnMac {
@@ -801,6 +846,9 @@ extension MainCoordinator: WatchdogDelegate {
 
     private func hideAppLockScreen() {
         guard isAppLockVisible else { return }
+        #if targetEnvironment(macCatalyst)
+        setupMacToolbar()
+        #endif
 
         let window = UIApplication.shared.delegate!.window!
         window?.makeKeyAndVisible()
@@ -853,7 +901,7 @@ extension MainCoordinator: WatchdogDelegate {
         showBiometricsBackground()
         lastSuccessfulBiometricAuthTime = .distantPast
         Keychain.shared.performBiometricAuth { [weak self] success in
-            guard let self = self else { return }
+            guard let self else { return }
             if success {
                 Diag.warning("Biometric auth successful")
                 self.lastSuccessfulBiometricAuthTime = Date.now
@@ -922,6 +970,11 @@ extension MainCoordinator: PasscodeInputDelegate {
         }
     }
 
+    func passcodeInputDidRequestBiometrics(_ sender: PasscodeInputVC) {
+        assert(canUseBiometrics())
+        performBiometricUnlock()
+    }
+
     private func setupPasscode(_ passcode: String, viewController: PasscodeInputVC) {
         Diag.info("Passcode setup successful")
         do {
@@ -943,15 +996,7 @@ extension MainCoordinator: PasscodeInputDelegate {
                 HapticFeedback.play(.wrongPassword)
                 viewController.animateWrongPassccode()
                 StoreReviewSuggester.registerEvent(.trouble)
-                if Settings.current.isLockAllDatabasesOnFailedPasscode {
-                    DatabaseSettingsManager.shared.eraseAllMasterKeys()
-                    databaseViewerCoordinator?.closeDatabase(
-                        shouldLock: true,
-                        reason: .databaseTimeout,
-                        animated: false,
-                        completion: nil
-                    )
-                }
+                handleFailedPasscode()
             }
         } catch {
             let alert = UIAlertController.make(
@@ -961,40 +1006,49 @@ extension MainCoordinator: PasscodeInputDelegate {
         }
     }
 
-    func passcodeInputDidRequestBiometrics(_ sender: PasscodeInputVC) {
-        assert(canUseBiometrics())
-        performBiometricUnlock()
+    private func handleFailedPasscode() {
+        // swiftlint:disable:next trailing_closure
+        let isResetting = AppEraser.registerFailedAppPasscodeAttempt(afterReset: {
+            exit(0)
+        })
+        if isResetting {
+            return
+        }
+
+        if Settings.current.isLockAllDatabasesOnFailedPasscode {
+            DatabaseSettingsManager.shared.eraseAllMasterKeys()
+            databaseViewerCoordinator?.closeDatabase(
+                shouldLock: true,
+                reason: .databaseTimeout,
+                animated: false,
+                completion: nil
+            )
+        }
     }
 }
 
 extension MainCoordinator: OnboardingCoordinatorDelegate {
     func didPressCreateDatabase(in coordinator: OnboardingCoordinator) {
-        coordinator.dismiss(completion: { [weak self] in
-            guard let self = self else { return }
-            self.databasePickerCoordinator.createDatabase(
-                presenter: self.rootSplitVC
-            )
-        })
+        coordinator.dismiss { [weak self] in
+            guard let self else { return }
+            databasePickerCoordinator.startDatabaseCreator(presenter: rootSplitVC)
+        }
     }
 
     func didPressAddExistingDatabase(in coordinator: OnboardingCoordinator) {
-        coordinator.dismiss(completion: { [weak self] in
-            guard let self = self else { return }
-            self.databasePickerCoordinator.addExternalDatabase(
-                presenter: self.rootSplitVC
-            )
-        })
+        coordinator.dismiss { [weak self] in
+            guard let self else { return }
+            databasePickerCoordinator.startExternalDatabasePicker(presenter: rootSplitVC)
+        }
     }
 
     func didPressConnectToServer(in coordinator: OnboardingCoordinator) {
         Diag.info("Network access permission implied by user action")
         Settings.current.isNetworkAccessAllowed = true
-        coordinator.dismiss(completion: { [weak self] in
-            guard let self = self else { return }
-            self.databasePickerCoordinator.addRemoteDatabase(
-                presenter: self.rootSplitVC
-            )
-        })
+        coordinator.dismiss { [weak self] in
+            guard let self else { return }
+            databasePickerCoordinator.startRemoteDatabasePicker(presenter: rootSplitVC)
+        }
     }
 }
 
@@ -1027,19 +1081,37 @@ extension MainCoordinator: FileKeeperDelegate {
 }
 
 extension MainCoordinator: DatabasePickerCoordinatorDelegate {
-    func shouldAcceptDatabaseSelection(
-        _ fileRef: URLReference,
+    func didSelectDatabase(
+        _ fileRef: URLReference?,
+        cause: FileActivationCause?,
         in coordinator: DatabasePickerCoordinator
-    ) -> Bool {
-        return true
+    ) {
+        switch cause {
+        case .keyPress:
+            setDatabase(fileRef, andThen: .unlock)
+        case .touch:
+            if rootSplitVC.isCollapsed {
+                setDatabase(fileRef, andThen: .unlock)
+            } else {
+                setDatabase(fileRef, andThen: .doNothing)
+            }
+        case .app:
+            setDatabase(fileRef, andThen: .unlock)
+        case nil:
+            setDatabase(fileRef, andThen: .doNothing)
+        }
     }
 
-    func didSelectDatabase(_ fileRef: URLReference?, in coordinator: DatabasePickerCoordinator) {
-        setDatabase(fileRef)
+    func didPressShowRandomGenerator(at popoverAnchor: PopoverAnchor?, in viewController: UIViewController) {
+        showPasswordGenerator(at: popoverAnchor, in: viewController)
     }
 
-    func shouldKeepSelection(in coordinator: DatabasePickerCoordinator) -> Bool {
-        return !rootSplitVC.isCollapsed
+    func didPressShowAppSettings(at popoverAnchor: PopoverAnchor?, in viewController: UIViewController) {
+        showSettingsScreen(in: viewController)
+    }
+
+    func didPressShowDiagnostics(at popoverAnchor: PopoverAnchor?, in viewController: UIViewController) {
+        showDiagnostics(in: viewController)
     }
 }
 
@@ -1052,18 +1124,6 @@ extension MainCoordinator: DatabaseUnlockerCoordinatorDelegate {
         }
     }
 
-    func shouldAutoUnlockDatabase(
-        _ fileRef: URLReference,
-        in coordinator: DatabaseUnlockerCoordinator
-    ) -> Bool {
-        if isReloadingDatabase {
-            return true
-        }
-        if isInitialDatabase && Settings.current.isAutoUnlockStartupDatabase {
-            return true
-        }
-        return rootSplitVC.isCollapsed
-    }
 
     func willUnlockDatabase(_ fileRef: URLReference, in coordinator: DatabaseUnlockerCoordinator) {
         databasePickerCoordinator.setEnabled(false)
@@ -1118,15 +1178,15 @@ extension MainCoordinator: DatabaseUnlockerCoordinatorDelegate {
 
     func didPressAddRemoteDatabase(in coordinator: DatabaseUnlockerCoordinator) {
         if rootSplitVC.isCollapsed {
-            primaryRouter.pop(animated: true, completion: { [weak self] in
-                guard let self = self else { return }
-                self.databasePickerCoordinator.maybeAddRemoteDatabase(
+            primaryRouter.pop(animated: true) { [weak self] in
+                guard let self else { return }
+                databasePickerCoordinator.paywalledStartRemoteDatabasePicker(
                     bypassPaywall: true,
                     presenter: self.rootSplitVC
                 )
-            })
+            }
         } else {
-            databasePickerCoordinator.maybeAddRemoteDatabase(
+            databasePickerCoordinator.paywalledStartRemoteDatabasePicker(
                 bypassPaywall: true,
                 presenter: rootSplitVC
             )
@@ -1162,8 +1222,9 @@ extension MainCoordinator: DatabaseViewerCoordinatorDelegate {
     func didLeaveDatabase(in coordinator: DatabaseViewerCoordinator) {
         Diag.debug("Did leave database")
 
-        if !self.rootSplitVC.isCollapsed {
-            self.databasePickerCoordinator.selectDatabase(self.selectedDatabaseRef, animated: false)
+        if !rootSplitVC.isCollapsed {
+            setDatabase(selectedDatabaseRef, andThen: .doNothing)
+            databasePickerCoordinator.becomeFirstResponder()
         }
     }
 
@@ -1303,7 +1364,7 @@ extension MainCoordinator {
 
     private func insertAboutAppCommand(to builder: UIMenuBuilder) {
         let title = builder.menu(for: .about)?.children.first?.title
-            ?? String.localizedStringWithFormat(LString.titleAboutKeePassium, AppInfo.name)
+            ?? String.localizedStringWithFormat(LString.aboutKeePassiumTitle, AppInfo.name)
         let actionAbout = UICommand(title: title, action: #selector(MainCoordinator.kpmShowAboutScreen))
         let menuAbout = UIMenu(identifier: .about, options: .displayInline, children: [actionAbout])
 
@@ -1345,10 +1406,10 @@ extension MainCoordinator {
     }
 
     @objc func kpmShowAboutScreen() {
-        showAboutScreen()
+        showAboutScreen(at: nil, in: getPresenterForModals())
     }
     @objc func kpmShowSettingsScreen() {
-        showSettingsScreen()
+        showSettingsScreen(in: getPresenterForModals())
     }
     @objc func kpmShowRandomGenerator() {
         showPasswordGenerator(at: nil, in: getPresenterForModals())

@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2024 KeePassium Labs <info@keepassium.com>
+//  Copyright © 2018-2025 KeePassium Labs <info@keepassium.com>
 // 
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -149,7 +149,7 @@ final class Meta2: Eraseable {
 
         switch formatVersion {
         case .v3:
-            if let headerHash = headerHash {
+            if let headerHash {
                 xmlMeta.addChild(name: Xml2.headerHash, value: headerHash.base64EncodedString())
             }
         case .v4, .v4_1:

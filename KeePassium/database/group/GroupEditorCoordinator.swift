@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2024 KeePassium Labs <info@keepassium.com>
+//  Copyright © 2018-2025 KeePassium Labs <info@keepassium.com>
 //
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -14,17 +14,14 @@ protocol GroupEditorCoordinatorDelegate: AnyObject {
     func didRelocateDatabase(_ databaseFile: DatabaseFile, to url: URL)
 }
 
-final class GroupEditorCoordinator: Coordinator {
+final class GroupEditorCoordinator: BaseCoordinator {
     private let smartGroupDefaultQuery = "is:entry"
     enum Mode {
         case create(smart: Bool)
         case modify(group: Group)
     }
-    var childCoordinators = [Coordinator]()
-    var dismissHandler: CoordinatorDismissHandler?
     weak var delegate: GroupEditorCoordinatorDelegate?
 
-    private let router: NavigationRouter
     private let databaseFile: DatabaseFile
     private let database: Database
     private let parent: Group
@@ -39,11 +36,10 @@ final class GroupEditorCoordinator: Coordinator {
 
     var databaseSaver: DatabaseSaver?
     var fileExportHelper: FileExportHelper?
-    var savingProgressHost: ProgressViewHost? { return router }
+    var savingProgressHost: ProgressViewHost? { return _router }
     var saveSuccessHandler: (() -> Void)?
 
     init(router: NavigationRouter, databaseFile: DatabaseFile, parent: Group, mode: Mode) {
-        self.router = router
         self.databaseFile = databaseFile
         self.database = databaseFile.database
         self.parent = parent
@@ -88,34 +84,28 @@ final class GroupEditorCoordinator: Coordinator {
             isSmartGroup: isSmartGroup
         )
         groupEditorVC.title = editorTitle
+        super.init(router: router)
         groupEditorVC.delegate = self
     }
 
-    deinit {
-        assert(childCoordinators.isEmpty)
-        removeAllChildCoordinators()
-    }
-
-    func start() {
-        router.push(groupEditorVC, animated: true, onPop: { [weak self] in
-            guard let self = self else { return }
-            self.removeAllChildCoordinators()
-            self.dismissHandler?(self)
-        })
+    override func start() {
+        super.start()
+        _pushInitialViewController(groupEditorVC, animated: true)
         refresh()
     }
 
-    private func refresh() {
+    override func refresh() {
+        super.refresh()
         groupEditorVC.refresh()
     }
 
     private func abortAndDismiss() {
-        router.pop(animated: true)
+        _router.pop(animated: true)
     }
 
     private func saveChangesAndDismiss() {
         group.touch(.modified, updateParents: false)
-        if let originalGroup = originalGroup {
+        if let originalGroup {
             group.apply(to: originalGroup, makeNewUUID: false)
             delegate?.didUpdateGroup(originalGroup, in: self)
         } else {
@@ -127,26 +117,20 @@ final class GroupEditorCoordinator: Coordinator {
     }
 
     private func showDiagnostics() {
-        let diagnosticsViewerCoordinator = DiagnosticsViewerCoordinator(router: router)
-        diagnosticsViewerCoordinator.dismissHandler = { [weak self] coordinator in
-            self?.removeChildCoordinator(coordinator)
-        }
-        addChildCoordinator(diagnosticsViewerCoordinator)
+        let diagnosticsViewerCoordinator = DiagnosticsViewerCoordinator(router: _router)
+        addChildCoordinator(diagnosticsViewerCoordinator, onDismiss: nil)
         diagnosticsViewerCoordinator.start()
     }
 
     func showIconPicker() {
         let iconPickerCoordinator = ItemIconPickerCoordinator(
-            router: router,
+            router: _router,
             databaseFile: databaseFile,
             customFaviconUrl: nil
         )
         iconPickerCoordinator.item = group
-        iconPickerCoordinator.dismissHandler = { [weak self] coordinator in
-            self?.removeChildCoordinator(coordinator)
-        }
         iconPickerCoordinator.delegate = self
-        addChildCoordinator(iconPickerCoordinator)
+        addChildCoordinator(iconPickerCoordinator, onDismiss: nil)
         iconPickerCoordinator.start()
     }
 
@@ -154,14 +138,11 @@ final class GroupEditorCoordinator: Coordinator {
         for textInput: TextInputView,
         in groupEditor: GroupEditorVC
     ) {
-        let passGenCoordinator = PasswordGeneratorCoordinator(router: router, quickMode: true, hasTarget: true)
-        passGenCoordinator.dismissHandler = { [weak self] coordinator in
-            self?.removeChildCoordinator(coordinator)
-        }
+        let passGenCoordinator = PasswordGeneratorCoordinator(router: _router, quickMode: true, hasTarget: true)
         passGenCoordinator.delegate = self
         passGenCoordinator.context = textInput
         passGenCoordinator.start()
-        addChildCoordinator(passGenCoordinator)
+        addChildCoordinator(passGenCoordinator, onDismiss: nil)
     }
 }
 
@@ -181,7 +162,7 @@ extension GroupEditorCoordinator: GroupEditorDelegate {
         }
     }
 
-    func didPressChangeIcon(at popoverAnchor: PopoverAnchor, in groupEditor: GroupEditorVC) {
+    func didPressChangeIcon(at popoverAnchor: PopoverAnchor?, in groupEditor: GroupEditorVC) {
         showIconPicker()
     }
 
@@ -194,16 +175,15 @@ extension GroupEditorCoordinator: GroupEditorDelegate {
             item: group,
             parent: originalGroup?.parent,
             databaseFile: databaseFile,
-            router: router
+            router: _router
         )
         tagsCoordinator.delegate = self
-        tagsCoordinator.dismissHandler = { [weak self, tagsCoordinator] coordinator in
-            self?.group.tags = tagsCoordinator.selectedTags
-            self?.refresh()
-            self?.removeChildCoordinator(coordinator)
-        }
         tagsCoordinator.start()
-        addChildCoordinator(tagsCoordinator)
+        addChildCoordinator(tagsCoordinator, onDismiss: { [weak self, weak tagsCoordinator] _ in
+            guard let self, let tagsCoordinator else { return }
+            group.tags = tagsCoordinator.selectedTags
+            refresh()
+        })
     }
 }
 
@@ -261,7 +241,7 @@ extension GroupEditorCoordinator: DatabaseSaving {
     }
 
     func didSave(databaseFile: DatabaseFile) {
-        router.pop(animated: true)
+        _router.pop(animated: true)
     }
 
     func getDatabaseSavingErrorParent() -> UIViewController {

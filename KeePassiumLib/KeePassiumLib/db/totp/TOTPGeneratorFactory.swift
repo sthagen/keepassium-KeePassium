@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2024 KeePassium Labs <info@keepassium.com>
+//  Copyright © 2018-2025 KeePassium Labs <info@keepassium.com>
 //
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -60,8 +60,12 @@ public class TOTPGeneratorFactory {
         return parseSingleFieldFormat(paramString) != nil
     }
 
-    public static func makeOtpauthURI(base32Seed seed: String) -> URL {
-        return GAuthFormat.make(base32Seed: seed)
+    public static func makeOtpauthURI(
+        base32Seed seed: String,
+        issuer: String?,
+        accountName: String?
+    ) -> URL {
+        return GAuthFormat.make(base32Seed: seed, issuer: issuer, accountName: accountName)
     }
 }
 
@@ -153,7 +157,7 @@ private class GAuthFormat: SingleFieldFormat {
             hashAlgorithm: algorithm ?? defaultAlgorithm)
     }
 
-    static func make(base32Seed: String) -> URL {
+    static func make(base32Seed: String, issuer: String?, accountName: String?) -> URL {
         var components = URLComponents()
         components.scheme = GAuthFormat.scheme
         components.host = GAuthFormat.host
@@ -171,6 +175,19 @@ private class GAuthFormat: SingleFieldFormat {
                 name: GAuthFormat.algorithmParam,
                 value: GAuthFormat.defaultAlgorithm.asString)
         ]
+
+        if let accountName, accountName.isNotEmpty {
+            let sanitizedAccountName = accountName.replacingOccurrences(of: ":", with: "_")
+            if let issuer, issuer.isNotEmpty {
+                let sanitizedIssuer = issuer.replacingOccurrences(of: ":", with: "_")
+                components.queryItems?.append(
+                    URLQueryItem(name: GAuthFormat.issuerParam, value: sanitizedIssuer)
+                )
+                components.path = "/" + sanitizedIssuer + ":" + sanitizedAccountName
+            } else {
+                components.path = "/" + sanitizedAccountName
+            }
+        }
         return components.url!
     }
 }

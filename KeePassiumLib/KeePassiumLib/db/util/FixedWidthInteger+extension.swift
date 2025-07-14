@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2024 KeePassium Labs <info@keepassium.com>
+//  Copyright © 2018-2025 KeePassium Labs <info@keepassium.com>
 // 
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -14,7 +14,7 @@ public func sizeof<T: FixedWidthInteger>(_ value: T) -> Int {
 
 extension FixedWidthInteger {
     init?(data: ByteArray?) {
-        guard let data = data else { return nil }
+        guard let data else { return nil }
         guard data.count == MemoryLayout<Self>.size else { return nil }
 
 
@@ -26,7 +26,7 @@ extension FixedWidthInteger {
     }
 
     init?(_ value: String?) {
-        guard let value = value else {
+        guard let value else {
             return nil
         }
         self.init(value)

@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2024 KeePassium Labs <info@keepassium.com>
+//  Copyright © 2018-2025 KeePassium Labs <info@keepassium.com>
 // 
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -110,7 +110,7 @@ class AESKDF: KeyDerivationFunction {
                     transformRounds,
                     {
                         (round: UInt64, progressPtr: Optional<UnsafeRawPointer>) -> Int32 in
-                        guard let progressPtr = progressPtr else {
+                        guard let progressPtr else {
                             return 0 /* continue transformations */
                         }
                         let progress = Unmanaged<ProgressEx>

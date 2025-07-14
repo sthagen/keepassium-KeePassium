@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2024 KeePassium Labs <info@keepassium.com>
+//  Copyright © 2018-2025 KeePassium Labs <info@keepassium.com>
 //
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -342,7 +342,7 @@ extension PasswordAuditResultsVC: UITableViewDelegate {
         tableView.deselectRow(at: indexPath, animated: true)
         let itemIndex = indexPath.row - announcements.count
         let selectedEntry = items[itemIndex].entry
-        let popoverAnchor = PopoverAnchor(tableView: tableView, at: indexPath)
+        let popoverAnchor = tableView.popoverAnchor(at: indexPath)
         delegate?.didPressEditEntry(selectedEntry, at: popoverAnchor, in: self) {
             tableView.reloadRows(at: [indexPath], with: .automatic)
         }

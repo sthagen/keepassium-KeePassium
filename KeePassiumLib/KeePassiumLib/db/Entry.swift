@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2024 KeePassium Labs <info@keepassium.com>
+//  Copyright © 2018-2025 KeePassium Labs <info@keepassium.com>
 // 
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -23,6 +23,8 @@ public class EntryField: Eraseable {
 
     public static let passkey = "passkey" + UUID().uuidString
 
+    public static let kp2aURLPrefix = "KP2A_URL"
+
     public var name: String
     public var value: String {
         didSet {
@@ -32,7 +34,11 @@ public class EntryField: Eraseable {
     public var isProtected: Bool
 
     public var visibleName: String {
-        switch name {
+        return Self.getVisibleName(for: name)
+    }
+
+    public class func getVisibleName(for fieldName: String) -> String {
+        switch fieldName {
         case Self.title: return LString.fieldTitle
         case Self.userName: return LString.fieldUserName
         case Self.password: return LString.fieldPassword
@@ -40,7 +46,27 @@ public class EntryField: Eraseable {
         case Self.notes: return LString.fieldNotes
         case Self.tags: return LString.fieldTags
         default:
-            return name
+            if let urlIndex = getExtraURLIndex(from: fieldName) {
+                return String.localizedStringWithFormat(LString.titleExtraURLTitleTemplate, urlIndex + 1)
+            }
+            return fieldName
+        }
+    }
+
+    public var isExtraURL: Bool {
+        return Self.getExtraURLIndex(from: name) != nil
+    }
+
+    public static func getExtraURLIndex(from fieldName: String) -> Int? {
+        guard fieldName.hasPrefix(Self.kp2aURLPrefix) else {
+            return nil
+        }
+
+        if fieldName == Self.kp2aURLPrefix {
+            return 0
+        } else {
+            let indexString = String(fieldName.split(separator: "_").last ?? "0")
+            return Int(indexString) ?? 0
         }
     }
 
@@ -249,7 +275,7 @@ public class Entry: DatabaseItem, Eraseable {
 
     public var description: String { return "Entry[\(rawTitle)]" }
 
-    init(database: Database?) {
+    init(database: Database?, creationDate: Date = Date()) {
         self.database = database
         attachments = []
         fields = []
@@ -258,11 +284,10 @@ public class Entry: DatabaseItem, Eraseable {
         iconID = Entry.defaultIconID
         isDeleted = false
 
-        let now = Date()
-        creationTime = now
-        lastModificationTime = now
-        lastAccessTime = now
-        expiryTime = now
+        creationTime = creationDate
+        lastModificationTime = creationDate
+        lastAccessTime = creationDate
+        expiryTime = creationDate
 
         super.init()
 
@@ -314,7 +339,7 @@ public class Entry: DatabaseItem, Eraseable {
         let existingField = fields.first { $0.name == name }
         if let field = existingField {
             field.value = value
-            if let isProtected = isProtected {
+            if let isProtected {
                 field.isProtected = isProtected
             } else {
             }
@@ -370,8 +395,13 @@ public class Entry: DatabaseItem, Eraseable {
 
     override public func touch(_ mode: DatabaseItem.TouchMode, updateParents: Bool = true) {
         lastAccessTime = Date.now
-        if mode == .modified {
+        switch mode {
+        case .accessed:
+            break
+        case .modified:
             lastModificationTime = Date.now
+        case let .modifiedAt(date):
+            lastModificationTime = date
         }
         if updateParents {
             parent?.touch(mode, updateParents: true)

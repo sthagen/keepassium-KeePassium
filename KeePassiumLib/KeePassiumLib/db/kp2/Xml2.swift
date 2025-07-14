@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2024 KeePassium Labs <info@keepassium.com>
+//  Copyright © 2018-2025 KeePassium Labs <info@keepassium.com>
 // 
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -25,7 +25,7 @@ internal struct Xml2 {
                         comment: "Generic error while parsing XML. [errorDetails: String]"),
                     details)
             case let .unexpectedTag(actual, expected):
-                if let expected = expected {
+                if let expected {
                     return String.localizedStringWithFormat(
                         NSLocalizedString(
                             "[Database2/Xml2/ParsingError] Unexpected tag '%@' (instead of '%@')",
@@ -44,7 +44,7 @@ internal struct Xml2 {
                         actual)
                 }
             case let .malformedValue(tag, value):
-                if let value = value {
+                if let value {
                     return String.localizedStringWithFormat(
                         NSLocalizedString(
                             "[Database2/Xml2/ParsingError] Malformed value '%@' in %@",

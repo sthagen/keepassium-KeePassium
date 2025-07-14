@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2024 KeePassium Labs <info@keepassium.com>
+//  Copyright © 2018-2025 KeePassium Labs <info@keepassium.com>
 //
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -50,17 +50,9 @@ final class AnnouncementCell: UITableViewCell {
             .activate()
         announcementView.leadingAnchor
             .constraint(equalTo: contentView.layoutMarginsGuide.leadingAnchor)
-            .setPriority(.defaultHigh)
             .activate()
         announcementView.trailingAnchor
             .constraint(equalTo: contentView.layoutMarginsGuide.trailingAnchor)
-            .setPriority(.defaultHigh)
-            .activate()
-        announcementView.centerXAnchor
-            .constraint(equalTo: contentView.layoutMarginsGuide.centerXAnchor)
-            .activate()
-        announcementView.widthAnchor
-            .constraint(lessThanOrEqualTo: readableContentGuide.widthAnchor)
             .activate()
     }
 }

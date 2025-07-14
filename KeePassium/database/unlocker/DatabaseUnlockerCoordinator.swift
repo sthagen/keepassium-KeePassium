@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2024 KeePassium Labs <info@keepassium.com>
+//  Copyright © 2018-2025 KeePassium Labs <info@keepassium.com>
 //
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -8,15 +8,9 @@
 
 import KeePassiumLib
 
-typealias DatabaseUnlockResult = Result<Database, Error>
-
 protocol DatabaseUnlockerCoordinatorDelegate: AnyObject {
     func shouldDismissFromKeyboard(_ coordinator: DatabaseUnlockerCoordinator) -> Bool
 
-    func shouldAutoUnlockDatabase(
-        _ fileRef: URLReference,
-        in coordinator: DatabaseUnlockerCoordinator
-    ) -> Bool
     func willUnlockDatabase(_ fileRef: URLReference, in coordinator: DatabaseUnlockerCoordinator)
     func didNotUnlockDatabase(
         _ fileRef: URLReference,
@@ -40,55 +34,44 @@ protocol DatabaseUnlockerCoordinatorDelegate: AnyObject {
     func didPressAddRemoteDatabase(in coordinator: DatabaseUnlockerCoordinator)
 }
 
-final class DatabaseUnlockerCoordinator: Coordinator, Refreshable {
+final class DatabaseUnlockerCoordinator: BaseCoordinator {
     enum State {
         case unlockOriginalFileFast
         case unlockOriginalFileSlow
         case unlockFallbackFile
     }
-    var childCoordinators = [Coordinator]()
-    var dismissHandler: CoordinatorDismissHandler?
     weak var delegate: DatabaseUnlockerCoordinatorDelegate?
 
     var reloadingContext: DatabaseReloadContext?
 
-    private let router: NavigationRouter
     private let databaseUnlockerVC: DatabaseUnlockerVC
 
     private var databaseRef: URLReference
     private var fallbackDatabaseRef: URLReference?
     private var selectedKeyFileRef: URLReference?
-    private var selectedHardwareKey: YubiKey?
+    private var selectedHardwareKey: HardwareKey?
 
     private var state: State = .unlockOriginalFileFast
     private var databaseLoader: DatabaseLoader?
 
     init(router: NavigationRouter, databaseRef: URLReference) {
-        self.router = router
         self.databaseRef = databaseRef
         self.fallbackDatabaseRef = DatabaseManager.getFallbackFile(for: databaseRef)
-
         databaseUnlockerVC = DatabaseUnlockerVC.instantiateFromStoryboard()
+        super.init(router: router)
+
         databaseUnlockerVC.delegate = self
-        databaseUnlockerVC.shouldAutofocus = true
         databaseUnlockerVC.databaseRef = databaseRef
     }
 
-    deinit {
-        assert(childCoordinators.isEmpty)
-        removeAllChildCoordinators()
+    override func start() {
+        super.start()
+        _pushInitialViewController(databaseUnlockerVC, animated: true)
+        setDatabase(databaseRef, andThen: .doNothing)
     }
 
-    func start() {
-        router.push(databaseUnlockerVC, animated: true, onPop: { [weak self] in
-            guard let self = self else { return }
-            self.removeAllChildCoordinators()
-            self.dismissHandler?(self)
-        })
-        setDatabase(databaseRef)
-    }
-
-    func refresh() {
+    override func refresh() {
+        super.refresh()
         databaseUnlockerVC.refresh()
     }
 
@@ -96,7 +79,7 @@ final class DatabaseUnlockerCoordinator: Coordinator, Refreshable {
         databaseLoader?.cancel(reason: reason)
     }
 
-    func setDatabase(_ fileRef: URLReference) {
+    func setDatabase(_ fileRef: URLReference, andThen activation: DatabaseUnlockerActivationType) {
         databaseRef = fileRef
         fallbackDatabaseRef = DatabaseManager.getFallbackFile(for: databaseRef)
         databaseUnlockerVC.databaseRef = fileRef
@@ -121,14 +104,15 @@ final class DatabaseUnlockerCoordinator: Coordinator, Refreshable {
             setKeyFile(nil)
         }
 
-        let associatedYubiKey = dbSettings.associatedYubiKey
-        setHardwareKey(associatedYubiKey) 
+        let associatedHardwareKey = dbSettings.associatedHardwareKey
+        setHardwareKey(associatedHardwareKey)
 
         state = .unlockOriginalFileFast
         refresh()
 
         DispatchQueue.main.async { [self] in
             maybeShowInitialDatabaseError(fileRef)
+            activateDatabase(activation)
         }
     }
 
@@ -141,7 +125,7 @@ final class DatabaseUnlockerCoordinator: Coordinator, Refreshable {
 
         let timeout = Timeout(duration: 2.0)
         fileRef.refreshInfo(timeout: timeout) { [weak self] result in
-            guard let self = self else { return }
+            guard let self else { return }
             switch result {
             case .success:
                 self.refresh()
@@ -156,24 +140,41 @@ final class DatabaseUnlockerCoordinator: Coordinator, Refreshable {
 }
 
 extension DatabaseUnlockerCoordinator {
+
+    public func activateDatabase(_ activation: DatabaseUnlockerActivationType) {
+        if databaseUnlockerVC.isProgressViewVisible() {
+            return
+        }
+
+        switch activation {
+        case .doNothing:
+            return
+        case .unlock:
+            if canUnlockAutomatically() {
+                tryToUnlockDatabase()
+                return
+            }
+            fallthrough
+        case .focus:
+            databaseUnlockerVC.maybeFocusOnPassword()
+        }
+    }
+
     private func showDiagnostics(
         at popoverAnchor: PopoverAnchor,
         in viewController: UIViewController
     ) {
         let modalRouter = NavigationRouter.createModal(style: .formSheet, at: popoverAnchor)
         let diagnosticsViewerCoordinator = DiagnosticsViewerCoordinator(router: modalRouter)
-        diagnosticsViewerCoordinator.dismissHandler = { [weak self] coordinator in
-            self?.removeChildCoordinator(coordinator)
-        }
         diagnosticsViewerCoordinator.start()
         viewController.present(modalRouter, animated: true, completion: nil)
-        addChildCoordinator(diagnosticsViewerCoordinator)
+        addChildCoordinator(diagnosticsViewerCoordinator, onDismiss: nil)
     }
 
     private func getPopoverRouter(at popoverAnchor: PopoverAnchor) -> NavigationRouter {
         #if AUTOFILL_EXT
         if ProcessInfo.isRunningOnMac {
-            return router
+            return _router
         }
         #endif
         return NavigationRouter.createModal(style: .popover, at: popoverAnchor)
@@ -183,16 +184,13 @@ extension DatabaseUnlockerCoordinator {
         at popoverAnchor: PopoverAnchor,
         in viewController: UIViewController
     ) {
-        let targetRouter = getPopoverRouter(at: popoverAnchor)
-        let keyFilePickerCoordinator = KeyFilePickerCoordinator(router: targetRouter)
-        keyFilePickerCoordinator.dismissHandler = { [weak self] coordinator in
-            self?.removeChildCoordinator(coordinator)
-        }
+        let modalRouter = NavigationRouter.createModal(style: .formSheet, at: popoverAnchor)
+        let keyFilePickerCoordinator = KeyFilePickerCoordinator(router: modalRouter)
         keyFilePickerCoordinator.delegate = self
         keyFilePickerCoordinator.start()
-        addChildCoordinator(keyFilePickerCoordinator)
-        if targetRouter != router {
-            viewController.present(targetRouter, animated: true, completion: nil)
+        addChildCoordinator(keyFilePickerCoordinator, onDismiss: nil)
+        if modalRouter != _router {
+            viewController.present(modalRouter, animated: true, completion: nil)
         }
     }
 
@@ -202,14 +200,11 @@ extension DatabaseUnlockerCoordinator {
     ) {
         let targetRouter = getPopoverRouter(at: popoverAnchor)
         let hardwareKeyPickerCoordinator = HardwareKeyPickerCoordinator(router: targetRouter)
-        hardwareKeyPickerCoordinator.dismissHandler = { [weak self] coordinator in
-            self?.removeChildCoordinator(coordinator)
-        }
         hardwareKeyPickerCoordinator.delegate = self
         hardwareKeyPickerCoordinator.setSelectedKey(selectedHardwareKey)
         hardwareKeyPickerCoordinator.start()
-        addChildCoordinator(hardwareKeyPickerCoordinator)
-        if targetRouter != router {
+        addChildCoordinator(hardwareKeyPickerCoordinator, onDismiss: nil)
+        if targetRouter != _router {
             viewController.present(targetRouter, animated: true, completion: nil)
         }
     }
@@ -226,14 +221,14 @@ extension DatabaseUnlockerCoordinator {
         databaseUnlockerVC.refresh()
     }
 
-    private func setHardwareKey(_ yubiKey: YubiKey?) {
-        selectedHardwareKey = yubiKey
+    private func setHardwareKey(_ hardwareKey: HardwareKey?) {
+        selectedHardwareKey = hardwareKey
         if reloadingContext == nil {
             DatabaseSettingsManager.shared.updateSettings(for: databaseRef) { dbSettings in
-                dbSettings.maybeSetAssociatedYubiKey(yubiKey)
+                dbSettings.maybeSetAssociatedHardwareKey(hardwareKey)
             }
         }
-        databaseUnlockerVC.setYubiKey(yubiKey)
+        databaseUnlockerVC.setHardwareKey(hardwareKey)
         databaseUnlockerVC.refresh()
     }
 
@@ -245,21 +240,6 @@ extension DatabaseUnlockerCoordinator {
             return false
         }
         return dbSettings.hasMasterKey
-    }
-
-    private func maybeUnlockAutomatically() {
-        guard canUnlockAutomatically() else {
-            return
-        }
-        guard delegate?.shouldAutoUnlockDatabase(databaseRef, in: self) ?? false else {
-            return
-        }
-        databaseUnlockerVC.showProgressView(
-            title: LString.databaseStatusLoading,
-            allowCancelling: true,
-            animated: false)
-
-        tryToUnlockDatabase()
     }
 
     private func tryToUnlockDatabase() {
@@ -275,7 +255,7 @@ extension DatabaseUnlockerCoordinator {
 
         let challengeHandler = ChallengeResponseManager.makeHandler(
             for: selectedHardwareKey,
-            presenter: router.navigationController.view
+            presenter: _router.navigationController.view
         )
 
         let databaseSettingsManager = DatabaseSettingsManager.shared
@@ -306,7 +286,7 @@ extension DatabaseUnlockerCoordinator {
              .unlockOriginalFileSlow:
             currentDatabaseRef = databaseRef
         case .unlockFallbackFile:
-            guard let fallbackDatabaseRef = fallbackDatabaseRef else {
+            guard let fallbackDatabaseRef else {
                 assertionFailure("Tried to open non-existent database")
                 return
             }
@@ -352,7 +332,7 @@ extension DatabaseUnlockerCoordinator {
                 action: .init(
                     title: error.recoverySuggestion ?? LString.actionFixThis,
                     handler: { [weak self] in
-                        guard let self = self else { return }
+                        guard let self else { return }
                         Diag.debug("Will reinstate database")
                         self.delegate?.didPressReinstateDatabase(self.databaseRef, in: self)
                     }
@@ -394,7 +374,7 @@ extension DatabaseUnlockerCoordinator {
             action: .init(
                 title: error.recoverySuggestion ?? LString.actionFixThis,
                 handler: { [weak self] in
-                    guard let self = self else { return }
+                    guard let self else { return }
                     Diag.debug("Will reinstate database")
                     self.delegate?.didPressReinstateDatabase(self.databaseRef, in: self)
                 }
@@ -411,7 +391,7 @@ extension DatabaseUnlockerCoordinator {
             action: .init(
                 title: LString.actionConnectToServer,
                 handler: { [weak self] in
-                    guard let self = self else { return }
+                    guard let self else { return }
                     Diag.debug("Will add remote database")
                     self.delegate?.didPressAddRemoteDatabase(in: self)
                 }
@@ -425,18 +405,11 @@ extension DatabaseUnlockerCoordinator: DatabaseUnlockerDelegate {
         return delegate?.shouldDismissFromKeyboard(self) ?? false
     }
 
-    func willAppear(viewController: DatabaseUnlockerVC) {
-        guard databaseLoader == nil else {
-            return
-        }
-        maybeUnlockAutomatically()
-    }
-
     func didPressSelectKeyFile(
         at popoverAnchor: PopoverAnchor,
         in viewController: DatabaseUnlockerVC
     ) {
-        router.dismissModals(animated: false, completion: { [weak self] in
+        _router.dismissModals(animated: false, completion: { [weak self] in
             self?.selectKeyFile(at: popoverAnchor, in: viewController)
         })
     }
@@ -445,13 +418,13 @@ extension DatabaseUnlockerCoordinator: DatabaseUnlockerDelegate {
         at popoverAnchor: PopoverAnchor,
         in viewController: DatabaseUnlockerVC
     ) {
-        router.dismissModals(animated: false, completion: { [weak self] in
+        _router.dismissModals(animated: false, completion: { [weak self] in
             self?.selectHardwareKey(at: popoverAnchor, in: viewController)
         })
     }
 
     func shouldDismissPopovers(in viewController: DatabaseUnlockerVC) {
-        router.dismissModals(animated: false, completion: nil)
+        _router.dismissModals(animated: false, completion: nil)
     }
 
     func canUnlockAutomatically(_ viewController: DatabaseUnlockerVC) -> Bool {
@@ -474,12 +447,20 @@ extension DatabaseUnlockerCoordinator: DatabaseUnlockerDelegate {
 }
 
 extension DatabaseUnlockerCoordinator: KeyFilePickerCoordinatorDelegate {
-    func didPickKeyFile(_ keyFile: URLReference?, in coordinator: KeyFilePickerCoordinator) {
+    func didSelectKeyFile(
+        _ fileRef: URLReference?,
+        cause: FileActivationCause?,
+        in coordinator: KeyFilePickerCoordinator
+    ) {
+        assert(cause != nil, "File selected but not activated?")
         databaseUnlockerVC.hideErrorMessage(animated: false)
-        setKeyFile(keyFile)
+        setKeyFile(fileRef)
     }
 
-    func didEliminateKeyFile(_ keyFile: URLReference, in coordinator: KeyFilePickerCoordinator) {
+    func didEliminateKeyFile(
+        _ keyFile: URLReference,
+        in coordinator: KeyFilePickerCoordinator
+    ) {
         if keyFile == selectedKeyFileRef {
             databaseUnlockerVC.hideErrorMessage(animated: false)
             setKeyFile(nil)
@@ -489,9 +470,9 @@ extension DatabaseUnlockerCoordinator: KeyFilePickerCoordinatorDelegate {
 }
 
 extension DatabaseUnlockerCoordinator: HardwareKeyPickerCoordinatorDelegate {
-    func didSelectKey(_ yubiKey: YubiKey?, in coordinator: HardwareKeyPickerCoordinator) {
+    func didSelectKey(_ hardwareKey: HardwareKey?, in coordinator: HardwareKeyPickerCoordinator) {
         databaseUnlockerVC.hideErrorMessage(animated: false)
-        setHardwareKey(yubiKey)
+        setHardwareKey(hardwareKey)
     }
 }
 

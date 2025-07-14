@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2024 KeePassium Labs <info@keepassium.com>
+//  Copyright © 2018-2025 KeePassium Labs <info@keepassium.com>
 //
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -14,12 +14,9 @@ protocol DatabaseKeyChangerCoordinatorDelegate: AnyObject {
     func didRelocateDatabase(_ databaseFile: DatabaseFile, to url: URL)
 }
 
-final class DatabaseKeyChangerCoordinator: Coordinator {
-    var childCoordinators = [Coordinator]()
-    var dismissHandler: CoordinatorDismissHandler?
+final class DatabaseKeyChangerCoordinator: BaseCoordinator {
     weak var delegate: DatabaseKeyChangerCoordinatorDelegate?
 
-    private let router: NavigationRouter
     private let databaseKeyChangerVC: DatabaseKeyChangerVC
 
     private let databaseFile: DatabaseFile
@@ -27,39 +24,20 @@ final class DatabaseKeyChangerCoordinator: Coordinator {
 
     var databaseSaver: DatabaseSaver?
     var fileExportHelper: FileExportHelper?
-    var savingProgressHost: ProgressViewHost? { return router }
+    var savingProgressHost: ProgressViewHost? { return _router }
     var saveSuccessHandler: (() -> Void)?
 
     init(databaseFile: DatabaseFile, router: NavigationRouter) {
-        self.router = router
         self.databaseFile = databaseFile
         self.database = databaseFile.database
         databaseKeyChangerVC = DatabaseKeyChangerVC.make(for: databaseFile)
+        super.init(router: router)
         databaseKeyChangerVC.delegate = self
     }
 
-    deinit {
-        assert(childCoordinators.isEmpty)
-        removeAllChildCoordinators()
-    }
-
-    func start() {
-        if router.navigationController.topViewController == nil {
-            let leftButton = UIBarButtonItem(
-                barButtonSystemItem: .cancel,
-                target: self,
-                action: #selector(didPressDismissButton))
-            databaseKeyChangerVC.navigationItem.leftBarButtonItem = leftButton
-        }
-        router.push(databaseKeyChangerVC, animated: true, onPop: { [weak self] in
-            guard let self = self else { return }
-            self.removeAllChildCoordinators()
-            self.dismissHandler?(self)
-        })
-    }
-
-    @objc private func didPressDismissButton() {
-        router.dismiss(animated: true)
+    override func start() {
+        super.start()
+        _pushInitialViewController(databaseKeyChangerVC, dismissButtonStyle: .cancel, animated: true)
     }
 }
 
@@ -74,61 +52,52 @@ extension DatabaseKeyChangerCoordinator {
 
         let modalRouter = NavigationRouter.createModal(style: .popover, at: popoverAnchor)
         let keyFilePickerCoordinator = KeyFilePickerCoordinator(router: modalRouter)
-        keyFilePickerCoordinator.dismissHandler = { [weak self] coordinator in
-            self?.removeChildCoordinator(coordinator)
-        }
         keyFilePickerCoordinator.delegate = self
         keyFilePickerCoordinator.start()
-        router.present(modalRouter, animated: true, completion: nil)
-        addChildCoordinator(keyFilePickerCoordinator)
+        _router.present(modalRouter, animated: true, completion: nil)
+        addChildCoordinator(keyFilePickerCoordinator, onDismiss: nil)
     }
 
     private func showHardwareKeyPicker(at popoverAnchor: PopoverAnchor) {
         let modalRouter = NavigationRouter.createModal(style: .popover, at: popoverAnchor)
         let hardwareKeyPickerCoordinator = HardwareKeyPickerCoordinator(router: modalRouter)
-        hardwareKeyPickerCoordinator.dismissHandler = { [weak self] coordinator in
-            self?.removeChildCoordinator(coordinator)
-        }
         hardwareKeyPickerCoordinator.delegate = self
-        hardwareKeyPickerCoordinator.setSelectedKey(databaseKeyChangerVC.yubiKey)
+        hardwareKeyPickerCoordinator.setSelectedKey(databaseKeyChangerVC.hardwareKey)
         hardwareKeyPickerCoordinator.start()
-        router.present(modalRouter, animated: true, completion: nil)
-        addChildCoordinator(hardwareKeyPickerCoordinator)
+        _router.present(modalRouter, animated: true, completion: nil)
+        addChildCoordinator(hardwareKeyPickerCoordinator, onDismiss: nil)
     }
 
     private func showDiagnostics() {
         let modalRouter = NavigationRouter.createModal(style: .formSheet)
         let diagnosticsViewerCoordinator = DiagnosticsViewerCoordinator(router: modalRouter)
-        diagnosticsViewerCoordinator.dismissHandler = { [weak self] coordinator in
-            self?.removeChildCoordinator(coordinator)
-        }
         diagnosticsViewerCoordinator.start()
 
-        router.present(modalRouter, animated: true, completion: nil)
-        addChildCoordinator(diagnosticsViewerCoordinator)
+        _router.present(modalRouter, animated: true, completion: nil)
+        addChildCoordinator(diagnosticsViewerCoordinator, onDismiss: nil)
     }
 
     private func applyChangesAndSaveDatabase() {
         let newPassword = databaseKeyChangerVC.password
         let newKeyFile = databaseKeyChangerVC.keyFileRef
-        let newYubiKey = databaseKeyChangerVC.yubiKey
+        let newHardwareKey = databaseKeyChangerVC.hardwareKey
 
         database.keyHelper.createCompositeKey(
             password: newPassword,
             keyFile: newKeyFile,
             challengeHandler: ChallengeResponseManager.makeHandler(
-                for: newYubiKey,
-                presenter: router.navigationController.view
+                for: newHardwareKey,
+                presenter: _router.navigationController.view
             ),
             completion: { [weak self] result in
-                guard let self = self else { return }
+                guard let self else { return }
                 switch result {
                 case .success(let newCompositeKey):
                     self.database.changeCompositeKey(to: newCompositeKey)
                     DatabaseSettingsManager.shared.updateSettings(for: self.databaseFile) { dbSettings in
                         dbSettings.maybeSetMasterKey(newCompositeKey)
                         dbSettings.maybeSetAssociatedKeyFile(newKeyFile)
-                        dbSettings.maybeSetAssociatedYubiKey(newYubiKey)
+                        dbSettings.maybeSetAssociatedHardwareKey(newHardwareKey)
                     }
                     self.saveDatabase(self.databaseFile)
                 case .failure(let errorMessage):
@@ -145,7 +114,7 @@ extension DatabaseKeyChangerCoordinator: DatabaseKeyChangerDelegate {
         at popoverAnchor: PopoverAnchor,
         in viewController: DatabaseKeyChangerVC
     ) {
-        router.dismissModals(animated: false, completion: { [weak self] in
+        _router.dismissModals(animated: false, completion: { [weak self] in
             self?.showKeyFilePicker(at: popoverAnchor)
         })
     }
@@ -154,13 +123,13 @@ extension DatabaseKeyChangerCoordinator: DatabaseKeyChangerDelegate {
         at popoverAnchor: PopoverAnchor,
         in viewController: DatabaseKeyChangerVC
     ) {
-        router.dismissModals(animated: false, completion: { [weak self] in
+        _router.dismissModals(animated: false, completion: { [weak self] in
             self?.showHardwareKeyPicker(at: popoverAnchor)
         })
     }
 
     func shouldDismissPopovers(in viewController: DatabaseKeyChangerVC) {
-        router.dismissModals(animated: false, completion: nil)
+        _router.dismissModals(animated: false, completion: nil)
     }
 
     func didPressSaveChanges(in viewController: DatabaseKeyChangerVC) {
@@ -169,8 +138,13 @@ extension DatabaseKeyChangerCoordinator: DatabaseKeyChangerDelegate {
 }
 
 extension DatabaseKeyChangerCoordinator: KeyFilePickerCoordinatorDelegate {
-    func didPickKeyFile(_ keyFile: URLReference?, in coordinator: KeyFilePickerCoordinator) {
-        databaseKeyChangerVC.setKeyFile(keyFile)
+    func didSelectKeyFile(
+        _ fileRef: URLReference?,
+        cause: FileActivationCause?,
+        in coordinator: KeyFilePickerCoordinator
+    ) {
+        assert(cause != nil, "Unexpected in single-panel mode")
+        databaseKeyChangerVC.setKeyFile(fileRef)
     }
 
     func didEliminateKeyFile(_ keyFile: URLReference, in coordinator: KeyFilePickerCoordinator) {
@@ -181,8 +155,8 @@ extension DatabaseKeyChangerCoordinator: KeyFilePickerCoordinatorDelegate {
 }
 
 extension DatabaseKeyChangerCoordinator: HardwareKeyPickerCoordinatorDelegate {
-    func didSelectKey(_ yubiKey: YubiKey?, in coordinator: HardwareKeyPickerCoordinator) {
-        databaseKeyChangerVC.setYubiKey(yubiKey)
+    func didSelectKey(_ hardwareKey: HardwareKey?, in coordinator: HardwareKeyPickerCoordinator) {
+        databaseKeyChangerVC.setHardwareKey(hardwareKey)
     }
 }
 
@@ -193,7 +167,7 @@ extension DatabaseKeyChangerCoordinator: DatabaseSaving {
 
     func didSave(databaseFile: DatabaseFile) {
         Diag.info("Master key change saved")
-        router.pop(animated: true) { [self] in
+        _router.pop(animated: true) { [self] in
             self.delegate?.didChangeDatabaseKey(in: self)
         }
     }

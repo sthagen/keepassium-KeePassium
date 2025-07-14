@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2024 KeePassium Labs <info@keepassium.com>
+//  Copyright © 2018-2025 KeePassium Labs <info@keepassium.com>
 //
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -216,7 +216,7 @@ final class FaviconDownloader {
 
         Diag.debug("Checking HTML for favicon links")
         let task = urlSession.dataTask(with: URLRequest(url: url)) { [weak self] probablyHtmlData, _, error in
-            if let error = error {
+            if let error {
                 Diag.error("Favicon request failed [error: \(error)]")
                 DispatchQueue.main.async {
                     let nsError = error as NSError

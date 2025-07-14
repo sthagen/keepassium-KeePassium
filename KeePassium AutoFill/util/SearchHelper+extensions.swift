@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2024 KeePassium Labs <info@keepassium.com>
+//  Copyright © 2018-2025 KeePassium Labs <info@keepassium.com>
 //
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -173,7 +173,7 @@ extension SearchHelper {
         parsedHost parsedHost1: ParsedHost?,
         with url2: URL?
     ) -> Double {
-        guard let url2 = url2 else { return 0.0 }
+        guard let url2 else { return 0.0 }
 
         if url1 == url2 { return 1.0 }
 

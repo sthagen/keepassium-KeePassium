@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2024 KeePassium Labs <info@keepassium.com>
+//  Copyright © 2018-2025 KeePassium Labs <info@keepassium.com>
 //
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -62,7 +62,7 @@ extension PasswordQuality {
 
 extension PasswordQuality {
     init?(password: String?) {
-        guard let password = password,
+        guard let password,
               !password.isEmpty,
               password.count < 1000
         else {

@@ -1,5 +1,79 @@
 #CHANGELOG
 
+## [2.4.165] - 2025-07-13
+
+### Added
+
+- macOS: Added Auto-Type via emulated key presses (#415, #210) [thanks, everyone]
+- macOS: Added support for OnlyKey challenge-response [thanks, everyone]
+- macOS: Option to lock app and/or database on macOS screen lock [thanks, everyone]
+- macOS: Scanning QR codes from camera (#421) [thanks, vit9696]
+- Reading OTP setup QR codes from images (#422) [thanks, vit9696]
+- Added option to reset the app after N failed app passcode attempts (#356) [thanks, O35dE]
+- Added possibility to export databases to WebDAV
+- macOS: Added import from Enpass JSON
+
+### Improved
+
+- Press Cmd+E to edit selected entry (#224) [thanks, plus-or-minus]
+- AutoFill: long-press to select which field to copy to clipboard (#7, #388) [thanks, Stuart]
+- App settings UI and keyboard navigation
+
+### Fixed
+
+- macOS: Cmd+C copied password instead of selected text (#426) [thanks, everyone]
+- DB unlocker could start with a previously removed database (regression in 2.4.164)
+- Enforce max history size for entries, if defined (`historyMaxSize` parameter in DB file)
+- Swipe gestures did not work in file pickers (regression in 2.4.164)
+- "Clear Master Keys on Timeout" setting no longer affects non-timeout locks 
+- macOS: Crash on file picker menu actions [thanks, Stuart]
+- macOS: Scrolling counts as user activity [thanks, Stuart]
+- Org: mandatory passcode setup could be dismissed
+
+
+## [2.4.164] - 2025-04-16
+
+### Added
+
+- Support for extra URLs (KP2A_URL_*) (#180) [thanks, everyone]
+- Added QR-code view for entry fields (#420) [thanks, everyone]
+- Database-specific data protection settings (#64) [thanks, everyone]
+- macOS: Import from Apple Passwords CSV
+
+### Improved
+
+- Show number of found items, both in search and smart groups [thanks, u/binroth]
+- WebDAV setup accepts both direct file URL or a folder path
+- macOS: Preserve split panel widths between launches [thanks, Stuart]
+- Menu for new custom fields, with frequently used options
+- iOS: More usable field actions menu (not in VoiceOver)
+- Show "Retry" option when DB saving fails (#437) [thanks, Carsten]
+- Reopening the last Entry Viewer's tab is optional now (#403) [thanks, u/gripe_and_complain]
+- Won't color passwords when "Differentiate Without Color" is active in system settings [thanks, Adam]
+- Added a 90-second clipboard timeout [thanks, Brian]
+- Select and delete multiple custom icons at once
+- Added an option to auto-download favicons on entry edit
+- Log a setup suggestion for YubiKeys with disabled NFC
+- Modernized database and key file picker UI
+
+
+### Fixed
+
+- Excessive warnings about local files missing in AutoFill (#441) [thanks, everyone]
+- Device locking interrupted by Face ID prompt (#19) [thanks, magebarf]
+- macOS: Selecting a premium plan with a mouse (#420) [thanks, vit9696]
+- Detection of external database changes on OneDrive [thanks, Michael]
+- Access to files in root of OneDrive Shared folder (#387) [thanks, everyone]
+- macOS: Short app protection timeouts did not work properly [thanks, everyone]
+- macOS: Preserve toolbar display mode on macOS 15 [thanks, u/binroth]
+- otpauth URI format for manually configured OTPs (#435) [thanks, rasa]
+- macOS: Selecting databases with keyboard [thanks, everyone]
+- Crash after editing a found entry (#436) [thanks, Tom]
+- macOS: Background of the passcode input dialog
+- App protection now considers key presses as user activity
+- Smart group update after editing an item (#439) [thanks, Doc-Steve]
+
+
 ## [2.3.163] - 2025-01-17
 
 ### Added

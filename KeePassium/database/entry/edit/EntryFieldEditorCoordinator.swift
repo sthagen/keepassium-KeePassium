@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2024 KeePassium Labs <info@keepassium.com>
+//  Copyright © 2018-2025 KeePassium Labs <info@keepassium.com>
 //
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -7,6 +7,7 @@
 //  For commercial licensing, please contact the author.
 
 import KeePassiumLib
+import UIKit
 
 protocol EntryFieldEditorCoordinatorDelegate: AnyObject {
     func didUpdateEntry(_ entry: Entry, in coordinator: EntryFieldEditorCoordinator)
@@ -14,11 +15,9 @@ protocol EntryFieldEditorCoordinatorDelegate: AnyObject {
     func didRelocateDatabase(_ databaseFile: DatabaseFile, to url: URL)
 }
 
-final class EntryFieldEditorCoordinator: Coordinator {
+final class EntryFieldEditorCoordinator: BaseCoordinator {
     private typealias RollbackRoutine = () -> Void
 
-    var childCoordinators = [Coordinator]()
-    var dismissHandler: CoordinatorDismissHandler?
     weak var delegate: EntryFieldEditorCoordinatorDelegate?
 
     public var isCreating: Bool {
@@ -36,9 +35,8 @@ final class EntryFieldEditorCoordinator: Coordinator {
     private var originalEntryBeforeSaving: Entry?
     private var rollbackPreSaveActions: RollbackRoutine?
 
-    private var qrCodeScanner = { YubiKitQRCodeScanner() }()
+    private var qrCodeScanner = { QRCodeScanner() }()
 
-    private let router: NavigationRouter
     private let fieldEditorVC: EntryFieldEditorVC
 
     private var isModified = false {
@@ -51,17 +49,17 @@ final class EntryFieldEditorCoordinator: Coordinator {
 
     var databaseSaver: DatabaseSaver?
     var fileExportHelper: FileExportHelper?
-    var savingProgressHost: ProgressViewHost? { return router }
+    var savingProgressHost: ProgressViewHost? { return _router }
     var saveSuccessHandler: (() -> Void)?
 
     private var tagsField: EntryField?
 
     init(router: NavigationRouter, databaseFile: DatabaseFile, parent: Group, target: Entry?) {
-        self.router = router
         self.databaseFile = databaseFile
         self.database = databaseFile.database
         self.parent = parent
         self.originalEntry = target
+        fieldEditorVC = EntryFieldEditorVC.instantiateFromStoryboard()
 
         let isCreationMode: Bool
         if let _target = target {
@@ -75,7 +73,7 @@ final class EntryFieldEditorCoordinator: Coordinator {
             entry.rawTitle = LString.defaultNewEntryName
         }
 
-        fieldEditorVC = EntryFieldEditorVC.instantiateFromStoryboard()
+        super.init(router: router)
         fieldEditorVC.title = isCreationMode ? LString.titleNewEntry : LString.titleEntry
 
         entry.touch(.accessed)
@@ -88,6 +86,39 @@ final class EntryFieldEditorCoordinator: Coordinator {
         fieldEditorVC.supportsFaviconDownload = database is Database2
         fieldEditorVC.itemCategory = ItemCategory.get(for: entry)
         fieldEditorVC.shouldFocusOnTitleField = isCreationMode
+        fieldEditorVC.mostCommonCustomFields = getMostCommonCustomFields()
+    }
+
+    private func getMostCommonCustomFields() -> [String] {
+        let ignoredCustomFields = [
+            EntryField.otpConfig1,
+            EntryField.otpConfig2Seed,
+            EntryField.otpConfig2Settings,
+            EntryField.timeOtpLength,
+            EntryField.timeOtpPeriod,
+            EntryField.timeOtpPeriod,
+            EntryField.timeOtpSecret,
+            EntryField.timeOtpAlgorithm,
+            EntryField.passkeyCredentialID,
+            EntryField.passkeyRelyingParty,
+            EntryField.passkeyPrivateKeyPEM,
+            EntryField.passkeyUserHandle,
+            EntryField.passkeyUsername
+        ]
+
+        var names: [String: Int] = [:]
+        database.root?.applyToAllChildren(
+            groupHandler: nil,
+            entryHandler: { entry in
+                entry.fields.forEach { field in
+                    guard !field.isStandardField else { return }
+                    guard !ignoredCustomFields.contains(field.name) else { return }
+                    guard !field.isExtraURL else { return }
+
+                    names[field.name, default: 0] += 1
+            }
+        })
+        return names.sorted { $0.value > $1.value }.prefix(5).map { $0.key }
     }
 
     private func setupFields(entry: Entry) -> ([EditableField], EntryField?) {
@@ -105,47 +136,66 @@ final class EntryFieldEditorCoordinator: Coordinator {
         return (fields, tagsField)
     }
 
-    deinit {
-        assert(childCoordinators.isEmpty)
-        removeAllChildCoordinators()
-    }
-
-    func start() {
-        router.push(fieldEditorVC, animated: true, onPop: { [weak self] in
-            guard let self = self else { return }
-            self.removeAllChildCoordinators()
-            self.dismissHandler?(self)
-        })
+    override func start() {
+        super.start()
+        _pushInitialViewController(fieldEditorVC, animated: true)
         refresh()
     }
 
-    private func refresh() {
+    override func refresh() {
+        super.refresh()
         fieldEditorVC.entryIcon = UIImage.kpIcon(forEntry: entry)
         fieldEditorVC.refresh()
     }
 
     private func abortAndDismiss() {
-        router.pop(animated: true)
+        _router.pop(animated: true)
     }
 
-    private func saveChangesAndDismiss() {
-        entry.touch(.modified, updateParents: false)
+    private func startSaving() {
         fieldEditorVC.view.endEditing(true)
 
-        if let originalEntry = originalEntry {
+        let isURLChanged = originalEntry == nil || originalEntry?.resolvedURL != entry.resolvedURL
+        let shouldDownloadFavicon =
+                isURLChanged
+                && !isIconModified()
+                && Settings.current.isAutoDownloadFaviconsEnabled
+                && Settings.current.isNetworkAccessAllowed
+        if shouldDownloadFavicon,
+           let websiteURL = URL.from(malformedString: entry.resolvedURL)
+        {
+            Diag.debug("Auto-downloading favicon")
+            fieldEditorVC.isDownloadingFavicon = true
+            refresh()
+            downloadFavicon(for: websiteURL, in: fieldEditorVC) { [weak self, weak fieldEditorVC] image in
+                guard let self, let fieldEditorVC else { return }
+                fieldEditorVC.isDownloadingFavicon = false
+                if let image {
+                    changeIcon(image: image)
+                }
+                finishSaving()
+            }
+        } else {
+            finishSaving()
+        }
+    }
+
+    private func finishSaving() {
+        entry.touch(.modified, updateParents: false)
+        if let originalEntry {
             if originalEntryBeforeSaving == nil {
                 originalEntryBeforeSaving = originalEntry.clone(makeNewUUID: false)
                 originalEntry.backupState()
             }
             entry.applyPreservingHistory(to: originalEntry, makeNewUUID: false)
             rollbackPreSaveActions = { [weak self] in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.originalEntryBeforeSaving?.apply(to: self.originalEntry!, makeNewUUID: false)
             }
         } else {
             parent.add(entry: entry)
             rollbackPreSaveActions = { [weak self] in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.parent.remove(entry: self.entry)
             }
         }
@@ -169,6 +219,12 @@ final class EntryFieldEditorCoordinator: Coordinator {
             fieldEditorVC.fields = fields
         }
         refresh()
+
+        fieldEditorVC.showNotification(
+            LString.actionDone,
+            image: .symbol(.clock),
+            duration: 1
+        )
     }
 
     private func setOTPConfig(unfilteredSeed: String) {
@@ -177,7 +233,11 @@ final class EntryFieldEditorCoordinator: Coordinator {
             return
         }
         let seed = unfilteredSeed.replacingOccurrences(of: " ", with: "")
-        let otpauthURI = TOTPGeneratorFactory.makeOtpauthURI(base32Seed: seed)
+        let otpauthURI = TOTPGeneratorFactory.makeOtpauthURI(
+            base32Seed: seed,
+            issuer: entry.resolvedTitle.isEmpty ? AppInfo.name : entry.resolvedTitle,
+            accountName: entry.resolvedUserName.isEmpty ? nil : entry.resolvedUserName
+        )
         setOTPConfig(uri: otpauthURI.absoluteString, isQRBased: false)
     }
 
@@ -187,17 +247,14 @@ final class EntryFieldEditorCoordinator: Coordinator {
         in viewController: UIViewController
     ) {
         let passGenCoordinator = PasswordGeneratorCoordinator(
-            router: router,
+            router: _router,
             quickMode: quickMode,
             hasTarget: true
         )
-        passGenCoordinator.dismissHandler = { [weak self] coordinator in
-            self?.removeChildCoordinator(coordinator)
-        }
         passGenCoordinator.delegate = self
         passGenCoordinator.context = textInput
         passGenCoordinator.start()
-        addChildCoordinator(passGenCoordinator)
+        addChildCoordinator(passGenCoordinator, onDismiss: nil)
     }
 
     private func makeUserNameGeneratorMenu(for field: EditableField) -> UIMenu {
@@ -233,12 +290,25 @@ final class EntryFieldEditorCoordinator: Coordinator {
     }
 
     private func showDiagnostics() {
-        let diagnosticsViewerCoordinator = DiagnosticsViewerCoordinator(router: router)
-        diagnosticsViewerCoordinator.dismissHandler = { [weak self] coordinator in
-            self?.removeChildCoordinator(coordinator)
-        }
+        let diagnosticsViewerCoordinator = DiagnosticsViewerCoordinator(router: _router)
         diagnosticsViewerCoordinator.start()
-        addChildCoordinator(diagnosticsViewerCoordinator)
+        addChildCoordinator(diagnosticsViewerCoordinator, onDismiss: nil)
+    }
+
+    private func isIconModified() -> Bool {
+        let newIconID = entry.iconID
+        let newCustomIconUUID = (entry as? Entry2)?.customIconUUID
+        let origIconID = originalEntry?.iconID
+        let origCustomIconUUID = (originalEntry as? Entry2)?.customIconUUID
+        if let origIconID {
+            return newIconID != origIconID || newCustomIconUUID != origCustomIconUUID
+        } else {
+            let parent2 = parent as? Group2
+            return
+                (newIconID != Entry.defaultIconID && newIconID != parent.iconID)
+                || (newCustomIconUUID != parent2?.customIconUUID)
+                || newCustomIconUUID != .ZERO
+        }
     }
 
     private func changeIcon(image: UIImage) {
@@ -257,17 +327,14 @@ final class EntryFieldEditorCoordinator: Coordinator {
 
     func showIconPicker() {
         let iconPickerCoordinator = ItemIconPickerCoordinator(
-            router: router,
+            router: _router,
             databaseFile: databaseFile,
             customFaviconUrl: URL.from(malformedString: entry.resolvedURL)
         )
         iconPickerCoordinator.item = entry
-        iconPickerCoordinator.dismissHandler = { [weak self] coordinator in
-            self?.removeChildCoordinator(coordinator)
-        }
         iconPickerCoordinator.delegate = self
         iconPickerCoordinator.start()
-        addChildCoordinator(iconPickerCoordinator)
+        addChildCoordinator(iconPickerCoordinator, onDismiss: nil)
     }
 }
 
@@ -282,17 +349,26 @@ extension EntryFieldEditorCoordinator: EntryFieldEditorDelegate {
         return database is Database2
     }
 
-    func isQRScannerAvailable(_ viewController: EntryFieldEditorVC) -> Bool {
-        return qrCodeScanner.deviceSupportsQRScanning
+    func shouldProvideAvailableQRSources(for viewController: EntryFieldEditorVC) -> Set<QRCodeSource> {
+        return qrCodeScanner.getSupportedSources()
     }
 
-    func didPressQRCodeOTPSetup(in viewController: EntryFieldEditorVC) {
-        qrCodeScanner.scanQRCode(presenter: viewController) { [weak self] result in
+    func didPressPickOTPQRCode(from source: QRCodeSource, in viewController: EntryFieldEditorVC) {
+        qrCodeScanner.pickQRCode(source: source, presenter: viewController) {
+            [weak self, weak viewController] result in
+            guard let self, let viewController else { return }
+
             switch result {
-            case .failure(let error):
-                self?.fieldEditorVC.showNotification(error.localizedDescription)
             case .success(let scannedText):
-                self?.setOTPConfig(uri: scannedText, isQRBased: true)
+                if let scannedText {
+                    setOTPConfig(uri: scannedText, isQRBased: true)
+                }
+            case .failure(let scannerError):
+                viewController.showNotification(
+                    scannerError.localizedDescription,
+                    image: .symbol(.exclamationMarkTriangle, tint: .errorMessage),
+                    hidePrevious: true
+                )
             }
         }
     }
@@ -320,7 +396,7 @@ extension EntryFieldEditorCoordinator: EntryFieldEditorDelegate {
 
     func didPressCancel(in viewController: EntryFieldEditorVC) {
         guard isModified else {
-            router.pop(animated: true)
+            _router.pop(animated: true)
             return
         }
 
@@ -330,33 +406,47 @@ extension EntryFieldEditorCoordinator: EntryFieldEditorDelegate {
             preferredStyle: .alert)
         alert.addAction(title: LString.actionEdit, style: .cancel, handler: nil)
         alert.addAction(title: LString.actionDiscard, style: .destructive) { [weak self] _ in
-            guard let self = self else { return }
-            self.router.pop(animated: true)
+            self?._router.pop(animated: true)
         }
-        router.present(alert, animated: true, completion: nil)
+        _router.present(alert, animated: true, completion: nil)
     }
 
     func didPressDone(in viewController: EntryFieldEditorVC) {
-        saveChangesAndDismiss()
+        startSaving()
     }
 
     func didModifyContent(in viewController: EntryFieldEditorVC) {
         isModified = true
     }
 
-    func didPressAddField(in viewController: EntryFieldEditorVC) {
+    func didPressAddField(name: String?, in viewController: EntryFieldEditorVC) -> EntryField? {
         guard let entry2 = entry as? Entry2 else {
             assertionFailure("Tried to add custom field to an entry which does not support them")
-            return
+            return nil
         }
         let newField = entry2.makeEntryField(
-            name: LString.defaultNewCustomFieldName,
+            name: name ?? LString.defaultNewCustomFieldName,
             value: "",
             isProtected: true)
         entry2.fields.append(newField)
         fields.append(EditableField(field: newField))
         fieldEditorVC.fields = fields
         isModified = true
+        return newField
+    }
+
+    func didPressAddURLField(in viewController: EntryFieldEditorVC) -> EntryField? {
+        guard let entry2 = entry as? Entry2 else {
+            assertionFailure("Tried to add custom field to an entry which does not support them")
+            return nil
+        }
+        let newURLField = entry2.makeExtraURLField(value: "https://")
+
+        entry2.fields.append(newURLField)
+        fields.append(EditableField(field: newURLField))
+        fieldEditorVC.fields = fields
+        isModified = true
+        return newURLField
     }
 
     func didPressDeleteField(_ field: EditableField, in viewController: EntryFieldEditorVC) {
@@ -421,15 +511,14 @@ extension EntryFieldEditorCoordinator: EntryFieldEditorDelegate {
             item: entry,
             parent: originalEntry?.parent,
             databaseFile: databaseFile,
-            router: router
+            router: _router
         )
         tagsCoordinator.delegate = self
-        tagsCoordinator.dismissHandler = { [weak self, tagsCoordinator] coordinator in
-            self?.applyTags(tags: tagsCoordinator.selectedTags)
-            self?.removeChildCoordinator(coordinator)
-        }
         tagsCoordinator.start()
-        addChildCoordinator(tagsCoordinator)
+        addChildCoordinator(tagsCoordinator, onDismiss: { [weak self, weak tagsCoordinator] _ in
+            guard let self, let tagsCoordinator else { return }
+            applyTags(tags: tagsCoordinator.selectedTags)
+        })
     }
 
     private func applyTags(tags: [String]) {
@@ -534,7 +623,7 @@ extension EntryFieldEditorCoordinator: DatabaseSaving {
         let changedEntry = originalEntry ?? entry
         delegate?.didUpdateEntry(changedEntry, in: self)
 
-        router.pop(animated: true)
+        _router.pop(animated: true)
     }
 
     func didFailSaving(databaseFile: DatabaseFile) {

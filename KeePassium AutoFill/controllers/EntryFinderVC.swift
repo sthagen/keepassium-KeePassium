@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2024 KeePassium Labs <info@keepassium.com>
+//  Copyright © 2018-2025 KeePassium Labs <info@keepassium.com>
 // 
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -7,6 +7,11 @@
 //  For commercial licensing, please contact the author.
 
 import KeePassiumLib
+
+enum AutoFillClipboardField {
+    case totp
+    case custom(EntryField)
+}
 
 protocol EntryFinderDelegate: AnyObject {
     func didLoadViewController(_ viewController: EntryFinderVC)
@@ -21,6 +26,12 @@ protocol EntryFinderDelegate: AnyObject {
 
     @available(iOS 18.0, *)
     func didSelectField(_ field: EntryField, from entry: Entry, in viewController: EntryFinderVC)
+
+    func didSelectAutoCopyOverride(
+        _ field: AutoFillClipboardField,
+        from entry: Entry,
+        in viewController: EntryFinderVC)
+    func getAutoCopyOverride(for entry: Entry, in viewController: EntryFinderVC) -> AutoFillClipboardField?
 }
 
 final class EntryFinderCell: UITableViewCell {
@@ -42,7 +53,7 @@ final class EntryFinderCell: UITableViewCell {
 
     fileprivate var entry: Entry? {
         didSet {
-            guard let entry = entry else {
+            guard let entry else {
                 titleLabel?.text = ""
                 subtitleLabel?.text = ""
                 iconView?.image = nil
@@ -197,7 +208,7 @@ final class EntryFinderVC: UITableViewController {
 
     public func activateManualSearch(query: String? = nil) {
         DispatchQueue.main.async { [weak self] in
-            guard let self = self else { return }
+            guard let self else { return }
             self.searchController.isActive = true
             self.searchController.searchBar.text = query
             self.searchController.searchBar.becomeFirstResponderWhenSafe()
@@ -257,6 +268,20 @@ final class EntryFinderVC: UITableViewController {
             return (.matchSeparator, 0)
         } else {
             return (.partialMatch, resultSection - nExactResults - 1)
+        }
+    }
+
+    private func getEntry(at indexPath: IndexPath) -> Entry? {
+        let (sectionType, sectionIndex) = getSectionTypeAndIndex(indexPath.section)
+        switch sectionType {
+        case .exactMatch:
+            let exactMatchSection = searchResults.exactMatch[sectionIndex]
+            return exactMatchSection.scoredItems[indexPath.row].item as? Entry
+        case .partialMatch:
+            let partialMatchSection = searchResults.partialMatch[sectionIndex]
+            return partialMatchSection.scoredItems[indexPath.row].item as? Entry
+        default:
+            return nil
         }
     }
 
@@ -341,22 +366,20 @@ final class EntryFinderVC: UITableViewController {
         _ tableView: UITableView,
         cellForRowAt indexPath: IndexPath
     ) -> UITableViewCell {
-        let (sectionType, sectionIndex) = getSectionTypeAndIndex(indexPath.section)
+        let (sectionType, _) = getSectionTypeAndIndex(indexPath.section)
         switch sectionType {
         case .announcement:
             return makeAnnouncementCell(at: indexPath)
         case .nothingFound:
             return makeNothingFoundCell(at: indexPath)
         case .exactMatch:
-            let exactMatchSection = searchResults.exactMatch[sectionIndex]
-            let entry = exactMatchSection.scoredItems[indexPath.row].item as? Entry
+            let entry = getEntry(at: indexPath)
             return makeResultCell(at: indexPath, entry: entry)
         case .matchSeparator:
             assertionFailure("Result separator is not supposed to contain cells")
             return makeNothingFoundCell(at: indexPath)
         case .partialMatch:
-            let partialMatchSection = searchResults.partialMatch[sectionIndex]
-            let entry = partialMatchSection.scoredItems[indexPath.row].item as? Entry
+            let entry = getEntry(at: indexPath)
             return makeResultCell(at: indexPath, entry: entry)
         }
     }
@@ -389,6 +412,79 @@ final class EntryFinderVC: UITableViewController {
         return cell
     }
 
+    override func tableView(
+        _ tableView: UITableView,
+        contextMenuConfigurationForRowAt indexPath: IndexPath,
+        point: CGPoint
+    ) -> UIContextMenuConfiguration? {
+        guard autoFillMode == .credentials,
+              let entry = getEntry(at: indexPath)
+        else {
+            return nil
+        }
+
+        return UIContextMenuConfiguration(actionProvider: { [weak self] _ in
+            self?.createAutoCopyOptionsMenu(for: entry)
+        })
+    }
+
+    private func createAutoCopyOptionsMenu(for entry: Entry) -> UIMenu? {
+        let ignoredCustomFields = [
+            EntryField.title,
+            EntryField.userName,
+            EntryField.password,
+            EntryField.otpConfig1,
+            EntryField.otpConfig2Seed,
+            EntryField.otpConfig2Settings,
+            EntryField.timeOtpLength,
+            EntryField.timeOtpPeriod,
+            EntryField.timeOtpPeriod,
+            EntryField.timeOtpSecret,
+            EntryField.timeOtpAlgorithm,
+            EntryField.passkeyCredentialID,
+            EntryField.passkeyRelyingParty,
+            EntryField.passkeyPrivateKeyPEM,
+            EntryField.passkeyUserHandle,
+            EntryField.passkeyUsername
+        ]
+
+        let fields = entry.fields.filter {
+            !$0.value.isEmpty && !ignoredCustomFields.contains($0.name)
+        }
+        guard !fields.isEmpty else { return nil }
+
+        let currentOverride = delegate?.getAutoCopyOverride(for: entry, in: self)
+
+        let hasTOTPGenerator = TOTPGeneratorFactory.makeGenerator(for: entry) != nil
+        var actions = [UIAction]()
+
+        if hasTOTPGenerator {
+            let copyOTPAction = UIAction(title: LString.fieldTOTP) { [weak self] _ in
+                guard let self else { return }
+                self.delegate?.didSelectAutoCopyOverride(.totp, from: entry, in: self)
+            }
+            if case .totp = currentOverride {
+                copyOTPAction.state = .on
+            }
+            actions.append(copyOTPAction)
+        }
+
+        let otherFieldActions = fields.map { field in
+            let action = UIAction(title: field.visibleName) { [weak self] _ in
+                guard let self else { return }
+                self.delegate?.didSelectAutoCopyOverride(.custom(field), from: entry, in: self)
+            }
+
+            if case let(.custom(currentField)) = currentOverride,
+               currentField.name == field.name {
+                action.state = .on
+            }
+
+            return action
+        }
+        actions.append(contentsOf: otherFieldActions)
+        return UIMenu(title: LString.autoCopyMenuTitle, children: actions)
+    }
 
     override func tableView(
         _ tableView: UITableView,
@@ -406,21 +502,7 @@ final class EntryFinderVC: UITableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         Watchdog.shared.restart()
 
-        let (sectionType, sectionIndex) = getSectionTypeAndIndex(indexPath.section)
-        switch sectionType {
-        case .announcement, .matchSeparator, .nothingFound:
-            return
-        case .exactMatch:
-            let exactMatchSection = searchResults.exactMatch[sectionIndex]
-            guard let entry = exactMatchSection.scoredItems[indexPath.row].item as? Entry else {
-                return
-            }
-            delegate?.didSelectEntry(entry, in: self)
-        case .partialMatch:
-            let partialMatchSection = searchResults.partialMatch[sectionIndex]
-            guard let entry = partialMatchSection.scoredItems[indexPath.row].item as? Entry else {
-                return
-            }
+        if let entry = getEntry(at: indexPath) {
             delegate?.didSelectEntry(entry, in: self)
         }
     }
@@ -450,7 +532,7 @@ final class EntryFinderVC: UITableViewController {
         let confirmationAlert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         let lockDatabaseAction = UIAlertAction(title: LString.actionLockDatabase, style: .destructive) {
             [weak self] _ in
-            guard let self = self else { return }
+            guard let self else { return }
             self.delegate?.didPressLockDatabase(in: self)
         }
         let cancelAction = UIAlertAction(title: LString.actionCancel, style: .cancel, handler: nil)
@@ -522,6 +604,12 @@ extension LString {
         "[AutoFill/InsertText/select]",
         value: "Select Field",
         comment: "Call for action to select an entry field for filling out."
+    )
+
+    public static let autoCopyMenuTitle = NSLocalizedString(
+        "[AutoFill/Search/autoCopyMenuTitle]",
+        value: "Auto-copy to Clipboard",
+        comment: "Title for the menu that allows selecting a field to be copied to clipboard automatically."
     )
     // swiftlint:enable line_length
 

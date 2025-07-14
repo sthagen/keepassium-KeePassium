@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2024 KeePassium Labs <info@keepassium.com>
+//  Copyright © 2018-2025 KeePassium Labs <info@keepassium.com>
 //
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -12,8 +12,14 @@ public struct OneDriveSharedFolder: Equatable {
     public var name: String
 
     var urlPath: String {
-        return "/drives/\(driveID)/items/\(itemID)"
+        if isDriveOnly {
+            return "/drives/\(driveID)"
+        } else {
+            return "/drives/\(driveID)/items/\(itemID)"
+        }
     }
+
+    var isDriveOnly: Bool { itemID.isEmpty }
 
     public static func == (lhs: OneDriveSharedFolder, rhs: OneDriveSharedFolder) -> Bool {
         return lhs.driveID == rhs.driveID
@@ -167,11 +173,14 @@ extension OneDriveItem {
         let parentPath = parent?.urlPath ?? OneDriveAPI.personalDriveRootPath
         if path == "/" {
             urlString = OneDriveAPI.mainEndpoint + parentPath
-        } else {
-            let encodedPath = path
-                .addingPercentEncoding(withAllowedCharacters: .urlPathAllowed)!
-            urlString = OneDriveAPI.mainEndpoint + parentPath + ":\(encodedPath):"
+            return urlString
         }
+        if let parent, parent.isDriveOnly {
+            urlString = OneDriveAPI.mainEndpoint + parentPath + "/items/\(itemID)"
+            return urlString
+        }
+        let encodedPath = path.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed)!
+        urlString = OneDriveAPI.mainEndpoint + parentPath + ":\(encodedPath):"
         return urlString
     }
 

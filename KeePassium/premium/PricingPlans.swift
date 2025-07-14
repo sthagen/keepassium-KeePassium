@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2024 KeePassium Labs <info@keepassium.com>
+//  Copyright © 2018-2025 KeePassium Labs <info@keepassium.com>
 //
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -69,7 +69,7 @@ struct PricingPlanBenefit {
         title: LString.premiumBenefitMultipleDatabasesTitle,
         description: LString.premiumBenefitMultipleDatabasesDescription
     )
-    static let yubikeyChallengeResponse = PricingPlanBenefit(
+    static let hardwareKeyChallengeResponse = PricingPlanBenefit(
         symbolName: .premiumBenefitHardwareKeys,
         title: LString.premiumBenefitHardwareKeysTitle,
         description: LString.premiumBenefitHardwareKeysDescription
@@ -180,7 +180,7 @@ class FreePricingPlan: PricingPlan {
         self.benefits = [
             PricingPlanBenefit.quickAutoFill,
             PricingPlanBenefit.multipleDatabases,
-            PricingPlanBenefit.yubikeyChallengeResponse,
+            PricingPlanBenefit.hardwareKeyChallengeResponse,
             PricingPlanBenefit.passwordAudit,
             PricingPlanBenefit.businessClouds,
             PricingPlanBenefit.linkedDatabases,
@@ -209,7 +209,7 @@ class RealPricingPlan: PricingPlan {
         guard let localizedTrialDuration = product.localizedTrialDuration else {
             return
         }
-        guard let localizedPriceWithPeriod = localizedPriceWithPeriod else {
+        guard let localizedPriceWithPeriod else {
             assertionFailure("Need a subscription price")
             return
         }
@@ -239,7 +239,7 @@ class PricingPlanPremiumMonthly: RealPricingPlan {
         self.benefits = [
             PricingPlanBenefit.quickAutoFill,
             PricingPlanBenefit.multipleDatabases,
-            PricingPlanBenefit.yubikeyChallengeResponse,
+            PricingPlanBenefit.hardwareKeyChallengeResponse,
             PricingPlanBenefit.passwordAudit,
             PricingPlanBenefit.businessClouds,
             PricingPlanBenefit.linkedDatabases,
@@ -268,7 +268,7 @@ class PricingPlanPremiumYearly: RealPricingPlan {
         self.benefits = [
             PricingPlanBenefit.quickAutoFill,
             PricingPlanBenefit.multipleDatabases,
-            PricingPlanBenefit.yubikeyChallengeResponse,
+            PricingPlanBenefit.hardwareKeyChallengeResponse,
             PricingPlanBenefit.passwordAudit,
             PricingPlanBenefit.businessClouds,
             PricingPlanBenefit.linkedDatabases,
@@ -295,7 +295,7 @@ class PricingPlanVersionPurchase: RealPricingPlan {
         self.benefits = [
             PricingPlanBenefit.quickAutoFill,
             PricingPlanBenefit.multipleDatabases,
-            PricingPlanBenefit.yubikeyChallengeResponse,
+            PricingPlanBenefit.hardwareKeyChallengeResponse,
             PricingPlanBenefit.passwordAudit,
             PricingPlanBenefit.businessClouds,
             PricingPlanBenefit.linkedDatabases,
@@ -321,7 +321,7 @@ class PricingPlanPremiumForever: RealPricingPlan {
         self.benefits = [
             PricingPlanBenefit.quickAutoFill,
             PricingPlanBenefit.multipleDatabases,
-            PricingPlanBenefit.yubikeyChallengeResponse,
+            PricingPlanBenefit.hardwareKeyChallengeResponse,
             PricingPlanBenefit.passwordAudit,
             PricingPlanBenefit.businessClouds,
             PricingPlanBenefit.linkedDatabases,

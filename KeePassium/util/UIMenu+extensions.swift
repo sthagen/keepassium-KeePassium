@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2024 KeePassium Labs <info@keepassium.com>
+//  Copyright © 2018-2025 KeePassium Labs <info@keepassium.com>
 //
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -44,20 +44,22 @@ extension UIMenu {
         reverse: Bool = false,
         options: UIMenu.Options = [],
         macOptions: UIMenu.Options? = nil,
-        children: [UIMenuElement]
+        children: [UIMenuElement?]
     ) -> UIMenu {
+        let validChildren = children.compactMap { $0 }
+        assert(validChildren.count > 0, "Tried to create menu without any items")
         if ProcessInfo.isRunningOnMac {
             return UIMenu(
                 title: title,
                 subtitle: subtitle,
                 options: macOptions ?? options,
-                children: children)
+                children: validChildren)
         } else {
             return UIMenu(
                 title: title,
                 subtitle: subtitle,
                 options: options,
-                children: reverse ? children.reversed() : children)
+                children: reverse ? validChildren.reversed() : validChildren)
         }
     }
 

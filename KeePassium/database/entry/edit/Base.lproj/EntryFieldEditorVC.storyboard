@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="32700.99.1234" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="dyC-HY-kh4">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23504" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="dyC-HY-kh4">
     <device id="retina5_5" orientation="portrait" appearance="light"/>
     <dependencies>
-        <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22684"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23506"/>
         <capability name="Image references" minToolsVersion="12.0"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
@@ -20,27 +19,6 @@
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <color key="separatorColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
-                        <view key="tableFooterView" contentMode="scaleToFill" id="ad1-Rf-HyL">
-                            <rect key="frame" x="0.0" y="882.33333587646484" width="414" height="60"/>
-                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            <subviews>
-                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="center" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="1Nq-zk-w7B" customClass="MultilineButton" customModule="KeePassium" customModuleProvider="target">
-                                    <rect key="frame" x="16.000000000000007" y="8" width="118.66666666666669" height="21"/>
-                                    <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
-                                    <inset key="titleEdgeInsets" minX="4" minY="0.0" maxX="-4" maxY="0.0"/>
-                                    <state key="normal" title="{Set up OTP}" image="clock" catalog="system">
-                                        <color key="titleColor" name="ActionTint"/>
-                                    </state>
-                                </button>
-                            </subviews>
-                            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                            <constraints>
-                                <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="1Nq-zk-w7B" secondAttribute="bottom" id="A5O-rV-uth"/>
-                                <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="1Nq-zk-w7B" secondAttribute="trailing" constant="20" symbolic="YES" id="Bey-aP-cPa"/>
-                                <constraint firstItem="1Nq-zk-w7B" firstAttribute="leading" secondItem="ad1-Rf-HyL" secondAttribute="leadingMargin" constant="8" id="Hji-Ty-Xw8"/>
-                                <constraint firstItem="1Nq-zk-w7B" firstAttribute="top" secondItem="ad1-Rf-HyL" secondAttribute="topMargin" id="RtH-1H-rzd"/>
-                            </constraints>
-                        </view>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="TitleCell" id="GLB-1c-KE8" customClass="EntryFieldEditorTitleCell" customModule="KeePassium" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="50" width="414" height="56"/>
@@ -80,82 +58,6 @@
                                 <connections>
                                     <outlet property="iconButton" destination="ldy-wH-etc" id="YKM-o6-MmX"/>
                                     <outlet property="titleTextField" destination="mGc-If-zfn" id="Wgt-4Z-iil"/>
-                                </connections>
-                            </tableViewCell>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="SingleLineCell" id="fOA-rA-t9w" customClass="EntryFieldEditorSingleLineCell" customModule="KeePassium" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="106" width="414" height="84.333335876464844"/>
-                                <autoresizingMask key="autoresizingMask"/>
-                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="fOA-rA-t9w" id="fv0-vc-xOU">
-                                    <rect key="frame" x="0.0" y="0.0" width="414" height="84.333335876464844"/>
-                                    <autoresizingMask key="autoresizingMask"/>
-                                    <subviews>
-                                        <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zo6-9v-QQD" userLabel="Separator">
-                                            <rect key="frame" x="0.0" y="0.0" width="414" height="4"/>
-                                            <color key="backgroundColor" systemColor="groupTableViewBackgroundColor"/>
-                                            <constraints>
-                                                <constraint firstAttribute="height" constant="4" id="p7c-1i-Stv"/>
-                                            </constraints>
-                                        </view>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="{Field Name}" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CN9-CU-AJF">
-                                            <rect key="frame" x="20" y="11.999999999999998" width="93" height="19.333333333333329"/>
-                                            <accessibility key="accessibilityConfiguration">
-                                                <bool key="isElement" value="NO"/>
-                                            </accessibility>
-                                            <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
-                                            <color key="textColor" name="AuxiliaryText"/>
-                                            <nil key="highlightedColor"/>
-                                            <attributedString key="userComments">
-                                                <fragment content="#bc-ignore!"/>
-                                            </attributedString>
-                                        </label>
-                                        <textField opaque="NO" contentMode="scaleToFill" verticalCompressionResistancePriority="751" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="{Field Value}" borderStyle="roundedRect" textAlignment="natural" adjustsFontSizeToFit="NO" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="zr2-BH-wQ3" customClass="ValidatingTextField" customModule="KeePassium" customModuleProvider="target">
-                                            <rect key="frame" x="20" y="39.333333333333336" width="374" height="34.000000000000007"/>
-                                            <color key="backgroundColor" systemColor="secondarySystemGroupedBackgroundColor"/>
-                                            <constraints>
-                                                <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="22" id="JcH-Or-9Cf"/>
-                                            </constraints>
-                                            <color key="textColor" name="PrimaryText"/>
-                                            <fontDescription key="fontDescription" name="Menlo-Regular" family="Menlo" pointSize="16"/>
-                                            <textInputTraits key="textInputTraits" autocorrectionType="no" returnKeyType="done"/>
-                                            <attributedString key="userComments">
-                                                <fragment content="#bc-ignore!"/>
-                                            </attributedString>
-                                        </textField>
-                                        <button hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="249" horizontalCompressionResistancePriority="751" verticalCompressionResistancePriority="751" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="tailTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yxs-MK-Ca2">
-                                            <rect key="frame" x="334" y="4" width="60" height="35.333333333333336"/>
-                                            <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
-                                            <state key="normal" title="{Button}">
-                                                <color key="titleColor" name="ActionTint"/>
-                                            </state>
-                                            <attributedString key="userComments">
-                                                <fragment content="#bc-ignore!"/>
-                                            </attributedString>
-                                            <connections>
-                                                <action selector="didPressActionButton:" destination="fOA-rA-t9w" eventType="touchUpInside" id="c5P-cn-3LK"/>
-                                            </connections>
-                                        </button>
-                                    </subviews>
-                                    <constraints>
-                                        <constraint firstItem="yxs-MK-Ca2" firstAttribute="firstBaseline" secondItem="CN9-CU-AJF" secondAttribute="firstBaseline" priority="750" id="A4M-vW-rRZ"/>
-                                        <constraint firstAttribute="trailing" secondItem="zo6-9v-QQD" secondAttribute="trailing" id="NKp-Gx-XFk"/>
-                                        <constraint firstItem="zr2-BH-wQ3" firstAttribute="top" secondItem="yxs-MK-Ca2" secondAttribute="bottom" id="PTj-t3-edN"/>
-                                        <constraint firstItem="yxs-MK-Ca2" firstAttribute="trailing" secondItem="zr2-BH-wQ3" secondAttribute="trailing" id="Pa6-83-ed7"/>
-                                        <constraint firstItem="zo6-9v-QQD" firstAttribute="leading" secondItem="fv0-vc-xOU" secondAttribute="leading" id="VMh-Ye-oOw"/>
-                                        <constraint firstItem="zr2-BH-wQ3" firstAttribute="leading" secondItem="fv0-vc-xOU" secondAttribute="leadingMargin" id="XB0-Mn-9Av"/>
-                                        <constraint firstAttribute="trailingMargin" secondItem="zr2-BH-wQ3" secondAttribute="trailing" id="YXl-RR-pqr"/>
-                                        <constraint firstItem="zr2-BH-wQ3" firstAttribute="top" secondItem="CN9-CU-AJF" secondAttribute="bottom" constant="8" id="b0A-5H-XPw"/>
-                                        <constraint firstItem="yxs-MK-Ca2" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="CN9-CU-AJF" secondAttribute="trailing" constant="8" id="cU9-nc-Tmi"/>
-                                        <constraint firstItem="yxs-MK-Ca2" firstAttribute="top" relation="greaterThanOrEqual" secondItem="zo6-9v-QQD" secondAttribute="bottom" id="dWV-ps-qIT"/>
-                                        <constraint firstAttribute="bottomMargin" relation="greaterThanOrEqual" secondItem="zr2-BH-wQ3" secondAttribute="bottom" id="r3g-HG-5oV"/>
-                                        <constraint firstItem="zo6-9v-QQD" firstAttribute="top" secondItem="fv0-vc-xOU" secondAttribute="top" id="y0D-zA-Rob"/>
-                                        <constraint firstItem="CN9-CU-AJF" firstAttribute="top" secondItem="zo6-9v-QQD" secondAttribute="bottom" constant="8" id="yW0-WQ-5Cv"/>
-                                        <constraint firstItem="CN9-CU-AJF" firstAttribute="leading" secondItem="fv0-vc-xOU" secondAttribute="leadingMargin" id="zSb-gY-Npx"/>
-                                    </constraints>
-                                </tableViewCellContentView>
-                                <connections>
-                                    <outlet property="actionButton" destination="yxs-MK-Ca2" id="1UT-Qs-8ZH"/>
-                                    <outlet property="textField" destination="zr2-BH-wQ3" id="Bqm-QR-otS"/>
-                                    <outlet property="titleLabel" destination="CN9-CU-AJF" id="W1O-DL-4V6"/>
                                 </connections>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="TagsFieldEditorCell" id="mcm-F8-Jbp" customClass="TagsFieldEditorCell" customModule="KeePassium" customModuleProvider="target">
@@ -487,9 +389,6 @@
                                     <userDefinedRuntimeAttribute type="string" keyPath="accessibilityLabel" value="Add Custom Field" localized="YES"/>
                                     <userDefinedRuntimeAttribute type="boolean" keyPath="isAccessibilityElement" value="YES"/>
                                 </userDefinedRuntimeAttributes>
-                                <connections>
-                                    <action selector="didPressAddField:" destination="dyC-HY-kh4" id="bWR-w3-H61"/>
-                                </connections>
                             </barButtonItem>
                         </rightBarButtonItems>
                     </navigationItem>
@@ -497,7 +396,6 @@
                     <connections>
                         <outlet property="addFieldButton" destination="HGI-xq-zUf" id="aPE-l1-Fw7"/>
                         <outlet property="doneButton" destination="urr-zn-2MK" id="KNL-EB-lsB"/>
-                        <outlet property="otpSetupButton" destination="1Nq-zk-w7B" id="YeF-mT-2jZ"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="WWU-SY-Plz" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -507,7 +405,6 @@
     </scenes>
     <color key="tintColor" name="ActionTint"/>
     <resources>
-        <image name="clock" catalog="system" width="128" height="123"/>
         <image name="die.face.3" catalog="system" width="128" height="114"/>
         <image name="trash" catalog="system" width="117" height="128"/>
         <namedColor name="ActionTint">

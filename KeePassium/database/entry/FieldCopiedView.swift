@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2024 KeePassium Labs <info@keepassium.com>
+//  Copyright © 2018-2025 KeePassium Labs <info@keepassium.com>
 //
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -12,16 +12,11 @@ protocol FieldCopiedViewDelegate: AnyObject {
     func didPressExport(for indexPath: IndexPath, from view: FieldCopiedView)
     func didPressCopyFieldReference(for indexPath: IndexPath, from view: FieldCopiedView)
     func didPressShowLargeType(for indexPath: IndexPath, from view: FieldCopiedView)
+    func didPressShowQRCode(for indexPath: IndexPath, from view: FieldCopiedView)
 }
 
 final class FieldCopiedView: UIView {
     weak var delegate: FieldCopiedViewDelegate?
-
-    enum Option: CaseIterable {
-        case canExport
-        case canCopyReference
-        case canShowLargeType
-    }
 
     private var indexPath: IndexPath!
     private weak var hidingTimer: Timer?
@@ -48,48 +43,54 @@ final class FieldCopiedView: UIView {
         return label
     }()
 
-    private lazy var actionButtonConfiguration: UIButton.Configuration = {
+    private func actionButtonConfiguration(for action: ViewableFieldAction) -> UIButton.Configuration {
         var config = UIButton.Configuration.plain()
         config.baseForegroundColor = .actionText
         config.preferredSymbolConfigurationForImage = .init(textStyle: .body, scale: .large)
         config.imagePadding = 8
+        config.image = action.icon
         return config
-    }()
+    }
 
     private lazy var exportButton: UIButton = {
         let button = UIButton(primaryAction: UIAction {[weak self] _ in
-            guard let self = self else { return }
+            guard let self else { return }
             self.delegate?.didPressExport(for: self.indexPath, from: self)
         })
-        var buttonConfig = actionButtonConfiguration
-        buttonConfig.image = .symbol(.squareAndArrowUp)
-        button.configuration = buttonConfig
+        button.configuration = actionButtonConfiguration(for: .export)
         button.accessibilityLabel = LString.actionShare
         return button
     }()
 
     private lazy var copyFieldReferenceButton: UIButton = {
         let button = UIButton(primaryAction: UIAction {[weak self] _ in
-            guard let self = self else { return }
+            guard let self else { return }
             self.delegate?.didPressCopyFieldReference(for: self.indexPath, from: self)
         })
-        var buttonConfig = actionButtonConfiguration
-        buttonConfig.image = .symbol(.fieldReference)
-        button.configuration = buttonConfig
+        button.configuration = actionButtonConfiguration(for: .copyReference)
         button.accessibilityLabel = LString.actionCopyFieldReference
         return button
     }()
 
     private lazy var showLargeTypeButton: UIButton = {
         let button = UIButton(primaryAction: UIAction {[weak self] _ in
-            guard let self = self else { return }
+            guard let self else { return }
             self.delegate?.didPressShowLargeType(for: self.indexPath, from: self)
         })
-        var buttonConfig = actionButtonConfiguration
-        buttonConfig.image = .symbol(.largeType)
-        button.configuration = buttonConfig
+        button.configuration = actionButtonConfiguration(for: .showLargeType)
         button.tintColor = .actionText
         button.accessibilityLabel = LString.actionShowTextInLargeType
+        return button
+    }()
+
+    private lazy var showQRCodeButton: UIButton = {
+        let button = UIButton(primaryAction: UIAction {[weak self] _ in
+            guard let self else { return }
+            self.delegate?.didPressShowQRCode(for: self.indexPath, from: self)
+        })
+        button.configuration = actionButtonConfiguration(for: .showQRCode)
+        button.tintColor = .actionText
+        button.accessibilityLabel = LString.actionShowAsQRCode
         return button
     }()
 
@@ -111,6 +112,7 @@ final class FieldCopiedView: UIView {
         stackView.addArrangedSubview(copyFieldReferenceButton)
         stackView.addArrangedSubview(exportButton)
         stackView.addArrangedSubview(showLargeTypeButton)
+        stackView.addArrangedSubview(showQRCodeButton)
 
         NSLayoutConstraint.activate([
             stackView.centerYAnchor.constraint(equalTo: layoutMarginsGuide.centerYAnchor),
@@ -129,17 +131,16 @@ final class FieldCopiedView: UIView {
     }
 
     public func show(
-        in tableView: UITableView,
+        in cell: UITableViewCell,
         at indexPath: IndexPath,
-        options: any Collection<Option> = [.canExport, .canCopyReference, .canShowLargeType]
+        actions: any Collection<ViewableFieldAction>
     ) {
-        hide(animated: false)
-        exportButton.isHidden = !options.contains(.canExport)
-        copyFieldReferenceButton.isHidden = !options.contains(.canCopyReference)
-        showLargeTypeButton.isHidden = !options.contains(.canShowLargeType)
-
-        guard let cell = tableView.cellForRow(at: indexPath) else { assertionFailure(); return }
         self.indexPath = indexPath
+        hide(animated: false)
+        exportButton.isHidden = !actions.contains(.export)
+        copyFieldReferenceButton.isHidden = !actions.contains(.copyReference)
+        showLargeTypeButton.isHidden = !actions.contains(.showLargeType)
+        showQRCodeButton.isHidden = !actions.contains(.showQRCode)
 
         wasUserInteractionEnabled = cell.accessoryView?.isUserInteractionEnabled
         cell.accessoryView?.isUserInteractionEnabled = false
@@ -159,8 +160,7 @@ final class FieldCopiedView: UIView {
                 self?.alpha = 0.9
             },
             completion: { [weak self] _ in
-                guard let self = self else { return }
-                tableView.deselectRow(at: indexPath, animated: false)
+                guard let self else { return }
                 self.hidingTimer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false) { [weak self] _ in
                     self?.hide(animated: true)
                 }

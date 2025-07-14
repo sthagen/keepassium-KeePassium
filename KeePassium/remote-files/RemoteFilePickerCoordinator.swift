@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2024 KeePassium Labs <info@keepassium.com>
+//  Copyright © 2018-2025 KeePassium Labs <info@keepassium.com>
 //
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -19,32 +19,22 @@ protocol RemoteFilePickerCoordinatorDelegate: AnyObject {
     )
 }
 
-final class RemoteFilePickerCoordinator: Coordinator {
-    var childCoordinators = [Coordinator]()
-    var dismissHandler: CoordinatorDismissHandler?
-
+final class RemoteFilePickerCoordinator: BaseCoordinator {
     weak var delegate: RemoteFilePickerCoordinatorDelegate?
 
-    private let router: NavigationRouter
     private let connectionTypePicker: ConnectionTypePickerVC
     private var oldRef: URLReference?
 
     init(oldRef: URLReference?, router: NavigationRouter) {
-        self.router = router
         self.oldRef = oldRef
         connectionTypePicker = ConnectionTypePickerVC.make()
+        super.init(router: router)
         connectionTypePicker.delegate = self
         connectionTypePicker.showsOtherLocations = true
     }
 
-    deinit {
-        assert(childCoordinators.isEmpty)
-        removeAllChildCoordinators()
-    }
-
-    func start() {
-        setupDismissButton()
-        startObservingPremiumStatus(#selector(premiumStatusDidChange))
+    override func start() {
+        super.start()
 
         let connectionType: RemoteConnectionType?
         switch oldRef?.fileProvider {
@@ -62,12 +52,8 @@ final class RemoteFilePickerCoordinator: Coordinator {
             connectionType = nil
         }
 
-        let animated = (connectionType == nil) 
-        router.push(connectionTypePicker, animated: animated, onPop: { [weak self] in
-            guard let self = self else { return }
-            self.removeAllChildCoordinators()
-            self.dismissHandler?(self)
-        })
+        let animated = (connectionType == nil)
+        _pushInitialViewController(connectionTypePicker, dismissButtonStyle: .cancel, animated: animated)
         if let connectionType {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { [self] in
                 didSelect(connectionType: connectionType, in: connectionTypePicker)
@@ -75,26 +61,8 @@ final class RemoteFilePickerCoordinator: Coordinator {
         }
     }
 
-    private func setupDismissButton() {
-        guard router.navigationController.topViewController == nil else {
-            return
-        }
-
-        let cancelButton = UIBarButtonItem(
-            systemItem: .cancel,
-            primaryAction: UIAction { [weak self] _ in
-                self?.dismiss()
-            },
-            menu: nil)
-        connectionTypePicker.navigationItem.leftBarButtonItem = cancelButton
-    }
-
-    private func dismiss(completion: (() -> Void)? = nil) {
-        router.pop(viewController: connectionTypePicker, animated: true, completion: completion)
-    }
-
-    @objc
-    private func premiumStatusDidChange() {
+    override func refresh() {
+        super.refresh()
         connectionTypePicker.refresh()
     }
 }
@@ -140,15 +108,10 @@ extension RemoteFilePickerCoordinator: ConnectionTypePickerDelegate {
 
 extension RemoteFilePickerCoordinator: WebDAVConnectionSetupCoordinatorDelegate {
     private func startWebDAVSetup(stateIndicator: BusyStateIndicating) {
-        let setupCoordinator = WebDAVConnectionSetupCoordinator(
-            router: router
-        )
+        let setupCoordinator = WebDAVConnectionSetupCoordinator(router: _router)
         setupCoordinator.delegate = self
-        setupCoordinator.dismissHandler = { [weak self] coordinator in
-            self?.removeChildCoordinator(coordinator)
-        }
         setupCoordinator.start()
-        addChildCoordinator(setupCoordinator)
+        addChildCoordinator(setupCoordinator, onDismiss: nil)
     }
 
     func didPickRemoteFile(
@@ -159,21 +122,27 @@ extension RemoteFilePickerCoordinator: WebDAVConnectionSetupCoordinatorDelegate 
         delegate?.didPickRemoteFile(url: url, credential: credential, in: self)
         dismiss()
     }
+
+    func didPickRemoteFolder(
+        _ folder: WebDAVItem,
+        credential: NetworkCredential,
+        stateIndicator: (any BusyStateIndicating)?,
+        in coordinator: WebDAVConnectionSetupCoordinator
+    ) {
+        assertionFailure("Expected didPickRemoteItem instead")
+    }
 }
 
 extension RemoteFilePickerCoordinator: GoogleDriveConnectionSetupCoordinatorDelegate {
     private func startGoogleDriveSetup(stateIndicator: BusyStateIndicating) {
         let setupCoordinator = GoogleDriveConnectionSetupCoordinator(
-            router: router,
+            router: _router,
             stateIndicator: stateIndicator,
             oldRef: oldRef
         )
         setupCoordinator.delegate = self
-        setupCoordinator.dismissHandler = { [weak self] coordinator in
-            self?.removeChildCoordinator(coordinator)
-        }
         setupCoordinator.start()
-        addChildCoordinator(setupCoordinator)
+        addChildCoordinator(setupCoordinator, onDismiss: nil)
     }
 
     func didPickRemoteFile(
@@ -200,16 +169,13 @@ extension RemoteFilePickerCoordinator: GoogleDriveConnectionSetupCoordinatorDele
 extension RemoteFilePickerCoordinator: DropboxConnectionSetupCoordinatorDelegate {
     private func startDropboxSetup(stateIndicator: BusyStateIndicating) {
         let setupCoordinator = DropboxConnectionSetupCoordinator(
-            router: router,
+            router: _router,
             stateIndicator: stateIndicator,
             oldRef: oldRef
         )
         setupCoordinator.delegate = self
-        setupCoordinator.dismissHandler = { [weak self] coordinator in
-            self?.removeChildCoordinator(coordinator)
-        }
         setupCoordinator.start()
-        addChildCoordinator(setupCoordinator)
+        addChildCoordinator(setupCoordinator, onDismiss: nil)
     }
 
     func didPickRemoteFile(
@@ -238,14 +204,11 @@ extension RemoteFilePickerCoordinator: OneDriveConnectionSetupCoordinatorDelegat
         let setupCoordinator = OneDriveConnectionSetupCoordinator(
             stateIndicator: stateIndicator,
             oldRef: oldRef,
-            router: router
+            router: _router
         )
         setupCoordinator.delegate = self
-        setupCoordinator.dismissHandler = { [weak self] coordinator in
-            self?.removeChildCoordinator(coordinator)
-        }
         setupCoordinator.start()
-        addChildCoordinator(setupCoordinator)
+        addChildCoordinator(setupCoordinator, onDismiss: nil)
     }
 
     func didPickRemoteFile(

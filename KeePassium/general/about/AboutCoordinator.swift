@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2024 KeePassium Labs <info@keepassium.com>
+//  Copyright © 2018-2025 KeePassium Labs <info@keepassium.com>
 //
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -8,49 +8,18 @@
 
 import KeePassiumLib
 
-final class AboutCoordinator: Coordinator {
-    var childCoordinators = [Coordinator]()
-
-    var dismissHandler: CoordinatorDismissHandler?
-
-    private let router: NavigationRouter
+final class AboutCoordinator: BaseCoordinator {
     private let aboutVC: AboutVC
 
-    init(router: NavigationRouter) {
-        self.router = router
+    override init(router: NavigationRouter) {
         aboutVC = AboutVC.instantiateFromStoryboard()
+        super.init(router: router)
         aboutVC.delegate = self
     }
 
-    deinit {
-        assert(childCoordinators.isEmpty)
-        removeAllChildCoordinators()
-    }
-
-    func start() {
-        setupCloseButton()
-        router.push(aboutVC, animated: true, onPop: { [weak self] in
-            guard let self = self else { return }
-            self.removeAllChildCoordinators()
-            self.dismissHandler?(self)
-        })
-    }
-
-    private func setupCloseButton() {
-        guard router.navigationController.topViewController == nil else {
-            return
-        }
-
-        let closeButton = UIBarButtonItem(
-            barButtonSystemItem: .close,
-            target: self,
-            action: #selector(didPressDismiss))
-        aboutVC.navigationItem.leftBarButtonItem = closeButton
-    }
-
-    @objc
-    private func didPressDismiss(_ sender: UIBarButtonItem) {
-        router.dismiss(animated: true)
+    override func start() {
+        super.start()
+        _pushInitialViewController(aboutVC, dismissButtonStyle: .close, animated: true)
     }
 }
 

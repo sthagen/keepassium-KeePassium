@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2024 KeePassium Labs <info@keepassium.com>
+//  Copyright © 2018-2025 KeePassium Labs <info@keepassium.com>
 // 
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -41,6 +41,8 @@ class Watchdog {
 
     private let screenIsLockedNotificationName = Notification.Name(rawValue: "com.apple.screenIsLocked")
     private let screenIsUnlockedNotificationName = Notification.Name(rawValue: "com.apple.screenIsUnlocked")
+    private let nsWindowDidBecomeKeyNotificationName = Notification.Name(rawValue: "NSWindowDidBecomeKeyNotification")
+    private let nsWindowDidResignKeyNotificationName = Notification.Name(rawValue: "NSWindowDidResignKeyNotification")
 
     init() {
         NotificationCenter.default.addObserver(
@@ -64,12 +66,33 @@ class Watchdog {
                 selector: #selector(macScreenDidUnlock),
                 name: screenIsUnlockedNotificationName,
                 object: nil)
+
+            NotificationCenter.default.addObserver(
+                self,
+                selector: #selector(macWindowDidBecomeKey),
+                name: nsWindowDidBecomeKeyNotificationName,
+                object: nil)
+            NotificationCenter.default.addObserver(
+                self,
+                selector: #selector(macWindowDidResignKey),
+                name: nsWindowDidResignKeyNotificationName,
+                object: nil)
         #endif
     }
 
 
     @objc private func appDidBecomeActive(_ notification: Notification) {
         didBecomeActive()
+    }
+
+    @objc private func macWindowDidBecomeKey(_notification: Notification) {
+        Diag.debug("Mac window did become key")
+        didBecomeActive()
+    }
+
+    @objc private func macWindowDidResignKey(_notification: Notification) {
+        Diag.debug("Mac window did resign key")
+        willResignActive()
     }
 
     @objc private func macScreenDidUnlock(_notification: Notification) {
@@ -88,7 +111,7 @@ class Watchdog {
             maybeLockSomething()
         }
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
-            guard let self = self else { return }
+            guard let self else { return }
             self.delegate?.hideAppCover(self)
         }
     }
@@ -99,25 +122,40 @@ class Watchdog {
 
     @objc private func macScreenDidLock(_notification: Notification) {
         Diag.debug("Screen locked")
+
+        if Settings.current.isLockDatabasesOnScreenLock {
+            Diag.debug("Screen locked: Database Lock engaged")
+            engageDatabaseLock(reason: .systemEvent, animate: false)
+        }
+
+        if Settings.current.isAppLockEnabled && Settings.current.isLockAppOnScreenLock {
+            Diag.debug("Screen locked: App Lock engaged")
+            engageAppLock()
+        }
+
         willResignActive()
     }
 
     internal func willResignActive() {
         Diag.debug("App will resign active")
-        guard let delegate = delegate else { return }
+        guard let delegate else { return }
         delegate.showAppCover(self)
         if delegate.isAppLocked { return }
 
         let databaseTimeout = Settings.current.databaseLockTimeout
         if databaseTimeout == .immediately && !isIgnoringMinimizationOnce {
             Diag.debug("Going to background: Database Lock engaged")
-            engageDatabaseLock(animate: false)
+            engageDatabaseLock(reason: .timeout, animate: false)
         }
 
         let appTimeout = Settings.current.appLockTimeout
         if appTimeout.triggerMode == .appMinimized && !isIgnoringMinimizationOnce {
             Diag.debug("Going to background: App Lock engaged")
             Watchdog.shared.restart() 
+        }
+
+        if ProcessInfo.isRunningOnMac {
+            return
         }
 
         appLockTimer?.invalidate()
@@ -144,7 +182,7 @@ class Watchdog {
     }
 
     open func restart() {
-        guard let delegate = delegate else { return }
+        guard let delegate else { return }
         guard !delegate.isAppLocked else { return }
         Settings.current.recentUserActivityTimestamp = Date.now
         restartAppTimer()
@@ -172,14 +210,14 @@ class Watchdog {
                 .timeIntervalSinceReferenceDate
             let timestampNow = Date.now.timeIntervalSinceReferenceDate
             let secondsPassed = timestampNow - timestampOfRecentActivity
-            return secondsPassed > Double(timeout.seconds)
+            return secondsPassed > timeout.seconds
         }
     }
 
     @objc private func maybeLockDatabase() {
         if hasRebootedSinceLastTime() && Settings.current.isLockDatabasesOnReboot {
             Diag.debug("Device reboot detected, locking the databases")
-            engageDatabaseLock(animate: false)
+            engageDatabaseLock(reason: .systemEvent, animate: false)
             return
         }
 
@@ -188,7 +226,7 @@ class Watchdog {
         case .never:
             return
         case .immediately:
-            engageDatabaseLock(animate: false)
+            engageDatabaseLock(reason: .timeout, animate: false)
             return
         default:
             break
@@ -199,7 +237,7 @@ class Watchdog {
         if intervalSinceLocked > 0 {
             let isLockedJustNow = intervalSinceLocked < 0.2
 
-            engageDatabaseLock(animate: isLockedJustNow)
+            engageDatabaseLock(reason: .timeout, animate: isLockedJustNow)
         }
     }
 
@@ -228,7 +266,7 @@ class Watchdog {
     }
 
     private func restartAppTimer() {
-        if let appLockTimer = appLockTimer {
+        if let appLockTimer {
             appLockTimer.invalidate()
         }
 
@@ -247,7 +285,7 @@ class Watchdog {
     }
 
     private func restartDatabaseTimer() {
-        if let databaseLockTimer = databaseLockTimer {
+        if let databaseLockTimer {
             databaseLockTimer.invalidate()
         }
 
@@ -267,7 +305,7 @@ class Watchdog {
     }
 
     private func engageAppLock() {
-        guard let delegate = delegate else { return }
+        guard let delegate else { return }
         guard !delegate.isAppLocked else { return }
         Diag.info("Engaging App Lock")
         appLockTimer?.invalidate()
@@ -275,21 +313,28 @@ class Watchdog {
         delegate.showAppLock(self)
     }
 
-    private func engageDatabaseLock(animate: Bool) {
+    private func engageDatabaseLock(reason: DatabaseLockReason, animate: Bool) {
         Diag.info("Engaging Database Lock")
         self.databaseLockTimer?.invalidate()
         self.databaseLockTimer = nil
 
-        let isLockDatabases = Settings.current.isLockDatabasesOnTimeout
-        if isLockDatabases {
+        let mustLock: Bool
+        switch reason {
+        case .systemEvent:
+            mustLock = true
+        case .timeout:
+            mustLock = Settings.current.isLockDatabasesOnTimeout
+        }
+        if mustLock {
             DatabaseSettingsManager.shared.eraseAllMasterKeys()
         }
         delegate?.mustCloseDatabase(self, animate: animate)
     }
 
-    open func unlockApp() {
-        guard let delegate = delegate else { return }
+    func unlockApp() {
+        guard let delegate else { return }
         guard delegate.isAppLocked else { return }
+        AppEraser.registerSuccessfulAppUnlock()
         delegate.hideAppCover(self)
         delegate.hideAppLock(self)
         restart()

@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2024 KeePassium Labs <info@keepassium.com>
+//  Copyright © 2018-2025 KeePassium Labs <info@keepassium.com>
 //
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -68,7 +68,7 @@ final class AppHistoryViewerVC: UITableViewController {
             tableView.reloadData()
         }
 
-        guard let appHistory = appHistory else { return }
+        guard let appHistory else { return }
 
         sections = appHistory.sections.map { return TableSection.historySection(section: $0) }
         if let perpetualFallbackDate = fallbackDate {
@@ -156,11 +156,14 @@ extension AppHistoryViewerVC {
         if item.credits.isEmpty {
             configuration.secondaryText = nil
         } else {
-            let creditsText = item.credits.joined(separator: ", ")
-            configuration.secondaryText = String.localizedStringWithFormat(
+            let creditsText = String.localizedStringWithFormat(
                 LString.appHistoryThanksTemplate,
-                creditsText
+                item.credits.joined(separator: ", ")
             )
+            let subtitle = [item.github, creditsText]
+                .compactMap { $0 }
+                .joined(separator: " • ")
+            configuration.secondaryText = subtitle
         }
         cell.contentConfiguration = configuration
         cell.selectionStyle = .none
@@ -215,7 +218,7 @@ extension AppHistoryViewerVC {
                 return section.releaseDate < date
             }
         })
-        guard let sectionIndex = sectionIndex else {
+        guard let sectionIndex else {
             return
         }
         tableView.scrollToRow(

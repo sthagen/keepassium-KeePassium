@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2024 KeePassium Labs <info@keepassium.com>
+//  Copyright © 2018-2025 KeePassium Labs <info@keepassium.com>
 //
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -53,13 +53,10 @@ final class DatabaseLoadingWarningsVC: UIAlertController {
                 style: .default,
                 handler: { [weak viewController] _ in
                     guard let presentingVC = viewController else { return }
-                    let popoverAnchor = PopoverAnchor(
-                        sourceView: presentingVC.view,
-                        sourceRect: presentingVC.view.frame)
                     SupportEmailComposer.show(
                         subject: .problem,
                         parent: presentingVC,
-                        popoverAnchor: popoverAnchor,
+                        popoverAnchor: presentingVC.view.asPopoverAnchor,
                         completion: { _ in
                             alert.dismiss(animated: false, completion: nil)
                         }

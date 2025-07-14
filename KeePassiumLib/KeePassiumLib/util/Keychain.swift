@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2024 KeePassium Labs <info@keepassium.com>
+//  Copyright © 2018-2025 KeePassium Labs <info@keepassium.com>
 // 
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -87,7 +87,7 @@ public class Keychain {
         var result = [String: AnyObject]()
         result[kSecClass as String] = kSecClassGenericPassword
         result[kSecAttrService as String] = service.rawValue as AnyObject?
-        if let account = account {
+        if let account {
             result[kSecAttrAccount as String] = account as AnyObject?
         }
         if let accessGroup = Keychain.accessGroup {
@@ -124,7 +124,7 @@ public class Keychain {
     }
 
     private func getAccounts(service: Service) throws -> [String] {
-        var query = makeQuery(service: .databaseSettings, account: nil)
+        var query = makeQuery(service: service, account: nil)
         query[kSecReturnAttributes as String] = kCFBooleanTrue
         query[kSecMatchLimit as String] = kSecMatchLimitAll
 

@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2024 KeePassium Labs <info@keepassium.com>
+//  Copyright © 2018-2025 KeePassium Labs <info@keepassium.com>
 //
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -66,13 +66,13 @@ final class HIBPService {
         let url = Constants.hibpRangeURL.appendingPathComponent(hashPrefix)
 
         let task = urlSession.dataTask(with: .init(url: url)) { data, _, error in
-            if let error = error {
+            if let error {
                 Diag.error("HIBP request failed [hasPrefix: \(hashPrefix), error: \(error)]")
                 completionHandler(.failure(.requestError(error)))
                 return
             }
 
-            guard let data = data,
+            guard let data,
                   let string = String(data: data, encoding: .utf8)
             else {
                 Diag.error("HIBP request failed because of empty response [hashPrefix: \(hashPrefix)]")

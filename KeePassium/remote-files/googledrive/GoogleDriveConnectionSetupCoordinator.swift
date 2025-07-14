@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018-2024 KeePassium Labs <info@keepassium.com>
+//  Copyright © 2018-2025 KeePassium Labs <info@keepassium.com>
 //
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -25,23 +25,7 @@ protocol GoogleDriveConnectionSetupCoordinatorDelegate: AnyObject {
     )
 }
 
-final class GoogleDriveConnectionSetupCoordinator: NSObject, RemoteDataSourceSetupCoordinator {
-    typealias Manager = GoogleDriveManager
-
-    var childCoordinators = [Coordinator]()
-    var dismissHandler: CoordinatorDismissHandler?
-
-    let router: NavigationRouter
-
-    let stateIndicator: BusyStateIndicating
-    let selectionMode: RemoteItemSelectionMode
-    let manager = GoogleDriveManager.shared
-
-    var token: OAuthToken?
-    var accountInfo: GoogleDriveAccountInfo?
-    weak var firstVC: UIViewController?
-    private var oldRef: URLReference?
-
+final class GoogleDriveConnectionSetupCoordinator: RemoteDataSourceSetupCoordinator<GoogleDriveManager> {
     weak var delegate: GoogleDriveConnectionSetupCoordinatorDelegate?
 
     init(
@@ -50,35 +34,28 @@ final class GoogleDriveConnectionSetupCoordinator: NSObject, RemoteDataSourceSet
         oldRef: URLReference?,
         selectionMode: RemoteItemSelectionMode = .file
     ) {
-        self.router = router
-        self.stateIndicator = stateIndicator
-        self.oldRef = oldRef
-        self.selectionMode = selectionMode
+        super.init(
+            mode: selectionMode,
+            manager: GoogleDriveManager.shared,
+            oldRef: oldRef,
+            stateIndicator: stateIndicator,
+            router: router)
     }
 
-    deinit {
-        assert(childCoordinators.isEmpty)
-        removeAllChildCoordinators()
-    }
-
-    func start() {
-        startSignIn()
-    }
-
-    func onAccountInfoAcquired(_ accountInfo: GoogleDriveAccountInfo) {
-        self.accountInfo = accountInfo
-        if let oldRef,
-           let url = oldRef.url,
-           oldRef.fileProvider == .keepassiumGoogleDrive
+    override func onAccountInfoAcquired(_ accountInfo: GoogleDriveAccountInfo) {
+        self._accountInfo = accountInfo
+        if let _oldRef,
+           let url = _oldRef.url,
+           _oldRef.fileProvider == .keepassiumGoogleDrive
         {
             trySelectFile(url, onFailure: { [weak self] in
                 guard let self else { return }
-                self.oldRef = nil
+                self._oldRef = nil
                 self.onAccountInfoAcquired(accountInfo)
             })
         }
-        maybeSuggestPremium(isCorporateStorage: accountInfo.isWorkspaceAccount) { [weak self] _ in
-            self?.showFolder(
+        maybeSuggestPremium(isCorporateStorage: accountInfo.isWorkspaceAccount) { [weak self] in
+            self?._showFolder(
                 items: [
                     GoogleDriveItem.getSpecialFolder(.myDrive, accountInfo: accountInfo),
                     GoogleDriveItem.getSpecialFolder(.sharedWithMe, accountInfo: accountInfo),
@@ -90,29 +67,33 @@ final class GoogleDriveConnectionSetupCoordinator: NSObject, RemoteDataSourceSet
     }
 
     private func trySelectFile(_ fileURL: URL, onFailure: @escaping () -> Void) {
-        guard let token,
+        guard let _token,
               let item = GoogleDriveItem.fromURL(fileURL)
         else {
             onFailure()
             return
         }
         let timeout = Timeout(duration: FileDataProvider.defaultTimeoutDuration)
-        manager.getItemInfo(item, token: token, tokenUpdater: nil, timeout: timeout) { [self, onFailure] result in
+        _manager.getItemInfo(item, token: _token, tokenUpdater: nil, timeout: timeout) {
+            [self, onFailure] result in
             switch result {
             case .success:
                 Diag.info("Old file reference reinstated successfully")
-                delegate?.didPickRemoteFile(url: fileURL, oauthToken: token, stateIndicator: stateIndicator, in: self)
+                delegate?.didPickRemoteFile(
+                    url: fileURL,
+                    oauthToken: _token,
+                    stateIndicator: _stateIndicator,
+                    in: self
+                )
             case .failure(let remoteError):
                 Diag.debug("Failed to reinstate old file reference [message: \(remoteError.localizedDescription)]")
                 onFailure()
             }
         }
     }
-}
 
-extension GoogleDriveConnectionSetupCoordinator: RemoteFolderViewerDelegate {
-    func didSelectItem(_ item: RemoteFileItem, in viewController: RemoteFolderViewerVC) {
-        guard let token else {
+    override func didSelectItem(_ item: RemoteFileItem, in viewController: RemoteFolderViewerVC) {
+        guard let _token else {
             Diag.warning("Not signed into any Google account, cancelling")
             assertionFailure()
             return
@@ -125,12 +106,12 @@ extension GoogleDriveConnectionSetupCoordinator: RemoteFolderViewerDelegate {
 
         guard !googleDriveItem.isShortcut else {
             Diag.debug("Shortcut item selected, requesting its info")
-            stateIndicator.indicateState(isBusy: true)
+            _stateIndicator.indicateState(isBusy: true)
             let timeout = Timeout(duration: FileDataProvider.defaultTimeoutDuration)
-            manager.getItemInfo(googleDriveItem, freshToken: token, timeout: timeout, completionQueue: .main) {
+            _manager.getItemInfo(googleDriveItem, freshToken: _token, timeout: timeout, completionQueue: .main) {
                 [weak self, weak viewController] result in
                 guard let self, let viewController else { return }
-                self.stateIndicator.indicateState(isBusy: false)
+                _stateIndicator.indicateState(isBusy: false)
                 switch result {
                 case .success(let resolvedItem):
                     Diag.debug("Shortcut item info updated successfully")
@@ -144,16 +125,20 @@ extension GoogleDriveConnectionSetupCoordinator: RemoteFolderViewerDelegate {
         }
 
         selectItem(item, in: viewController) { [weak self] fileURL, token in
-            guard let self = self else {
+            guard let self else {
                 return
             }
-            self.delegate?.didPickRemoteFile(url: fileURL, oauthToken: token, stateIndicator: stateIndicator, in: self)
+            self.delegate?.didPickRemoteFile(
+                url: fileURL,
+                oauthToken: token,
+                stateIndicator: _stateIndicator,
+                in: self)
             self.dismiss()
         }
     }
 
-    func didPressSave(to folder: RemoteFileItem, in viewController: RemoteFolderViewerVC) {
-        guard let token else {
+    override func didPressSave(to folder: RemoteFileItem, in viewController: RemoteFolderViewerVC) {
+        guard let _token else {
             Diag.warning("Not signed into any Google account, cancelling")
             assertionFailure()
             return
@@ -175,7 +160,7 @@ extension GoogleDriveConnectionSetupCoordinator: RemoteFolderViewerDelegate {
         }
         delegate?.didPickRemoteFolder(
             googleDriveFolder,
-            oauthToken: token,
+            oauthToken: _token,
             stateIndicator: viewController,
             in: self
         )

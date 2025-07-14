@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2024 KeePassium Labs <info@keepassium.com>
+//  Copyright © 2018-2025 KeePassium Labs <info@keepassium.com>
 // 
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -7,11 +7,6 @@
 //  For commercial licensing, please contact the author.
 
 import UIKit
-
-enum DatabaseLockReason {
-    case userRequest
-    case timeout
-}
 
 public class DatabaseManager {
     private init() {
@@ -75,7 +70,7 @@ public class DatabaseManager {
             mode: .overwriteLatest,
             timestamp: .now
         )
-        guard let latestBackupURL = latestBackupURL else {
+        guard let latestBackupURL else {
             return nil
         }
         do {

@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2024 KeePassium Labs <info@keepassium.com>
+//  Copyright © 2018-2025 KeePassium Labs <info@keepassium.com>
 // 
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -105,8 +105,8 @@ public class Group1: Group {
         (entry as! Entry1).groupID = -1
     }
 
-    override public func createEntry(detached: Bool = false) -> Entry {
-        let newEntry = Entry1(database: database)
+    override public func createEntry(creationDate: Date = Date(), detached: Bool = false) -> Entry {
+        let newEntry = Entry1(database: database, creationDate: creationDate)
         newEntry.uuid = UUID()
 
         if self.iconID != Group.defaultIconID && self.iconID != Group.defaultOpenIconID {
@@ -115,9 +115,9 @@ public class Group1: Group {
 
         newEntry.isDeleted = isDeleted
 
-        newEntry.creationTime = Date.now
-        newEntry.lastAccessTime = Date.now
-        newEntry.lastModificationTime = Date.now
+        newEntry.creationTime = creationDate
+        newEntry.lastAccessTime = creationDate
+        newEntry.lastModificationTime = creationDate
         newEntry.expiryTime = Date.kp1Never
 
         newEntry.groupID = self.id

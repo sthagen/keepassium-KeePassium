@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018-2024 KeePassium Labs <info@keepassium.com>
+//  Copyright © 2018-2025 KeePassium Labs <info@keepassium.com>
 //
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -8,9 +8,11 @@
 
 import UIKit
 
-struct Hotkey {
+struct Hotkey: Equatable {
     fileprivate let input: String
     fileprivate let modifiers: UIKeyModifierFlags
+
+    static let systemCopyToClipboard = Self(input: "C", modifiers: [.command])
 
     static let appPreferences = Self(input: ",", modifiers: [.command])
     static let refreshList    = Self(input: "r", modifiers: [.command])
@@ -29,6 +31,8 @@ struct Hotkey {
 
     static let createEntry       = Self(input: "n", modifiers: [.command])
     static let createGroup       = Self(input: "n", modifiers: [.command, .control])
+
+    static let editEntry         = Self(input: "e", modifiers: [.command])
 
     static let copyUserName = Self(input: "B", modifiers: [.command])
     static let copyPassword = Self(input: "C", modifiers: [.command])

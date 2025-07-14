@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2024 KeePassium Labs <info@keepassium.com>
+//  Copyright © 2018-2025 KeePassium Labs <info@keepassium.com>
 //
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -260,18 +260,6 @@ extension DatabasePrintFormatter {
                 NSAttributedString.Key.foregroundColor: UIColor.darkText
             ]
         ))
-        return result
-    }
-}
-
-fileprivate extension Group {
-    func getLevel() -> DatabasePrintFormatter.Level {
-        var result = 0
-        var p = self.parent
-        while p != nil {
-            p = p?.parent
-            result += 1
-        }
         return result
     }
 }

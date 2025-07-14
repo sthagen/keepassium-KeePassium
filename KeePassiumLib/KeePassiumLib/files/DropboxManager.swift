@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018-2024 KeePassium Labs <info@keepassium.com>
+//  Copyright © 2018-2025 KeePassium Labs <info@keepassium.com>
 //
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -191,7 +191,7 @@ final public class DropboxManager: NSObject {
             return
         }
 
-        guard let callbackURL = callbackURL,
+        guard let callbackURL,
               let urlComponents = URLComponents(url: callbackURL, resolvingAgainstBaseURL: true),
               let queryItems = urlComponents.queryItems
         else {
@@ -437,7 +437,7 @@ extension DropboxManager: RemoteDataSourceManager {
         urlRequest.setValue("application/json", forHTTPHeaderField: DropboxAPI.Keys.contentType)
 
         let json: String
-        if let cursor = cursor {
+        if let cursor {
             json = """
             {
                 "cursor": "\(cursor)"
@@ -470,7 +470,7 @@ extension DropboxManager: RemoteDataSourceManager {
                 let hasMore = json[DropboxAPI.Keys.hasMore] as? Bool
                 if let fileItems = parseFileListResponse(json, folder: folder) {
                     Diag.debug("File list acquired successfully")
-                    if let hasMore = hasMore,
+                    if let hasMore,
                        hasMore {
                         self.getItems(
                             in: folder,
@@ -588,7 +588,7 @@ extension DropboxManager: RemoteDataSourceManager {
         urlRequest.timeoutInterval = timeout.duration
 
         let dataTask = urlSession.dataTask(with: urlRequest) { data, response, error in
-            if let error = error {
+            if let error {
                 completionQueue.addOperation {
                     let nsError = error as NSError
                     Diag.error("Failed to download file [message: \(nsError.debugDescription)]")
@@ -597,7 +597,7 @@ extension DropboxManager: RemoteDataSourceManager {
                 return
             }
 
-            guard let data = data else {
+            guard let data else {
                 completionQueue.addOperation {
                     Diag.error("Failed to download file: no data returned")
                     completion(.failure(.emptyResponse))

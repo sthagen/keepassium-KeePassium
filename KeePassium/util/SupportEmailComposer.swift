@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2024 KeePassium Labs <info@keepassium.com>
+//  Copyright © 2018-2025 KeePassium Labs <info@keepassium.com>
 //
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -46,7 +46,7 @@ class SupportEmailComposer: NSObject {
     static func show(
         subject: Subject,
         parent: UIViewController,
-        popoverAnchor: PopoverAnchor,
+        popoverAnchor: PopoverAnchor?,
         completion: CompletionHandler? = nil
     ) {
         let subjectText = "\(AppInfo.name) - \(subject.rawValue)" 
@@ -130,7 +130,7 @@ class SupportEmailComposer: NSObject {
     }
 
     private func showExportSheet(for url: URL, completion: CompletionHandler?) {
-        guard let parent = parent else {
+        guard let parent else {
             completion?(false)
             return
         }

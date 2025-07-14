@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2024 KeePassium Labs <info@keepassium.com>
+//  Copyright © 2018-2025 KeePassium Labs <info@keepassium.com>
 // 
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -10,7 +10,6 @@ import KeePassiumLib
 import UniformTypeIdentifiers
 
 protocol EntryViewerPagesDataSource: AnyObject {
-    func getPageCount(for viewController: EntryViewerPagesVC) -> Int
     func getPage(index: Int, for viewController: EntryViewerPagesVC) -> UIViewController?
     func getPageIndex(of page: UIViewController, for viewController: EntryViewerPagesVC) -> Int?
 }
@@ -28,6 +27,8 @@ final class EntryViewerPagesVC: UIViewController, Refreshable {
     public weak var dataSource: EntryViewerPagesDataSource?
 
     weak var delegate: EntryViewerPagesVCDelegate?
+
+    public var startPageIndex: Int?
 
     private var isHistoryEntry = false
     private var canEditEntry = false
@@ -84,11 +85,6 @@ final class EntryViewerPagesVC: UIViewController, Refreshable {
         super.viewWillAppear(animated)
         assert(dataSource != nil, "dataSource must be defined")
         refresh()
-        if isHistoryEntry {
-            switchTo(page: 0)
-        } else {
-            switchTo(page: Settings.current.entryViewerPage)
-        }
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -96,6 +92,8 @@ final class EntryViewerPagesVC: UIViewController, Refreshable {
 
         navigationItem.rightBarButtonItem =
             pagesViewController.viewControllers?.first?.navigationItem.rightBarButtonItem
+
+        pagesViewController.viewControllers?.first?.becomeFirstResponder()
     }
 
     override func viewWillLayoutSubviews() {
@@ -136,7 +134,7 @@ final class EntryViewerPagesVC: UIViewController, Refreshable {
     }
 
     public func switchTo(page index: Int) {
-        guard let dataSource = dataSource,
+        guard let dataSource,
               let targetPageVC = dataSource.getPage(index: index, for: self)
         else {
             assertionFailure()
@@ -172,8 +170,11 @@ final class EntryViewerPagesVC: UIViewController, Refreshable {
         to targetPageVC: UIViewController,
         index: Int
     ) {
+        previousPageVC?.resignFirstResponder()
         previousPageVC?.didMove(toParent: nil)
         targetPageVC.didMove(toParent: pagesViewController)
+        targetPageVC.becomeFirstResponder()
+
         pageSelector.selectedSegmentIndex = index
         currentPageIndex = index
         navigationItem.rightBarButtonItem =
@@ -205,6 +206,10 @@ final class EntryViewerPagesVC: UIViewController, Refreshable {
             titleView.subtitleLabel.isHidden = true
         }
 
+        if let startPageIndex {
+            switchTo(page: startPageIndex)
+            self.startPageIndex = nil
+        }
         let currentPage = pagesViewController.viewControllers?.first
         (currentPage as? Refreshable)?.refresh()
     }
@@ -219,7 +224,7 @@ extension EntryViewerPagesVC: UIPageViewControllerDelegate {
     ) {
         guard finished && completed else { return }
 
-        guard let dataSource = dataSource,
+        guard let dataSource,
               let selectedVC = pageViewController.viewControllers?.first,
               let selectedIndex = dataSource.getPageIndex(of: selectedVC, for: self)
         else {
@@ -284,13 +289,13 @@ extension EntryViewerPagesVC: UIDropInteractionDelegate {
             dispatchGroup.enter()
 
             dragItem.itemProvider.loadFileRepresentation(forTypeIdentifier: UTType.item.identifier) { url, error in
-                if let error = error {
+                if let error {
                     Diag.error("Failed to load dropped file [error: \(error.localizedDescription)]")
                     dispatchGroup.leave()
                     return
                 }
 
-                guard let url = url else {
+                guard let url else {
                     Diag.error("Dropped file URL is invalid")
                     dispatchGroup.leave()
                     return

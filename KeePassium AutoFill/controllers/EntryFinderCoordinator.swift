@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2024 KeePassium Labs <info@keepassium.com>
+//  Copyright © 2018-2025 KeePassium Labs <info@keepassium.com>
 //
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -11,7 +11,11 @@ import KeePassiumLib
 
 protocol EntryFinderCoordinatorDelegate: AnyObject {
     func didLeaveDatabase(in coordinator: EntryFinderCoordinator)
-    func didSelectEntry(_ entry: Entry, in coordinator: EntryFinderCoordinator)
+    func didSelectEntry(
+        _ entry: Entry,
+        autoCopyOverride: AutoFillClipboardField?,
+        in coordinator: EntryFinderCoordinator
+    )
 
     @available(iOS 18.0, *)
     func didSelectText(_ text: String, in coordinator: EntryFinderCoordinator)
@@ -25,12 +29,9 @@ protocol EntryFinderCoordinatorDelegate: AnyObject {
         in coordinator: EntryFinderCoordinator)
 }
 
-final class EntryFinderCoordinator: Coordinator {
-    var childCoordinators = [Coordinator]()
-    var dismissHandler: CoordinatorDismissHandler?
+final class EntryFinderCoordinator: BaseCoordinator {
     weak var delegate: EntryFinderCoordinatorDelegate?
 
-    private let router: NavigationRouter
     private let entryFinderVC: EntryFinderVC
 
     private let originalRef: URLReference
@@ -50,6 +51,8 @@ final class EntryFinderCoordinator: Coordinator {
 
     private let autoFillMode: AutoFillMode?
 
+    private var autoCopyOverrides: [UUID: AutoFillClipboardField] = [:]
+
     init(
         router: NavigationRouter,
         originalRef: URLReference,
@@ -60,7 +63,6 @@ final class EntryFinderCoordinator: Coordinator {
         passkeyRegistrationParams: PasskeyRegistrationParams?,
         autoFillMode: AutoFillMode?
     ) {
-        self.router = router
         self.originalRef = originalRef
         self.databaseFile = databaseFile
         self.database = databaseFile.database
@@ -69,32 +71,29 @@ final class EntryFinderCoordinator: Coordinator {
         self.passkeyRelyingParty = passkeyRelyingParty
         self.passkeyRegistrationParams = passkeyRegistrationParams
         self.autoFillMode = autoFillMode
-
         entryFinderVC = EntryFinderVC.instantiateFromStoryboard()
+        super.init(router: router)
+
         entryFinderVC.delegate = self
         entryFinderVC.autoFillMode = autoFillMode
 
         entryFinderVC.navigationItem.title = databaseFile.visibleFileName
     }
 
-    deinit {
-        assert(childCoordinators.isEmpty)
-        removeAllChildCoordinators()
-    }
-
-    func start() {
-        router.prepareCustomTransition(
+    override func start() {
+        super.start()
+        _router.prepareCustomTransition(
             duration: vcAnimationDuration,
             type: .fade,
             timingFunction: .easeOut
         )
-        router.push(
+        _router.push(
             entryFinderVC,
             animated: false, 
             replaceTopViewController: true,
             onPop: { [weak self] in
-                guard let self = self else { return }
-                self.dismissHandler?(self)
+                guard let self else { return }
+                self._dismissHandler?(self)
                 self.delegate?.didLeaveDatabase(in: self)
             }
         )
@@ -106,7 +105,7 @@ final class EntryFinderCoordinator: Coordinator {
     }
 
     func stop(animated: Bool, completion: (() -> Void)?) {
-        router.pop(viewController: entryFinderVC, animated: animated, completion: completion)
+        _router.pop(viewController: entryFinderVC, animated: animated, completion: completion)
     }
 }
 
@@ -115,7 +114,7 @@ extension EntryFinderCoordinator {
         DatabaseSettingsManager.shared.updateSettings(for: originalRef) {
             $0.clearMasterKey()
         }
-        router.pop(viewController: entryFinderVC, animated: true)
+        _router.pop(viewController: entryFinderVC, animated: true)
         Diag.info("Database locked")
     }
 
@@ -161,7 +160,7 @@ extension EntryFinderCoordinator {
            Settings.current.autoFillPerfectMatch,
            autoFillMode != .passkeyRegistration
         {
-            delegate?.didSelectEntry(perfectMatch, in: self)
+            delegate?.didSelectEntry(perfectMatch, autoCopyOverride: nil, in: self)
         } else {
             entryFinderVC.setSearchResults(results)
         }
@@ -188,7 +187,7 @@ extension EntryFinderCoordinator {
             sheet.prefersGrabberVisible = true
             sheet.detents = creatorVC.detents()
         }
-        router.present(creatorVC, animated: true, completion: nil)
+        _router.present(creatorVC, animated: true, completion: nil)
     }
 }
 
@@ -251,7 +250,7 @@ extension EntryFinderCoordinator {
             actionTitle: actionTitle,
             image: .symbol(.iCloudSlash),
             onDidPressAction: { [weak self, weak viewController] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.delegate?.didPressReinstateDatabase(originalRef, in: self)
                 viewController?.refreshAnnouncements()
             }
@@ -298,7 +297,8 @@ extension EntryFinderCoordinator: EntryFinderDelegate {
                 in: self
             )
         } else {
-            delegate?.didSelectEntry(entry, in: self)
+            let autoCopyOverride = autoCopyOverrides[entry.uuid]
+            delegate?.didSelectEntry(entry, autoCopyOverride: autoCopyOverride, in: self)
         }
     }
 
@@ -313,6 +313,27 @@ extension EntryFinderCoordinator: EntryFinderDelegate {
             value = getUpdatedOTPValue(field, entry: entry)
         }
         delegate?.didSelectText(value, in: self)
+    }
+
+    func getAutoCopyOverride(for entry: Entry, in viewController: EntryFinderVC) -> AutoFillClipboardField? {
+        if let autoCopyOverride = autoCopyOverrides[entry.uuid] {
+            return autoCopyOverride
+        }
+
+        guard Settings.current.isCopyTOTPOnAutoFill,
+              TOTPGeneratorFactory.makeGenerator(for: entry) != nil else {
+            return nil
+        }
+
+        return .totp
+    }
+
+    func didSelectAutoCopyOverride(
+        _ field: AutoFillClipboardField,
+        from entry: Entry,
+        in viewController: EntryFinderVC
+    ) {
+        autoCopyOverrides[entry.uuid] = field
     }
 }
 

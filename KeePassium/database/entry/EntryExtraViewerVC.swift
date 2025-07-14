@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2024 KeePassium Labs <info@keepassium.com>
+//  Copyright © 2018-2025 KeePassium Labs <info@keepassium.com>
 //
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -19,6 +19,11 @@ protocol EntryExtraViewerVCDelegate: AnyObject {
         at popoverAnchor: PopoverAnchor,
         in viewController: EntryExtraViewerVC)
     func didPressShowLargeType(
+        text: String,
+        at popoverAnchor: PopoverAnchor,
+        in viewController: EntryExtraViewerVC
+    )
+    func didPressShowQRCode(
         text: String,
         at popoverAnchor: PopoverAnchor,
         in viewController: EntryExtraViewerVC
@@ -211,6 +216,7 @@ final class EntryExtraViewerVC: UITableViewController, Refreshable {
         switch getSection(rawIndex: indexPath.section) {
         case .info:
             let cell = tableView.dequeueReusableCell(withIdentifier: CellID.uuidCell, for: indexPath)
+            cell.selectionStyle = .none
             var configuration = uuidCellConfiguarion
             configuration.secondaryText = entry?.uuid.uuidString
             cell.contentConfiguration = configuration
@@ -265,12 +271,53 @@ final class EntryExtraViewerVC: UITableViewController, Refreshable {
         let section = getSection(rawIndex: indexPath.section)
         guard section == .info,
               indexPath.row == 0,
-              let entry = entry
+              let entry,
+              let cell = tableView.cellForRow(at: indexPath)
         else {
             return
         }
-        delegate?.didPressCopyField(text: entry.uuid.uuidString, in: self)
-        animateCopyingToClipboard(at: indexPath)
+
+        let actions: [ViewableFieldAction] = [.export, .showLargeType, .showQRCode]
+        if #available(iOS 17.4, *),
+           !ProcessInfo.isRunningOnMac
+        {
+            let popoverAnchor = tableView.popoverAnchor(at: indexPath)
+            showFieldMenu(with: [.copy] + actions, in: cell, for: indexPath, at: popoverAnchor)
+        } else {
+            delegate?.didPressCopyField(text: entry.uuid.uuidString, in: self)
+            animateCopyingToClipboard(in: cell, at: indexPath, actions: actions)
+        }
+    }
+
+    @available(iOS 17.4, *)
+    private func showFieldMenu(
+        with actions: [ViewableFieldAction],
+        in cell: UITableViewCell,
+        for indexPath: IndexPath,
+        at popoverAnchor: PopoverAnchor
+    ) {
+        let overlayView = EntryFieldMenuButton(actions: actions) { [weak self] selectedAction in
+            guard let self,
+                  let value = self.entry?.uuid.uuidString
+            else {
+                return
+            }
+
+            switch selectedAction {
+            case .copy:
+                delegate?.didPressCopyField(text: value, in: self)
+                animateCopyingToClipboard(in: cell, at: indexPath, actions: [])
+            case .export:
+                delegate?.didPressExportField(text: value, at: popoverAnchor, in: self)
+            case .showLargeType:
+                delegate?.didPressShowLargeType(text: value, at: popoverAnchor, in: self)
+            case .showQRCode:
+                delegate?.didPressShowQRCode(text: value, at: popoverAnchor, in: self)
+            case .copyReference:
+                assertionFailure("Invalid action")
+            }
+        }
+        overlayView.showMenuInCell(cell)
     }
 
     private func update(property: Property, to value: Bool) {
@@ -281,28 +328,28 @@ final class EntryExtraViewerVC: UITableViewController, Refreshable {
         delegate?.didUpdateProperties(properties: properties, in: self)
     }
 
-    private func animateCopyingToClipboard(at indexPath: IndexPath) {
+    private func animateCopyingToClipboard(
+        in cell: UITableViewCell,
+        at indexPath: IndexPath,
+        actions: [ViewableFieldAction]
+    ) {
         HapticFeedback.play(.copiedToClipboard)
-        DispatchQueue.main.async { [weak self] in
-            guard let self = self else { return }
-            self.copiedCellView.show(
-                in: self.tableView,
-                at: indexPath,
-                options: [.canExport, .canShowLargeType]
-            )
+        DispatchQueue.main.async { [weak self, weak cell] in
+            guard let self, let cell else { return }
+            self.copiedCellView.show(in: cell, at: indexPath, actions: actions)
         }
     }
 }
 
 extension EntryExtraViewerVC: FieldCopiedViewDelegate {
     func didPressExport(for indexPath: IndexPath, from view: FieldCopiedView) {
-        guard let entry = entry else {
+        guard let entry else {
             return
         }
         view.hide(animated: true)
 
         HapticFeedback.play(.contextMenuOpened)
-        let popoverAnchor = PopoverAnchor(tableView: tableView, at: indexPath)
+        let popoverAnchor = tableView.popoverAnchor(at: indexPath)
         delegate?.didPressExportField(text: entry.uuid.uuidString, at: popoverAnchor, in: self)
     }
 
@@ -313,7 +360,15 @@ extension EntryExtraViewerVC: FieldCopiedViewDelegate {
         guard let entry else { return }
 
         view.hide(animated: true)
-        let popoverAnchor = PopoverAnchor(tableView: tableView, at: indexPath)
+        let popoverAnchor = tableView.popoverAnchor(at: indexPath)
         delegate?.didPressShowLargeType(text: entry.uuid.uuidString, at: popoverAnchor, in: self)
+    }
+
+    func didPressShowQRCode(for indexPath: IndexPath, from view: FieldCopiedView) {
+        guard let entry else { return }
+
+        view.hide(animated: true)
+        let popoverAnchor = tableView.popoverAnchor(at: indexPath)
+        delegate?.didPressShowQRCode(text: entry.uuid.uuidString, at: popoverAnchor, in: self)
     }
 }

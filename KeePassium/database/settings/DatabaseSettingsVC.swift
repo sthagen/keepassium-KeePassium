@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2024 KeePassium Labs <info@keepassium.com>
+//  Copyright © 2018-2025 KeePassium Labs <info@keepassium.com>
 //
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -31,6 +31,8 @@ protocol DatabaseSettingsDelegate: AnyObject {
         newExternalUpdateBehavior: ExternalUpdateBehavior,
         in viewController: DatabaseSettingsVC
     )
+
+    func didPressDataProtection(in viewController: DatabaseSettingsVC)
 }
 
 final class DatabaseSettingsVC: UITableViewController, Refreshable {
@@ -54,6 +56,14 @@ final class DatabaseSettingsVC: UITableViewController, Refreshable {
         return formatter
     }()
 
+    private lazy var dataProtectionCellConfiguration: UIListContentConfiguration = {
+        var configuration = UIListContentConfiguration.subtitleCell()
+        configuration.textProperties.font = UIFont.preferredFont(forTextStyle: .body)
+        configuration.textProperties.color = .primaryText
+        configuration.text = LString.dataProtectionSettingsTitle
+        return configuration
+    }()
+
     public static func make() -> DatabaseSettingsVC {
         let vc = DatabaseSettingsVC(style: .insetGrouped)
         return vc
@@ -63,7 +73,6 @@ final class DatabaseSettingsVC: UITableViewController, Refreshable {
         super.viewDidLoad()
         title = LString.titleDatabaseSettings
 
-        tableView.addObserver(self, forKeyPath: "contentSize", options: .new, context: nil)
         tableView.estimatedSectionHeaderHeight = 18
 
         registerCellClasses(tableView)
@@ -72,6 +81,7 @@ final class DatabaseSettingsVC: UITableViewController, Refreshable {
     }
 
     override func viewWillAppear(_ animated: Bool) {
+        tableView.addObserver(self, forKeyPath: "contentSize", options: .new, context: nil)
         super.viewWillAppear(animated)
         refresh()
     }
@@ -110,7 +120,7 @@ final class DatabaseSettingsVC: UITableViewController, Refreshable {
                 image: nil,
                 attributes: [],
                 handler: { [weak self] _ in
-                    guard let self = self else { return }
+                    guard let self else { return }
                     self.delegate?.didPressClose(in: self)
                 }
             ),
@@ -123,11 +133,13 @@ extension DatabaseSettingsVC {
     private enum CellID {
         static let switchCell = "SwitchCell"
         static let parameterValueCell = "ParameterValueCell"
+        static let dataProtectionCell = "DataProtectionCell"
     }
     private enum CellIndex {
-        static let sectionSizes = [1, 3, 3]
+        static let sectionSizes = [2, 3, 3]
 
         static let readOnly = IndexPath(row: 0, section: 0)
+        static let dataProtection = IndexPath(row: 1, section: 0)
         static let externalUpdateBehavior = IndexPath(row: 0, section: 1)
         static let fileUnreachableTimeout = IndexPath(row: 1, section: 1)
         static let fileUnreachableAction = IndexPath(row: 2, section: 1)
@@ -143,6 +155,9 @@ extension DatabaseSettingsVC {
         tableView.register(
             UINib(nibName: ParameterValueCell.reuseIdentifier, bundle: nil),
             forCellReuseIdentifier: CellID.parameterValueCell)
+        tableView.register(
+            UITableViewCell.self,
+            forCellReuseIdentifier: CellID.dataProtectionCell)
     }
 
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -161,7 +176,7 @@ extension DatabaseSettingsVC {
         case CellIndex.fileUnreachableAction.section:
             return nil
         case CellIndex.autoFillFileUnreachableAction.section:
-            return LString.titleAutoFillSettings
+            return LString.autoFillSettingsTitle
         default:
             return nil
         }
@@ -178,6 +193,12 @@ extension DatabaseSettingsVC {
                 for: indexPath)
                 as! SwitchCell
             configureReadOnlyCell(cell)
+            return cell
+        case CellIndex.dataProtection:
+            let cell = tableView.dequeueReusableCell(
+                withIdentifier: CellID.dataProtectionCell,
+                for: indexPath)
+            configureDataProtectionCell(cell)
             return cell
         case CellIndex.fileUnreachableTimeout:
             let cell = tableView.dequeueReusableCell(
@@ -226,6 +247,12 @@ extension DatabaseSettingsVC {
         }
     }
 
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        guard indexPath == CellIndex.dataProtection else { return }
+        delegate?.didPressDataProtection(in: self)
+    }
+
     private func configureReadOnlyCell(_ cell: SwitchCell) {
         cell.textLabel?.text = LString.titleFileAccessReadOnly
         let isEnabled = delegate?.canChangeReadOnly(in: self) ?? false
@@ -237,10 +264,15 @@ extension DatabaseSettingsVC {
         cell.theSwitch.accessibilityLabel = LString.titleFileAccessReadOnly
 
         cell.onDidToggleSwitch = { [weak self] theSwitch in
-            guard let self = self else { return }
+            guard let self else { return }
             self.isReadOnlyAccess = theSwitch.isOn
             self.delegate?.didChangeSettings(isReadOnlyFile: theSwitch.isOn, in: self)
         }
+    }
+
+    private func configureDataProtectionCell(_ cell: UITableViewCell) {
+        cell.contentConfiguration = dataProtectionCellConfiguration
+        cell.accessoryType = .disclosureIndicator
     }
 
     private func configureOfflineAccessCell(
@@ -257,7 +289,7 @@ extension DatabaseSettingsVC {
                 attributes: availableFallbackStrategies.contains(strategy) ? [] : .disabled,
                 state: strategy == fallbackStrategy ? .on : .off,
                 handler: { [weak self] _ in
-                    guard let self = self else { return }
+                    guard let self else { return }
                     self.delegate?.didChangeSettings(
                         newFallbackStrategy: strategy,
                         forAutoFill: forAutoFill,
@@ -289,7 +321,7 @@ extension DatabaseSettingsVC {
                 attributes: [],
                 state: isCurrent ? .on : .off,
                 handler: { [weak self] _ in
-                    guard let self = self else { return }
+                    guard let self else { return }
                     self.delegate?.didChangeSettings(
                         newFallbackTimeout: timeout,
                         forAutoFill: forAutoFill,
@@ -308,23 +340,23 @@ extension DatabaseSettingsVC {
 
     private func formatFallbackTimeout(_ timeout: TimeInterval) -> String {
         if timeout.isZero {
-            return LString.appProtectionTimeoutImmediatelyFull 
+            return LString.titleConsiderUnreachableImmediately
         }
         return fallbackTimeoutFormatter.localizedString(fromTimeInterval: timeout)
     }
 
     private func configureQuickTypeEnabledCell(_ cell: SwitchCell) {
-        cell.textLabel?.text = LString.titleQuickAutoFill
+        cell.textLabel?.text = LString.quickAutoFillTitle
         let isEnabled = delegate?.canChangeQuickTypeEnabled(in: self) ?? false
         cell.setEnabled(isEnabled)
         cell.theSwitch.isEnabled = isEnabled
         cell.theSwitch.isOn = isQuickTypeEnabled
 
         cell.textLabel?.isAccessibilityElement = false
-        cell.theSwitch.accessibilityLabel = LString.titleQuickAutoFill
+        cell.theSwitch.accessibilityLabel = LString.quickAutoFillTitle
 
         cell.onDidToggleSwitch = { [weak self, weak cell] theSwitch in
-            guard let self = self else { return }
+            guard let self else { return }
             self.isQuickTypeEnabled = theSwitch.isOn
             if !theSwitch.isOn {
                 cell?.textLabel?.flashColor(to: .destructiveTint, duration: 0.7)
@@ -345,7 +377,7 @@ extension DatabaseSettingsVC {
                 title: behavior.title,
                 state: behavior == externalUpdateBehavior ? .on : .off,
                 handler: { [weak self] _ in
-                    guard let self = self else { return }
+                    guard let self else { return }
                     self.delegate?.didChangeSettings(
                         newExternalUpdateBehavior: behavior,
                         in: self

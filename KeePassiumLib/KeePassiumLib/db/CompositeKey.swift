@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2024 KeePassium Labs <info@keepassium.com>
+//  Copyright © 2018-2025 KeePassium Labs <info@keepassium.com>
 //
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -159,7 +159,7 @@ public class CompositeKey: Codable {
         let responseReadySemaphore = DispatchSemaphore(value: 0)
         DispatchQueue.global(qos: .default).async {
             handler(challenge) { _response, _error in
-                if let _error = _error {
+                if let _error {
                     challengeError = _error
                     responseReadySemaphore.signal()
                     return
@@ -170,7 +170,7 @@ public class CompositeKey: Codable {
         }
         responseReadySemaphore.wait()
 
-        if let challengeError = challengeError {
+        if let challengeError {
             switch challengeError {
             case .cancelled:
                 throw ProgressInterruption.cancelled(reason: ProgressEx.CancellationReason.userRequest)
@@ -178,7 +178,7 @@ public class CompositeKey: Codable {
                 throw challengeError 
             }
         }
-        if let response = response {
+        if let response {
             return response.sha256
         }
         preconditionFailure("You should not be here")

@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2024 KeePassium Labs <info@keepassium.com>
+//  Copyright © 2018-2025 KeePassium Labs <info@keepassium.com>
 // 
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -13,7 +13,6 @@ protocol DatabaseCreatorDelegate: AnyObject {
     func didPressCancel(in databaseCreatorVC: DatabaseCreatorVC)
     func didPressSaveToFiles(in databaseCreatorVC: DatabaseCreatorVC)
     func didPressSaveToServer(in databaseCreatorVC: DatabaseCreatorVC)
-    func didPressErrorDetails(in databaseCreatorVC: DatabaseCreatorVC)
     func didPressPickKeyFile(
         in databaseCreatorVC: DatabaseCreatorVC,
         at popoverAnchor: PopoverAnchor)
@@ -24,11 +23,6 @@ protocol DatabaseCreatorDelegate: AnyObject {
 }
 
 class DatabaseCreatorVC: UIViewController, BusyStateIndicating, Refreshable {
-    enum DestinationType {
-        case files
-        case remoteServer
-    }
-
     public var databaseFileName: String { return fileNameField.text ?? "" }
     public var password: String { return passwordField.text ?? ""}
     public var keyFile: URLReference? {
@@ -36,10 +30,10 @@ class DatabaseCreatorVC: UIViewController, BusyStateIndicating, Refreshable {
             showKeyFile(keyFile)
         }
     }
-    public var yubiKey: YubiKey? {
+    public var hardwareKey: HardwareKey? {
         didSet {
-            if yubiKey != nil {
-                hardwareKeyField.text = YubiKey.getTitle(for: yubiKey)
+            if let hardwareKey {
+                hardwareKeyField.text = hardwareKey.localizedDescription
             } else {
                 hardwareKeyField.text = nil // use the "No Hardware Key" placeholder
             }
@@ -66,7 +60,7 @@ class DatabaseCreatorVC: UIViewController, BusyStateIndicating, Refreshable {
 
     private var hasPassword: Bool { passwordField.text?.isNotEmpty ?? false }
     private var hasKeyFile: Bool { keyFile != nil }
-    private var hasYubiKey: Bool { yubiKey != nil }
+    private var hasHardwareKey: Bool { hardwareKey != nil }
 
     public static func create() -> DatabaseCreatorVC {
         return DatabaseCreatorVC.instantiateFromStoryboard()
@@ -123,7 +117,7 @@ class DatabaseCreatorVC: UIViewController, BusyStateIndicating, Refreshable {
     }
 
     private func showKeyFile(_ keyFileRef: URLReference?) {
-        guard let keyFileRef = keyFileRef else {
+        guard let keyFileRef else {
             keyFileField.text = nil
             return
         }
@@ -168,13 +162,8 @@ extension DatabaseCreatorVC {
         delegate?.didPressCancel(in: self)
     }
 
-    private func didPressErrorDetails() {
-        hideErrorMessage(animated: true)
-        delegate?.didPressErrorDetails(in: self)
-    }
-
     private func verifyEnteredKey(success successHandler: @escaping () -> Void) {
-        guard hasPassword || hasKeyFile || hasYubiKey else {
+        guard hasPassword || hasKeyFile || hasHardwareKey else {
             showErrorMessage(
                 NSLocalizedString(
                     "[Database/Create] Please enter a password or choose a key file.",
@@ -200,7 +189,7 @@ extension DatabaseCreatorVC {
         }
 
         let isGoodEnough = entropy > PasswordQuality.minDatabasePasswordEntropy
-        if isGoodEnough || hasKeyFile || hasYubiKey {
+        if isGoodEnough || hasKeyFile || hasHardwareKey {
             successHandler()
             return
         }
@@ -254,7 +243,7 @@ extension DatabaseCreatorVC: UITextFieldDelegate {
         guard UIDevice.current.userInterfaceIdiom == .phone else {
             return true
         }
-        let popoverAnchor = PopoverAnchor(sourceView: textField, sourceRect: textField.bounds)
+        let popoverAnchor = textField.asPopoverAnchor
         switch textField {
         case keyFileField:
             hideErrorMessage(animated: true)
@@ -275,7 +264,7 @@ extension DatabaseCreatorVC: UITextFieldDelegate {
             return
         }
         let isMac = ProcessInfo.isRunningOnMac
-        let popoverAnchor = PopoverAnchor(sourceView: textField, sourceRect: textField.bounds)
+        let popoverAnchor = textField.asPopoverAnchor
         switch textField {
         case keyFileField:
             hideErrorMessage(animated: true)

@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2024 KeePassium Labs <info@keepassium.com>
+//  Copyright © 2018-2025 KeePassium Labs <info@keepassium.com>
 //
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -30,7 +30,7 @@ class DatabaseIconSetPicker: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = LString.titleDatabaseIcons
+        title = LString.appearanceDatabaseIconsTitle
     }
 
     override func viewDidAppear(_ animated: Bool) {

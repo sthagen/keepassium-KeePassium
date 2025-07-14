@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2024 KeePassium Labs <info@keepassium.com>
+//  Copyright © 2018-2025 KeePassium Labs <info@keepassium.com>
 // 
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -14,7 +14,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     private var mainCoordinator: MainCoordinator!
 
     #if targetEnvironment(macCatalyst)
-    private var macUtils: MacUtils?
+    var macUtils: MacUtils?
     #endif
 
     override var next: UIResponder? { mainCoordinator }
@@ -25,7 +25,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     ) -> Bool {
         initAppGlobals(application)
 
-        let window = UIWindow(frame: UIScreen.main.bounds)
+        let window = WatchdogAwareWindow(frame: UIScreen.main.bounds)
         let args = ProcessInfo.processInfo.arguments
         if args.contains("darkMode") {
             window.overrideUserInterfaceStyle = .dark
@@ -40,20 +40,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         if let macUtils, macUtils.isControlKeyPressed() {
             proposeAppReset = true
         }
+        let autoTypeHelper = AutoTypeHelper(macUtils: macUtils)
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(sceneWillDeactivate),
             name: UIScene.willDeactivateNotification,
             object: nil
         )
+        #else
+        let autoTypeHelper = AutoTypeHelper(macUtils: nil)
         #endif
 
         if UIDevice.current.userInterfaceIdiom == .pad {
             window.makeKeyAndVisible()
-            mainCoordinator = MainCoordinator(window: window)
+            mainCoordinator = MainCoordinator(window: window, autoTypeHelper: autoTypeHelper)
             mainCoordinator.start(hasIncomingURL: hasIncomingURL, proposeReset: proposeAppReset)
         } else {
-            mainCoordinator = MainCoordinator(window: window)
+            mainCoordinator = MainCoordinator(window: window, autoTypeHelper: autoTypeHelper)
             mainCoordinator.start(hasIncomingURL: hasIncomingURL, proposeReset: proposeAppReset)
             window.makeKeyAndVisible()
         }

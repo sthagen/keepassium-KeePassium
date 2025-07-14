@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2024 KeePassium Labs <info@keepassium.com>
+//  Copyright © 2018-2025 KeePassium Labs <info@keepassium.com>
 //
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -24,8 +24,6 @@ public protocol PasswordGeneratorDelegate: AnyObject {
 }
 
 final public class PasswordGeneratorVC: UIViewController, Refreshable {
-    private typealias Mode = PasswordGeneratorMode
-
     private enum CellID {
         static let wideCell = "WideCell"
         static let fixedSetCell = "FixedSetCell"
@@ -424,7 +422,7 @@ extension PasswordGeneratorVC: UITableViewDelegate {
 
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        let popoverAnchor = PopoverAnchor(tableView: tableView, at: indexPath)
+        let popoverAnchor = tableView.popoverAnchor(at: indexPath)
         switch (mode, indexPath) {
         case (_, CellIndex.modeSelector):
             showModeSelector(at: popoverAnchor)
@@ -647,7 +645,7 @@ extension PasswordGeneratorVC {
             textField.accessibilityLabel = LString.PasswordGenerator.titleCustomCharacters
         }
         alert.addAction(title: LString.actionOK, style: .default) { [weak self, weak alert] _ in
-            guard let self = self else { return }
+            guard let self else { return }
             let text = alert?.textFields!.first!.text ?? ""
             self.config.customModeConfig.customLists[condition] = text.removingRepetitions()
             self.saveConfig()

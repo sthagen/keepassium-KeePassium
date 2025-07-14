@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2024 KeePassium Labs <info@keepassium.com>
+//  Copyright © 2018-2025 KeePassium Labs <info@keepassium.com>
 //
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -94,7 +94,7 @@ final class GroupViewerEntryCell: UITableViewCell {
     }
 
     public func refresh() {
-        guard let totpGenerator = totpGenerator else {
+        guard let totpGenerator else {
             showOTPButton.setVisible(false)
             otpView.setVisible(false)
             return
@@ -147,7 +147,7 @@ final class GroupViewerEntryCell: UITableViewCell {
             delay: 0,
             options: .beginFromCurrentState,
             animations: { [weak self] in
-                guard let self = self else { return }
+                guard let self else { return }
                 if animateValue {
                     self.otpView.isHidden = !visible
                 }

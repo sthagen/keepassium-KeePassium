@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2024 KeePassium Labs <info@keepassium.com>
+//  Copyright © 2018-2025 KeePassium Labs <info@keepassium.com>
 //
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -11,16 +11,54 @@ import Foundation
 final public class DatabaseSettings: Eraseable {
     public var isReadOnlyFile: Bool = false
 
-    public var isRememberMasterKey: Bool?
-    public var isRememberFinalKey: Bool?
+    private var _isRememberMasterKey: Bool?
+    public var isRememberMasterKey: Bool? {
+        get {
+            if ManagedAppConfig.shared.getBoolIfLicensed(.rememberDatabaseKey) != nil {
+                return nil
+            } else {
+                return _isRememberMasterKey
+            }
+        }
+        set {
+            _isRememberMasterKey = newValue
+        }
+    }
+
+    private var _isRememberFinalKey: Bool?
+    public var isRememberFinalKey: Bool? {
+        get {
+            if ManagedAppConfig.shared.getBoolIfLicensed(.rememberDatabaseFinalKey) != nil {
+                return nil
+            } else {
+                return _isRememberFinalKey
+            }
+        }
+        set {
+            _isRememberFinalKey = newValue
+        }
+    }
+
     public private(set) var masterKey: CompositeKey?
     public var hasMasterKey: Bool { return masterKey != nil }
 
-    public var isRememberKeyFile: Bool?
+    private var _isRememberKeyFile: Bool?
+    public var isRememberKeyFile: Bool? {
+        get {
+            if ManagedAppConfig.shared.getBoolIfLicensed(.keepKeyFileAssociations) != nil {
+                return nil
+            } else {
+                return _isRememberKeyFile
+            }
+        }
+        set {
+            _isRememberKeyFile = newValue
+        }
+    }
     public private(set) var associatedKeyFile: URLReference?
 
     public var isRememberHardwareKey: Bool?
-    public private(set) var associatedYubiKey: YubiKey?
+    public private(set) var associatedHardwareKey: HardwareKey?
 
     public var isQuickTypeEnabled: Bool?
 
@@ -50,7 +88,7 @@ final public class DatabaseSettings: Eraseable {
         associatedKeyFile = nil
 
         isRememberHardwareKey = nil
-        associatedYubiKey = nil
+        associatedHardwareKey = nil
 
         isQuickTypeEnabled = nil
 
@@ -101,15 +139,15 @@ final public class DatabaseSettings: Eraseable {
         }
     }
 
-    public func setAssociatedYubiKey(_ yubiKey: YubiKey?) {
-        associatedYubiKey = yubiKey
+    public func setAssociatedHardwareKey(_ hardwareKey: HardwareKey?) {
+        associatedHardwareKey = hardwareKey
     }
 
-    public func maybeSetAssociatedYubiKey(_ yubiKey: YubiKey?) {
+    public func maybeSetAssociatedHardwareKey(_ hardwareKey: HardwareKey?) {
         if isRememberHardwareKey ?? Settings.current.isKeepHardwareKeyAssociations {
-            setAssociatedYubiKey(yubiKey)
+            setAssociatedHardwareKey(hardwareKey)
         } else {
-            setAssociatedYubiKey(nil)
+            setAssociatedHardwareKey(nil)
         }
     }
 }
@@ -126,6 +164,7 @@ extension DatabaseSettings: Codable {
         case associatedKeyFile
         case isRememberHardwareKey
         case associatedYubiKey
+        case associatedHardwareKey
         case isQuickTypeEnabled
         case fallbackStrategy
         case fallbackTimeout
@@ -141,7 +180,7 @@ extension DatabaseSettings: Codable {
     }
 
     internal static func deserialize(from data: Data?) -> DatabaseSettings? {
-        guard let data = data else { return nil }
+        guard let data else { return nil }
         let decoder = JSONDecoder()
         do {
             let result = try decoder.decode(DatabaseSettings.self, from: data)
@@ -163,7 +202,11 @@ extension DatabaseSettings: Codable {
         self.isRememberKeyFile = try container.decodeIfPresent(Bool.self, forKey: .isRememberKeyFile)
         self.associatedKeyFile = try container.decodeIfPresent(URLReference.self, forKey: .associatedKeyFile)
         self.isRememberHardwareKey = try container.decodeIfPresent(Bool.self, forKey: .isRememberHardwareKey)
-        self.associatedYubiKey = try container.decodeIfPresent(YubiKey.self, forKey: .associatedYubiKey)
+        if let associatedHardwareKey = try container.decodeIfPresent(HardwareKey.self, forKey: .associatedHardwareKey) {
+            self.associatedHardwareKey = associatedHardwareKey
+        } else {
+            self.associatedHardwareKey = try container.decodeIfPresent(HardwareKey.self, forKey: .associatedYubiKey)
+        }
         self.isQuickTypeEnabled = try container.decodeIfPresent(Bool.self, forKey: .isQuickTypeEnabled)
         self.fallbackStrategy = try container.decodeIfPresent(UnreachableFileFallbackStrategy.self, forKey: .fallbackStrategy)
         self.fallbackTimeout = try container.decodeIfPresent(TimeInterval.self, forKey: .fallbackTimeout)
@@ -197,8 +240,8 @@ extension DatabaseSettings: Codable {
         if let _isRememberHardwareKey = isRememberHardwareKey {
             try container.encode(_isRememberHardwareKey, forKey: .isRememberHardwareKey)
         }
-        if let _associatedYubiKey = associatedYubiKey {
-            try container.encode(_associatedYubiKey, forKey: .associatedYubiKey)
+        if let _associatedHardwareKey = associatedHardwareKey {
+            try container.encode(_associatedHardwareKey, forKey: .associatedHardwareKey)
         }
         if let _isQuickTypeEnabled = isQuickTypeEnabled {
             try container.encode(_isQuickTypeEnabled, forKey: .isQuickTypeEnabled)

@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2024 KeePassium Labs <info@keepassium.com>
+//  Copyright © 2018-2025 KeePassium Labs <info@keepassium.com>
 //
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -11,7 +11,7 @@ import UIKit
 extension UILabel {
 
     public func setText(_ text: String?, strikethrough: Bool) {
-        if let text = text, strikethrough {
+        if let text, strikethrough {
             let attributedText = NSAttributedString(
                 string: text,
                 attributes: [
@@ -39,7 +39,7 @@ extension UILabel {
                 self?.textColor = .destructiveTint
             },
             completion: { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 UIView.transition(
                     with: self,
                     duration: duration * 0.7,

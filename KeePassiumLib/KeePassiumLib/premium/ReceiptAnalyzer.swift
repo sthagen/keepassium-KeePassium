@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2024 KeePassium Labs <info@keepassium.com>
+//  Copyright © 2018-2025 KeePassium Labs <info@keepassium.com>
 //
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -389,10 +389,10 @@ class ReceiptAnalyzer {
 
 fileprivate extension Date {
     static func max(_ one: Date?, _ two: Date?) -> Date? {
-        guard let one = one else {
+        guard let one else {
             return two
         }
-        guard let two = two else {
+        guard let two else {
             return one
         }
         if one > two {

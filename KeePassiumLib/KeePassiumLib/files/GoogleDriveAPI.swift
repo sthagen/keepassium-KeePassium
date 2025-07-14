@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018-2024 KeePassium Labs <info@keepassium.com>
+//  Copyright © 2018-2025 KeePassium Labs <info@keepassium.com>
 //
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -98,11 +98,11 @@ extension GoogleDriveAPI {
             data: Data?,
             error: Error?
         ) -> Result<[String: Any], RemoteError> {
-            if let error = error {
+            if let error {
                 Diag.error("Google Drive request failed [operation: \(operation), message: \(error.localizedDescription)]")
                 return .failure(.general(error: error))
             }
-            guard let data = data else {
+            guard let data else {
                 Diag.error("Google Drive request failed: no data received [operation: \(operation)]")
                 return .failure(.emptyResponse)
             }

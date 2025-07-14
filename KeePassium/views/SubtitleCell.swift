@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2024 KeePassium Labs <info@keepassium.com>
+//  Copyright © 2018-2025 KeePassium Labs <info@keepassium.com>
 //
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -8,8 +8,10 @@
 
 import UIKit
 
-final class SubtitleCell: UITableViewCell {
-    public static let reuseIdentifier = "SubtitleCell"
+class SubtitleCell: UITableViewCell {
+    static var reuseIdentifier: String {
+        return String(describing: self)
+    }
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: .subtitle, reuseIdentifier: reuseIdentifier)

@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018-2024 KeePassium Labs <info@keepassium.com>
+//  Copyright © 2018-2025 KeePassium Labs <info@keepassium.com>
 //
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -66,11 +66,11 @@ extension DropboxAPI {
             data: Data?,
             error: Error?
         ) -> Result<[String: Any], RemoteError> {
-            if let error = error {
+            if let error {
                 Diag.error("Dropbox request failed [operation: \(operation), message: \(error.localizedDescription)]")
                 return .failure(.general(error: error))
             }
-            guard let data = data else {
+            guard let data else {
                 Diag.error("Dropbox request failed: no data received [operation: \(operation)]")
                 return .failure(.emptyResponse)
             }
@@ -123,7 +123,7 @@ extension DropboxAPI {
                 Diag.warning("Authorization token expired")
                 return .authorizationRequired(message: LString.titleDropboxRequiresSignIn)
             case "path":
-                if let item = item {
+                if let item {
                     Diag.warning("File does not exists anymore")
                     let error = NSError(
                         domain: NSCocoaErrorDomain,

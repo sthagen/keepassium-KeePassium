@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2024 KeePassium Labs <info@keepassium.com>
+//  Copyright © 2018-2025 KeePassium Labs <info@keepassium.com>
 //
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -76,14 +76,14 @@ final class PasswordGeneratorQuickSheetVC: UITableViewController, Refreshable {
             title: LString.PasswordGenerator.titleRandomGenerator,
             image: .symbol(.gearshape2),
             primaryAction: UIAction { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.delegate?.didRequestFullMode(in: self)
             }
         )
         let refreshButton = UIBarButtonItem(
             systemItem: .refresh,
             primaryAction: UIAction { [weak self] _ in
-                self?.refresh()
+                self?.regenerate()
             }
         )
         navigationItem.rightBarButtonItem = fullModeButton
@@ -95,10 +95,21 @@ final class PasswordGeneratorQuickSheetVC: UITableViewController, Refreshable {
             ],
             animated: false
         )
+
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(refresh),
+            name: UIAccessibility.differentiateWithoutColorDidChangeNotification,
+            object: nil
+        )
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -125,13 +136,18 @@ final class PasswordGeneratorQuickSheetVC: UITableViewController, Refreshable {
         }
     }
 
-    func refresh() {
+    func regenerate() {
         items = generateItems()
+        refresh()
+    }
+
+    @objc
+    func refresh() {
         tableView.reloadData()
     }
 
     private func generateItems() -> [DataItem] {
-        guard let delegate = delegate else {
+        guard let delegate else {
             assertionFailure("This won't work without a delegate.")
             return []
         }
@@ -220,7 +236,7 @@ extension PasswordGeneratorQuickSheetVC {
             attributes: [.accessibilitySpeechSpellOut: item.mode.accessibilityShouldSpellOut]
         )
         cell.onDidPressCopy = { [weak self] contentView in
-            guard let self = self else { return }
+            guard let self else { return }
             self.delegate?.didPressCopy(item.text, inView: contentView, in: self)
         }
         return cell

@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2024 KeePassium Labs <info@keepassium.com>
+//  Copyright © 2018-2025 KeePassium Labs <info@keepassium.com>
 // 
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -99,7 +99,7 @@ final class AboutVC: UITableViewController {
         tableView.deselectRow(at: indexPath, animated: true)
         guard let selectedCell = tableView.cellForRow(at: indexPath) else { return }
 
-        let popoverAnchor = PopoverAnchor(tableView: tableView, at: indexPath)
+        let popoverAnchor = tableView.popoverAnchor(at: indexPath)
         switch selectedCell {
         case contactSupportCell:
             delegate?.didPressContactSupport(at: popoverAnchor, in: self)

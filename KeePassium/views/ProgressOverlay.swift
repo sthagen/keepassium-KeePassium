@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2024 KeePassium Labs <info@keepassium.com>
+//  Copyright © 2018-2025 KeePassium Labs <info@keepassium.com>
 // 
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -201,7 +201,7 @@ class ProgressOverlay: UIView {
             delay: 0.0,
             options: [.allowUserInteraction, .beginFromCurrentState],
             animations: { [weak self] in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.spinner.alpha = spinnerAlpha
                 self.animatingStatusConstraint.isActive = isConstraintActive
                 self.setNeedsLayout()

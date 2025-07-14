@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2024 KeePassium Labs <info@keepassium.com>
+//  Copyright © 2018-2025 KeePassium Labs <info@keepassium.com>
 // 
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -199,7 +199,7 @@ public class Group: DatabaseItem, Eraseable {
         return entries.first(where: { $0.uuid == uuid })
     }
 
-    public func createEntry(detached: Bool = false) -> Entry {
+    public func createEntry(creationDate: Date = Date(), detached: Bool = false) -> Entry {
         fatalError("Pure virtual method")
     }
 
@@ -209,9 +209,15 @@ public class Group: DatabaseItem, Eraseable {
 
     override public func touch(_ mode: DatabaseItem.TouchMode, updateParents: Bool = true) {
         lastAccessTime = Date.now
-        if mode == .modified {
+        switch mode {
+        case .accessed:
+            break
+        case .modified:
             lastModificationTime = Date.now
+        case let .modifiedAt(date):
+            lastModificationTime = date
         }
+
         if updateParents {
             parent?.touch(mode, updateParents: true)
         }

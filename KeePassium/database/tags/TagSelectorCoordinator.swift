@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2024 KeePassium Labs <info@keepassium.com>
+//  Copyright © 2018-2025 KeePassium Labs <info@keepassium.com>
 //
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -15,12 +15,8 @@ protocol TagSelectorCoordinatorDelegate: AnyObject {
     func didUpdateTags(in coordinator: TagSelectorCoordinator)
 }
 
-final class TagSelectorCoordinator: Coordinator {
+final class TagSelectorCoordinator: BaseCoordinator {
 
-    var childCoordinators = [Coordinator]()
-    var dismissHandler: CoordinatorDismissHandler?
-
-    private let router: NavigationRouter
     private let item: DatabaseItem
     private let parent: DatabaseItem?
     private let tagSelectorVC: TagSelectorVC
@@ -39,7 +35,7 @@ final class TagSelectorCoordinator: Coordinator {
 
     var databaseSaver: DatabaseSaver?
     var fileExportHelper: FileExportHelper?
-    var savingProgressHost: ProgressViewHost? { return router }
+    var savingProgressHost: ProgressViewHost? { return _router }
     var saveSuccessHandler: (() -> Void)?
 
     weak var delegate: TagSelectorCoordinatorDelegate?
@@ -48,24 +44,15 @@ final class TagSelectorCoordinator: Coordinator {
         self.item = item
         self.parent = parent
         self.databaseFile = databaseFile
-        self.router = router
         tagSelectorVC = TagSelectorVC.create()
+        super.init(router: router)
         tagSelectorVC.delegate = self
     }
 
-    deinit {
-        assert(childCoordinators.isEmpty)
-        removeAllChildCoordinators()
-    }
-
-    func start() {
+    override func start() {
+        super.start()
         data = processData()
-
-        router.push(tagSelectorVC, animated: true, onPop: { [weak self] in
-            guard let self = self else { return }
-            self.removeAllChildCoordinators()
-            self.dismissHandler?(self)
-        })
+        _pushInitialViewController(tagSelectorVC, animated: true)
     }
 
     private func processData() -> [TagSelectorVC.Section] {
@@ -118,7 +105,7 @@ final class TagSelectorCoordinator: Coordinator {
 
 extension TagSelectorCoordinator: TagSelectorVCDelegate {
     func didPressDismiss(in viewController: TagSelectorVC) {
-        router.dismiss(animated: true)
+        dismiss()
     }
 
     func didPressDeleteTag(_ tag: Tag, in viewController: TagSelectorVC) {

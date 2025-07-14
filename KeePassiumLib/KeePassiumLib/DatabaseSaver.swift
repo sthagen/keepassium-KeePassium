@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2024 KeePassium Labs <info@keepassium.com>
+//  Copyright © 2018-2025 KeePassium Labs <info@keepassium.com>
 //
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -345,7 +345,7 @@ public class DatabaseSaver: ProgressObserver {
             endBackgroundTask()
         }
 
-        guard let error = error else {
+        guard let error else {
             return
         }
 
@@ -383,35 +383,35 @@ public class DatabaseSaver: ProgressObserver {
 extension DatabaseSaver {
     private func notifyWillSaveDatabase() {
         delegateQueue.async { [weak self] in
-            guard let self = self else { return }
+            guard let self else { return }
             self.delegate?.databaseSaver(self, willSave: self.databaseFile)
         }
     }
 
     private func notifyDidChangeProgress(progress: ProgressEx) {
         delegateQueue.async { [weak self] in
-            guard let self = self else { return }
+            guard let self else { return }
             self.delegate?.databaseSaver(self, didChangeProgress: progress, for: self.databaseFile)
         }
     }
 
     private func notifyDidCancelSaving() {
         delegateQueue.async { [weak self] in
-            guard let self = self else { return }
+            guard let self else { return }
             self.delegate?.databaseSaver(self, didCancelSaving: self.databaseFile)
         }
     }
 
     private func notifyDidSaveDatabase() {
         delegateQueue.async { [weak self] in
-            guard let self = self else { return }
+            guard let self else { return }
             self.delegate?.databaseSaver(self, didSave: self.databaseFile)
         }
     }
 
     private func notifyDidFailSaving(with error: Error) {
         delegateQueue.async { [weak self] in
-            guard let self = self else { return }
+            guard let self else { return }
             self.delegate?.databaseSaver(self, didFailSaving: self.databaseFile, with: error)
         }
     }
@@ -422,7 +422,7 @@ extension DatabaseSaver {
         completion: @escaping ConflictResolutionHandler
     ) {
         delegateQueue.async { [weak self] in
-            guard let self = self else { return }
+            guard let self else { return }
             assert(self.delegate != nil, "There is no delegate to handle sync conflict")
             self.delegate?.databaseSaverResolveConflict(
                 self,

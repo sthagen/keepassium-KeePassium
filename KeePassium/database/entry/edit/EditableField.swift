@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2024 KeePassium Labs <info@keepassium.com>
+//  Copyright © 2018-2025 KeePassium Labs <info@keepassium.com>
 // 
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -26,21 +26,21 @@ class EditableField: BasicViewableField {
     override var internalName: String {
         get { return field?.name ?? "" }
         set {
-            if let field = field { field.name = newValue }
+            if let field { field.name = newValue }
         }
     }
 
     override var value: String? {
         get { return field?.value }
         set {
-            if let field = field { field.value = newValue ?? "" }
+            if let field { field.value = newValue ?? "" }
         }
     }
 
     override var isProtected: Bool {
         get { return field?.isProtected ?? false }
         set {
-            if let field = field { field.isProtected = newValue }
+            if let field { field.isProtected = newValue }
         }
     }
 
@@ -57,6 +57,9 @@ class EditableField: BasicViewableField {
         case EntryField.url:
             return .URL
         default:
+            if let _ = EntryField.getExtraURLIndex(from: internalName) {
+                return .URL
+            }
             return nil
         }
     }

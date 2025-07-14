@@ -1,5 +1,5 @@
 //  KeePassium Password Manager
-//  Copyright © 2018–2024 KeePassium Labs <info@keepassium.com>
+//  Copyright © 2018-2025 KeePassium Labs <info@keepassium.com>
 // 
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
@@ -81,7 +81,7 @@ public class PasswordGenerator {
     }
 
     private func canSatisfy(maxConsecutive: Int?, with elements: [String]) -> Bool {
-        guard let maxConsecutive = maxConsecutive else {
+        guard let maxConsecutive else {
             return true
         }
         guard maxConsecutive > 0 else {
@@ -92,7 +92,7 @@ public class PasswordGenerator {
     }
 
     private func isSatisfied(maxConsecutive: Int?, with elements: [String]) -> Bool {
-        guard let maxConsecutive = maxConsecutive else {
+        guard let maxConsecutive else {
             return true
         }
         guard maxConsecutive > 0 else {
