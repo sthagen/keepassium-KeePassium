@@ -265,10 +265,8 @@ public class Entry: DatabaseItem, Eraseable {
     public var isExpired: Bool { return canExpire && (Date() > expiryTime) }
     public var isDeleted: Bool
 
-    public var isHiddenFromSearch: Bool {
-        get { return false }
-        set { fatalError("This property can be modified only in some DB formats") }
-        // swiftlint:disable:previous unused_setter_value
+    public var isAutoFillable: Bool {
+        !isDeleted && !isExpired
     }
 
     public var attachments: [Attachment]

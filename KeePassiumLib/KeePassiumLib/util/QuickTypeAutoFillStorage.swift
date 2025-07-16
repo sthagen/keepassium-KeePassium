@@ -76,10 +76,7 @@ final public class QuickTypeAutoFillStorage {
             let parentGroup2 = entry.parent as? Group2
             let canSearch = parentGroup2?.resolvingIsSearchingEnabled() ?? true
             let canAutoType = parentGroup2?.resolvingIsAutoTypeEnabled() ?? true
-            guard canSearch && canAutoType else {
-                return
-            }
-            if entry.isDeleted || entry.isHiddenFromSearch || entry.isExpired {
+            guard canSearch && canAutoType && entry.isAutoFillable else {
                 return
             }
 
@@ -159,7 +156,7 @@ private struct SearchableData {
 extension Entry {
 
     fileprivate func extractSearchableData() -> SearchableData? {
-        if isHiddenFromSearch {
+        guard isAutoFillable else {
             return nil
         }
 

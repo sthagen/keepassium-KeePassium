@@ -780,9 +780,7 @@ extension AutoFillCoordinator {
         in databaseFile: DatabaseFile
     ) -> Entry? {
         guard let entry = databaseFile.database.root?.findEntry(byUUID: record.itemID),
-              !entry.isDeleted,
-              !entry.isHiddenFromSearch,
-              !entry.isExpired
+              entry.isAutoFillable
         else {
             return nil
         }

@@ -1533,8 +1533,9 @@ extension GroupViewerVC: UISearchResultsUpdating {
         else { return }
 
         searchResults = searchHelper.findEntriesAndGroups(
-            database: database,
+            in: database,
             searchText: searchText,
+            onlyAutoFillable: false,
             excludeGroupUUID: group.isSmartGroup ? group.uuid : nil
         )
         searchResults.sort(order: Settings.current.groupSortOrder)

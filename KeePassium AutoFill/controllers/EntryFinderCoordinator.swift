@@ -168,8 +168,11 @@ extension EntryFinderCoordinator {
 
     private func performManualSearch(searchText: String) {
         var searchResults = FuzzySearchResults(exactMatch: [], partialMatch: [])
-        searchResults.exactMatch = searchHelper
-            .findEntries(database: database, searchText: searchText)
+        searchResults.exactMatch = searchHelper.findEntries(
+            in: database,
+            searchText: searchText,
+            onlyAutoFillable: true
+        )
         searchResults.partialMatch = []
         entryFinderVC.setSearchResults(searchResults)
     }
