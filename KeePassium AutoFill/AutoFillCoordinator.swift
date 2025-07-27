@@ -606,7 +606,13 @@ extension AutoFillCoordinator {
         }
     }
 
-    private func returnEntry(_ entry: Entry, clipboardOverride: AutoFillClipboardField?) {
+    private func returnEntry(
+        _ entry: Entry,
+        from databaseFile: DatabaseFile,
+        clipboardOverride: AutoFillClipboardField?
+    ) {
+        RecentAutoFillEntryTracker.shared.recordRecentEntry(entry, from: databaseFile)
+
         switch autoFillMode {
         case .credentials:
             returnCredentials(from: entry, clipboardOverride: clipboardOverride)
@@ -797,7 +803,7 @@ extension AutoFillCoordinator {
             return
         }
         log.trace("returnQuickTypeEntry")
-        returnEntry(foundEntry, clipboardOverride: nil)
+        returnEntry(foundEntry, from: databaseFile, clipboardOverride: nil)
     }
 
     func databaseLoader(_ databaseLoader: DatabaseLoader, willLoadDatabase dbRef: URLReference) {
@@ -1127,7 +1133,7 @@ extension AutoFillCoordinator: DatabaseUnlockerCoordinatorDelegate {
            autoFillMode != .passkeyRegistration
         {
             log.trace("Unlocked and found a match")
-            returnEntry(desiredEntry, clipboardOverride: nil)
+            returnEntry(desiredEntry, from:databaseFile, clipboardOverride: nil)
         } else {
             showDatabaseViewer(fileRef, databaseFile: databaseFile, warnings: warnings)
         }
@@ -1163,7 +1169,7 @@ extension AutoFillCoordinator: EntryFinderCoordinatorDelegate {
         in coordinator: EntryFinderCoordinator
     ) {
         log.trace("didSelectEntry, via clipboard: \(String(describing: autoCopyOverride))")
-        returnEntry(entry, clipboardOverride: autoCopyOverride)
+        returnEntry(entry, from: coordinator.databaseFile, clipboardOverride: autoCopyOverride)
     }
 
     @available(iOS 18.0, *)

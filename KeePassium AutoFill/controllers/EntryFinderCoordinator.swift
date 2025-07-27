@@ -151,6 +151,16 @@ extension EntryFinderCoordinator {
             database: database,
             serviceIdentifiers: serviceIdentifiers,
             passkeyRelyingParty: passkeyRelyingParty)
+
+        if results.exactMatch.isEmpty {
+            let recentEntry = RecentAutoFillEntryTracker.shared.getRecentEntry(from: databaseFile)
+            entryFinderVC.setRecentlyUsedEntry(recentEntry)
+            Diag.debug("Set recently used entry: \(recentEntry?.resolvedTitle ?? "none")")
+        } else {
+            entryFinderVC.setRecentlyUsedEntry(nil)
+            Diag.debug("Cleared recently used entry (have exact matches)")
+        }
+
         if results.isEmpty && autoFillMode != .passkeyRegistration {
             entryFinderVC.activateManualSearch(query: autoFillMode?.query)
             return

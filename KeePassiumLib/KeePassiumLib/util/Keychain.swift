@@ -47,6 +47,7 @@ public class Keychain {
         case fileReferences = "KeePassium.fileRefs"
         case networkCredentials = "KeePassium.networkCredentials"
         case timestamps = "KeePassium.timestamps"
+        case recentAutoFillEntry = "KeePassium.recentAutoFillEntry"
     }
     private let keychainFormatVersion = "formatVersion"
     private let appPasscodeAccount = "appPasscode"
@@ -655,6 +656,22 @@ public extension Keychain {
         }
         Diag.debug("Biometric auth is ready")
         return true
+    }
+}
+
+public extension Keychain {
+    private static let recentAutoFillEntryAccount = "lastUsedEntry"
+
+    func setRecentAutoFillEntry(_ data: Data) throws {
+        try set(service: .recentAutoFillEntry, account: Self.recentAutoFillEntryAccount, data: data)
+    }
+
+    func getRecentAutoFillEntry() throws -> Data? {
+        return try get(service: .recentAutoFillEntry, account: Self.recentAutoFillEntryAccount)
+    }
+
+    func removeRecentAutoFillEntry() throws {
+        try remove(service: .recentAutoFillEntry, account: Self.recentAutoFillEntryAccount)
     }
 }
 

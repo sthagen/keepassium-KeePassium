@@ -1,6 +1,6 @@
 //  KeePassium Password Manager
 //  Copyright © 2018-2025 KeePassium Labs <info@keepassium.com>
-// 
+//
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
 //  by the Free Software Foundation: https://www.gnu.org/licenses/).
@@ -123,8 +123,10 @@ final class EntryFinderVC: UITableViewController {
 
     private var announcements = [AnnouncementItem]()
 
-    private var searchController: UISearchController! 
-    private var manualSearchButton: UIBarButtonItem! 
+    private var recentlyUsedEntry: Entry?
+
+    private var searchController: UISearchController!
+    private var manualSearchButton: UIBarButtonItem!
     private var searchResults = FuzzySearchResults(exactMatch: [], partialMatch: [])
 
     override var canDismissFromKeyboard: Bool {
@@ -218,6 +220,11 @@ final class EntryFinderVC: UITableViewController {
         }
     }
 
+    public func setRecentlyUsedEntry(_ entry: Entry?) {
+        recentlyUsedEntry = entry
+        refresh()
+    }
+
     func refresh() {
         guard isViewLoaded else {
             return
@@ -245,23 +252,41 @@ final class EntryFinderVC: UITableViewController {
 
     private enum SectionType {
         case announcement
+        case recentlyUsed
         case nothingFound
         case exactMatch
         case matchSeparator
         case partialMatch
     }
-
     private func getSectionTypeAndIndex(_ section: Int) -> (SectionType, Int) {
-        let precedingSections = announcements.isEmpty ? 0 : 1
-        let resultSection = section - precedingSections
-        if resultSection < 0 {
-            return (.announcement, section)
+        var currentSection = 0
+
+        if !announcements.isEmpty {
+            if section == currentSection {
+                return (.announcement, section)
+            }
+            currentSection += 1
         }
+
+        if recentlyUsedEntry != nil && searchController.searchBar.text?.isEmpty == true {
+            if section == currentSection {
+                return (.recentlyUsed, 0)
+            }
+            currentSection += 1
+        }
+
         if searchResults.isEmpty {
-            return (.nothingFound, 0)
+            if recentlyUsedEntry == nil {
+                return (.nothingFound, 0)
+            } else {
+                assertionFailure("Unexpected section access when recently used entry exists")
+                return (.nothingFound, 0)
+            }
         }
 
         let nExactResults = searchResults.exactMatch.count
+        let resultSection = section - currentSection
+
         if resultSection < nExactResults {
             return (.exactMatch, resultSection)
         } else if resultSection == nExactResults {
@@ -277,6 +302,8 @@ final class EntryFinderVC: UITableViewController {
         case .exactMatch:
             let exactMatchSection = searchResults.exactMatch[sectionIndex]
             return exactMatchSection.scoredItems[indexPath.row].item as? Entry
+        case .recentlyUsed:
+           return recentlyUsedEntry
         case .partialMatch:
             let partialMatchSection = searchResults.partialMatch[sectionIndex]
             return partialMatchSection.scoredItems[indexPath.row].item as? Entry
@@ -286,17 +313,21 @@ final class EntryFinderVC: UITableViewController {
     }
 
     override func numberOfSections(in tableView: UITableView) -> Int {
+        let showRecentlyUsed = recentlyUsedEntry != nil && self.searchController.searchBar.text?.isEmpty == true
+
         let nAnnouncementSections = announcements.isEmpty ? 0 : 1
-        if searchResults.isEmpty {
+        if searchResults.isEmpty && showRecentlyUsed {
             return nAnnouncementSections + 1 // for "Nothing found" cell
         }
+
+        let recentlyUsedSections = showRecentlyUsed ? 1 : 0
 
         var nSearchResultSections = searchResults.exactMatch.count
         let hasPartialResults = !searchResults.partialMatch.isEmpty
         if hasPartialResults {
             nSearchResultSections += searchResults.partialMatch.count + 1 
         }
-        return nAnnouncementSections + nSearchResultSections
+        return nAnnouncementSections + recentlyUsedSections + nSearchResultSections
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -304,6 +335,8 @@ final class EntryFinderVC: UITableViewController {
         switch sectionType {
         case .announcement:
             return announcements.count
+        case .recentlyUsed:
+            return 1
         case .nothingFound:
             return 1 // "Nothing found" cell
         case .exactMatch:
@@ -323,6 +356,8 @@ final class EntryFinderVC: UITableViewController {
         switch sectionType {
         case .announcement, .nothingFound, .matchSeparator:
             return nil
+        case .recentlyUsed:
+            return LString.autoFillRecentlyUsedSectionTitle
         case .exactMatch:
             return searchResults.exactMatch[sectionIndex].group.name
         case .partialMatch:
@@ -345,8 +380,8 @@ final class EntryFinderVC: UITableViewController {
     override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         let (sectionType, _) = getSectionTypeAndIndex(section)
         switch sectionType {
-        case .announcement, .exactMatch, .partialMatch, .nothingFound:
-            return 8 
+        case .announcement, .exactMatch, .partialMatch, .nothingFound, .recentlyUsed:
+            return 8
         default:
             return UITableView.automaticDimension
         }
@@ -370,6 +405,9 @@ final class EntryFinderVC: UITableViewController {
         switch sectionType {
         case .announcement:
             return makeAnnouncementCell(at: indexPath)
+        case .recentlyUsed:
+            print("EntryFinderVC: recently used entry is \(recentlyUsedEntry?.resolvedTitle ?? "none")")
+            return makeResultCell(at: indexPath, entry: recentlyUsedEntry)
         case .nothingFound:
             return makeNothingFoundCell(at: indexPath)
         case .exactMatch:
@@ -613,4 +651,10 @@ extension LString {
     )
     // swiftlint:enable line_length
 
+    public static let autoFillRecentlyUsedSectionTitle = NSLocalizedString(
+        "[AutoFill/RecentlyUsed/title]",
+        value: "Recently Used",
+        comment: "Section title for the recently used entry in AutoFill"
+    )
+    // swiftlint:enable line_length
 }
