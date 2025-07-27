@@ -6,33 +6,51 @@
 //  by the Free Software Foundation: https://www.gnu.org/licenses/).
 //  For commercial licensing, please contact the author.
 
-public enum RemoteConnectionType: CustomStringConvertible {
+public enum RemoteConnectionType: Hashable {
     public static let allValues: [RemoteConnectionType] = [
         .dropbox,
         .dropboxBusiness,
         .googleDrive,
         .googleWorkspace,
-        .oneDrivePersonal,
-        .oneDriveForBusiness,
+        .oneDrivePersonal(scope: .fullAccess),
+        .oneDrivePersonal(scope: .appFolder),
+        .oneDriveForBusiness(scope: .fullAccess),
+        .oneDriveForBusiness(scope: .appFolder),
         .webdav,
     ]
 
+    public static var availableValues: [RemoteConnectionType] {
+        return allValues
+    }
+
     case webdav
-    case oneDrivePersonal
-    case oneDriveForBusiness
+    case oneDrivePersonal(scope: OAuthScope)
+    case oneDriveForBusiness(scope: OAuthScope)
     case dropbox
     case dropboxBusiness
     case googleDrive
     case googleWorkspace
+}
 
+extension RemoteConnectionType: CustomStringConvertible {
     public var description: String {
         switch self {
         case .webdav:
             return LString.connectionTypeWebDAV
-        case .oneDrivePersonal:
-            return LString.connectionTypeOneDrivePersonal
-        case .oneDriveForBusiness:
-            return LString.connectionTypeOneDriveForBusiness
+        case .oneDrivePersonal(let scope):
+            switch scope {
+            case .fullAccess:
+                return FileProvider.keepassiumOneDrivePersonal.localizedName
+            case .appFolder:
+                return FileProvider.keepassiumOneDrivePersonalAppFolder.localizedName
+            }
+        case .oneDriveForBusiness(let scope):
+            switch scope {
+            case .fullAccess:
+                return FileProvider.keepassiumOneDriveBusiness.localizedName
+            case .appFolder:
+                return FileProvider.keepassiumOneDriveBusinessAppFolder.localizedName
+            }
         case .dropbox:
             return LString.connectionTypeDropbox
         case .dropboxBusiness:
@@ -44,14 +62,34 @@ public enum RemoteConnectionType: CustomStringConvertible {
         }
     }
 
+    public var subtitle: String? {
+        switch self {
+        case .oneDrivePersonal(scope: .appFolder),
+             .oneDriveForBusiness(scope: .appFolder):
+            return LString.connectionTypeDedicatedAppFolder
+        default:
+            return nil
+        }
+    }
+
     public var fileProvider: FileProvider {
         switch self {
         case .webdav:
             return .keepassiumWebDAV
-        case .oneDrivePersonal:
-            return .keepassiumOneDrivePersonal
-        case .oneDriveForBusiness:
-            return .keepassiumOneDriveBusiness
+        case .oneDrivePersonal(let scope):
+            switch scope {
+            case .fullAccess:
+                return .keepassiumOneDrivePersonal
+            case .appFolder:
+                return .keepassiumOneDrivePersonalAppFolder
+            }
+        case .oneDriveForBusiness(let scope):
+            switch scope {
+            case .fullAccess:
+                return .keepassiumOneDriveBusiness
+            case .appFolder:
+                return .keepassiumOneDriveBusinessAppFolder
+            }
         case .dropbox,
              .dropboxBusiness:
             return .keepassiumDropbox

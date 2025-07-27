@@ -36,22 +36,7 @@ final class RemoteFilePickerCoordinator: BaseCoordinator {
     override func start() {
         super.start()
 
-        let connectionType: RemoteConnectionType?
-        switch oldRef?.fileProvider {
-        case .some(.keepassiumWebDAV):
-            connectionType = .webdav
-        case .some(.keepassiumDropbox):
-            connectionType = .dropbox
-        case .some(.keepassiumGoogleDrive):
-            connectionType = .googleDrive
-        case .some(.keepassiumOneDrivePersonal):
-            connectionType = .oneDrivePersonal
-        case .some(.keepassiumOneDriveBusiness):
-            connectionType = .oneDriveForBusiness
-        default:
-            connectionType = nil
-        }
-
+        let connectionType = getConnectionType(by: oldRef?.fileProvider)
         let animated = (connectionType == nil)
         _pushInitialViewController(connectionTypePicker, dismissButtonStyle: .cancel, animated: animated)
         if let connectionType {
@@ -64,6 +49,27 @@ final class RemoteFilePickerCoordinator: BaseCoordinator {
     override func refresh() {
         super.refresh()
         connectionTypePicker.refresh()
+    }
+
+    private func getConnectionType(by fileProvider: FileProvider?) -> RemoteConnectionType? {
+        switch fileProvider {
+        case .keepassiumWebDAV:
+            return .webdav
+        case .keepassiumDropbox:
+            return .dropbox
+        case .keepassiumGoogleDrive:
+            return .googleDrive
+        case .keepassiumOneDrivePersonal:
+            return .oneDrivePersonal(scope: .fullAccess)
+        case .keepassiumOneDrivePersonalAppFolder:
+            return .oneDrivePersonal(scope: .appFolder)
+        case .keepassiumOneDriveBusiness:
+            return .oneDriveForBusiness(scope: .fullAccess)
+        case .keepassiumOneDriveBusinessAppFolder:
+            return .oneDriveForBusiness(scope: .appFolder)
+        default:
+            return nil
+        }
     }
 }
 
@@ -90,8 +96,10 @@ extension RemoteFilePickerCoordinator: ConnectionTypePickerDelegate {
         switch connectionType {
         case .webdav:
             startWebDAVSetup(stateIndicator: viewController)
-        case .oneDrivePersonal, .oneDriveForBusiness:
-            startOneDriveSetup(stateIndicator: viewController)
+        case .oneDrivePersonal(let scope):
+            startOneDriveSetup(scope: scope, stateIndicator: viewController)
+        case .oneDriveForBusiness(let scope):
+            startOneDriveSetup(scope: scope, stateIndicator: viewController)
         case .dropbox, .dropboxBusiness:
             startDropboxSetup(stateIndicator: viewController)
         case .googleDrive, .googleWorkspace:
@@ -200,10 +208,11 @@ extension RemoteFilePickerCoordinator: DropboxConnectionSetupCoordinatorDelegate
 }
 
 extension RemoteFilePickerCoordinator: OneDriveConnectionSetupCoordinatorDelegate {
-    private func startOneDriveSetup(stateIndicator: BusyStateIndicating) {
+    private func startOneDriveSetup(scope: OAuthScope, stateIndicator: BusyStateIndicating) {
         let setupCoordinator = OneDriveConnectionSetupCoordinator(
-            stateIndicator: stateIndicator,
+            scope: scope,
             oldRef: oldRef,
+            stateIndicator: stateIndicator,
             router: _router
         )
         setupCoordinator.delegate = self

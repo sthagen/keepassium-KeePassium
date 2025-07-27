@@ -8,8 +8,9 @@
 
 public protocol OneDriveAuthProvider {
     func acquireToken(
-        presenter: UIViewController,
+        scope: OAuthScope,
         timeout: Timeout,
+        presenter: UIViewController,
         completionQueue: OperationQueue,
         completion: @escaping (Result<OAuthToken, RemoteError>) -> Void
     )

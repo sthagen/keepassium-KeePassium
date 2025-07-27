@@ -25,16 +25,24 @@ protocol OneDriveConnectionSetupCoordinatorDelegate: AnyObject {
 
 final class OneDriveConnectionSetupCoordinator: RemoteDataSourceSetupCoordinator<OneDriveManager> {
     weak var delegate: OneDriveConnectionSetupCoordinatorDelegate?
+    private let scope: OAuthScope
 
     init(
-        stateIndicator: BusyStateIndicating,
         selectionMode: RemoteItemSelectionMode = .file,
+        scope: OAuthScope,
         oldRef: URLReference?,
-        router: NavigationRouter
+        stateIndicator: BusyStateIndicating,
+        router: NavigationRouter,
     ) {
+        if oldRef?.url?.isOneDriveAppFolderScopedURL == true {
+            self.scope = .appFolder
+        } else {
+            self.scope = scope
+        }
         super.init(
             mode: selectionMode,
             manager: OneDriveManager.shared,
+            scope: self.scope,
             oldRef: oldRef,
             stateIndicator: stateIndicator,
             router: router)
@@ -42,9 +50,10 @@ final class OneDriveConnectionSetupCoordinator: RemoteDataSourceSetupCoordinator
 
     override func onAccountInfoAcquired(_ accountInfo: OneDriveDriveInfo) {
         self._accountInfo = accountInfo
+        let currentFileProvider = accountInfo.type.getMatchingFileProvider(scope: scope)
         if let _oldRef,
            let url = _oldRef.url,
-           _oldRef.fileProvider == accountInfo.type.matchingFileProvider
+           _oldRef.fileProvider == currentFileProvider
         {
             trySelectFile(url, onFailure: { [weak self] in
                 guard let self else { return }
@@ -89,7 +98,15 @@ final class OneDriveConnectionSetupCoordinator: RemoteDataSourceSetupCoordinator
             assertionFailure()
             return
         }
+
+        if scope == .appFolder {
+            let appFolderItem = OneDriveItem.getDedicatedAppFolder(driveInfo: accountInfo)
+            showFolder(folder: appFolderItem, stateIndicator: _stateIndicator)
+            return
+        }
+
         let vc = RemoteFolderViewerVC.make()
+
         vc.items = [
             OneDriveItem.getPersonalFilesFolder(driveInfo: accountInfo),
             OneDriveItem.getSharedWithMeFolder(driveInfo: accountInfo),
@@ -167,7 +184,8 @@ final class OneDriveConnectionSetupCoordinator: RemoteDataSourceSetupCoordinator
         in viewController: RemoteFolderViewerVC
     ) {
         let driveType = fileItem.driveInfo.type
-        guard driveType.matchingFileProvider.isAllowed else {
+        let fileProvider = driveType.getMatchingFileProvider(scope: scope)
+        guard fileProvider.isAllowed else {
             Diag.error("OneDrive account type is blocked by org settings [type: \(driveType.description)]")
             viewController.showErrorAlert(FileAccessError.managedAccessDenied)
             _stateIndicator.indicateState(isBusy: false)

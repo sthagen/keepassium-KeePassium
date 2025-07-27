@@ -23,6 +23,11 @@ extension URL {
             && OneDriveURLHelper.getDriveType(from: self) == .business
     }
 
+    public var isOneDriveAppFolderScopedURL: Bool {
+        return isOneDriveFileURL
+            && OneDriveURLHelper.getScope(from: self) == .appFolder
+    }
+
     func getOneDriveLocationDescription() -> String? {
         guard isOneDriveFileURL else {
             return nil
@@ -53,6 +58,7 @@ private enum OneDriveURLHelper {
         static let parentDriveID = "parentDriveID"
         static let parentItemID = "parentItemID"
         static let parentName = "parentName"
+        static let scope = "scope"
     }
 
     static func build(from item: OneDriveItem) -> URL {
@@ -65,6 +71,9 @@ private enum OneDriveURLHelper {
             queryItems.append(URLQueryItem(name: Key.parentDriveID, value: parent.driveID))
             queryItems.append(URLQueryItem(name: Key.parentItemID, value: parent.itemID))
             queryItems.append(URLQueryItem(name: Key.parentName, value: parent.name))
+        }
+        if item.scope != .fullAccess {
+            queryItems.append(URLQueryItem(name: Key.scope, value: item.scope.rawValue))
         }
         let result = URL.build(
             schemePrefix: schemePrefix,
@@ -121,11 +130,14 @@ private enum OneDriveURLHelper {
             type: driveType,
             ownerName: driveOwnerName
         )
+        let scope = getScope(from: prefixedURL)
+
         return OneDriveItem(
             name: itemName,
             itemID: itemID,
             itemPath: itemPath,
             parent: parent,
+            scope: scope,
             isFolder: prefixedURL.hasDirectoryPath,
             fileInfo: nil,
             driveInfo: driveInfo
@@ -143,10 +155,13 @@ private enum OneDriveURLHelper {
 
         var serviceName = ""
         let owner = queryItems[Key.owner] ?? "?"
+
         if let driveTypeRaw = queryItems[Key.driveType],
            let driveType = OneDriveDriveInfo.DriveType(rawValue: driveTypeRaw)
         {
-            serviceName = driveType.description
+            let scope = getScope(from: prefixedURL)
+            let fileProvider = driveType.getMatchingFileProvider(scope: scope)
+            serviceName = fileProvider.localizedName
         }
         return "\(serviceName) (\(owner)) → \(path)"
     }
@@ -173,5 +188,10 @@ private enum OneDriveURLHelper {
             return nil
         }
         return driveType
+    }
+
+    fileprivate static func getScope(from prefixedURL: URL) -> OAuthScope {
+        assert(prefixedURL.isOneDriveFileURL)
+        return prefixedURL.queryItems[Key.scope].flatMap { OAuthScope(rawValue: $0) } ?? .fullAccess
     }
 }

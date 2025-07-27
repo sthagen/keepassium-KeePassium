@@ -70,8 +70,9 @@ public protocol RemoteDataSourceManager<ItemType> {
     )
 
     func authenticate(
-        presenter: UIViewController,
+        scope: OAuthScope,
         timeout: Timeout,
+        presenter: UIViewController,
         completionQueue: OperationQueue,
         completion: @escaping (Result<OAuthToken, RemoteError>) -> Void
     )

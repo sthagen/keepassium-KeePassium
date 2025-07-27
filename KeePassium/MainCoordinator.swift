@@ -1124,7 +1124,6 @@ extension MainCoordinator: DatabaseUnlockerCoordinatorDelegate {
         }
     }
 
-
     func willUnlockDatabase(_ fileRef: URLReference, in coordinator: DatabaseUnlockerCoordinator) {
         databasePickerCoordinator.setEnabled(false)
         isInitialDatabase = false

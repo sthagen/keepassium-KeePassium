@@ -37,6 +37,7 @@ final class DropboxConnectionSetupCoordinator: RemoteDataSourceSetupCoordinator<
         super.init(
             mode: selectionMode,
             manager: DropboxManager.shared,
+            scope: .fullAccess,
             oldRef: oldRef,
             stateIndicator: stateIndicator,
             router: router)

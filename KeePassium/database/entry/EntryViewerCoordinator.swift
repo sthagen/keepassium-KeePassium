@@ -335,7 +335,6 @@ extension EntryViewerCoordinator {
         viewController.present(activityVC, animated: true)
     }
 
-
     private func showSaveDialog(
         for attachment: Attachment,
         at popoverAnchor: PopoverAnchor,

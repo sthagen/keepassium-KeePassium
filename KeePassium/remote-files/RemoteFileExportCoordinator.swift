@@ -257,8 +257,10 @@ extension RemoteFileExportCoordinator: ConnectionTypePickerDelegate {
             switch connectionType {
             case .webdav:
                 startWebDAVSetup(stateIndicator: viewController)
-            case .oneDrivePersonal, .oneDriveForBusiness:
-                startOneDriveSetup(stateIndicator: viewController)
+            case .oneDrivePersonal(let scope):
+                startOneDriveSetup(scope: scope, stateIndicator: viewController)
+            case .oneDriveForBusiness(let scope):
+                startOneDriveSetup(scope: scope, stateIndicator: viewController)
             case .dropbox, .dropboxBusiness:
                 startDropboxSetup(stateIndicator: viewController)
             case .googleDrive, .googleWorkspace:
@@ -351,11 +353,12 @@ extension RemoteFileExportCoordinator: DropboxConnectionSetupCoordinatorDelegate
 }
 
 extension RemoteFileExportCoordinator: OneDriveConnectionSetupCoordinatorDelegate {
-    private func startOneDriveSetup(stateIndicator: BusyStateIndicating) {
+    private func startOneDriveSetup(scope: OAuthScope, stateIndicator: BusyStateIndicating) {
         let setupCoordinator = OneDriveConnectionSetupCoordinator(
-            stateIndicator: stateIndicator,
             selectionMode: .folder,
+            scope: scope,
             oldRef: nil,
+            stateIndicator: stateIndicator,
             router: _router
         )
         setupCoordinator.delegate = self

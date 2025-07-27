@@ -27,7 +27,9 @@ extension FileProvider {
         case .keepassiumWebDAV:
             return .fileProviderWebDAV
         case .keepassiumOneDrivePersonal,
-             .keepassiumOneDriveBusiness:
+             .keepassiumOneDrivePersonalAppFolder,
+             .keepassiumOneDriveBusiness,
+             .keepassiumOneDriveBusinessAppFolder:
             return .fileProviderOneDrive
         case .keepassiumOneDriveLegacy:
             assertionFailure("Should be either Personal or Business instead")

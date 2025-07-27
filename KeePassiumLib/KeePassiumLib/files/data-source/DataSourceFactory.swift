@@ -13,17 +13,20 @@ internal final class DataSourceFactory {
             return LocalDataSource()
         }
 
-        if url.isWebDAVFileURL {
+        let detectedFileProvider = findInAppFileProvider(for: url)
+        switch detectedFileProvider {
+        case .keepassiumWebDAV:
             return WebDAVDataSource()
-        } else if url.isOneDrivePersonalFileURL {
-            return OneDriveDataSource(fileProvider: .keepassiumOneDrivePersonal)
-        } else if url.isOneDriveBusinessFileURL {
-            return OneDriveDataSource(fileProvider: .keepassiumOneDriveBusiness)
-        } else if url.isDropboxFileURL {
+        case .keepassiumOneDrivePersonal,
+             .keepassiumOneDrivePersonalAppFolder,
+             .keepassiumOneDriveBusiness,
+             .keepassiumOneDriveBusinessAppFolder:
+            return OneDriveDataSource(fileProvider: detectedFileProvider!)
+        case .keepassiumDropbox:
             return DropboxDataSource()
-        } else if url.isGoogleDriveFileURL {
+        case .keepassiumGoogleDrive:
             return GoogleDriveDataSource()
-        } else {
+        default:
             Diag.warning("Unexpected URL format, assuming local file [prefix: \(urlSchemePrefix)]")
             return LocalDataSource()
         }
@@ -37,9 +40,17 @@ internal final class DataSourceFactory {
         } else if url.isGoogleDriveFileURL {
             return .keepassiumGoogleDrive
         } else if url.isOneDrivePersonalFileURL {
-            return .keepassiumOneDrivePersonal
+            if url.isOneDriveAppFolderScopedURL {
+                return .keepassiumOneDrivePersonalAppFolder
+            } else {
+                return .keepassiumOneDrivePersonal
+            }
         } else if url.isOneDriveBusinessFileURL {
-            return .keepassiumOneDriveBusiness
+            if url.isOneDriveAppFolderScopedURL {
+                return .keepassiumOneDriveBusinessAppFolder
+            } else {
+                return .keepassiumOneDriveBusiness
+            }
         }
         return nil
     }

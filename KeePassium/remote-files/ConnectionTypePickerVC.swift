@@ -36,7 +36,7 @@ final class ConnectionTypePickerVC: UITableViewController, Refreshable, BusyStat
             refresh()
         }
     }
-    public let values = RemoteConnectionType.allValues
+    public let values = RemoteConnectionType.availableValues
     public var selectedValue: RemoteConnectionType?
 
     private lazy var titleView: SpinnerLabel = {
@@ -127,12 +127,19 @@ extension ConnectionTypePickerVC {
 
     private func configureConnectionTypeCell(_ cell: SubtitleCell, at indexPath: IndexPath) {
         let connectionType = values[indexPath.row]
-        cell.textLabel?.text = connectionType.description
+        let isAllowed = connectionType.fileProvider.isAllowed
+        if isAllowed {
+            cell.textLabel?.text = connectionType.description
+            cell.detailTextLabel?.text = connectionType.subtitle
+        } else {
+            let title = [connectionType.description, connectionType.subtitle]
+                .compactMap { $0 }
+                .joined(separator: " / ")
+            cell.textLabel?.text = title
+            cell.detailTextLabel?.text = LString.Error.storageAccessDeniedByOrg
+        }
         cell.imageView?.contentMode = .scaleAspectFit
         cell.imageView?.image = .symbol(connectionType.fileProvider.iconSymbol)
-
-        let isAllowed = connectionType.fileProvider.isAllowed
-        cell.detailTextLabel?.text = isAllowed ? nil : LString.Error.storageAccessDeniedByOrg
 
         let isEnabled = delegate?.isConnectionTypeEnabled(connectionType, in: self) ?? true
         cell.setEnabled(isEnabled && isAllowed && !isBusy)

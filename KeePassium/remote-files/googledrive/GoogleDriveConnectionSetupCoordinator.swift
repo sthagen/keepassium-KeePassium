@@ -37,6 +37,7 @@ final class GoogleDriveConnectionSetupCoordinator: RemoteDataSourceSetupCoordina
         super.init(
             mode: selectionMode,
             manager: GoogleDriveManager.shared,
+            scope: .fullAccess,
             oldRef: oldRef,
             stateIndicator: stateIndicator,
             router: router)

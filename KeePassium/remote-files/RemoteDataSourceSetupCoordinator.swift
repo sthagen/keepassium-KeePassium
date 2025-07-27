@@ -16,11 +16,12 @@ class RemoteDataSourceSetupCoordinator<Manager: RemoteDataSourceManager>:
     RemoteFolderViewerDelegate
 {
     let _manager: Manager
-    let _stateIndicator: BusyStateIndicating
     let selectionMode: RemoteItemSelectionMode
+    let _scope: OAuthScope
     var _token: OAuthToken?
     var _accountInfo: Manager.AccountInfo?
     internal var _oldRef: URLReference?
+    let _stateIndicator: BusyStateIndicating
 
     override var _presenterForModals: UIViewController {
         _router.navigationController
@@ -29,14 +30,16 @@ class RemoteDataSourceSetupCoordinator<Manager: RemoteDataSourceManager>:
     init(
         mode: RemoteItemSelectionMode,
         manager: Manager,
+        scope: OAuthScope,
         oldRef: URLReference?,
         stateIndicator: BusyStateIndicating,
         router: NavigationRouter
     ) {
         self.selectionMode = mode
         self._manager = manager
-        self._stateIndicator = stateIndicator
+        self._scope = scope
         self._oldRef = oldRef
+        self._stateIndicator = stateIndicator
         super.init(router: router)
     }
 
@@ -101,8 +104,12 @@ class RemoteDataSourceSetupCoordinator<Manager: RemoteDataSourceManager>:
         _stateIndicator.indicateState(isBusy: true)
         let presenter = _router.navigationController
         let timeout = Timeout(duration: FileDataProvider.defaultTimeoutDuration)
-        _manager.authenticate(presenter: presenter, timeout: timeout, completionQueue: .main) {
-            [weak self] result in
+        _manager.authenticate(
+            scope: _scope,
+            timeout: timeout,
+            presenter: presenter,
+            completionQueue: .main
+        ) { [weak self] result in
             guard let self else { return }
             _stateIndicator.indicateState(isBusy: false)
             switch result {

@@ -8,10 +8,16 @@
 
 import Foundation
 
+public enum OAuthScope: String, Codable, CaseIterable {
+    case fullAccess
+    case appFolder
+}
+
 public struct OAuthToken: Codable {
     public var accessToken: String
     public var refreshToken: String
     public var accountIdentifier: String?
+    public var scope: OAuthScope
     public var acquired: Date
     public var lifespan: TimeInterval
     public var halflife: TimeInterval { lifespan / 2 }
@@ -19,15 +25,46 @@ public struct OAuthToken: Codable {
     public init(
         accessToken: String,
         refreshToken: String,
+        scope: OAuthScope = .fullAccess,
         acquired: Date,
         lifespan: TimeInterval,
         accountIdentifier: String? = nil
     ) {
         self.accessToken = accessToken
         self.refreshToken = refreshToken
+        self.scope = scope
         self.acquired = acquired
         self.lifespan = lifespan
         self.accountIdentifier = accountIdentifier
+    }
+
+    private enum CodingKeys: String, CodingKey {
+        case accessToken
+        case refreshToken
+        case accountIdentifier
+        case scope
+        case acquired
+        case lifespan
+    }
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.accessToken = try container.decode(String.self, forKey: .accessToken)
+        self.refreshToken = try container.decode(String.self, forKey: .refreshToken)
+        self.accountIdentifier = try container.decodeIfPresent(String.self, forKey: .accountIdentifier)
+        self.scope = try container.decodeIfPresent(OAuthScope.self, forKey: .scope) ?? .fullAccess
+        self.acquired = try container.decode(Date.self, forKey: .acquired)
+        self.lifespan = try container.decode(TimeInterval.self, forKey: .lifespan)
+    }
+
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(accessToken, forKey: .accessToken)
+        try container.encode(refreshToken, forKey: .refreshToken)
+        try container.encodeIfPresent(accountIdentifier, forKey: .accountIdentifier)
+        try container.encode(scope, forKey: .scope)
+        try container.encode(acquired, forKey: .acquired)
+        try container.encode(lifespan, forKey: .lifespan)
     }
 }
 

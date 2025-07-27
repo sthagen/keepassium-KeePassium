@@ -60,8 +60,9 @@ final public class DropboxManager: NSObject {
     }
 
     public func authenticate(
-        presenter: UIViewController,
+        scope: OAuthScope,
         timeout: Timeout,
+        presenter: UIViewController,
         completionQueue: OperationQueue = .main,
         completion: @escaping (Result<OAuthToken, RemoteError>) -> Void
     ) {

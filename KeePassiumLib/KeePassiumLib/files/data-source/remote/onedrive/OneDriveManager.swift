@@ -69,14 +69,16 @@ extension OneDriveManager {
     }
 
     public func authenticate(
-        presenter: UIViewController,
+        scope: OAuthScope,
         timeout: Timeout,
+        presenter: UIViewController,
         completionQueue: OperationQueue = .main,
         completion: @escaping (Result<OAuthToken, RemoteError>) -> Void
     ) {
         authProvider.acquireToken(
-            presenter: presenter,
+            scope: scope,
             timeout: timeout,
+            presenter: presenter,
             completionQueue: completionQueue,
             completion: completion
         )
@@ -91,7 +93,15 @@ extension OneDriveManager {
         completion: @escaping (Result<OneDriveDriveInfo, RemoteError>) -> Void
     ) {
         Diag.debug("Requesting drive info")
-        let parentPath = OneDriveAPI.defaultDrivePath
+
+        let parentPath: String
+        switch token.scope {
+        case .fullAccess:
+            parentPath = OneDriveAPI.defaultDrivePath
+        case .appFolder:
+            parentPath = OneDriveAPI.appFolderRootPath
+        }
+
         let driveInfoURL = URL(string: OneDriveAPI.mainEndpoint + parentPath)!
         var urlRequest = URLRequest(url: driveInfoURL)
         urlRequest.httpMethod = "GET"
@@ -103,7 +113,7 @@ extension OneDriveManager {
                 .parseJSONResponse(operation: "getDriveInfo", data: data, error: error)
             switch result {
             case .success(let json):
-                if let driveInfo = self.parseDriveInfoResponse(json: json) {
+                if let driveInfo = self.parseAccountInfoResponse(json: json) {
                     Diag.debug("Drive info received successfully")
                     completionQueue.addOperation {
                         completion(.success(driveInfo))
@@ -122,7 +132,16 @@ extension OneDriveManager {
         dataTask.resume()
     }
 
+    private func parseAccountInfoResponse(json: [String: Any]) -> OneDriveDriveInfo? {
+        if json[OneDriveAPI.Keys.specialFolder] != nil {
+            return parseSpecialFolderInfoResponse(json: json)
+        } else {
+            return parseDriveInfoResponse(json: json)
+        }
+    }
+
     private func parseDriveInfoResponse(json: [String: Any]) -> OneDriveDriveInfo? {
+        assert(json[OneDriveAPI.Keys.specialFolder] == nil, "Not a drive info response")
         guard let driveID = json[OneDriveAPI.Keys.id] as? String else {
             Diag.error("Failed to parse drive info: id field missing")
             return nil
@@ -146,6 +165,40 @@ extension OneDriveManager {
         let result = OneDriveDriveInfo(
             id: driveID,
             name: driveName,
+            type: .init(rawValue: driveTypeString) ?? .personal,
+            ownerName: ownerName
+        )
+        return result
+    }
+
+    private func parseSpecialFolderInfoResponse(json: [String: Any]) -> OneDriveDriveInfo? {
+        assert(json[OneDriveAPI.Keys.specialFolder] != nil, "Not a special folder")
+        guard let parentDrive = json[OneDriveAPI.Keys.parentReference] as? [String: Any] else {
+            Diag.error("Failed to parse drive info: parent reference missing")
+            return nil
+        }
+        guard let driveID = parentDrive[OneDriveAPI.Keys.driveId] as? String else {
+            Diag.error("Failed to parse drive info: id field missing")
+            return nil
+        }
+        guard let driveTypeString = parentDrive[OneDriveAPI.Keys.driveType] as? String else {
+            Diag.error("Failed to parse drive info: driveType field missing")
+            return nil
+        }
+        let folderName = json[OneDriveAPI.Keys.name] as? String ?? LString.connectionTypeDedicatedAppFolder
+
+        var ownerName: String?
+        if let createdByDict = json[OneDriveAPI.Keys.createdBy] as? [String: Any],
+           let userDict = createdByDict[OneDriveAPI.Keys.user] as? [String: Any]
+        {
+            let ownerEmailString = userDict[OneDriveAPI.Keys.email] as? String
+            let ownerDisplayName = userDict[OneDriveAPI.Keys.displayName] as? String
+            ownerName = ownerEmailString ?? ownerDisplayName
+        }
+
+        let result = OneDriveDriveInfo(
+            id: driveID,
+            name: folderName,
             type: .init(rawValue: driveTypeString) ?? .personal,
             ownerName: ownerName
         )
@@ -216,6 +269,7 @@ extension OneDriveManager {
                 itemID: itemID,
                 itemPath: folderPathWithTrailingSlash + itemName,
                 parent: parent,
+                scope: folder.scope,
                 isFolder: infoDict[OneDriveAPI.Keys.folder] != nil,
                 fileInfo: FileInfo(
                     fileName: itemName,
@@ -315,6 +369,7 @@ extension OneDriveManager {
                     json,
                     path: item.itemPath,
                     parent: item.parent,
+                    scope: item.scope,
                     driveInfo: item.driveInfo
                 )
                 if let fileItems {
@@ -340,6 +395,7 @@ extension OneDriveManager {
         _ json: [String: Any],
         path: String,
         parent: OneDriveSharedFolder?,
+        scope: OAuthScope,
         driveInfo: OneDriveDriveInfo
     ) -> OneDriveItem? {
         guard let itemID = json[OneDriveAPI.Keys.id] as? String,
@@ -356,7 +412,7 @@ extension OneDriveManager {
            let driveTypeString = parentRef[OneDriveAPI.Keys.driveType],
            let driveType = OneDriveDriveInfo.DriveType(rawValue: driveTypeString)
         {
-            let driveOwner = parentRef[OneDriveAPI.Keys.owner]
+            let driveOwner = parentRef[OneDriveAPI.Keys.owner] ?? driveInfo.ownerName
             itemDriveInfo = OneDriveDriveInfo(id: driveID, name: driveName, type: driveType, ownerName: driveOwner)
         } else {
             Diag.debug("Using fallback drive info")
@@ -368,6 +424,7 @@ extension OneDriveManager {
             itemID: itemID,
             itemPath: path,
             parent: parent,
+            scope: scope,
             isFolder: json[OneDriveAPI.Keys.folder] != nil,
             fileInfo: FileInfo(
                 fileName: itemName,
@@ -663,7 +720,6 @@ extension OneDriveManager {
         completion: @escaping CreateCompletionHandler<OneDriveItem>
     ) {
         Diag.debug("Creating new file")
-
         let createSessionURL = folder.getRequestURL(.createUploadSessionForCreating(newFileName: fileName))
 
         var urlRequest = URLRequest(url: createSessionURL)

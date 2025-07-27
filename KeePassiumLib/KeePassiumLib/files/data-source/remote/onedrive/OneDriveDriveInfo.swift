@@ -31,12 +31,17 @@ public struct OneDriveDriveInfo: Equatable {
             }
         }
 
-        public var matchingFileProvider: FileProvider {
-            switch self {
-            case .personal:
+        public func getMatchingFileProvider(scope: OAuthScope) -> FileProvider {
+            switch (self, scope) {
+            case (.personal, .fullAccess):
                 return .keepassiumOneDrivePersonal
-            case .business,
-                 .sharepoint:
+            case (.personal, .appFolder):
+                return .keepassiumOneDrivePersonalAppFolder
+            case (.business, .appFolder),
+                 (.sharepoint, .appFolder):
+                return .keepassiumOneDriveBusinessAppFolder
+            case (.business, .fullAccess),
+                 (.sharepoint, .fullAccess):
                 return .keepassiumOneDriveBusiness
             }
         }

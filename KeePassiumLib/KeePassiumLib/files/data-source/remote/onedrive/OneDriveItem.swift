@@ -33,6 +33,7 @@ public struct OneDriveItem: RemoteFileItem {
     public var itemID: String
     public var itemPath: String
     public var parent: OneDriveSharedFolder?
+    public let scope: OAuthScope
     public var isFolder: Bool
     public var fileInfo: FileInfo?
     public let driveInfo: OneDriveDriveInfo
@@ -55,6 +56,7 @@ public struct OneDriveItem: RemoteFileItem {
         itemID: String,
         itemPath: String,
         parent: OneDriveSharedFolder? = nil,
+        scope: OAuthScope,
         isFolder: Bool,
         fileInfo: FileInfo? = nil,
         driveInfo: OneDriveDriveInfo
@@ -64,6 +66,7 @@ public struct OneDriveItem: RemoteFileItem {
             itemID: itemID,
             itemPath: itemPath,
             parent: parent,
+            scope: scope,
             isFolder: isFolder,
             fileInfo: fileInfo,
             driveInfo: driveInfo,
@@ -78,6 +81,7 @@ public struct OneDriveItem: RemoteFileItem {
         itemID: String,
         itemPath: String,
         parent: OneDriveSharedFolder? = nil,
+        scope: OAuthScope,
         isFolder: Bool,
         fileInfo: FileInfo? = nil,
         driveInfo: OneDriveDriveInfo,
@@ -90,6 +94,7 @@ public struct OneDriveItem: RemoteFileItem {
         self.itemPath = itemPath
         self.parent = parent
         self.isFolder = isFolder
+        self.scope = scope
         self.fileInfo = fileInfo
         self.driveInfo = driveInfo
         self.requestURLBaseOverride = requestURLBaseOverride
@@ -102,6 +107,7 @@ public struct OneDriveItem: RemoteFileItem {
             name: LString.titleOneDriveFolderFiles,
             itemID: "",
             itemPath: "/",
+            scope: .fullAccess,
             isFolder: true,
             driveInfo: driveInfo,
             requestURLBaseOverride: nil,
@@ -115,11 +121,26 @@ public struct OneDriveItem: RemoteFileItem {
             name: LString.titleOneDriveFolderSharedWithMe,
             itemID: "",
             itemPath: "",
+            scope: .fullAccess,
             isFolder: true,
             driveInfo: driveInfo,
             requestURLBaseOverride: OneDriveAPI.mainEndpoint + OneDriveAPI.sharedWithMeRootPath,
             childrenRequestOverride: "", // same as base URL, no "/children" - it's a special case
             supportsItemCreation: false
+        )
+    }
+
+    public static func getDedicatedAppFolder(driveInfo: OneDriveDriveInfo) -> OneDriveItem {
+        OneDriveItem(
+            name: driveInfo.type.getMatchingFileProvider(scope: .appFolder).localizedName,
+            itemID: "",
+            itemPath: "/",
+            scope: .appFolder,
+            isFolder: true,
+            driveInfo: driveInfo,
+            requestURLBaseOverride: nil,
+            childrenRequestOverride: nil,
+            supportsItemCreation: true
         )
     }
 
@@ -130,6 +151,7 @@ public struct OneDriveItem: RemoteFileItem {
             itemID: itemID,
             itemPath: self.itemPath.withTrailingSlash() + name,
             parent: self.parent,
+            scope: self.scope,
             isFolder: false,
             fileInfo: nil,
             driveInfo: self.driveInfo,
@@ -146,6 +168,7 @@ extension OneDriveItem: Equatable {
             && lhs.itemID == rhs.itemID
             && lhs.itemPath == rhs.itemPath
             && lhs.parent == rhs.parent
+            && lhs.scope == rhs.scope
             && lhs.isFolder == rhs.isFolder
             && lhs.fileInfo == rhs.fileInfo
             && lhs.driveInfo == rhs.driveInfo
@@ -169,8 +192,17 @@ extension OneDriveItem {
         }
 
         let path = path ?? itemPath
+        let parentPath: String
+        switch (parent?.urlPath, scope) {
+        case (.some, _):
+            parentPath = parent!.urlPath
+        case (nil, .fullAccess):
+            parentPath = OneDriveAPI.personalDriveRootPath
+        case (nil, .appFolder):
+            parentPath = OneDriveAPI.appFolderRootPath
+        }
+
         let urlString: String
-        let parentPath = parent?.urlPath ?? OneDriveAPI.personalDriveRootPath
         if path == "/" {
             urlString = OneDriveAPI.mainEndpoint + parentPath
             return urlString

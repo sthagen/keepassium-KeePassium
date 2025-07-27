@@ -7,10 +7,11 @@
 //  For commercial licensing, please contact the author.
 
 import AuthenticationServices
+import Foundation
 
 class BasicOneDriveAuthProvider: NSObject, OneDriveAuthProvider {
     private enum TokenOperation: CustomStringConvertible {
-        case authorization(code: String)
+        case authorization(code: String, scope: OAuthScope)
         case refresh(token: OAuthToken)
         var description: String {
             switch self {
@@ -20,12 +21,16 @@ class BasicOneDriveAuthProvider: NSObject, OneDriveAuthProvider {
                 return "tokenRefresh"
             }
         }
-    }
 
-    private let config = OneDriveAuthConfig(
-        redirectURI: "\(AppGroup.appURLScheme)://onedrive-auth",
-        scopes: ["user.read", "files.readwrite.all", "offline_access"]
-    )
+        var scope: OAuthScope {
+            switch self {
+            case .authorization(_, let scope):
+                return scope
+            case .refresh(let token):
+                return token.scope
+            }
+        }
+    }
 
     private let urlSession: URLSession
     private var presentationAnchors = [ObjectIdentifier: Weak<ASPresentationAnchor>]()
@@ -34,23 +39,39 @@ class BasicOneDriveAuthProvider: NSObject, OneDriveAuthProvider {
         self.urlSession = urlSession
         super.init()
     }
+
+    static private func getConfig(scope: OAuthScope) -> OneDriveAuthConfig {
+        let scopes: [String]
+        switch scope {
+        case .fullAccess:
+            scopes = ["user.read", "files.readwrite.all", "offline_access"]
+        case .appFolder:
+            scopes = ["user.read", "files.readwrite.appfolder", "offline_access"]
+        }
+        return OneDriveAuthConfig(
+            redirectURI: "\(AppGroup.appURLScheme)://onedrive-auth",
+            scopes: scopes
+        )
+    }
 }
 
 extension BasicOneDriveAuthProvider {
     func acquireToken(
-        presenter: UIViewController,
+        scope: OAuthScope,
         timeout: Timeout,
+        presenter: UIViewController,
         completionQueue: OperationQueue,
         completion: @escaping (Result<OAuthToken, RemoteError>) -> Void
     ) {
-        Diag.info("Authenticating with OneDrive")
+        Diag.info("Authenticating with OneDrive [scope: \(scope)]")
         let webAuthSession = ASWebAuthenticationSession(
-            url: getAuthURL(config: config),
+            url: getAuthURL(config: Self.getConfig(scope: scope)),
             callbackURLScheme: OneDriveAPI.callbackURLScheme,
             completionHandler: { [self] (callbackURL: URL?, error: Error?) in
                 handleAuthResponse(
                     callbackURL: callbackURL,
                     error: error,
+                    scope: scope,
                     timeout: timeout,
                     completionQueue: completionQueue,
                     completion: completion
@@ -67,6 +88,7 @@ extension BasicOneDriveAuthProvider {
     private func handleAuthResponse(
         callbackURL: URL?,
         error: Error?,
+        scope: OAuthScope,
         timeout: Timeout,
         completionQueue: OperationQueue,
         completion: @escaping (Result<OAuthToken, RemoteError>) -> Void
@@ -135,7 +157,7 @@ extension BasicOneDriveAuthProvider {
             return
         }
         getToken(
-            operation: .authorization(code: authCodeString),
+            operation: .authorization(code: authCodeString, scope: scope),
             timeout: timeout,
             completionQueue: completionQueue,
             completion: completion)
@@ -199,21 +221,27 @@ extension BasicOneDriveAuthProvider {
             forHTTPHeaderField: OneDriveAPI.Keys.contentType)
         urlRequest.timeoutInterval = timeout.duration
 
-        var postParams = [
-            "client_id=\(config.clientID)",
-            "redirect_uri=\(config.redirectURI)",
-        ]
-
+        let postParams: [String]
         let refreshToken: String?
         switch operation {
-        case .authorization(let authCode):
+        case let .authorization(authCode, scope):
+            let config = Self.getConfig(scope: scope)
             refreshToken = nil
-            postParams.append("code=\(authCode)")
-            postParams.append("grant_type=authorization_code")
-        case .refresh(let token):
+            postParams = [
+                "client_id=\(config.clientID)",
+                "redirect_uri=\(config.redirectURI)",
+                "code=\(authCode)",
+                "grant_type=authorization_code"
+            ]
+        case let .refresh(token):
+            let config = Self.getConfig(scope: token.scope)
             refreshToken = token.refreshToken
-            postParams.append("refresh_token=\(token.refreshToken)")
-            postParams.append("grant_type=refresh_token")
+            postParams = [
+                "client_id=\(config.clientID)",
+                "redirect_uri=\(config.redirectURI)",
+                "refresh_token=\(token.refreshToken)",
+                "grant_type=refresh_token"
+            ]
         }
 
         let postData = postParams
@@ -225,10 +253,14 @@ extension BasicOneDriveAuthProvider {
 
         let dataTask = urlSession.dataTask(with: urlRequest) { data, response, error in
             let result = OneDriveAPI.ResponseParser
-                    .parseJSONResponse(operation: operation.description, data: data, error: error)
+                .parseJSONResponse(operation: operation.description, data: data, error: error)
             switch result {
             case .success(let json):
-                if let token = self.parseTokenResponse(json: json, currentRefreshToken: refreshToken) {
+                if let token = self.parseTokenResponse(
+                    json: json,
+                    currentRefreshToken: refreshToken,
+                    scope: operation.scope
+                ) {
                     Diag.debug("OAuth token acquired successfully [operation: \(operation)]")
                     completionQueue.addOperation {
                         completion(.success(token))
@@ -247,7 +279,11 @@ extension BasicOneDriveAuthProvider {
         dataTask.resume()
     }
 
-    private func parseTokenResponse(json: [String: Any], currentRefreshToken: String?) -> OAuthToken? {
+    private func parseTokenResponse(
+        json: [String: Any],
+        currentRefreshToken: String?,
+        scope: OAuthScope
+    ) -> OAuthToken? {
         guard let accessToken = json[OneDriveAPI.Keys.accessToken] as? String else {
             Diag.error("Failed to parse token response: access_token missing")
             return nil
@@ -265,6 +301,7 @@ extension BasicOneDriveAuthProvider {
         let token = OAuthToken(
             accessToken: accessToken,
             refreshToken: refreshToken,
+            scope: scope,
             acquired: Date.now,
             lifespan: TimeInterval(expires_in)
         )

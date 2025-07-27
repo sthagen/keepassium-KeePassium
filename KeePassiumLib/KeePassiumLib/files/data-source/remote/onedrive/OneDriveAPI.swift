@@ -27,6 +27,7 @@ internal enum OneDriveAPI {
     static let mainEndpoint = "https://graph.microsoft.com/v1.0"
     static let defaultDrivePath = "/me/drive"
     static let personalDriveRootPath = defaultDrivePath + "/root"
+    static let appFolderRootPath = defaultDrivePath + "/special/approot"
     static let sharedWithMeRootPath = defaultDrivePath + "/sharedWithMe"
 
     static let maxUploadSize = 60 * 1024 * 1024 
@@ -38,6 +39,7 @@ internal enum OneDriveAPI {
         static let contentLength = "Content-Length"
         static let contentRange = "Content-Range"
         static let contentType = "Content-Type"
+        static let createdBy = "createdBy"
         static let createdDateTime = "createdDateTime"
         static let displayName = "displayName"
         static let driveId = "driveId"
@@ -60,6 +62,7 @@ internal enum OneDriveAPI {
         static let refreshToken = "refresh_token"
         static let remoteItem = "remoteItem"
         static let size = "size"
+        static let specialFolder = "specialFolder"
         static let suberror = "suberror"
         static let uploadUrl = "uploadUrl"
         static let user = "user"

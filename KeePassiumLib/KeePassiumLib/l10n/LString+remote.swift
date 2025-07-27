@@ -37,6 +37,11 @@ extension LString {
         bundle: Bundle.framework,
         value: "OneDrive for Business",
         comment: "Name of a cloud storage service. Must match Microsoft's translation, see  https://partner.microsoft.com/solutions/onedrive-for-business")
+    public static let connectionTypeDedicatedAppFolder = NSLocalizedString(
+        "[StorageService/DedicatedAppFolder/title]",
+        bundle: Bundle.framework,
+        value: "App Folder Only",
+        comment: "Subtitle for a storage service: the app will have access only to its own dedicated folder.")
     public static let connectionTypeDropbox = "Dropbox"
     public static let connectionTypeDropboxBusiness = NSLocalizedString(
         "[StorageService/DropboxBusiness/title]",
