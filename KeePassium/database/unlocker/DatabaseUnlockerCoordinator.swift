@@ -160,11 +160,8 @@ extension DatabaseUnlockerCoordinator {
         }
     }
 
-    private func showDiagnostics(
-        at popoverAnchor: PopoverAnchor,
-        in viewController: UIViewController
-    ) {
-        let modalRouter = NavigationRouter.createModal(style: .formSheet, at: popoverAnchor)
+    private func showDiagnostics(in viewController: UIViewController) {
+        let modalRouter = NavigationRouter.createModal(style: .formSheet)
         let diagnosticsViewerCoordinator = DiagnosticsViewerCoordinator(router: modalRouter)
         diagnosticsViewerCoordinator.start()
         viewController.present(modalRouter, animated: true, completion: nil)
@@ -438,11 +435,30 @@ extension DatabaseUnlockerCoordinator: DatabaseUnlockerDelegate {
         eraseMasterKey()
     }
 
-    func didPressShowDiagnostics(
-        at popoverAnchor: PopoverAnchor,
+    func didPressShowDiagnostics(at popoverAnchor: PopoverAnchor, in viewController: DatabaseUnlockerVC) {
+        showDiagnostics(in: viewController)
+    }
+
+    func didPressCancelAction(
+        _ action: ProgressOverlay.CancelAction,
         in viewController: DatabaseUnlockerVC
     ) {
-        showDiagnostics(at: popoverAnchor, in: viewController)
+        switch action {
+        case .cancel:
+            cancelLoading(reason: .userRequest)
+        case .repeatedCancel:
+            showDiagnostics(in: viewController)
+        case .useFallback:
+            databaseLoader?.cancel(reason: .userRequest)
+            databaseLoader = nil
+            if let fallbackRef = fallbackDatabaseRef, state != .unlockFallbackFile {
+                Diag.info("User requested fallback, switching to local copy [\(fallbackRef.visibleFileName)]")
+                state = .unlockFallbackFile
+                retryToUnlockDatabase()
+            } else {
+                cancelLoading(reason: .userRequest)
+            }
+        }
     }
 }
 
@@ -478,9 +494,12 @@ extension DatabaseUnlockerCoordinator: HardwareKeyPickerCoordinatorDelegate {
 
 extension DatabaseUnlockerCoordinator: DatabaseLoaderDelegate {
     func databaseLoader(_ databaseLoader: DatabaseLoader, willLoadDatabase dbRef: URLReference) {
+        let hasFallback = (fallbackDatabaseRef != nil && state != .unlockFallbackFile)
+        let isRemote = dbRef.url?.isRemoteURL ?? false
         databaseUnlockerVC.showProgressView(
             title: LString.databaseStatusLoading,
             allowCancelling: true,
+            allowFallback: hasFallback && isRemote,
             animated: true
         )
     }
@@ -504,6 +523,9 @@ extension DatabaseUnlockerCoordinator: DatabaseLoaderDelegate {
             DatabaseSettingsManager.shared.updateSettings(for: databaseRef) { dbSettings in
                 dbSettings.clearMasterKey()
             }
+
+            state = .unlockOriginalFileSlow
+
             databaseUnlockerVC.refresh()
             databaseUnlockerVC.clearPasswordField()
             databaseUnlockerVC.hideProgressView(animated: true)

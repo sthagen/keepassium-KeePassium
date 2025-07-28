@@ -17,6 +17,8 @@ final public class OneDriveManager: RemoteDataSourceManager {
 
     private var presentationAnchors = [ObjectIdentifier: Weak<ASPresentationAnchor>]()
 
+    private let taskManager = RemoteTaskManager(serviceName: "OneDrive")
+
     private let urlSession: URLSession
     private var authProvider: OneDriveAuthProvider
 
@@ -45,6 +47,10 @@ final public class OneDriveManager: RemoteDataSourceManager {
             )
         }()
         authProvider = BasicOneDriveAuthProvider(urlSession: urlSession)
+    }
+
+    public func cancelAllOperations() {
+        taskManager.cancelAllOperations()
     }
 
     public func acquireTokenSilent(
@@ -546,6 +552,13 @@ extension OneDriveManager {
 
         let dataTask = urlSession.dataTask(with: urlRequest) { data, response, error in
             if let error {
+                if (error as NSError).code == NSURLErrorCancelled {
+                    Diag.debug("OneDrive file download was cancelled")
+                    completionQueue.addOperation {
+                        completion(.failure(.cancelledByUser))
+                    }
+                    return
+                }
                 completionQueue.addOperation {
                     Diag.error("Failed to download file [message: \(error.localizedDescription)]")
                     completion(.failure(.general(error: error)))
@@ -575,6 +588,9 @@ extension OneDriveManager {
                 completion(.success(data))
             }
         }
+
+        taskManager.addTask(dataTask)
+
         dataTask.resume()
     }
 }

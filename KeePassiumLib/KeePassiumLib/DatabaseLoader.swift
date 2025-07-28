@@ -179,6 +179,8 @@ public class DatabaseLoader: ProgressObserver {
 
     private var startTime: Date?
 
+    private var currentDataSource: DataSource?
+
     public init(
         dbRef: URLReference,
         compositeKey: CompositeKey,
@@ -200,6 +202,12 @@ public class DatabaseLoader: ProgressObserver {
         progress.totalUnitCount = ProgressSteps.all
         progress.completedUnitCount = ProgressSteps.willStart
         super.init(progress: progress)
+
+        progress.onCancel = { [weak self] in
+            if let remoteDataSource = self?.currentDataSource as? any RemoteDataSource {
+                remoteDataSource.cancelAllOperations()
+            }
+        }
     }
 
     private func initDatabase(signature data: ByteArray) -> Database? {
@@ -285,6 +293,9 @@ public class DatabaseLoader: ProgressObserver {
     private func onDatabaseURLResolved(url: URL, fileProvider: FileProvider?) {
         assert(operationQueue.isCurrent)
         progress.status = LString.Progress.loadingDatabaseFile
+
+        currentDataSource = DataSourceFactory.getDataSource(for: url)
+
         FileDataProvider.read(
             url,
             fileProvider: fileProvider,
@@ -293,6 +304,7 @@ public class DatabaseLoader: ProgressObserver {
             completionQueue: operationQueue,
             completion: { [weak self] result in
                 guard let self else { return }
+                self.currentDataSource = nil
                 switch result {
                 case .success(let docData):
                     self.onDatabaseDocumentReadComplete(data: docData, fileURL: url, fileProvider: fileProvider)
@@ -369,6 +381,9 @@ public class DatabaseLoader: ProgressObserver {
 
     private func onKeyFileURLResolved(url: URL, fileProvider: FileProvider?, dbFile: DatabaseFile) {
         assert(operationQueue.isCurrent)
+
+        currentDataSource = DataSourceFactory.getDataSource(for: url)
+
         FileDataProvider.read(
             url,
             fileProvider: fileProvider,
@@ -377,6 +392,7 @@ public class DatabaseLoader: ProgressObserver {
             completionQueue: operationQueue,
             completion: { [weak self] result in
                 guard let self else { return }
+                self.currentDataSource = nil
                 switch result {
                 case .success(let docData):
                     self.onKeyFileDataReady(dbFile: dbFile, keyFileData: SecureBytes.from(docData))

@@ -19,6 +19,8 @@ public protocol RemoteDataSourceManager<ItemType> {
 
     var maxUploadSize: Int { get }
 
+    func cancelAllOperations()
+
     func acquireTokenSilent(
         token: OAuthToken,
         timeout: Timeout,
@@ -255,5 +257,38 @@ extension RemoteDataSourceManager {
                 return
             }
         }
+    }
+}
+
+final class RemoteTaskManager {
+    private var activeTasks = Set<URLSessionDataTask>()
+    private let activeTasksLock = NSLock()
+    private let serviceName: String
+
+    init(serviceName: String) {
+        self.serviceName = serviceName
+    }
+
+    func cancelAllOperations() {
+        activeTasksLock.lock()
+        defer { activeTasksLock.unlock() }
+
+        for task in activeTasks {
+            task.cancel()
+        }
+        activeTasks.removeAll()
+        Diag.debug("Cancelled all \(serviceName) operations")
+    }
+
+    func addTask(_ task: URLSessionDataTask) {
+        activeTasksLock.lock()
+        defer { activeTasksLock.unlock() }
+        activeTasks.insert(task)
+    }
+
+    func removeTask(_ task: URLSessionDataTask) {
+        activeTasksLock.lock()
+        defer { activeTasksLock.unlock() }
+        activeTasks.remove(task)
     }
 }

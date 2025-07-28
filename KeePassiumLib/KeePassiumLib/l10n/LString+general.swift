@@ -507,6 +507,12 @@ extension LString {
         value: "Forgot your password?",
         comment: "Message shown when user enters an invalid database password"
     )
+    public static let actionUseFallbackDatabase = NSLocalizedString(
+        "[Database/Unlock/UseFallback/action]",
+        bundle: Bundle.framework,
+        value: "Use Local Copy",
+        comment: "Action: load a local (on-device) copy of a remote database"
+    )
 
     public static let databaseStatusLoading = NSLocalizedString(
         "[Database/Loading/Status] Loading...",

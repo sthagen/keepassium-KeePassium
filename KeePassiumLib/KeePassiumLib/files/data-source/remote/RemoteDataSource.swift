@@ -21,6 +21,8 @@ protocol RemoteDataSource: DataSource {
     var usedFileProvider: FileProvider { get }
     var recoveryAction: String { get }
 
+    func cancelAllOperations()
+
     func getAccessCoordinator() -> FileAccessCoordinator
     func read(
         _ url: URL,
@@ -53,6 +55,10 @@ protocol RemoteDataSource: DataSource {
 extension RemoteDataSource {
     func getAccessCoordinator() -> FileAccessCoordinator {
         return PassthroughFileAccessCoordinator()
+    }
+
+    func cancelAllOperations() {
+        manager.cancelAllOperations()
     }
 
     func saveUpdatedToken(_ newToken: OAuthToken, prefixedURL url: URL) {

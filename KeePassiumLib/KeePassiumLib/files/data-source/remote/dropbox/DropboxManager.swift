@@ -34,6 +34,9 @@ final public class DropboxManager: NSObject {
     public static let shared = DropboxManager()
 
     private var presentationAnchors = [ObjectIdentifier: Weak<ASPresentationAnchor>]()
+
+    private let taskManager = RemoteTaskManager(serviceName: "Dropbox")
+
     private let urlSession: URLSession
 
     private static let backgroundQueue: OperationQueue = {
@@ -346,6 +349,10 @@ extension DropboxManager: RemoteDataSourceManager {
         return DropboxAPI.maxUploadSize
     }
 
+    public func cancelAllOperations() {
+        taskManager.cancelAllOperations()
+    }
+
     public func getAccountInfo(
         freshToken token: OAuthToken,
         timeout: Timeout,
@@ -590,6 +597,13 @@ extension DropboxManager: RemoteDataSourceManager {
 
         let dataTask = urlSession.dataTask(with: urlRequest) { data, response, error in
             if let error {
+                if (error as NSError).code == NSURLErrorCancelled {
+                    Diag.debug("Dropbox file download was cancelled")
+                    completionQueue.addOperation {
+                        completion(.failure(.cancelledByUser))
+                    }
+                    return
+                }
                 completionQueue.addOperation {
                     let nsError = error as NSError
                     Diag.error("Failed to download file [message: \(nsError.debugDescription)]")
@@ -625,6 +639,9 @@ extension DropboxManager: RemoteDataSourceManager {
                 completion(.success(data))
             }
         }
+
+        taskManager.addTask(dataTask)
+
         dataTask.resume()
     }
 

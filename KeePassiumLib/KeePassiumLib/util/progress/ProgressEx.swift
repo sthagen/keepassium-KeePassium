@@ -81,6 +81,7 @@ public class ProgressEx: Progress, @unchecked Sendable {
     public func cancel(reason: CancellationReason) {
         self.cancellationReason = reason
         super.cancel()
+        onCancel?()
     }
 
     override public func cancel() {

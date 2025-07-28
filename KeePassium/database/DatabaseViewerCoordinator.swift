@@ -992,8 +992,13 @@ extension DatabaseViewerCoordinator: ProgressViewHost {
             title: title,
             animated: animated)
         progressOverlay?.isCancellable = allowCancelling
-        progressOverlay?.unresponsiveCancelHandler = { [weak self] in
-            self?.showDiagnostics()
+        progressOverlay?.cancelActionHandler = { [weak self] action in
+            switch action {
+            case .repeatedCancel:
+                self?.showDiagnostics()
+            case .cancel, .useFallback:
+                break
+            }
         }
     }
 
