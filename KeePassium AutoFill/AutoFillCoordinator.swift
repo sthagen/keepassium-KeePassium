@@ -59,6 +59,8 @@ class AutoFillCoordinator: BaseCoordinator {
     private var databaseMemoryFootprintMiB: Float?
     private let memoryPressureSource = DispatchSource.makeMemoryPressureSource(eventMask: [.warning, .critical])
 
+    private var databaseSaver: DatabaseSaver?
+
     init(
         rootController: CredentialProviderViewController,
         context: ASCredentialProviderExtensionContext
@@ -402,7 +404,7 @@ extension AutoFillCoordinator {
             return
         }
 
-        returnPasskeyRegistration(passkey: passkey)
+        returnPasskeyRegistration(passkey: passkey, andSave: databaseFile)
     }
 }
 
@@ -669,7 +671,7 @@ extension AutoFillCoordinator {
         cleanup()
     }
 
-    private func returnPasskeyRegistration(passkey: NewPasskey) {
+    private func returnPasskeyRegistration(passkey: NewPasskey, andSave databaseFile: DatabaseFile) {
         log.trace("Will return registered passkey")
         watchdog.restart()
         guard let passkeyClientDataHash else {
@@ -683,7 +685,9 @@ extension AutoFillCoordinator {
         extensionContext.completeRegistrationRequest(
             using: passkeyCredential,
             completionHandler: { [self] expired in
+                guard !expired else { return }
                 log.info("Did return passkey (exp: \(expired))")
+                saveDatabaseWithoutUI(databaseFile)
             }
         )
 
@@ -816,6 +820,62 @@ extension AutoFillCoordinator {
         }
         returnQuickTypeEntry(matching: record, in: databaseFile)
     }
+}
+
+extension AutoFillCoordinator: DatabaseSaverDelegate {
+    private func saveDatabaseWithoutUI(_ databaseFile: DatabaseFile) {
+        assert(databaseSaver == nil)
+        log.debug("Will save database")
+
+        databaseSaver = DatabaseSaver(
+            databaseFile: databaseFile,
+            skipTasks: [.updateQuickAutoFill],
+            timeoutDuration: 10,
+            delegate: self
+        )
+        databaseSaver?.save()
+    }
+
+    func databaseSaver(_ databaseSaver: DatabaseSaver, willSave databaseFile: DatabaseFile) {
+        log.debug("Saving database…")
+    }
+
+    func databaseSaver(
+        _ databaseSaver: DatabaseSaver,
+        didChangeProgress progress: ProgressEx,
+        for databaseFile: DatabaseFile
+    ) {
+    }
+
+    func databaseSaverResolveConflict(
+        _ databaseSaver: DatabaseSaver,
+        local: DatabaseFile,
+        remoteURL: URL,
+        remoteData: ByteArray,
+        completion: @escaping DatabaseSaver.ConflictResolutionHandler
+    ) {
+        log.error("Sync conflict when saving database, cancelling")
+        completion(.cancel)
+    }
+
+    func databaseSaver(_ databaseSaver: DatabaseSaver, didCancelSaving databaseFile: DatabaseFile) {
+        self.databaseSaver = nil
+    }
+
+    func databaseSaver(_ databaseSaver: DatabaseSaver, didSave databaseFile: DatabaseFile) {
+        log.info("Database successfully saved")
+        self.databaseSaver = nil
+    }
+
+    func databaseSaver(
+        _ databaseSaver: DatabaseSaver,
+        didFailSaving databaseFile: DatabaseFile,
+        with error: any Error
+    ) {
+        log.error("Database saving failed: \(error)")
+        self.databaseSaver = nil
+    }
+
 }
 
 extension AutoFillCoordinator: WatchdogDelegate {
