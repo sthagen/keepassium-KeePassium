@@ -115,7 +115,6 @@ public enum LString {
             value: "This is an older database format, some data might be lost.",
             comment: "Notification when user tries to copy data from KDBX to older KDB database."
         )
-
     }
 
 

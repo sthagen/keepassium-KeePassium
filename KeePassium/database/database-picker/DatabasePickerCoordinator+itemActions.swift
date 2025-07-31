@@ -58,13 +58,31 @@ extension DatabasePickerCoordinator {
         }
 
         func getAccessories(for fileItem: FilePickerItem.FileInfo) -> [UICellAccessory]? {
+            var result = [UICellAccessory]()
+
+            if let dbRef = fileItem.source,
+               DatabaseTransactionManager.hasPendingTransaction(for: dbRef)
+            {
+                let unsavedChangesImage = UIImageView(image: .symbol(
+                    .unsavedChanges,
+                    tint: .warningMessage,
+                    accessibilityLabel: LString.titleUnsavedChanges
+                ))
+                unsavedChangesImage.preferredSymbolConfiguration = .init(textStyle: .body, scale: .large)
+                let pendingChangesAccessory = UICellAccessory.customView(configuration:
+                    .init(customView: unsavedChangesImage, placement: .trailing())
+                )
+                result.append(pendingChangesAccessory)
+            }
+
             let fileMenuAccessory = UICellAccessory.customView(configuration: .init(
                 customView: makeFileMenuButton(for: fileItem),
                 placement: .trailing(displayed: .always),
                 tintColor: .actionTint,
                 maintainsFixedSize: false)
             )
-            return [fileMenuAccessory]
+            result.append(fileMenuAccessory)
+            return result
         }
 
         func getContextMenu(for item: FilePickerItem.FileInfo, at popoverAnchor: PopoverAnchor) -> UIMenu? {

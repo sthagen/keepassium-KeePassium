@@ -47,6 +47,7 @@ class DatabasePickerCoordinator: FilePickerCoordinator {
     let mode: DatabasePickerMode
 
     internal var _selectedDatabase: URLReference?
+    internal var _hasPendingTransactions = false
 
     init(router: NavigationRouter, mode: DatabasePickerMode) {
         self.mode = mode
@@ -64,80 +65,41 @@ class DatabasePickerCoordinator: FilePickerCoordinator {
         toolbarDecorator.coordinator = self
     }
 
-    internal func enumerateDatabases(
-        sorted: Bool = false,
-        excludeBackup: Bool = false,
-        excludeWithErrors: Bool = false,
-        excludeNeedingReinstatement: Bool = false
-    ) -> [URLReference] {
-        var result = FileKeeper.shared.getAllReferences(fileType: .database, includeBackup: !excludeBackup)
-        if excludeWithErrors {
-            result = result.filter { !$0.hasError }
-        }
-        if excludeNeedingReinstatement {
-            result = result.filter { !$0.needsReinstatement }
-        }
-        if sorted {
-            let sortOrder = Settings.current.filesSortOrder
-            result = result.sorted(by: { sortOrder.compare($0, $1) })
-        }
-        return result
-    }
-
     public func isKnownDatabase(_ databaseRef: URLReference) -> Bool {
-        let knownDatabases = enumerateDatabases(
-            excludeBackup: false,
-            excludeWithErrors: false,
-            excludeNeedingReinstatement: false
-        )
+        let knownDatabases = _fileReferences
         return knownDatabases.contains(databaseRef)
     }
 
     public func canBeOpenedAutomatically(databaseRef: URLReference) -> Bool {
-        let validDatabases = enumerateDatabases(
-            excludeBackup: !Settings.current.isBackupFilesVisible,
-            excludeWithErrors: true,
-            excludeNeedingReinstatement: true
-        )
+        let validDatabases = _fileReferences.filter {
+            !$0.hasError && !$0.needsReinstatement
+        }
         return validDatabases.contains(databaseRef)
     }
 
     public func getListedDatabaseCount() -> Int {
-        let listedDatabases = enumerateDatabases(
-            excludeBackup: !Settings.current.isBackupFilesVisible,
-            excludeWithErrors: false,
-            excludeNeedingReinstatement: false
-        )
-        return listedDatabases.count
+        return _fileReferences.count
     }
 
     public func getFirstListedDatabase() -> URLReference? {
-        let shownDBs = enumerateDatabases(sorted: true, excludeBackup: !Settings.current.isBackupFilesVisible)
-        return shownDBs.first
-    }
-
-    private func getAnnouncements() -> [AnnouncementItem] {
-        var announcements: [AnnouncementItem] = []
-        if mode == .autoFill,
-           FileKeeper.shared.areSandboxFilesLikelyMissing()
-        {
-            let sandboxUnreachableAnnouncement = AnnouncementItem(
-                title: nil,
-                body: LString.messageLocalFilesMissing,
-                actionTitle: LString.callToActionOpenTheMainApp,
-                image: .symbol(.questionmarkFolder),
-                onDidPressAction: { announcementView in
-                    URLOpener(announcementView).open(url: AppGroup.launchMainAppURL)
-                }
-            )
-            announcements.append(sandboxUnreachableAnnouncement)
-        }
-        return announcements
+        return _fileReferences.first
     }
 
     override func refresh() {
-        announcements = getAnnouncements()
+        _updateAnnouncements()
         super.refresh()
+    }
+
+    override func _didUpdateFileReferences() {
+        super._didUpdateFileReferences()
+        let hadTransactions = _hasPendingTransactions
+        _hasPendingTransactions = _fileReferences.contains(where: {
+            DatabaseTransactionManager.hasPendingTransaction(for: $0)
+        })
+
+        if _hasPendingTransactions != hadTransactions {
+            _updateAnnouncements()
+        }
     }
 
     override var _contentUnavailableConfiguration: UIContentUnavailableConfiguration? {

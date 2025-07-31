@@ -41,7 +41,27 @@ final public class QuickTypeAutoFillStorage {
     }
 
     static func saveIdentities(from databaseFile: DatabaseFile, replaceExisting: Bool) {
-        guard Settings.current.isQuickTypeEnabled else {
+        saveIdentities(from: databaseFile, replaceExisting: replaceExisting, identitySource: {
+            [weak databaseFile] in
+            guard let databaseFile else { return [] }
+            return getCredentialIdentities(from: databaseFile)
+        })
+    }
+
+    static func saveIdentities(from entry: Entry, in databaseFile: DatabaseFile) {
+        saveIdentities(from: databaseFile, replaceExisting: false, identitySource: {
+            [weak entry, weak databaseFile] in
+            guard let entry, let databaseFile else { return [] }
+            return getCredentialIdentities(from: entry, in: databaseFile)
+        })
+    }
+
+    private static func saveIdentities(
+        from databaseFile: DatabaseFile,
+        replaceExisting: Bool,
+        identitySource: @escaping () -> [ASCredentialIdentity]
+    ) {
+        guard DatabaseSettingsManager.shared.isQuickTypeEnabled(databaseFile) else {
             Diag.debug("QuickType AutoFill disabled, skipping")
             return
         }
@@ -51,7 +71,7 @@ final public class QuickTypeAutoFillStorage {
             guard state.isEnabled else {
                 return
             }
-            let identities = self.getCredentialIdentities(from: databaseFile)
+            let identities = identitySource()
             let completion: ((Bool, Error?) -> Void) = { success, error in
                 if let error {
                     Diag.error("Failed to save QuickType AutoFill data [message: \(error.localizedDescription)]")
@@ -73,29 +93,40 @@ final public class QuickTypeAutoFillStorage {
         var result = [ASCredentialIdentity]()
         let rootGroup = databaseFile.database.root
         rootGroup?.applyToAllChildren(groupHandler: nil, entryHandler: { entry in
-            let parentGroup2 = entry.parent as? Group2
-            let canSearch = parentGroup2?.resolvingIsSearchingEnabled() ?? true
-            let canAutoType = parentGroup2?.resolvingIsAutoTypeEnabled() ?? true
-            guard canSearch && canAutoType && entry.isAutoFillable else {
-                return
-            }
-
-            let record = QuickTypeAutoFillRecord(context: databaseFile, itemID: entry.uuid)
-            let recordID = record.recordIdentifier
-            if let serviceIDs = entry.extractSearchableData()?.toCredentialServiceIdentifiers() {
-                 let passwordAndOTPIdentities = makeCredentialIdentities(
-                    userName: "\(entry.resolvedUserName) | \(entry.resolvedTitle)",
-                    services: serviceIDs,
-                    containsTOTP: entry.containsTOTP,
-                    recordID: recordID
-                )
-                result.append(contentsOf: passwordAndOTPIdentities)
-            }
-            if let passkey = Passkey.make(from: entry) {
-                let passkeyCredentialIdentity = passkey.asCredentialIdentity(recordIdentifier: recordID)
-                result.append(passkeyCredentialIdentity)
-            }
+            result.append(contentsOf: getCredentialIdentities(from: entry, in: databaseFile))
         })
+        return result
+    }
+
+    private static func getCredentialIdentities(
+        from entry: Entry, in databaseFile: DatabaseFile
+    ) -> [ASCredentialIdentity] {
+        var result = [ASCredentialIdentity]()
+        let parentGroup2 = entry.parent as? Group2
+        let canSearch = parentGroup2?.resolvingIsSearchingEnabled() ?? true
+        let canAutoType = parentGroup2?.resolvingIsAutoTypeEnabled() ?? true
+        guard canSearch && canAutoType else {
+            return []
+        }
+        guard entry.isAutoFillable else {
+            return []
+        }
+
+        let record = QuickTypeAutoFillRecord(context: databaseFile, itemID: entry.uuid)
+        let recordID = record.recordIdentifier
+        if let serviceIDs = entry.extractSearchableData()?.toCredentialServiceIdentifiers() {
+             let passwordAndOTPIdentities = makeCredentialIdentities(
+                userName: "\(entry.resolvedUserName) | \(entry.resolvedTitle)",
+                services: serviceIDs,
+                containsTOTP: entry.containsTOTP,
+                recordID: recordID
+            )
+            result.append(contentsOf: passwordAndOTPIdentities)
+        }
+        if let passkey = Passkey.make(from: entry) {
+            let passkeyCredentialIdentity = passkey.asCredentialIdentity(recordIdentifier: recordID)
+            result.append(passkeyCredentialIdentity)
+        }
         return result
     }
 

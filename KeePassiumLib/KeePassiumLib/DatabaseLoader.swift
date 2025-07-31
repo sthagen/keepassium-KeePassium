@@ -158,6 +158,7 @@ public class DatabaseLoader: ProgressObserver {
     public weak var delegate: DatabaseLoaderDelegate?
     private let delegateQueue: DispatchQueue
 
+    private let originalDatabaseRef: URLReference
     private let dbRef: URLReference
     private let compositeKey: CompositeKey
     public let status: DatabaseFile.Status
@@ -182,7 +183,8 @@ public class DatabaseLoader: ProgressObserver {
     private var currentDataSource: DataSource?
 
     public init(
-        dbRef: URLReference,
+        originalDBRef: URLReference,
+        actualDBRef: URLReference,
         compositeKey: CompositeKey,
         status: DatabaseFile.Status,
         timeout: Timeout,
@@ -190,7 +192,8 @@ public class DatabaseLoader: ProgressObserver {
         delegateQueue: DispatchQueue = .main
     ) {
         assert(compositeKey.state != .empty)
-        self.dbRef = dbRef
+        self.dbRef = actualDBRef
+        self.originalDatabaseRef = originalDBRef
         self.compositeKey = compositeKey.clone()
         self.status = status
         self.timeout = timeout
@@ -344,6 +347,7 @@ public class DatabaseLoader: ProgressObserver {
             data: data,
             fileURL: fileURL,
             fileReference: dbRef,
+            originalReference: originalDatabaseRef,
             status: status
         )
         guard compositeKey.state == .rawComponents else {
@@ -461,7 +465,7 @@ public class DatabaseLoader: ProgressObserver {
             Diag.info("Database loaded OK")
 
             addFileLocationWarnings(to: warnings)
-
+            applyPendingOperations(dbFile, warnings: warnings)
             performAfterLoadTasks(dbFile)
 
             progress.completedUnitCount = ProgressSteps.all
@@ -537,6 +541,16 @@ public class DatabaseLoader: ProgressObserver {
                 nameTemplate: dbFile.visibleFileName,
                 mode: .renameLatest,
                 contents: dbFile.data)
+        }
+    }
+
+    private func applyPendingOperations(_ dbFile: DatabaseFile, warnings: DatabaseLoadingWarnings) {
+        do {
+            try dbFile.applyUnappliedPendingOperations(recoveryMode: false)
+        } catch let error as DatabaseOperation.Error {
+            Diag.warning("Failed to apply pending database operation [message: \(error.localizedDescription)]")
+        } catch {
+            Diag.warning("Failed to get pending database operations [message: \(error.localizedDescription)]")
         }
     }
 

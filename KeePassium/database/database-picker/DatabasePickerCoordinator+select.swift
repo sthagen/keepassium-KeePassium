@@ -25,11 +25,9 @@ extension DatabasePickerCoordinator {
             return
         }
 
-        let validSortedDatabases = enumerateDatabases(
-            sorted: true,
-            excludeBackup: true,
-            excludeWithErrors: true
-        )
+        let validSortedDatabases = _fileReferences
+            .filter { !$0.hasError && !$0.needsReinstatement }
+            .filter { $0.location != .internalBackup }
         let isFirstDatabase = (fileRef === validSortedDatabases.first) || validSortedDatabases.isEmpty
         if isFirstDatabase || fileRef.location == .internalBackup {
             completion(fileRef)

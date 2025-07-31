@@ -105,7 +105,9 @@ extension DatabasePickerCoordinator: RemoteFilePickerCoordinatorDelegate {
 
 extension DatabasePickerCoordinator {
     public func needsPremiumToAddDatabase() -> Bool {
-        let validDatabases = enumerateDatabases(excludeBackup: true, excludeNeedingReinstatement: true)
+        let validDatabases = _fileReferences
+            .filter { !$0.needsReinstatement }
+            .filter { $0.location != .internalBackup }
         if validDatabases.count == 0 {
             return false
         }

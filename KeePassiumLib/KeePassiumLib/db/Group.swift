@@ -199,7 +199,7 @@ public class Group: DatabaseItem, Eraseable {
         return entries.first(where: { $0.uuid == uuid })
     }
 
-    public func createEntry(creationDate: Date = Date(), detached: Bool = false) -> Entry {
+    public func createEntry(creationDate: Date = Date(), detached: Bool = false, uuid: UUID? = nil) -> Entry {
         fatalError("Pure virtual method")
     }
 
@@ -317,5 +317,11 @@ extension Array where Element == Group {
         if let index = firstIndex(where: { $0 === group }) {
             remove(at: index)
         }
+    }
+}
+
+extension DatabaseOperation {
+    public static func createEntry(in group: Group) -> CreateEntryOperation {
+        return CreateEntryOperation(uuid: UUID(), parentUUID: group.uuid, creationTime: .now)
     }
 }

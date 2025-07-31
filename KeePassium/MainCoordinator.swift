@@ -482,8 +482,7 @@ extension MainCoordinator {
         let databaseViewerCoordinator = DatabaseViewerCoordinator(
             splitViewController: rootSplitVC,
             primaryRouter: primaryRouter,
-            originalRef: fileRef, 
-            databaseFile: databaseFile, 
+            databaseFile: databaseFile,
             context: context,
             loadingWarnings: warnings,
             autoTypeHelper: autoTypeHelper
@@ -642,9 +641,10 @@ extension MainCoordinator {
 
     private func reloadDatabase(
         _ databaseFile: DatabaseFile,
-        targetRef: URLReference,
         from databaseViewerCoordinator: DatabaseViewerCoordinator
     ) {
+        let targetRef = databaseFile.originalReference
+
         let context = DatabaseReloadContext(for: databaseFile.database)
         context.groupUUID = databaseViewerCoordinator.currentGroupUUID
 
@@ -1239,10 +1239,9 @@ extension MainCoordinator: DatabaseViewerCoordinatorDelegate {
 
     func didPressReloadDatabase(
         _ databaseFile: DatabaseFile,
-        originalRef: URLReference,
         in coordinator: DatabaseViewerCoordinator
     ) {
-        reloadDatabase(databaseFile, targetRef: originalRef, from: coordinator)
+        reloadDatabase(databaseFile, from: coordinator)
     }
 
     func didPressSwitchTo(

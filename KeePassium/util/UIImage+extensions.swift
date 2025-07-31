@@ -33,6 +33,7 @@ public enum SymbolName: String, Equatable {
     public static let largeType = Self.characterMagnify
     public static let passwordAudit = Self.networkBadgeShield
     public static let managedParameter = Self.person2BadgeGearshape
+    public static let unsavedChanges = Self.externalDriveTriangleBadgeExclamationMark
 
     public static let premiumBenefitMultiDB = Self.shieldBadgePlus
     public static let premiumBenefitDBTimeout = Self.clockBadgeCheckmark
@@ -92,6 +93,7 @@ public enum SymbolName: String, Equatable {
     case exclamationMarkOctagonFill = "exclamationmark.octagon.fill"
     case exclamationMarkTriangle = "exclamationmark.triangle" 
     case exclamationMarkTriangleFill = "exclamationmark.triangle.fill"
+    case externalDriveTriangleBadgeExclamationMark = "externaldrive.trianglebadge.exclamationmark"
     case eye = "eye"
     case eyeFill = "eye.fill"
     case faceID = "faceid"

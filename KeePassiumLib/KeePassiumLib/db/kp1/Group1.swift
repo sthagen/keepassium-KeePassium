@@ -105,9 +105,9 @@ public class Group1: Group {
         (entry as! Entry1).groupID = -1
     }
 
-    override public func createEntry(creationDate: Date = Date(), detached: Bool = false) -> Entry {
+    override public func createEntry(creationDate: Date = Date(), detached: Bool = false, uuid: UUID? = nil) -> Entry {
         let newEntry = Entry1(database: database, creationDate: creationDate)
-        newEntry.uuid = UUID()
+        newEntry.uuid = uuid ?? UUID()
 
         if self.iconID != Group.defaultIconID && self.iconID != Group.defaultOpenIconID {
             newEntry.iconID = self.iconID

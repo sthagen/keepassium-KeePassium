@@ -266,7 +266,9 @@ final public class NavigationRouter: NSObject {
 
     public func popAll(completion: (() -> Void)? = nil) {
         fireAllPopHandlers()
-        navigationController.setViewControllers([UIViewController()], animated: false)
+        if Thread.isMainThread {
+            navigationController.setViewControllers([UIViewController()], animated: false)
+        }
         completion?()
     }
 

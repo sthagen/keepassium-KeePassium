@@ -280,6 +280,13 @@ public class DatabaseSaver: ProgressObserver {
     }
 
     private func performPostSaveTasks(savedData: ByteArray) {
+        do {
+            try databaseFile.removeAppliedPendingOperations()
+        } catch {
+            Diag.error("Failed to remove pending operations, they can overwrite data on next reload")
+            assertionFailure()
+        }
+
         if relatedTasks.contains(.updateLatestBackup) {
             updateLatestBackup(with: savedData)
         }

@@ -304,7 +304,8 @@ extension DatabaseUnlockerCoordinator {
         #endif
 
         databaseLoader = DatabaseLoader(
-            dbRef: currentDatabaseRef,
+            originalDBRef: databaseRef,
+            actualDBRef: currentDatabaseRef,
             compositeKey: compositeKey,
             status: databaseStatus,
             timeout: Timeout(duration: fallbackTimeoutDuration),

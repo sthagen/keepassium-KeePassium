@@ -8,7 +8,7 @@
 
 import Foundation
 
-public class EntryField: Eraseable {
+public class EntryField: Eraseable, Codable {
     public static let title    = "Title"
     public static let userName = "UserName"
     public static let password = "Password"
@@ -148,6 +148,19 @@ public class EntryField: Eraseable {
         resolvedValueInternal?.erase()
         resolvedValueInternal = nil
         resolveStatus = .noReferences
+    }
+
+    private enum CodingKeys: String, CodingKey {
+        case name
+        case value
+        case isProtected
+    }
+
+    public required init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.name = try container.decode(String.self, forKey: .name)
+        self.value = try container.decode(String.self, forKey: .value)
+        self.isProtected = try container.decode(Bool.self, forKey: .isProtected)
     }
 
     public func contains(

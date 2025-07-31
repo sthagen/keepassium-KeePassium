@@ -471,6 +471,21 @@ extension LString {
         bundle: Bundle.framework,
         value: "One or more databases have unsaved changes made in AutoFill.",
         comment: "Notification message")
+    public static let recoveredEntriesGroupNameTemplate = NSLocalizedString(
+        "[Database/UnsavedChanges/RecoveredEntriesGroup/name]",
+        bundle: Bundle.framework,
+        value: "Recovered Changes (%@)",
+        comment: "Title of a group where problematic pending changes are saved. %@ is the date of recovery.")
+    public static let messageCouldNotApplySomeChanges = NSLocalizedString(
+        "[Database/UnsavedChanges/couldNotApply]",
+        bundle: Bundle.framework,
+        value: "Some pending changes could not be applied automatically; recent modifications might be missing.",
+        comment: "Notification message")
+    public static let messageProblematicChangesInfo = NSLocalizedString(
+        "[Database/UnsavedChanges/Problematic/info]",
+        bundle: Bundle.framework,
+        value: "Some pending changes refer to missing entries or groups. KeePassium will create these items in a separate group and apply the changes there.",
+        comment: "Notification message about a problem with unsaved/pending changes.")
     public static let actionSaveChanges = NSLocalizedString(
         "[Database/UnsavedChanges/saveAction]",
         bundle: Bundle.framework,

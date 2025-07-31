@@ -122,28 +122,6 @@ public class Passkey {
             recordIdentifier: recordIdentifier)
     }
 
-    public func apply(to entry: Entry2) {
-        entry.setField(
-            name: EntryField.passkeyCredentialID,
-            value: credentialID.base64URLEncodedString(),
-            isProtected: true)
-        entry.setField(
-            name: EntryField.passkeyPrivateKeyPEM,
-            value: privateKeyPEM,
-            isProtected: true)
-        entry.setField(
-            name: EntryField.passkeyRelyingParty,
-            value: relyingParty,
-            isProtected: false)
-        entry.setField(
-            name: EntryField.passkeyUserHandle,
-            value: userHandle.base64URLEncodedString(),
-            isProtected: true)
-        entry.setField(
-            name: EntryField.passkeyUsername,
-            value: username,
-            isProtected: false)
-    }
 }
 
 extension Passkey {
@@ -331,5 +309,43 @@ public class NewPasskey: Passkey {
         ]
         let encoded = dict.encode()
         return Data(encoded)
+    }
+}
+
+extension DatabaseOperation {
+    public static func createPasskeyEntry(with passkey: Passkey, in group: Group2) -> [DatabaseOperation] {
+        let createOp = createEntry(in: group)
+        let createdEntryUUID = createOp.uuid
+        let editOp = applyPasskey(passkey, to: createdEntryUUID)
+        editOp.addFieldChange(name: EntryField.title, value: passkey.relyingParty)
+        editOp.addFieldChange(name: EntryField.userName, value: passkey.username)
+        editOp.addFieldChange(name: EntryField.url, value: "https://" + passkey.relyingParty)
+        return [createOp, editOp]
+    }
+
+    public static func applyPasskey(_ passkey: Passkey, to targetEntryUUID: UUID) -> EditEntryOperation {
+        let result = EditEntryOperation(uuid: targetEntryUUID, modificationTime: .now, fields: [
+            EntryField(
+                name: EntryField.passkeyCredentialID,
+                value: passkey.credentialID.base64URLEncodedString(),
+                isProtected: true),
+            EntryField(
+                name: EntryField.passkeyPrivateKeyPEM,
+                value: passkey.privateKeyPEM,
+                isProtected: true),
+            EntryField(
+                name: EntryField.passkeyRelyingParty,
+                value: passkey.relyingParty,
+                isProtected: false),
+            EntryField(
+                name: EntryField.passkeyUserHandle,
+                value: passkey.userHandle.base64URLEncodedString(),
+                isProtected: true),
+            EntryField(
+                name: EntryField.passkeyUsername,
+                value: passkey.username,
+                isProtected: false)
+        ])
+        return result
     }
 }

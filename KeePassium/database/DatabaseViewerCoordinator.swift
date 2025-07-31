@@ -35,7 +35,6 @@ protocol DatabaseViewerCoordinatorDelegate: AnyObject {
 
     func didPressReloadDatabase(
         _ databaseFile: DatabaseFile,
-        originalRef: URLReference,
         in coordinator: DatabaseViewerCoordinator
     )
 
@@ -57,7 +56,6 @@ final class DatabaseViewerCoordinator: BaseCoordinator {
     private let placeholderRouter: NavigationRouter
     private var entryViewerRouter: NavigationRouter?
 
-    private let originalRef: URLReference
     private let databaseFile: DatabaseFile
     private let database: Database
 
@@ -111,14 +109,12 @@ final class DatabaseViewerCoordinator: BaseCoordinator {
     init(
         splitViewController: RootSplitVC,
         primaryRouter: NavigationRouter,
-        originalRef: URLReference,
         databaseFile: DatabaseFile,
         context: DatabaseReloadContext?,
         loadingWarnings: DatabaseLoadingWarnings?,
         autoTypeHelper: AutoTypeHelper?
     ) {
         self.splitViewController = splitViewController
-        self.originalRef = originalRef
         self.databaseFile = databaseFile
         self.database = databaseFile.database
         self.loadingWarnings = loadingWarnings
@@ -153,11 +149,11 @@ final class DatabaseViewerCoordinator: BaseCoordinator {
         showInitialGroups(replacingTopVC: splitViewController.isCollapsed)
         showEntry(nil)
 
-        Settings.current.startupDatabase = originalRef
+        Settings.current.startupDatabase = databaseFile.originalReference
 
         updateAnnouncements()
         DispatchQueue.main.asyncAfter(deadline: .now() + 2 * vcAnimationDuration) { [weak self] in
-            self?.showInitialMessages()
+            self?.processJustOpenedDatabase()
         }
 
         NotificationCenter.default.addObserver(
@@ -210,16 +206,37 @@ final class DatabaseViewerCoordinator: BaseCoordinator {
     @objc
     private func appDidBecomeActive(_ notification: Notification) {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
-            self?.maybeCheckDatabaseForExternalChanges()
+            self?.performAppPostActivationTasks()
+        }
+    }
+
+    private func performAppPostActivationTasks() {
+        wasDatabaseModifiedExternally { [weak self] result in
+            guard let self else { return }
+            updateAnnouncements()
+            switch result {
+            case let .hasChanged(behavior, groupViewerVC):
+                processDatabaseChange(behavior: behavior, viewController: groupViewerVC)
+            case .isTheSame:
+                maybeApplyAndSavePendingChanges(recoveryMode: false)
+            }
         }
     }
 }
 
 extension DatabaseViewerCoordinator {
-    private func showInitialMessages() {
-        if loadingWarnings != nil {
-            showLoadingWarnings(loadingWarnings!)
+    private func processJustOpenedDatabase() {
+        if let loadingWarnings,
+           !loadingWarnings.isEmpty
+        {
+            showLoadingWarnings(loadingWarnings)
+            return
         }
+
+        if maybeApplyAndSavePendingChanges(recoveryMode: false) {
+            return
+        }
+
         if announcements.isEmpty {
             StoreReviewSuggester.maybeShowAppReview(
                 appVersion: AppInfo.version,
@@ -245,6 +262,31 @@ extension DatabaseViewerCoordinator {
             }
         )
         StoreReviewSuggester.registerEvent(.trouble)
+    }
+
+    @discardableResult
+    private func maybeApplyAndSavePendingChanges(recoveryMode: Bool) -> Bool {
+        guard databaseFile.hasPendingOperations() else {
+            return false
+        }
+        do {
+            try databaseFile.applyUnappliedPendingOperations(recoveryMode: recoveryMode)
+        } catch {
+            Diag.error("Failed to apply pending operations, skipping auto-saving [message: \(error.localizedDescription)]")
+            return false
+        }
+        guard canEditDatabase else {
+            Diag.debug("Read-only file, skipping auto-saving")
+            return false
+        }
+        Diag.info("Will auto-save pending changes")
+        saveDatabase(databaseFile, onSuccess: { [weak self] in
+            guard let self,
+                  let recoveryGroup = databaseFile.latestRecoveryGroup
+            else { return }
+            showGroup(recoveryGroup, animated: true)
+        })
+        return true
     }
 
     private func showDiagnostics() {
@@ -407,7 +449,7 @@ extension DatabaseViewerCoordinator {
     }
 
     public func reloadDatabase() {
-        delegate?.didPressReloadDatabase(databaseFile, originalRef: originalRef, in: self)
+        delegate?.didPressReloadDatabase(databaseFile, in: self)
     }
 
     public func closeDatabase(
@@ -418,7 +460,7 @@ extension DatabaseViewerCoordinator {
     ) {
         if shouldLock {
             Settings.current.startupDatabase = nil
-            DatabaseSettingsManager.shared.updateSettings(for: originalRef) {
+            DatabaseSettingsManager.shared.updateSettings(for: databaseFile.originalReference) {
                 $0.clearMasterKey()
             }
         }
@@ -1181,17 +1223,24 @@ extension DatabaseViewerCoordinator {
         }
 
         announcements.removeAll()
-        if let appLockSetupAnnouncement = maybeMakeAppLockSetupAnnouncement(for: rootGroupViewer) {
-            announcements.append(appLockSetupAnnouncement)
-        }
 
         let status = databaseFile.status
         if status.contains(.localFallback) {
             announcements.append(makeFallbackDatabaseAnnouncement(for: rootGroupViewer))
-        } else {
-            if status.contains(.readOnly) {
-                announcements.append(makeReadOnlyDatabaseAnnouncement(for: rootGroupViewer))
-            }
+        } else if status.contains(.readOnly) {
+            announcements.append(makeReadOnlyDatabaseAnnouncement(for: rootGroupViewer))
+        }
+
+        if databaseFile.hasPendingOperations() {
+            announcements.append(makePendingOperationsAnnouncement(
+                for: rootGroupViewer,
+                isProblematic: databaseFile.someOperationsFailed,
+                allowSaving: canEditDatabase
+            ))
+        }
+
+        if let appLockSetupAnnouncement = maybeMakeAppLockSetupAnnouncement(for: rootGroupViewer) {
+            announcements.append(appLockSetupAnnouncement)
         }
 
         if announcements.isEmpty, 
@@ -1235,6 +1284,7 @@ extension DatabaseViewerCoordinator {
     private func makeFallbackDatabaseAnnouncement(
         for viewController: GroupViewerVC
     ) -> AnnouncementItem {
+        let originalRef: URLReference = databaseFile.originalReference
         let actionTitle: String?
         switch originalRef.error {
         case .authorizationRequired(_, let recoveryAction):
@@ -1264,6 +1314,55 @@ extension DatabaseViewerCoordinator {
             actionTitle: nil,
             image: nil
         )
+    }
+
+    private func makePendingOperationsAnnouncement(
+        for viewController: GroupViewerVC,
+        isProblematic: Bool,
+        allowSaving: Bool
+    ) -> AnnouncementItem {
+        var messages = [LString.titleDatabaseHasUnsavedChanges]
+        if isProblematic {
+            messages.append(LString.messageCouldNotApplySomeChanges)
+        }
+
+        var anItem = AnnouncementItem(
+            title: LString.titleUnsavedChanges,
+            body: messages.joined(separator: "\n\n"),
+            image: .symbol(.unsavedChanges, tint: .warningMessage)
+        )
+        if allowSaving {
+            anItem.actionTitle = isProblematic ? LString.actionForceSave : LString.actionSaveChanges
+            anItem.onDidPressAction = { [weak self] _ in
+                guard let self else { return }
+                Diag.info("Will save pending changes on user request")
+                showingProblematicOperationsAlert(isProblematic, presenter: viewController) { [weak self] in
+                    self?.maybeApplyAndSavePendingChanges(recoveryMode: isProblematic)
+                }
+            }
+        }
+        return anItem
+    }
+
+    private func showingProblematicOperationsAlert(
+        _ isProblematic: Bool,
+        presenter: UIViewController,
+        completion: @escaping () -> Void
+    ) {
+        guard isProblematic else {
+            completion()
+            return
+        }
+
+        let alert = UIAlertController.make(
+            title: LString.titleUnsavedChanges,
+            message: LString.messageProblematicChangesInfo,
+            dismissButtonTitle: LString.actionCancel
+        )
+        alert.addAction(title: LString.actionContinue, style: .default, preferred: true) { _ in
+            completion()
+        }
+        presenter.present(alert, animated: true)
     }
 
     private func maybeMakeDonationAnnouncement(
@@ -1319,15 +1418,22 @@ extension DatabaseViewerCoordinator: FaviconDownloading {
 }
 
 extension DatabaseViewerCoordinator {
-    private func maybeCheckDatabaseForExternalChanges() {
-        let dbRef = originalRef
+    private enum ExternalUpdateResult {
+        case hasChanged(ExternalUpdateBehavior, GroupViewerVC)
+        case isTheSame
+    }
+
+    private func wasDatabaseModifiedExternally(completion: @escaping (ExternalUpdateResult) -> Void) {
+        let dbRef: URLReference = databaseFile.originalReference
         guard let groupViewerVC = topGroupViewer else {
+            completion(.isTheSame)
             return
         }
 
         let behavior = DatabaseSettingsManager.shared.getExternalUpdateBehavior(dbRef)
         switch behavior {
         case .dontCheck:
+            completion(.isTheSame)
             return
         case .checkAndNotify, .checkAndReload:
             break
@@ -1338,6 +1444,7 @@ extension DatabaseViewerCoordinator {
             currentHash = fileInfo.hash
             guard currentHash != nil else {
                 Diag.debug("File provider does not support content hash, skipping")
+                completion(.isTheSame)
                 return
             }
         } else {
@@ -1352,25 +1459,28 @@ extension DatabaseViewerCoordinator {
             canUseCache: false,
             timeout: Timeout(duration: timeoutDuration),
             completionQueue: .main
-        ) { [weak self, weak groupViewerVC] result in
-            guard let self, let groupViewerVC else {
+        ) { [weak groupViewerVC] result in
+            guard let groupViewerVC else {
                 return
             }
             switch result {
             case let .success(info):
                 guard let newHash = info.hash else {
                     groupViewerVC.databaseChangesCheckStatus = .idle
+                    completion(.isTheSame)
                     return
                 }
                 if newHash != currentHash {
-                    processDatabaseChange(behavior: behavior, viewController: groupViewerVC)
+                    completion(.hasChanged(behavior, groupViewerVC))
                 } else {
                     Diag.info("Database is up to date")
                     groupViewerVC.databaseChangesCheckStatus = .upToDate
+                    completion(.isTheSame)
                 }
             case let .failure(error):
                 Diag.error("Reading database file info failed [message: \(error.localizedDescription)]")
                 groupViewerVC.databaseChangesCheckStatus = .failed
+                completion(.isTheSame)
             }
         }
     }
@@ -1386,7 +1496,7 @@ extension DatabaseViewerCoordinator {
             let action = ToastAction(title: LString.actionReloadDatabase) { [weak self] in
                 guard let self else { return }
                 toastHost.hideAllToasts()
-                delegate?.didPressReloadDatabase(databaseFile, originalRef: originalRef, in: self)
+                delegate?.didPressReloadDatabase(databaseFile, in: self)
             }
             toastHost.showNotification(
                 LString.databaseChangedExternallyMessage,
@@ -1395,7 +1505,7 @@ extension DatabaseViewerCoordinator {
             )
         case .checkAndReload:
             Diag.info("Database changed elsewhere, reloading automatically")
-            delegate?.didPressReloadDatabase(databaseFile, originalRef: originalRef, in: self)
+            delegate?.didPressReloadDatabase(databaseFile, in: self)
         }
     }
 }

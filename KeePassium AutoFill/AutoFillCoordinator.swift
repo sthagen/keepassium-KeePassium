@@ -50,10 +50,6 @@ class AutoFillCoordinator: BaseCoordinator {
     fileprivate var isBiometricAuthShown = false
     fileprivate var isPasscodeInputShown = false
 
-    var fileExportHelper: FileExportHelper?
-    var saveSuccessHandler: (() -> Void)?
-    var databaseSaver: DatabaseSaver?
-
     #if INTUNE
     private var enrollmentDelegate: IntuneEnrollmentDelegateImpl?
     private var policyDelegate: IntunePolicyDelegateImpl?
@@ -322,7 +318,6 @@ extension AutoFillCoordinator {
         log.trace("Displaying database viewer")
         let entryFinderCoordinator = EntryFinderCoordinator(
             router: _router,
-            originalRef: fileRef,
             databaseFile: databaseFile,
             loadingWarnings: warnings,
             serviceIdentifiers: serviceIdentifiers,
@@ -337,41 +332,6 @@ extension AutoFillCoordinator {
             self?.entryFinderCoordinator = nil
         })
         self.entryFinderCoordinator = entryFinderCoordinator
-    }
-
-    func maybeWarnAboutExcessiveMemory(presenter: UIViewController, _ completion: @escaping () -> Void) {
-        guard let databaseMemoryFootprintMiB,
-              let kdfPeak = entryFinderCoordinator?.databaseFile.database.peakKDFMemoryFootprint
-        else {
-            assertionFailure()
-            completion()
-            return
-        }
-
-        let kdfPeakMiB = MemoryMonitor.bytesToMiB(kdfPeak)
-        let memoryRequiredForSavingMiB = kdfPeakMiB
-                + 2 * databaseMemoryFootprintMiB
-                + MemoryMonitor.autoFillMemoryWarningThresholdMiB
-        let memoryAvailableMiB = MemoryMonitor.estimateAutoFillMemoryRemainingMiB()
-        Diag.debug(String(
-            format: "%.1f MiB necessary, %.1f MiB available",
-            memoryRequiredForSavingMiB,
-            memoryAvailableMiB
-        ))
-        log.debug("\(memoryRequiredForSavingMiB, format: .fixed(precision: 1), privacy: .public) MiB necessary, \(memoryAvailableMiB, format: .fixed(precision: 1), privacy: .public) MiB available")
-
-        if memoryAvailableMiB > memoryRequiredForSavingMiB {
-            completion()
-        } else {
-            let alert = UIAlertController.make(
-                title: LString.titleWarning,
-                message: LString.messageAutoFillCannotModify,
-                dismissButtonTitle: LString.actionCancel)
-            alert.addAction(title: LString.actionContinue, style: .default, preferred: true) { _ in
-                completion()
-            }
-            presenter.present(alert, animated: true, completion: nil)
-        }
     }
 
     private func startPasskeyRegistration(
@@ -400,14 +360,15 @@ extension AutoFillCoordinator {
 
         guard let targetEntry = entry as? Entry2 else {
             Diag.debug("Creating a new passkey entry")
-            _ = rootGroup.createPasskeyEntry(with: passkey)
-            finishPasskeyRegistration(passkey, in: databaseFile, presenter: presenter)
+            let createOps = DatabaseOperation.createPasskeyEntry(with: passkey, in: rootGroup)
+            finishPasskeyRegistration(passkey, operations: createOps, in: databaseFile, presenter: presenter)
             return
         }
+
+        let editOp = DatabaseOperation.applyPasskey(passkey, to: targetEntry.uuid)
         guard let _ = Passkey.make(from: targetEntry) else {
             Diag.debug("Adding passkey to existing entry")
-            db2.setPasskey(passkey, for: targetEntry)
-            finishPasskeyRegistration(passkey, in: databaseFile, presenter: presenter)
+            finishPasskeyRegistration(passkey, operations: [editOp], in: databaseFile, presenter: presenter)
             return
         }
 
@@ -422,8 +383,7 @@ extension AutoFillCoordinator {
             handler: { [weak self, weak databaseFile, weak presenter] _ in
                 guard let self, let databaseFile, let presenter else { return }
                 Diag.debug("Replacing passkey in existing entry")
-                db2.setPasskey(passkey, for: targetEntry)
-                finishPasskeyRegistration(passkey, in: databaseFile, presenter: presenter)
+                finishPasskeyRegistration(passkey, operations: [editOp], in: databaseFile, presenter: presenter)
             }
         )
         presenter.present(overwriteConfirmationAlert, animated: true)
@@ -431,17 +391,18 @@ extension AutoFillCoordinator {
 
     private func finishPasskeyRegistration(
         _ passkey: NewPasskey,
+        operations: [DatabaseOperation],
         in databaseFile: DatabaseFile,
         presenter: UIViewController
     ) {
-        maybeWarnAboutExcessiveMemory(presenter: presenter) { [weak self] in
-            guard let self else { return }
-
-            Settings.current.isAutoFillFinishedOK = false
-            saveDatabase(databaseFile, onSuccess: { [weak self, passkey] in
-                self?.returnPasskeyRegistration(passkey: passkey)
-            })
+        do {
+            try databaseFile.addPendingOperations(operations, apply: true)
+        } catch {
+            presenter.showErrorAlert(error)
+            return
         }
+
+        returnPasskeyRegistration(passkey: passkey)
     }
 }
 
@@ -557,7 +518,8 @@ extension AutoFillCoordinator: DatabaseLoaderDelegate {
 
         assert(self.quickTypeDatabaseLoader == nil)
         quickTypeDatabaseLoader = DatabaseLoader(
-            dbRef: fallbackDBRef ?? dbRef,
+            originalDBRef: dbRef,
+            actualDBRef: fallbackDBRef ?? dbRef,
             compositeKey: masterKey,
             status: dbStatus,
             timeout: Timeout(duration: timeoutDuration),
@@ -1133,7 +1095,7 @@ extension AutoFillCoordinator: DatabaseUnlockerCoordinatorDelegate {
            autoFillMode != .passkeyRegistration
         {
             log.trace("Unlocked and found a match")
-            returnEntry(desiredEntry, from:databaseFile, clipboardOverride: nil)
+            returnEntry(desiredEntry, from: databaseFile, clipboardOverride: nil)
         } else {
             showDatabaseViewer(fileRef, databaseFile: databaseFile, warnings: warnings)
         }
@@ -1195,19 +1157,6 @@ extension AutoFillCoordinator: EntryFinderCoordinatorDelegate {
             in: coordinator.databaseFile,
             presenter: presenter
         )
-    }
-}
-
-extension AutoFillCoordinator: DatabaseSaving {
-    var savingProgressHost: ProgressViewHost? {
-        return _router
-    }
-
-    func didRelocate(databaseFile: KeePassiumLib.DatabaseFile, to newURL: URL) {
-    }
-
-    func getDatabaseSavingErrorParent() -> UIViewController {
-        return _router.navigationController
     }
 }
 

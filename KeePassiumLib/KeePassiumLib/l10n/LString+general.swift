@@ -172,6 +172,12 @@ extension LString {
         value: "Save as…",
         comment: "Action/button to save data to a different file"
     )
+    public static let actionForceSave = NSLocalizedString(
+        "[Generic/File/ForceSave]",
+        bundle: Bundle.framework,
+        value: "Force Save",
+        comment: "Action to save data, when we ignore minor problems in the process.")
+
     public static let actionShowMore = NSLocalizedString(
         "[Generic] Show more",
         bundle: Bundle.framework,

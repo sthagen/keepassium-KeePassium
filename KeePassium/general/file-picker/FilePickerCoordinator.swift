@@ -25,6 +25,7 @@ class FilePickerCoordinator: BaseCoordinator, FilePickerVC.Delegate {
         set { _filePickerVC.title = newValue }
     }
 
+    internal var _fileReferences = [URLReference]()
     private let fileType: FileType
     private var fileKeeperNotifications: FileKeeperNotifications!
     private let fileInfoReloader = FileInfoReloader()
@@ -73,24 +74,34 @@ class FilePickerCoordinator: BaseCoordinator, FilePickerVC.Delegate {
     override func refresh() {
         super.refresh()
 
-        let refs: [URLReference] = FileKeeper.shared.getAllReferences(
+        _fileReferences = FileKeeper.shared.getAllReferences(
             fileType: fileType,
             includeBackup: Settings.current.isBackupFilesVisible)
-        setFileRefs(refs)
+
+        let sortOrder = Settings.current.filesSortOrder
+        _fileReferences.sort { sortOrder.compare($0, $1) }
+
+        showFileRefs(_fileReferences)
 
         fileInfoReloader.getInfo(
-            for: refs,
+            for: _fileReferences,
             update: { [weak self] _ in
-                self?.setFileRefs(refs)
+                guard let self else { return }
+                showFileRefs(self._fileReferences)
             },
             completion: { [weak self] in
-                self?.setFileRefs(refs)
+                guard let self else { return }
+                showFileRefs(self._fileReferences)
             }
         )
         _filePickerVC.refreshControls()
     }
 
-    private func setFileRefs(_ refs: [URLReference]) {
+    internal func _didUpdateFileReferences() {
+    }
+
+    private func showFileRefs(_ refs: [URLReference]) {
+        _didUpdateFileReferences()
         _filePickerVC.contentUnavailableConfiguration = refs.isEmpty ? _contentUnavailableConfiguration : nil
         _filePickerVC.setFileRefs(refs)
     }

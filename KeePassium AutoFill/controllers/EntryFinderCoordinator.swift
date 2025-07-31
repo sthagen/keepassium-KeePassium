@@ -34,7 +34,6 @@ final class EntryFinderCoordinator: BaseCoordinator {
 
     private let entryFinderVC: EntryFinderVC
 
-    private let originalRef: URLReference
     let databaseFile: DatabaseFile
     let database: Database
     private let loadingWarnings: DatabaseLoadingWarnings?
@@ -55,7 +54,6 @@ final class EntryFinderCoordinator: BaseCoordinator {
 
     init(
         router: NavigationRouter,
-        originalRef: URLReference,
         databaseFile: DatabaseFile,
         loadingWarnings: DatabaseLoadingWarnings?,
         serviceIdentifiers: [ASCredentialServiceIdentifier],
@@ -63,7 +61,6 @@ final class EntryFinderCoordinator: BaseCoordinator {
         passkeyRegistrationParams: PasskeyRegistrationParams?,
         autoFillMode: AutoFillMode?
     ) {
-        self.originalRef = originalRef
         self.databaseFile = databaseFile
         self.database = databaseFile.database
         self.loadingWarnings = loadingWarnings
@@ -111,7 +108,7 @@ final class EntryFinderCoordinator: BaseCoordinator {
 
 extension EntryFinderCoordinator {
     public func lockDatabase() {
-        DatabaseSettingsManager.shared.updateSettings(for: originalRef) {
+        DatabaseSettingsManager.shared.updateSettings(for: databaseFile.originalReference) {
             $0.clearMasterKey()
         }
         _router.pop(viewController: entryFinderVC, animated: true)
@@ -213,6 +210,9 @@ extension EntryFinderCoordinator {
         if databaseFile.status.contains(.readOnly) {
             announcements.append(makeReadOnlyDatabaseAnnouncement(for: entryFinderVC))
         }
+        if databaseFile.hasPendingOperations() {
+            announcements.append(makePendingChangesAnnouncement(for: entryFinderVC))
+        }
 
         if announcements.isEmpty,
            let qafAnnouncment = maybeMakeQuickAutoFillAnnouncment(for: entryFinderVC)
@@ -250,6 +250,7 @@ extension EntryFinderCoordinator {
     private func makeFallbackDatabaseAnnouncement(
         for viewController: EntryFinderVC
     ) -> AnnouncementItem {
+        let originalRef: URLReference = databaseFile.originalReference
         let actionTitle: String?
         switch originalRef.error {
         case .authorizationRequired(_, let recoveryAction):
@@ -279,6 +280,20 @@ extension EntryFinderCoordinator {
             body: LString.databaseIsReadOnly,
             actionTitle: nil,
             image: nil
+        )
+    }
+
+    private func makePendingChangesAnnouncement(
+        for viewController: EntryFinderVC
+    ) -> AnnouncementItem {
+        return AnnouncementItem(
+            title: LString.titleUnsavedChanges,
+            body: LString.titleOpenAppToSaveChanges,
+            actionTitle: LString.callToActionOpenTheMainApp,
+            image: .symbol(.unsavedChanges, tint: .warningMessage),
+            onDidPressAction: { [weak viewController] _ in
+                URLOpener(viewController).open(url: AppGroup.launchMainAppURL)
+            }
         )
     }
 }

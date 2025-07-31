@@ -649,7 +649,6 @@ extension LString {
         value: "Auto-copy to Clipboard",
         comment: "Title for the menu that allows selecting a field to be copied to clipboard automatically."
     )
-    // swiftlint:enable line_length
 
     public static let autoFillRecentlyUsedSectionTitle = NSLocalizedString(
         "[AutoFill/RecentlyUsed/title]",

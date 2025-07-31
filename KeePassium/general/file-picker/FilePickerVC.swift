@@ -253,12 +253,10 @@ class FilePickerVC: UIViewController {
     }
 
     public func setFileRefs(_ refs: [URLReference]) {
-        let sortOrder = Settings.current.filesSortOrder
-        let sortedRefs = refs.sorted { sortOrder.compare($0, $1) }
-        let sortedItems = sortedRefs.map {
-            FilePickerItem.FileInfo(source: $0, fileType: fileType)
+        self.fileItems = refs.map {
+            let fileInfo = FilePickerItem.FileInfo(source: $0, fileType: fileType)
+            return FilePickerItem.file(fileInfo)
         }
-        self.fileItems = sortedItems.map { FilePickerItem.file($0) }
         applySnapshot()
     }
 

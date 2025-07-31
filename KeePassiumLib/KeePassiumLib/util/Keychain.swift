@@ -43,6 +43,7 @@ public class Keychain {
     private enum Service: String, CaseIterable {
         case general = "KeePassium"
         case databaseSettings = "KeePassium.dbSettings"
+        case pendingDatabaseTransactions = "KeePassium.pendingDBTransactions"
         case premium = "KeePassium.premium"
         case fileReferences = "KeePassium.fileRefs"
         case networkCredentials = "KeePassium.networkCredentials"
@@ -266,6 +267,35 @@ extension Keychain {
             updater(dbSettings)
             try setDatabaseSettings(dbSettings, for: descriptor)
         }
+    }
+}
+
+extension Keychain {
+    func hasPendingTransaction(for descriptor: URLReference.Descriptor) throws -> Bool {
+        let descriptors = try getAccounts(service: .pendingDatabaseTransactions)
+        return descriptors.contains(descriptor)
+    }
+
+    func getPendingTransaction(for descriptor: URLReference.Descriptor) throws -> PendingDatabaseTransaction? {
+        guard let jsonData = try get(service: .pendingDatabaseTransactions, account: descriptor) else {
+            return nil
+        }
+        let decoder = JSONDecoder()
+        let transaction = try decoder.decode(PendingDatabaseTransaction.self, from: jsonData)
+        return transaction
+    }
+
+    func storePendingTransaction(
+        _ transaction: PendingDatabaseTransaction,
+        for descriptor: URLReference.Descriptor
+    ) throws {
+        let encoder = JSONEncoder()
+        let jsonData = try encoder.encode(transaction)
+        try set(service: .pendingDatabaseTransactions, account: descriptor, data: jsonData)
+    }
+
+    func erasePendingTransaction(for descriptor: URLReference.Descriptor) throws {
+        try remove(service: .pendingDatabaseTransactions, account: descriptor)
     }
 }
 
