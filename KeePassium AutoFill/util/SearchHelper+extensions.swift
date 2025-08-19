@@ -10,24 +10,6 @@ import AuthenticationServices
 import DomainParser
 import KeePassiumLib
 
-struct FuzzySearchResults {
-    var exactMatch: SearchResults
-    var partialMatch: SearchResults
-
-    var isEmpty: Bool { return exactMatch.isEmpty && partialMatch.isEmpty }
-
-    var perfectMatch: Entry? {
-        guard exactMatch.count == 1,
-              let theOnlyGroup = exactMatch.first,
-              theOnlyGroup.scoredItems.count == 1,
-              let theOnlyScoredEntry = theOnlyGroup.scoredItems.first?.item as? Entry
-        else {
-            return nil
-        }
-        return theOnlyScoredEntry
-    }
-}
-
 extension SearchHelper {
     func find(
         database: Database,

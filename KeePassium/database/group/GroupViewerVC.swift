@@ -330,7 +330,7 @@ final class GroupViewerVC:
         for groupedItems in searchResults {
             for scoredItem in groupedItems.scoredItems {
                 if let entry2 = scoredItem.item as? Entry2,
-                   let _ = TOTPGeneratorFactory.makeGenerator(for: entry2)
+                   entry2.hasValidTOTP
                 {
                     continue
                 } else {
@@ -688,11 +688,11 @@ final class GroupViewerVC:
 
     private func setupEntryCell(_ cell: GroupViewerEntryCell, entry: Entry) {
         cell.titleLabel.setText(entry.resolvedTitle, strikethrough: entry.isExpired)
-        cell.subtitleLabel?.setText(getDetailInfo(for: entry), strikethrough: entry.isExpired)
+        cell.subtitleLabel?.setText(entry.resolvedSubtitle, strikethrough: entry.isExpired)
         cell.iconView?.image = UIImage.kpIcon(forEntry: entry)
 
         cell.shouldHighlightOTP = shouldHighlightOTP
-        cell.totpGenerator = TOTPGeneratorFactory.makeGenerator(for: entry)
+        cell.totpGenerator = entry.totpGenerator()
         cell.otpCopiedHandler = { [weak self] in
             self?.hideAllToasts()
             self?.showNotification(LString.otpCodeCopiedToClipboard)
@@ -701,33 +701,6 @@ final class GroupViewerVC:
         cell.hasAttachments = entry.attachments.count > 0
         cell.hasPasskey = Passkey.probablyPresent(in: entry)
         cell.accessibilityCustomActions = getAccessibilityActions(for: entry)
-    }
-
-    private func getDetailInfo(for entry: Entry) -> String? {
-        switch Settings.current.entryListDetail {
-        case .none:
-            return nil
-        case .userName:
-            return entry.getField(EntryField.userName)?.decoratedResolvedValue
-        case .password:
-            return entry.getField(EntryField.password)?.decoratedResolvedValue
-        case .url:
-            return entry.getField(EntryField.url)?.decoratedResolvedValue
-        case .notes:
-            return entry.getField(EntryField.notes)?.decoratedResolvedValue
-                .replacingOccurrences(of: "\r", with: " ")
-                .replacingOccurrences(of: "\n", with: " ")
-        case .lastModifiedDate:
-            let dateFormatter = DateFormatter()
-            dateFormatter.dateStyle = .short
-            dateFormatter.timeStyle = .short
-            return dateFormatter.string(from: entry.lastModificationTime)
-        case .tags:
-            guard let entry2 = entry as? Entry2 else {
-                return nil
-            }
-            return entry2.resolvingTags().joined(separator: ", ")
-        }
     }
 
     private func adjustToolbarButtons() {

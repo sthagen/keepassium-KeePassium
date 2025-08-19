@@ -6,8 +6,11 @@
 //  by the Free Software Foundation: https://www.gnu.org/licenses/).
 //  For commercial licensing, please contact us.
 
-enum FileActivationCause {
-    case keyPress
-    case touch
-    case app
+import KeePassiumLib
+import UIKit
+
+protocol EntryFinderToolbarDecorator {
+    func getToolbarItems() -> [UIBarButtonItem]?
+    func getLeadingItemGroups() -> [UIBarButtonItemGroup]?
+    func getTrailingItemGroups() -> [UIBarButtonItemGroup]?
 }

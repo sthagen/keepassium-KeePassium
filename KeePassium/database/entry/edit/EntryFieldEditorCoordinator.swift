@@ -222,7 +222,7 @@ final class EntryFieldEditorCoordinator: BaseCoordinator {
 
         fieldEditorVC.showNotification(
             LString.actionDone,
-            image: .symbol(.clock),
+            image: .symbol(.oneTimePassword),
             duration: 1
         )
     }

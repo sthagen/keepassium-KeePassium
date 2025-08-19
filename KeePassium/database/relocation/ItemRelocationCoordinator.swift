@@ -446,7 +446,7 @@ extension ItemRelocationCoordinator: DatabasePickerCoordinatorDelegate {
 
     func didSelectDatabase(
         _ fileRef: URLReference?,
-        cause: FileActivationCause?,
+        cause: ItemActivationCause?,
         in coordinator: DatabasePickerCoordinator
     ) {
         assert(cause != nil, "Unexpected for single-panel mode")

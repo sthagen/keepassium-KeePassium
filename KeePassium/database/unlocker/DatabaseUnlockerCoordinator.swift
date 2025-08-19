@@ -466,7 +466,7 @@ extension DatabaseUnlockerCoordinator: DatabaseUnlockerDelegate {
 extension DatabaseUnlockerCoordinator: KeyFilePickerCoordinatorDelegate {
     func didSelectKeyFile(
         _ fileRef: URLReference?,
-        cause: FileActivationCause?,
+        cause: ItemActivationCause?,
         in coordinator: KeyFilePickerCoordinator
     ) {
         assert(cause != nil, "File selected but not activated?")

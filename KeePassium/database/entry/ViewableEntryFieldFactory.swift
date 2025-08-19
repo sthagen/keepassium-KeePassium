@@ -167,7 +167,7 @@ class ViewableEntryFieldFactory {
     ) -> [ViewableField] {
         var result = [ViewableField]()
 
-        let hasValidOTPConfig = TOTPGeneratorFactory.makeGenerator(for: entry) != nil
+        let hasValidOTPConfig = entry.hasValidTOTP
         let passkey = Passkey.make(from: entry)
         let hasValidPasskeyConfig = passkey != nil
         let isAuditable = (entry as? Entry2)?.qualityCheck ?? true

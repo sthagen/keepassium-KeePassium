@@ -31,6 +31,8 @@ public enum SymbolName: String, Equatable {
     public static let autoFill = Self.return
     public static let fieldReference = Self.arrowRightCircle
     public static let largeType = Self.characterMagnify
+    public static let oneTimePassword = Self.clock
+    public static let passkey = Self.personBadgeKey
     public static let passwordAudit = Self.networkBadgeShield
     public static let managedParameter = Self.person2BadgeGearshape
     public static let unsavedChanges = Self.externalDriveTriangleBadgeExclamationMark
@@ -130,6 +132,7 @@ public enum SymbolName: String, Equatable {
     case paintbrush = "paintbrush"
     case paperclip = "paperclip"
     case paperclipBadgeEllipsis = "paperclip.badge.ellipsis"
+    case personBadgeKey = "person.badge.key"
     case pencil = "pencil"
     case person = "person"
     case person2BadgeGearshape = "person.2.badge.gearshape"
@@ -219,6 +222,8 @@ extension UIImage {
     convenience init(asset: ImageAsset) {
         self.init(named: asset.rawValue)! 
     }
+
+    public static let kpIconMaxSize = CGSize(width: 29, height: 29)
 
     static func kpIcon(forEntry entry: Entry, iconSet: DatabaseIconSet? = nil) -> UIImage? {
         if let entry2 = entry as? Entry2,

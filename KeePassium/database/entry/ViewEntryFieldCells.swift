@@ -249,8 +249,7 @@ class ToggleVisibilityAccessoryButton: UIButton {
 }
 
 class ProtectedFieldCell: ViewableFieldCell {
-    private let hiddenValueMask = "* * * *"
-    private var toggleButton: ToggleVisibilityAccessoryButton? 
+    private var toggleButton: ToggleVisibilityAccessoryButton?
 
     override func setupCell() {
         super.setupCell()
@@ -310,7 +309,7 @@ class ProtectedFieldCell: ViewableFieldCell {
 
     override func getUserVisibleValue() -> String? {
         guard let field else { return nil }
-        return field.isValueHidden ? hiddenValueMask : field.decoratedResolvedValue
+        return field.isValueHidden ? EntryField.protectedValueMask : field.decoratedResolvedValue
     }
 
     private func refreshTextView() {

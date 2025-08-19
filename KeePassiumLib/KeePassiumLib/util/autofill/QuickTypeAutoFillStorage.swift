@@ -118,7 +118,7 @@ final public class QuickTypeAutoFillStorage {
              let passwordAndOTPIdentities = makeCredentialIdentities(
                 userName: "\(entry.resolvedUserName) | \(entry.resolvedTitle)",
                 services: serviceIDs,
-                containsTOTP: entry.containsTOTP,
+                containsTOTP: entry.hasValidTOTP,
                 recordID: recordID
             )
             result.append(contentsOf: passwordAndOTPIdentities)
@@ -207,9 +207,5 @@ extension Entry {
         result.addAll(urls: customURLs)
 
         return result
-    }
-
-    fileprivate var containsTOTP: Bool {
-        return TOTPGeneratorFactory.makeGenerator(for: self) != nil
     }
 }

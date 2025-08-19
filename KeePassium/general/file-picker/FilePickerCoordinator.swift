@@ -129,7 +129,7 @@ class FilePickerCoordinator: BaseCoordinator, FilePickerVC.Delegate {
 
     func didSelectFile(
         _ fileRef: URLReference?,
-        cause: FileActivationCause?,
+        cause: ItemActivationCause?,
         in viewController: FilePickerVC
     ) {
         assertionFailure("Pure virtual method, override this")

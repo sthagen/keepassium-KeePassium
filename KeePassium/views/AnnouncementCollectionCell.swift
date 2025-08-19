@@ -16,6 +16,15 @@ final class AnnouncementCollectionCell: UICollectionViewCell {
         return view
     }()
 
+    static func makeRegistration()
+        -> UICollectionView.CellRegistration<AnnouncementCollectionCell, AnnouncementItem>
+    {
+        UICollectionView.CellRegistration<AnnouncementCollectionCell, AnnouncementItem> {
+            cell, indexPath, announcement in
+            cell.configure(with: announcement)
+        }
+    }
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupView()
@@ -31,15 +40,13 @@ final class AnnouncementCollectionCell: UICollectionViewCell {
     }
 
     private func setupView() {
-        backgroundColor = .systemBackground
-
         contentView.addSubview(announcementView)
         announcementView.translatesAutoresizingMaskIntoConstraints = false
         announcementView.topAnchor
             .constraint(equalTo: contentView.topAnchor, constant: 8)
             .activate()
         announcementView.bottomAnchor
-            .constraint(equalTo: contentView.bottomAnchor, constant: -8)
+            .constraint(equalTo: contentView.bottomAnchor)
             .activate()
         announcementView.leadingAnchor
             .constraint(equalTo: contentView.leadingAnchor)

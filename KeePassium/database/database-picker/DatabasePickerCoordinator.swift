@@ -19,7 +19,7 @@ protocol DatabasePickerCoordinatorDelegate: AnyObject {
 
     func didSelectDatabase(
         _ fileRef: URLReference?,
-        cause: FileActivationCause?,
+        cause: ItemActivationCause?,
         in coordinator: DatabasePickerCoordinator
     )
 }
@@ -112,7 +112,7 @@ class DatabasePickerCoordinator: FilePickerCoordinator {
 
     override func didSelectFile(
         _ fileRef: URLReference?,
-        cause: FileActivationCause?,
+        cause: ItemActivationCause?,
         in viewController: FilePickerVC
     ) {
         guard let fileRef else {

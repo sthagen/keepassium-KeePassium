@@ -11,7 +11,7 @@ import KeePassiumLib
 protocol KeyFilePickerCoordinatorDelegate: AnyObject {
     func didSelectKeyFile(
         _ fileRef: URLReference?,
-        cause: FileActivationCause?,
+        cause: ItemActivationCause?,
         in coordinator: KeyFilePickerCoordinator
     )
 
@@ -60,7 +60,7 @@ class KeyFilePickerCoordinator: FilePickerCoordinator {
 
     override func didSelectFile(
         _ fileRef: URLReference?,
-        cause: FileActivationCause?,
+        cause: ItemActivationCause?,
         in viewController: FilePickerVC
     ) {
         assert(cause != nil, "Unexpected for single-panel mode")

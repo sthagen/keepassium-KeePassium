@@ -87,7 +87,7 @@ final class GroupViewerEntryCell: UITableViewCell {
         otpView.isHidden = true
         showOTPButton.setTitle("", for: .normal)
         showOTPButton.accessibilityLabel = LString.fieldOTP
-        showOTPButton.setImage(.symbol(.clock), for: .normal)
+        showOTPButton.setImage(.symbol(.oneTimePassword), for: .normal)
         otpView.tapHandler = { [weak self] in
             self?.animateOTPValue(visible: false)
         }

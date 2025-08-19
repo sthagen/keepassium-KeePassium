@@ -1083,7 +1083,7 @@ extension MainCoordinator: FileKeeperDelegate {
 extension MainCoordinator: DatabasePickerCoordinatorDelegate {
     func didSelectDatabase(
         _ fileRef: URLReference?,
-        cause: FileActivationCause?,
+        cause: ItemActivationCause?,
         in coordinator: DatabasePickerCoordinator
     ) {
         switch cause {

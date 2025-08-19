@@ -147,7 +147,7 @@ final class AnnouncementView: UIView {
 
         backgroundColor = .quaternarySystemFill
         layer.cornerRadius = 10
-        layer.borderColor = UIColor.secondarySystemFill.cgColor
+        layer.borderColor = UIColor.separator.cgColor
         layer.borderWidth = 1
 
         setupSubviews()

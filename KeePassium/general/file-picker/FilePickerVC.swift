@@ -31,7 +31,7 @@ class FilePickerVC: UIViewController {
 
         func didSelectFile(
             _ fileRef: URLReference?,
-            cause: FileActivationCause?,
+            cause: ItemActivationCause?,
             in viewController: FilePickerVC)
     }
 
@@ -445,7 +445,7 @@ extension FilePickerVC: UICollectionViewDelegate {
         handlePrimaryAction(at: indexPath, cause: .touch)
     }
 
-    private func handlePrimaryAction(at indexPath: IndexPath, cause: FileActivationCause?) {
+    private func handlePrimaryAction(at indexPath: IndexPath, cause: ItemActivationCause?) {
         switch dataSource.itemIdentifier(for: indexPath) {
         case .announcement:
             assertionFailure("Announcements should not be selectable")

@@ -233,7 +233,7 @@ final class EntryFieldEditorVC: UITableViewController, Refreshable {
         } else {
             actions = [scanQRCodeAction, pickQRPhotoAction, pickQRImageFileAction, manualSetupAction]
         }
-        return UIMenu(title: LString.fieldOTP, image: .symbol(.clock), children: actions)
+        return UIMenu(title: LString.fieldOTP, image: .symbol(.oneTimePassword), children: actions)
     }
 
 

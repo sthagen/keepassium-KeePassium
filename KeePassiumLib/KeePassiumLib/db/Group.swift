@@ -13,7 +13,6 @@ public class Group: DatabaseItem, Eraseable {
     public static let defaultOpenIconID = IconID.folderOpen
 
     public weak var database: Database?
-    public var uuid: UUID
     public var iconID: IconID
     public var name: String
     public var notes: String
@@ -55,7 +54,6 @@ public class Group: DatabaseItem, Eraseable {
     init(database: Database?) {
         self.database = database
 
-        uuid = UUID.ZERO
         iconID = Group.defaultIconID
         name = ""
         notes = ""
@@ -71,7 +69,7 @@ public class Group: DatabaseItem, Eraseable {
         lastAccessTime = now
         expiryTime = now
 
-        super.init()
+        super.init(uuid: UUID.ZERO)
     }
     deinit {
         erase()
