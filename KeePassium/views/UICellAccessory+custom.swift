@@ -9,12 +9,27 @@
 import KeePassiumLib
 
 extension UICellAccessory {
+    static func premiumFeatureIndicator() -> UICellAccessory {
+        let imageView = UIImageView(image: .symbol(
+            .starFill,
+            accessibilityLabel: LString.premiumFeatureGenericTitle
+        ))
+        imageView.isAccessibilityElement = true
+        imageView.preferredSymbolConfiguration = UIImage.SymbolConfiguration(textStyle: .body, scale: .default)
+        return UICellAccessory.customView(configuration: .init(
+            customView: imageView,
+            placement: .trailing(),
+            tintColor: .systemYellow
+        ))
+    }
+
     static func passkeyPresenceIndicator() -> UICellAccessory {
         let imageView = UIImageView(image: .symbol(
             .passkey,
             tint: .secondaryLabel,
             accessibilityLabel: LString.fieldPasskey
         ))
+        imageView.isAccessibilityElement = true
         imageView.preferredSymbolConfiguration = UIImage.SymbolConfiguration(textStyle: .body, scale: .default)
         return UICellAccessory.customView(configuration: .init(customView: imageView, placement: .trailing()))
     }
@@ -25,6 +40,7 @@ extension UICellAccessory {
             tint: .secondaryLabel,
             accessibilityLabel: LString.fieldOTP
         ))
+        imageView.isAccessibilityElement = true
         imageView.preferredSymbolConfiguration = UIImage.SymbolConfiguration(textStyle: .body, scale: .default)
         return UICellAccessory.customView(configuration: .init(customView: imageView, placement: .trailing()))
     }

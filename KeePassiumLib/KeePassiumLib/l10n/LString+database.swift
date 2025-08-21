@@ -133,6 +133,16 @@ extension LString {
         bundle: Bundle.framework,
         value: "Requires Apple USB-C to Lightning adapter",
         comment: "A notice for hardware keys that need an adapter for physical connection to device.")
+    public static let hardwareKeySlotN = NSLocalizedString(
+        "[HardwareKey/SlotN]",
+        bundle: Bundle.framework,
+        value: "Slot %d",
+        comment: "Hardware key slot number. [slotNumber: Int]")
+    public static let titleSlot = NSLocalizedString(
+        "[HardwareKey/SlotTitle]",
+        bundle: Bundle.framework,
+        value: "Slot",
+        comment: "Title for hardware key slot selection menu.")
 
 
     public static let titleDatabaseSettings = NSLocalizedString(

@@ -168,20 +168,23 @@ extension DatabaseUnlockerCoordinator {
         addChildCoordinator(diagnosticsViewerCoordinator, onDismiss: nil)
     }
 
-    private func getPopoverRouter(at popoverAnchor: PopoverAnchor) -> NavigationRouter {
+    private func makeRouterForChildCoordinator(
+        style: UIModalPresentationStyle,
+        at popoverAnchor: PopoverAnchor
+    ) -> NavigationRouter {
         #if AUTOFILL_EXT
         if ProcessInfo.isRunningOnMac {
             return _router
         }
         #endif
-        return NavigationRouter.createModal(style: .popover, at: popoverAnchor)
+        return NavigationRouter.createModal(style: style, at: popoverAnchor)
     }
 
     private func selectKeyFile(
         at popoverAnchor: PopoverAnchor,
         in viewController: UIViewController
     ) {
-        let modalRouter = NavigationRouter.createModal(style: .formSheet, at: popoverAnchor)
+        let modalRouter = makeRouterForChildCoordinator(style: .formSheet, at: popoverAnchor)
         let keyFilePickerCoordinator = KeyFilePickerCoordinator(router: modalRouter)
         keyFilePickerCoordinator.delegate = self
         keyFilePickerCoordinator.start()
@@ -195,7 +198,7 @@ extension DatabaseUnlockerCoordinator {
         at popoverAnchor: PopoverAnchor,
         in viewController: UIViewController
     ) {
-        let targetRouter = getPopoverRouter(at: popoverAnchor)
+        let targetRouter = makeRouterForChildCoordinator(style: .formSheet, at: popoverAnchor)
         let hardwareKeyPickerCoordinator = HardwareKeyPickerCoordinator(router: targetRouter)
         hardwareKeyPickerCoordinator.delegate = self
         hardwareKeyPickerCoordinator.setSelectedKey(selectedHardwareKey)
