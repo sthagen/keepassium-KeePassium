@@ -10,8 +10,8 @@ import KeePassiumLib
 
 protocol FilePickerToolbarDecorator {
     func getToolbarItems() -> [UIBarButtonItem]?
-    func getLeadingItemGroups() -> [UIBarButtonItemGroup]?
-    func getTrailingItemGroups() -> [UIBarButtonItemGroup]?
+    func getLeftBarButtonItems() -> [UIBarButtonItem]?
+    func getRightBarButtonItems() -> [UIBarButtonItem]?
 }
 
 protocol FilePickerItemDecorator: AnyObject {
@@ -248,8 +248,12 @@ class FilePickerVC: UIViewController {
     }
 
     private func setupNavbar() {
-        navigationItem.leadingItemGroups = toolbarDecorator?.getLeadingItemGroups() ?? []
-        navigationItem.trailingItemGroups = toolbarDecorator?.getTrailingItemGroups() ?? []
+        if let leftItems = toolbarDecorator?.getLeftBarButtonItems() {
+            navigationItem.leftBarButtonItems = leftItems
+        }
+        if let rightItems = toolbarDecorator?.getRightBarButtonItems() {
+            navigationItem.rightBarButtonItems = rightItems
+        }
     }
 
     public func setFileRefs(_ refs: [URLReference]) {

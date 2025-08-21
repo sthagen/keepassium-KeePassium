@@ -30,6 +30,8 @@ class FilePickerCoordinator: BaseCoordinator, FilePickerVC.Delegate {
     private var fileKeeperNotifications: FileKeeperNotifications!
     private let fileInfoReloader = FileInfoReloader()
 
+    internal let _dismissButtonStyle: UIBarButtonItem.SystemItem?
+
     internal let _filePickerVC: FilePickerVC
 
     init(
@@ -37,6 +39,7 @@ class FilePickerCoordinator: BaseCoordinator, FilePickerVC.Delegate {
         fileType: FileType,
         itemDecorator: FilePickerItemDecorator?,
         toolbarDecorator: FilePickerToolbarDecorator?,
+        dismissButtonStyle: UIBarButtonItem.SystemItem?,
         appearance: FilePickerAppearance
     ) {
         self.fileType = fileType
@@ -46,6 +49,7 @@ class FilePickerCoordinator: BaseCoordinator, FilePickerVC.Delegate {
             itemDecorator: itemDecorator,
             appearance: appearance
         )
+        self._dismissButtonStyle = dismissButtonStyle
         super.init(router: router)
         _filePickerVC.delegate = self
         fileKeeperNotifications = FileKeeperNotifications(observer: self)
@@ -57,7 +61,7 @@ class FilePickerCoordinator: BaseCoordinator, FilePickerVC.Delegate {
 
     override func start() {
         super.start()
-        _pushInitialViewController(_filePickerVC, animated: false)
+        _pushInitialViewController(_filePickerVC, dismissButtonStyle: _dismissButtonStyle, animated: true)
         refresh()
         fileKeeperNotifications.startObserving()
         NotificationCenter.default.addObserver(

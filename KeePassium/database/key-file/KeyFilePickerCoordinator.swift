@@ -38,6 +38,7 @@ class KeyFilePickerCoordinator: FilePickerCoordinator {
             fileType: .keyFile,
             itemDecorator: itemDecorator,
             toolbarDecorator: toolbarDecorator,
+            dismissButtonStyle: .cancel,
             appearance: .insetGrouped
         )
         title = LString.titleKeyFiles

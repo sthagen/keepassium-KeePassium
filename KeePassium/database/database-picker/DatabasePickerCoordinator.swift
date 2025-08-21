@@ -58,6 +58,7 @@ class DatabasePickerCoordinator: FilePickerCoordinator {
             fileType: .database,
             itemDecorator: itemDecorator,
             toolbarDecorator: toolbarDecorator,
+            dismissButtonStyle: nil,
             appearance: .plain
         )
         title = LString.titleDatabases

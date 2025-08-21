@@ -53,7 +53,7 @@ extension DatabasePickerCoordinator {
             ]
         }
 
-        func getLeadingItemGroups() -> [UIBarButtonItemGroup]? {
+        func getLeftBarButtonItems() -> [UIBarButtonItem]? {
             guard let coordinator else { assertionFailure(); return nil }
             switch coordinator.mode {
             case .full:
@@ -69,12 +69,11 @@ extension DatabasePickerCoordinator {
                     },
                     menu: UIMenu(children: [diagnosticAction])
                 )
-                let itemGroup = UIBarButtonItemGroup(barButtonItems: [cancelItem], representativeItem: nil)
-                return [itemGroup]
+                return [cancelItem]
             }
         }
 
-        func getTrailingItemGroups() -> [UIBarButtonItemGroup]? {
+        func getRightBarButtonItems() -> [UIBarButtonItem]? {
             guard let coordinator else { assertionFailure(); return nil }
             let needPremium = coordinator.needsPremiumToAddDatabase()
             var menuItems = [UIMenuElement]()
@@ -149,8 +148,7 @@ extension DatabasePickerCoordinator {
                 title: LString.titleMoreActions,
                 image: .symbol(.ellipsisCircle),
                 menu: listActionsMenu)
-            let itemGroup = UIBarButtonItemGroup(barButtonItems: [listActionsItem], representativeItem: nil)
-            return [itemGroup]
+            return [listActionsItem]
         }
     }
 }

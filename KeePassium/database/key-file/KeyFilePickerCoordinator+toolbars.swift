@@ -16,19 +16,11 @@ extension KeyFilePickerCoordinator {
             return nil
         }
 
-        func getLeadingItemGroups() -> [UIBarButtonItemGroup]? {
-            guard let coordinator else { assertionFailure(); return nil }
-            let cancelItem = UIBarButtonItem(
-                systemItem: .cancel,
-                primaryAction: UIAction { [weak coordinator] action in
-                    coordinator?.didPressCancel()
-                },
-            )
-            let itemGroup = UIBarButtonItemGroup(barButtonItems: [cancelItem], representativeItem: nil)
-            return [itemGroup]
+        func getLeftBarButtonItems() -> [UIBarButtonItem]? {
+            return nil
         }
 
-        func getTrailingItemGroups() -> [UIBarButtonItemGroup]? {
+        func getRightBarButtonItems() -> [UIBarButtonItem]? {
             guard let coordinator else { assertionFailure(); return nil }
             var barItems = [UIBarButtonItem]()
             if ProcessInfo.isRunningOnMac {
@@ -47,7 +39,7 @@ extension KeyFilePickerCoordinator {
                 menu: coordinator._makeAddKeyFileMenu()
             )
             barItems.append(addKeyFileBarButton)
-            return [UIBarButtonItemGroup(barButtonItems: barItems, representativeItem: nil)]
+            return barItems
         }
     }
 
