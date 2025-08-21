@@ -13,6 +13,11 @@ extension URL {
         return self.scheme == DropboxURLHelper.prefixedScheme
     }
 
+    public var isDropboxAppFolderScopedURL: Bool {
+        return isDropboxFileURL
+            && DropboxURLHelper.getScope(from: self) == .appFolder
+    }
+
     func getDropboxLocationDescription() -> String? {
         guard isDropboxFileURL else {
             return nil
@@ -31,15 +36,19 @@ public enum DropboxURLHelper {
         static let accountId = "accountId"
         static let email = "email"
         static let type = "type"
+        static let scope = "scope"
     }
 
     static func build(from item: DropboxItem) -> URL {
-        let queryItems = [
+        var queryItems = [
             URLQueryItem(name: Key.name, value: item.name),
             URLQueryItem(name: Key.accountId, value: item.info.accountId),
             URLQueryItem(name: Key.email, value: item.info.email),
             URLQueryItem(name: Key.type, value: item.info.type.rawValue)
         ]
+        if item.scope != .fullAccess {
+            queryItems.append(URLQueryItem(name: Key.scope, value: item.scope.rawValue))
+        }
         let result = URL.build(
             schemePrefix: schemePrefix,
             scheme: scheme,
@@ -76,21 +85,31 @@ public enum DropboxURLHelper {
             assertionFailure()
             return nil
         }
+        let scope = getScope(from: prefixedURL)
         return DropboxItem(
             name: name,
             isFolder: prefixedURL.hasDirectoryPath,
+            fileInfo: nil,
             pathDisplay: path,
-            info: DropboxAccountInfo(accountId: accountId, email: email, type: type)
+            info: DropboxAccountInfo(accountId: accountId, email: email, type: type),
+            scope: scope
         )
     }
 
     static func getDescription(for prefixedURL: URL) -> String? {
         let queryItems = prefixedURL.queryItems
         let accountType = DropboxAccountInfo.AccountType.from(queryItems[Key.type])
-        let serviceName = accountType?.description ?? LString.connectionTypeDropbox
+        let scope = getScope(from: prefixedURL)
+        let fileProvider = accountType?.getMatchingFileProvider(scope: scope) ?? .keepassiumDropbox
+        let serviceName = fileProvider.localizedName
         let path = prefixedURL.relativePath
         let email = queryItems[Key.email] ?? "?"
         return "\(serviceName) (\(email)) → \(path)"
+    }
+
+    fileprivate static func getScope(from prefixedURL: URL) -> OAuthScope {
+        assert(prefixedURL.isDropboxFileURL)
+        return prefixedURL.queryItems[Key.scope].flatMap { OAuthScope(rawValue: $0) } ?? .fullAccess
     }
 }
 

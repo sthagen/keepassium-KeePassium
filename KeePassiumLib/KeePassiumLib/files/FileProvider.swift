@@ -32,6 +32,9 @@ public enum FileProvider: Hashable {
         "com.keepassium.fileprovider.onedrive.business": .keepassiumOneDriveBusiness,
         "com.keepassium.fileprovider.onedrive.business.appfolder": .keepassiumOneDriveBusinessAppFolder,
         "com.keepassium.fileprovider.dropbox": .keepassiumDropbox,
+        "com.keepassium.fileprovider.dropbox.appfolder": .keepassiumDropboxAppFolder,
+        "com.keepassium.fileprovider.dropbox.business": .keepassiumDropboxBusiness,
+        "com.keepassium.fileprovider.dropbox.business.appfolder": .keepassiumDropboxBusinessAppFolder,
         "com.keepassium.fileprovider.googledrive": .keepassiumGoogleDrive,
         "mega.ios.MEGAPickerFileProvider": .megaNz,
         "de.telekom.Mediencenter.FileProviderExtension": .magentaCloud,
@@ -79,6 +82,9 @@ public enum FileProvider: Hashable {
     case keepassiumOneDriveBusinessAppFolder
 
     case keepassiumDropbox
+    case keepassiumDropboxAppFolder
+    case keepassiumDropboxBusiness
+    case keepassiumDropboxBusinessAppFolder
     case keepassiumGoogleDrive
     case megaNz
     case magentaCloud
@@ -194,6 +200,12 @@ public enum FileProvider: Hashable {
             return LString.connectionTypeOneDriveForBusiness + "*"  // a subtle "footnote"
         case .keepassiumDropbox:
             return LString.connectionTypeDropbox
+        case .keepassiumDropboxAppFolder:
+            return LString.connectionTypeDropbox + "*"
+        case .keepassiumDropboxBusiness:
+            return LString.connectionTypeDropboxBusiness
+        case .keepassiumDropboxBusinessAppFolder:
+            return LString.connectionTypeDropboxBusiness + "*"
         case .keepassiumGoogleDrive:
             return LString.connectionTypeGoogleDrive
         case .megaNz:
@@ -360,6 +372,9 @@ public enum FileProvider: Hashable {
              .keepassiumOneDriveBusiness,
              .keepassiumOneDriveBusinessAppFolder,
              .keepassiumDropbox,
+             .keepassiumDropboxAppFolder,
+             .keepassiumDropboxBusiness,
+             .keepassiumDropboxBusinessAppFolder,
              .keepassiumGoogleDrive:
             return true
         default:

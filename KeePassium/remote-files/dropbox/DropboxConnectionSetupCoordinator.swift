@@ -32,12 +32,13 @@ final class DropboxConnectionSetupCoordinator: RemoteDataSourceSetupCoordinator<
         router: NavigationRouter,
         stateIndicator: BusyStateIndicating,
         oldRef: URLReference?,
+        scope: OAuthScope = .fullAccess,
         selectionMode: RemoteItemSelectionMode = .file
     ) {
         super.init(
             mode: selectionMode,
             manager: DropboxManager.shared,
-            scope: .fullAccess,
+            scope: scope,
             oldRef: oldRef,
             stateIndicator: stateIndicator,
             router: router)
@@ -45,20 +46,22 @@ final class DropboxConnectionSetupCoordinator: RemoteDataSourceSetupCoordinator<
 
     override func onAccountInfoAcquired(_ accountInfo: DropboxAccountInfo) {
         self._accountInfo = accountInfo
+        let currentFileProvider = accountInfo.type.getMatchingFileProvider(scope: _scope)
         if let _oldRef,
            let url = _oldRef.url,
-           _oldRef.fileProvider == .keepassiumDropbox
+           _oldRef.fileProvider == currentFileProvider
         {
             trySelectFile(url, onFailure: { [weak self] in
                 guard let self else { return }
                 self._oldRef = nil
                 self.onAccountInfoAcquired(accountInfo)
             })
+            return
         }
         maybeSuggestPremium(isCorporateStorage: accountInfo.type.isCorporate) { [weak self] in
             guard let self else { return }
             self.showFolder(
-                folder: DropboxItem.root(info: accountInfo),
+                folder: DropboxItem.root(info: accountInfo, scope: _scope),
                 stateIndicator: _stateIndicator
             )
         }

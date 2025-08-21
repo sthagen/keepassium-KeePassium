@@ -12,12 +12,13 @@ final class DropboxDataSource: RemoteDataSource {
     typealias ItemType = DropboxItem
     typealias Manager = DropboxManager
 
-    let usedFileProvider: FileProvider = .keepassiumDropbox
+    let usedFileProvider: FileProvider
     let recoveryAction: String = LString.actionSignInToDropbox
 
     let manager: DropboxManager
 
-    init() {
+    init(fileProvider: FileProvider) {
+        self.usedFileProvider = fileProvider
         manager = DropboxManager.shared
     }
 }

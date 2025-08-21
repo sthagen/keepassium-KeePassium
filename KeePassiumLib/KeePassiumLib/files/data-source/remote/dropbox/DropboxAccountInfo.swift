@@ -38,6 +38,19 @@ public struct DropboxAccountInfo: Equatable {
                 return true
             }
         }
+
+        public func getMatchingFileProvider(scope: OAuthScope) -> FileProvider {
+            switch (self, scope) {
+            case (.basic, .fullAccess), (.pro, .fullAccess):
+                return .keepassiumDropbox
+            case (.basic, .appFolder), (.pro, .appFolder):
+                return .keepassiumDropboxAppFolder
+            case (.business, .fullAccess):
+                return .keepassiumDropboxBusiness
+            case (.business, .appFolder):
+                return .keepassiumDropboxBusinessAppFolder
+            }
+        }
     }
 
     public var accountId: String

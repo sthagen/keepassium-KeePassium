@@ -72,11 +72,12 @@ final public class DropboxManager: NSObject {
         Diag.info("Authenticating with Dropbox")
         let codeVerifier = "\(UUID().uuidString)-\(UUID().uuidString)"
         let webAuthSession = ASWebAuthenticationSession(
-            url: getAuthURL(codeVerifier: codeVerifier),
+            url: getAuthURL(codeVerifier: codeVerifier, scope: scope),
             callbackURLScheme: DropboxAPI.callbackURLScheme,
             completionHandler: { [self] (callbackURL: URL?, error: Error?) in
                 handleAuthResponse(
                     codeVerifier: codeVerifier,
+                    scope: scope,
                     callbackURL: callbackURL,
                     error: error,
                     timeout: timeout,
@@ -102,12 +103,12 @@ final public class DropboxManager: NSObject {
         }
 
         let result = items.compactMap { infoDict -> DropboxItem? in
-            return parseItem(infoDict, info: folder.info)
+            return parseItem(infoDict, info: folder.info, scope: folder.scope)
         }
         return result
     }
 
-    private func parseItem(_ infoDict: [String: Any], info: DropboxAccountInfo) -> DropboxItem? {
+    private func parseItem(_ infoDict: [String: Any], info: DropboxAccountInfo, scope: OAuthScope) -> DropboxItem? {
         guard let name = infoDict[DropboxAPI.Keys.name] as? String,
               let pathDisplay = infoDict[DropboxAPI.Keys.pathDisplay] as? String
         else {
@@ -131,7 +132,8 @@ final public class DropboxManager: NSObject {
                 hash: infoDict[DropboxAPI.Keys.contentHash] as? String
             ),
             pathDisplay: pathDisplay,
-            info: info
+            info: info,
+            scope: scope
         )
     }
 
@@ -150,7 +152,7 @@ final public class DropboxManager: NSObject {
         return base64 ?? ""
     }
 
-    private func getAuthURL(codeVerifier: String) -> URL {
+    private func getAuthURL(codeVerifier: String, scope: OAuthScope) -> URL {
        let codeChallenge = createCodeChallenge(codeVerifier: codeVerifier)
 
         var urlComponents = URLComponents()
@@ -158,7 +160,7 @@ final public class DropboxManager: NSObject {
         urlComponents.host = "www.dropbox.com"
         urlComponents.path = "/oauth2/authorize"
         urlComponents.queryItems = [
-            URLQueryItem(name: "client_id", value: DropboxAPI.clientID),
+            URLQueryItem(name: "client_id", value: DropboxAPI.clientID(scope: scope)),
             URLQueryItem(name: "response_type", value: "code"),
             URLQueryItem(name: "redirect_uri", value: DropboxAPI.authRedirectURI),
             URLQueryItem(name: "disable_signup", value: "true"),
@@ -171,6 +173,7 @@ final public class DropboxManager: NSObject {
 
     private func handleAuthResponse(
         codeVerifier: String,
+        scope: OAuthScope,
         callbackURL: URL?,
         error: Error?,
         timeout: Timeout,
@@ -228,13 +231,16 @@ final public class DropboxManager: NSObject {
             return
         }
         getToken(
-            operation: .authorization(code: authCodeString, codeVerifier: codeVerifier), timeout: timeout,
+            operation: .authorization(code: authCodeString, codeVerifier: codeVerifier),
+            scope: scope,
+            timeout: timeout,
             completionQueue: completionQueue,
             completion: completion)
     }
 
     private func getToken(
         operation: TokenOperation,
+        scope: OAuthScope,
         timeout: Timeout,
         completionQueue: OperationQueue,
         completion: @escaping (Result<OAuthToken, RemoteError>) -> Void
@@ -248,7 +254,7 @@ final public class DropboxManager: NSObject {
             forHTTPHeaderField: DropboxAPI.Keys.contentType)
 
         var postParams = [
-            "client_id=\(DropboxAPI.clientID)"
+            "client_id=\(DropboxAPI.clientID(scope: scope))"
         ]
 
         let refreshToken: String?
@@ -290,7 +296,8 @@ final public class DropboxManager: NSObject {
                 if let token = self.parseTokenResponse(
                     json: json,
                     currentRefreshToken: refreshToken,
-                    accountId: accountId
+                    accountId: accountId,
+                    scope: scope
                 ) {
                     Diag.debug("OAuth token acquired successfully [operation: \(operation)]")
                     completionQueue.addOperation {
@@ -313,7 +320,8 @@ final public class DropboxManager: NSObject {
     private func parseTokenResponse(
         json: [String: Any],
         currentRefreshToken: String?,
-        accountId: String?
+        accountId: String?,
+        scope: OAuthScope
     ) -> OAuthToken? {
         guard let accountId = (json[DropboxAPI.Keys.accountId] as? String) ?? accountId else {
             Diag.error("Failed to parse token response: account_id missing")
@@ -336,6 +344,7 @@ final public class DropboxManager: NSObject {
         let token = OAuthToken(
             accessToken: accessToken,
             refreshToken: refreshToken,
+            scope: scope,
             acquired: Date.now,
             lifespan: TimeInterval(expires_in),
             accountIdentifier: accountId
@@ -526,6 +535,7 @@ extension DropboxManager: RemoteDataSourceManager {
         } else {
             getToken(
                 operation: .refresh(token: token),
+                scope: token.scope,
                 timeout: timeout,
                 completionQueue: completionQueue,
                 completion: completion
@@ -562,7 +572,7 @@ extension DropboxManager: RemoteDataSourceManager {
                 .parseJSONResponse(operation: "itemInfo", item: item, data: data, error: error)
             switch result {
             case .success(let json):
-                if let fileItem = parseItem(json, info: item.info) {
+                if let fileItem = parseItem(json, info: item.info, scope: item.scope) {
                     Diag.debug("File info acquired successfully")
                     completionQueue.addOperation {
                         completion(.success(fileItem))
@@ -670,7 +680,7 @@ extension DropboxManager: RemoteDataSourceManager {
             switch result {
             case .success(let json):
                 if let name = json[DropboxAPI.Keys.name] as? String,
-                   let file = self.parseItem(json, info: item.info) {
+                   let file = self.parseItem(json, info: item.info, scope: item.scope) {
                     Diag.debug("Upload finished successfully")
                     completionQueue.addOperation {
                         completion(.success(UploadResponse(name: name, file: file)))
@@ -701,8 +711,10 @@ extension DropboxManager: RemoteDataSourceManager {
         let item = DropboxItem(
             name: fileName,
             isFolder: false,
+            fileInfo: nil,
             pathDisplay: "\(folder.pathDisplay)/\(fileName)",
-            info: folder.info
+            info: folder.info,
+            scope: folder.scope
         )
         updateFile(
             item,
