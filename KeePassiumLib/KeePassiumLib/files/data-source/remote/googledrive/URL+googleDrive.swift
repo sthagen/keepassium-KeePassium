@@ -13,6 +13,11 @@ extension URL {
         return self.scheme == GoogleDriveURLHelper.prefixedScheme
     }
 
+    public var isGoogleDriveAppFolderScopedURL: Bool {
+        return isGoogleDriveFileURL
+            && GoogleDriveURLHelper.getScope(from: self) == .appFolder
+    }
+
     func getGoogleDriveLocationDescription() -> String? {
         guard isGoogleDriveFileURL else {
             return nil
@@ -31,6 +36,7 @@ public enum GoogleDriveURLHelper {
         static let email = "email"
         static let driveID = "driveID"
         static let canCreateDrives = "canCreateDrives"
+        static let scope = "scope"
     }
 
     static func build(from item: GoogleDriveItem) -> URL {
@@ -42,6 +48,9 @@ public enum GoogleDriveURLHelper {
         ]
         if let driveID = item.sharedDriveID {
             queryItems.append(URLQueryItem(name: Key.driveID, value: driveID))
+        }
+        if item.scope != .fullAccess {
+            queryItems.append(URLQueryItem(name: Key.scope, value: item.scope.rawValue))
         }
         let result = URL.build(
             schemePrefix: schemePrefix,
@@ -74,13 +83,15 @@ public enum GoogleDriveURLHelper {
         let driveID = queryItems[Key.driveID]
         let canCreateDrives = (queryItems[Key.canCreateDrives] == "true")
         let accountInfo = GoogleDriveAccountInfo(email: email, canCreateDrives: canCreateDrives)
+        let scope = getScope(from: prefixedURL)
 
         return GoogleDriveItem(
-            name: prefixedURL.path,
+            name: prefixedURL.lastPathComponent,
             id: id,
             isFolder: false,
             isShortcut: false,
             accountInfo: accountInfo,
+            scope: scope,
             sharedDriveID: driveID
         )
     }
@@ -89,7 +100,14 @@ public enum GoogleDriveURLHelper {
         guard let item = GoogleDriveItem.fromURL(prefixedURL) else {
             return LString.connectionTypeGoogleDrive + "(?)"
         }
-        return "\(item.accountInfo.serviceName) (\(item.accountInfo.email))"
+        let fileProvider = item.accountInfo.getMatchingFileProvider(scope: item.scope)
+        let serviceName = fileProvider.localizedName
+        return "\(serviceName) (\(item.accountInfo.email))"
+    }
+
+    fileprivate static func getScope(from prefixedURL: URL) -> OAuthScope {
+        assert(prefixedURL.isGoogleDriveFileURL)
+        return prefixedURL.queryItems[Key.scope].flatMap { OAuthScope(rawValue: $0) } ?? .fullAccess
     }
 }
 

@@ -36,6 +36,7 @@ public enum FileProvider: Hashable {
         "com.keepassium.fileprovider.dropbox.business": .keepassiumDropboxBusiness,
         "com.keepassium.fileprovider.dropbox.business.appfolder": .keepassiumDropboxBusinessAppFolder,
         "com.keepassium.fileprovider.googledrive": .keepassiumGoogleDrive,
+        "com.keepassium.fileprovider.googledrive.appfolder": .keepassiumGoogleDriveAppFolder,
         "mega.ios.MEGAPickerFileProvider": .megaNz,
         "de.telekom.Mediencenter.FileProviderExtension": .magentaCloud,
         "it.twsweb.Nextcloud.File-Provider-Extension": .nextcloud,
@@ -86,6 +87,7 @@ public enum FileProvider: Hashable {
     case keepassiumDropboxBusiness
     case keepassiumDropboxBusinessAppFolder
     case keepassiumGoogleDrive
+    case keepassiumGoogleDriveAppFolder
     case megaNz
     case magentaCloud
     case nextcloud
@@ -193,21 +195,23 @@ public enum FileProvider: Hashable {
         case .keepassiumOneDrivePersonal:
             return LString.connectionTypeOneDrivePersonal
         case .keepassiumOneDrivePersonalAppFolder:
-            return LString.connectionTypeOneDrivePersonal + "*" // a subtle "footnote"
+            return Self.decorateForAppFolderScope(LString.connectionTypeOneDrivePersonal)
         case .keepassiumOneDriveBusiness:
             return LString.connectionTypeOneDriveForBusiness
         case .keepassiumOneDriveBusinessAppFolder:
-            return LString.connectionTypeOneDriveForBusiness + "*"  // a subtle "footnote"
+            return Self.decorateForAppFolderScope(LString.connectionTypeOneDriveForBusiness)
         case .keepassiumDropbox:
             return LString.connectionTypeDropbox
         case .keepassiumDropboxAppFolder:
-            return LString.connectionTypeDropbox + "*"
+            return Self.decorateForAppFolderScope(LString.connectionTypeDropbox)
         case .keepassiumDropboxBusiness:
             return LString.connectionTypeDropboxBusiness
         case .keepassiumDropboxBusinessAppFolder:
-            return LString.connectionTypeDropboxBusiness + "*"
+            return Self.decorateForAppFolderScope(LString.connectionTypeDropboxBusiness)
         case .keepassiumGoogleDrive:
             return LString.connectionTypeGoogleDrive
+        case .keepassiumGoogleDriveAppFolder:
+            return Self.decorateForAppFolderScope(LString.connectionTypeGoogleDrive)
         case .megaNz:
             return NSLocalizedString(
                 "[FileProvider/Mega.nz/name]",
@@ -339,6 +343,10 @@ public enum FileProvider: Hashable {
         // swiftlint:enable line_length
     }
 
+    public static func decorateForAppFolderScope(_ fileProviderName: String) -> String {
+        return fileProviderName + "*" // a subtle "footnote"
+    }
+
     private func getLocalStorageName() -> String {
         guard UIDevice.current.userInterfaceIdiom == .pad else {
             return NSLocalizedString(
@@ -375,7 +383,8 @@ public enum FileProvider: Hashable {
              .keepassiumDropboxAppFolder,
              .keepassiumDropboxBusiness,
              .keepassiumDropboxBusinessAppFolder,
-             .keepassiumGoogleDrive:
+             .keepassiumGoogleDrive,
+             .keepassiumGoogleDriveAppFolder:
             return true
         default:
             return false

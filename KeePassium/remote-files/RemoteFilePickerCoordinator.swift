@@ -64,7 +64,9 @@ final class RemoteFilePickerCoordinator: BaseCoordinator {
         case .keepassiumDropboxBusinessAppFolder:
             return .dropboxBusiness(scope: .appFolder)
         case .keepassiumGoogleDrive:
-            return .googleDrive
+            return .googleDrive(scope: .fullAccess)
+        case .keepassiumGoogleDriveAppFolder:
+            return .googleDrive(scope: .appFolder)
         case .keepassiumOneDrivePersonal:
             return .oneDrivePersonal(scope: .fullAccess)
         case .keepassiumOneDrivePersonalAppFolder:
@@ -102,14 +104,12 @@ extension RemoteFilePickerCoordinator: ConnectionTypePickerDelegate {
         switch connectionType {
         case .webdav:
             startWebDAVSetup(stateIndicator: viewController)
-        case .oneDrivePersonal(let scope):
-            startOneDriveSetup(scope: scope, stateIndicator: viewController)
-        case .oneDriveForBusiness(let scope):
+        case .oneDrivePersonal(let scope), .oneDriveForBusiness(let scope):
             startOneDriveSetup(scope: scope, stateIndicator: viewController)
         case .dropbox(let scope), .dropboxBusiness(let scope):
             startDropboxSetup(scope: scope, stateIndicator: viewController)
-        case .googleDrive, .googleWorkspace:
-            startGoogleDriveSetup(stateIndicator: viewController)
+        case .googleDrive(let scope), .googleWorkspace(let scope):
+            startGoogleDriveSetup(scope: scope, stateIndicator: viewController)
         }
     }
 
@@ -148,9 +148,10 @@ extension RemoteFilePickerCoordinator: WebDAVConnectionSetupCoordinatorDelegate 
 }
 
 extension RemoteFilePickerCoordinator: GoogleDriveConnectionSetupCoordinatorDelegate {
-    private func startGoogleDriveSetup(stateIndicator: BusyStateIndicating) {
+    private func startGoogleDriveSetup(scope: OAuthScope, stateIndicator: BusyStateIndicating) {
         let setupCoordinator = GoogleDriveConnectionSetupCoordinator(
             router: _router,
+            scope: scope,
             stateIndicator: stateIndicator,
             oldRef: oldRef
         )

@@ -12,8 +12,10 @@ public enum RemoteConnectionType: Hashable {
         .dropbox(scope: .appFolder),
         .dropboxBusiness(scope: .fullAccess),
         .dropboxBusiness(scope: .appFolder),
-        .googleDrive,
-        .googleWorkspace,
+        .googleDrive(scope: .fullAccess),
+        .googleDrive(scope: .appFolder),
+        .googleWorkspace(scope: .fullAccess),
+        .googleWorkspace(scope: .appFolder),
         .oneDrivePersonal(scope: .fullAccess),
         .oneDrivePersonal(scope: .appFolder),
         .oneDriveForBusiness(scope: .fullAccess),
@@ -30,8 +32,8 @@ public enum RemoteConnectionType: Hashable {
     case oneDriveForBusiness(scope: OAuthScope)
     case dropbox(scope: OAuthScope)
     case dropboxBusiness(scope: OAuthScope)
-    case googleDrive
-    case googleWorkspace
+    case googleDrive(scope: OAuthScope)
+    case googleWorkspace(scope: OAuthScope)
 }
 
 extension RemoteConnectionType: CustomStringConvertible {
@@ -67,10 +69,20 @@ extension RemoteConnectionType: CustomStringConvertible {
             case .appFolder:
                 return FileProvider.keepassiumDropboxBusinessAppFolder.localizedName
             }
-        case .googleDrive:
-            return LString.connectionTypeGoogleDrive
-        case .googleWorkspace:
-            return LString.connectionTypeGoogleWorkspace
+        case .googleDrive(let scope):
+            switch scope {
+            case .fullAccess:
+                return FileProvider.keepassiumGoogleDrive.localizedName
+            case .appFolder:
+                return FileProvider.keepassiumGoogleDriveAppFolder.localizedName
+            }
+        case .googleWorkspace(let scope):
+            switch scope {
+            case .fullAccess:
+                return LString.connectionTypeGoogleWorkspace
+            case .appFolder:
+                return FileProvider.decorateForAppFolderScope(LString.connectionTypeGoogleWorkspace)
+            }
         }
     }
 
@@ -79,7 +91,9 @@ extension RemoteConnectionType: CustomStringConvertible {
         case .oneDrivePersonal(scope: .appFolder),
              .oneDriveForBusiness(scope: .appFolder),
              .dropbox(scope: .appFolder),
-             .dropboxBusiness(scope: .appFolder):
+             .dropboxBusiness(scope: .appFolder),
+             .googleDrive(scope: .appFolder),
+             .googleWorkspace(scope: .appFolder):
             return LString.connectionTypeDedicatedAppFolder
         default:
             return nil
@@ -118,8 +132,13 @@ extension RemoteConnectionType: CustomStringConvertible {
             case .appFolder:
                 return .keepassiumDropboxBusinessAppFolder
             }
-        case .googleDrive, .googleWorkspace:
-            return .keepassiumGoogleDrive
+        case .googleDrive(let scope), .googleWorkspace(let scope):
+            switch scope {
+            case .fullAccess:
+                return .keepassiumGoogleDrive
+            case .appFolder:
+                return .keepassiumGoogleDriveAppFolder
+            }
         }
     }
 }

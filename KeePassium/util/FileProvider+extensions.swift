@@ -39,7 +39,8 @@ extension FileProvider {
              .keepassiumDropboxBusiness,
              .keepassiumDropboxBusinessAppFolder:
             return .fileProviderDropbox
-        case .keepassiumGoogleDrive:
+        case .keepassiumGoogleDrive,
+            .keepassiumGoogleDriveAppFolder:
             return .fileProviderGoogleDrive
         case .nextcloud:
             return .fileProviderNextCloud

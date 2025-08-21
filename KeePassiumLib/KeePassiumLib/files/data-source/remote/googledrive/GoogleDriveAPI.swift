@@ -33,9 +33,14 @@ internal enum GoogleDriveAPI {
     }
 
     static var authRedirectURI = callbackURLScheme + "://"
-    static let authScope = [
-        "https://www.googleapis.com/auth/drive",
-    ]
+    static func authScope(for scope: OAuthScope) -> [String] {
+        switch scope {
+        case .fullAccess:
+            return ["https://www.googleapis.com/auth/drive"]
+        case .appFolder:
+            return ["https://www.googleapis.com/auth/drive.appfolder"]
+        }
+    }
     static let maxUploadSize = 50 * 1024 * 1024
     static let tokenRequestURL = URL(string: "https://www.googleapis.com/oauth2/v4/token")!
     static let tokenRefreshURL = URL(string: "https://oauth2.googleapis.com/token")!
@@ -88,6 +93,7 @@ internal enum GoogleDriveAPI {
         static let uploadType = "uploadType"
         static let parents = "parents"
         static let md5Checksum = "md5Checksum"
+        static let spaces = "spaces"
     }
 }
 

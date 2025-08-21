@@ -27,17 +27,24 @@ protocol GoogleDriveConnectionSetupCoordinatorDelegate: AnyObject {
 
 final class GoogleDriveConnectionSetupCoordinator: RemoteDataSourceSetupCoordinator<GoogleDriveManager> {
     weak var delegate: GoogleDriveConnectionSetupCoordinatorDelegate?
+    private let scope: OAuthScope
 
     init(
         router: NavigationRouter,
+        scope: OAuthScope = .fullAccess,
         stateIndicator: BusyStateIndicating,
         oldRef: URLReference?,
         selectionMode: RemoteItemSelectionMode = .file
     ) {
+        if oldRef?.url?.isGoogleDriveAppFolderScopedURL == true {
+            self.scope = .appFolder
+        } else {
+            self.scope = scope
+        }
         super.init(
             mode: selectionMode,
             manager: GoogleDriveManager.shared,
-            scope: .fullAccess,
+            scope: self.scope,
             oldRef: oldRef,
             stateIndicator: stateIndicator,
             router: router)
@@ -45,21 +52,31 @@ final class GoogleDriveConnectionSetupCoordinator: RemoteDataSourceSetupCoordina
 
     override func onAccountInfoAcquired(_ accountInfo: GoogleDriveAccountInfo) {
         self._accountInfo = accountInfo
+        let currentFileProvider = accountInfo.getMatchingFileProvider(scope: scope)
         if let _oldRef,
            let url = _oldRef.url,
-           _oldRef.fileProvider == .keepassiumGoogleDrive
+           _oldRef.fileProvider == currentFileProvider
         {
             trySelectFile(url, onFailure: { [weak self] in
                 guard let self else { return }
                 self._oldRef = nil
                 self.onAccountInfoAcquired(accountInfo)
             })
+            return
         }
+
         maybeSuggestPremium(isCorporateStorage: accountInfo.isWorkspaceAccount) { [weak self] in
-            self?._showFolder(
+            guard let self else { return }
+            if _scope == .appFolder {
+                let appFolderItem = GoogleDriveItem.getDedicatedAppFolder(accountInfo: accountInfo)
+                showFolder(folder: appFolderItem, stateIndicator: _stateIndicator)
+                return
+            }
+
+            _showFolder(
                 items: [
-                    GoogleDriveItem.getSpecialFolder(.myDrive, accountInfo: accountInfo),
-                    GoogleDriveItem.getSpecialFolder(.sharedWithMe, accountInfo: accountInfo),
+                    GoogleDriveItem.getSpecialFolder(.myDrive, accountInfo: accountInfo, scope: _scope),
+                    GoogleDriveItem.getSpecialFolder(.sharedWithMe, accountInfo: accountInfo, scope: _scope),
                 ],
                 parent: nil,
                 title: accountInfo.serviceName

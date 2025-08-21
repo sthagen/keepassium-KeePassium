@@ -80,7 +80,7 @@ extension GoogleDriveManager {
     ) {
         Diag.info("Authenticating with Google Drive")
         let webAuthSession = ASWebAuthenticationSession(
-            url: getAuthURL(),
+            url: getAuthURL(scope: scope),
             callbackURLScheme: GoogleDriveAPI.callbackURLScheme,
             completionHandler: { [self] (callbackURL: URL?, error: Error?) in
                 handleAuthResponse(
@@ -99,16 +99,28 @@ extension GoogleDriveManager {
         webAuthSession.start()
     }
 
-    private func getAuthURL() -> URL {
+    private func getAuthURL(scope: OAuthScope) -> URL {
         var urlComponents = URLComponents()
         urlComponents.scheme = "https"
         urlComponents.host = "accounts.google.com"
         urlComponents.path = "/o/oauth2/v2/auth"
         urlComponents.queryItems = [
-            URLQueryItem(name: GoogleDriveAPI.Keys.clientID, value: GoogleDriveAPI.clientID),
-            URLQueryItem(name: GoogleDriveAPI.Keys.responseType, value: "code"),
-            URLQueryItem(name: GoogleDriveAPI.Keys.scope, value: GoogleDriveAPI.authScope.joined(separator: " ")),
-            URLQueryItem(name: GoogleDriveAPI.Keys.redirectURI, value: GoogleDriveAPI.authRedirectURI),
+            URLQueryItem(
+                name: GoogleDriveAPI.Keys.clientID,
+                value: GoogleDriveAPI.clientID
+            ),
+            URLQueryItem(
+                name: GoogleDriveAPI.Keys.responseType,
+                value: "code"
+            ),
+            URLQueryItem(
+                name: GoogleDriveAPI.Keys.scope,
+                value: GoogleDriveAPI.authScope(for: scope).joined(separator: " ")
+            ),
+            URLQueryItem(
+                name: GoogleDriveAPI.Keys.redirectURI,
+                value: GoogleDriveAPI.authRedirectURI
+            ),
         ]
         return urlComponents.url!
     }
@@ -444,7 +456,7 @@ extension GoogleDriveManager {
         }
 
         let result = items.compactMap { infoDict -> GoogleDriveItem? in
-            return parseItem(infoDict, accountInfo: folder.accountInfo)
+            return parseItem(infoDict, accountInfo: folder.accountInfo, scope: folder.scope)
         }
         return result
     }
@@ -530,7 +542,7 @@ extension GoogleDriveManager {
                 .parseJSONResponse(operation: "itemInfo", data: data, error: error)
             switch result {
             case .success(let json):
-                if let file = parseItem(json, accountInfo: item.accountInfo) {
+                if let file = parseItem(json, accountInfo: item.accountInfo, scope: item.scope) {
                     Diag.debug("File metadata acquired successfully")
                     completionQueue.addOperation {
                         completion(.success(file))
@@ -549,7 +561,11 @@ extension GoogleDriveManager {
         dataTask.resume()
     }
 
-    private func parseItem(_ infoDict: [String: Any], accountInfo: GoogleDriveAccountInfo) -> GoogleDriveItem? {
+    private func parseItem(
+        _ infoDict: [String: Any],
+        accountInfo: GoogleDriveAccountInfo,
+        scope: OAuthScope
+    ) -> GoogleDriveItem? {
         guard let name = infoDict[GoogleDriveAPI.Keys.name] as? String,
               var itemID = infoDict[GoogleDriveAPI.Keys.id] as? String,
               var itemMimeType = infoDict[GoogleDriveAPI.Keys.mimeType] as? String
@@ -600,6 +616,7 @@ extension GoogleDriveManager {
             isShortcut: isShortcut,
             fileInfo: fileInfo,
             accountInfo: accountInfo,
+            scope: scope,
             sharedDriveID: driveID
         )
     }
@@ -627,7 +644,7 @@ extension GoogleDriveManager {
                 .parseJSONResponse(operation: "updateFile", data: data, error: error)
             switch result {
             case .success(let json):
-                if let file = parseItem(json, accountInfo: item.accountInfo) {
+                if let file = parseItem(json, accountInfo: item.accountInfo, scope: item.scope) {
                     Diag.debug("Upload finished successfully")
                     completionQueue.addOperation {
                         completion(.success(UploadResponse(name: file.name, file: file)))
@@ -665,9 +682,10 @@ extension GoogleDriveManager {
         urlRequest.setValue("application/json; charset=UTF-8", forHTTPHeaderField: GoogleDriveAPI.Keys.contentType)
         urlRequest.timeoutInterval = timeout.duration
 
+        let parentId = (folder.scope == .appFolder && folder.id == "appfolder") ? "appDataFolder" : folder.id
         var params: [String: Any] = [
             GoogleDriveAPI.Keys.name: fileName,
-            GoogleDriveAPI.Keys.parents: [folder.id],
+            GoogleDriveAPI.Keys.parents: [parentId],
         ]
         if let driveID = folder.sharedDriveID {
             params[GoogleDriveAPI.Keys.driveID] = driveID
@@ -681,7 +699,7 @@ extension GoogleDriveManager {
                 .parseJSONResponse(operation: "createFile", data: data, error: error)
             switch result {
             case .success(let json):
-                if let newFile = parseItem(json, accountInfo: folder.accountInfo) {
+                if let newFile = parseItem(json, accountInfo: folder.accountInfo, scope: folder.scope) {
                     Diag.debug("File created successfully, uploading content")
                     self.updateFile(
                         newFile,

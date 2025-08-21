@@ -23,4 +23,13 @@ public struct GoogleDriveAccountInfo {
             return LString.connectionTypeGoogleDrive
         }
     }
+
+    public func getMatchingFileProvider(scope: OAuthScope) -> FileProvider {
+        switch scope {
+        case .fullAccess:
+            return .keepassiumGoogleDrive
+        case .appFolder:
+            return .keepassiumGoogleDriveAppFolder
+        }
+    }
 }

@@ -15,6 +15,7 @@ public struct GoogleDriveItem: RemoteFileItem {
     public var isShortcut: Bool
     public var fileInfo: FileInfo?
     public var accountInfo: GoogleDriveAccountInfo
+    public let scope: OAuthScope
     public var supportsItemCreation: Bool {
         return isFolder
     }
@@ -30,6 +31,7 @@ public struct GoogleDriveItem: RemoteFileItem {
         isShortcut: Bool,
         fileInfo: FileInfo? = nil,
         accountInfo: GoogleDriveAccountInfo,
+        scope: OAuthScope = .fullAccess,
         sharedDriveID: String? = nil,
         rootType: RootType? = nil
     ) {
@@ -39,6 +41,7 @@ public struct GoogleDriveItem: RemoteFileItem {
         self.isShortcut = isShortcut
         self.fileInfo = fileInfo
         self.accountInfo = accountInfo
+        self.scope = scope
         self.sharedDriveID = sharedDriveID
         self.rootType = rootType
     }
@@ -58,14 +61,30 @@ extension GoogleDriveItem {
         }
     }
 
-    public static func getSpecialFolder(_ type: RootType, accountInfo: GoogleDriveAccountInfo) -> Self {
+    public static func getSpecialFolder(
+        _ type: RootType,
+        accountInfo: GoogleDriveAccountInfo,
+        scope: OAuthScope = .fullAccess
+    ) -> Self {
         return GoogleDriveItem(
             name: type.description,
             id: "",
             isFolder: true,
             isShortcut: false,
             accountInfo: accountInfo,
+            scope: scope,
             rootType: type
+        )
+    }
+
+    public static func getDedicatedAppFolder(accountInfo: GoogleDriveAccountInfo) -> Self {
+        return GoogleDriveItem(
+            name: accountInfo.getMatchingFileProvider(scope: .appFolder).localizedName,
+            id: "appfolder",
+            isFolder: true,
+            isShortcut: false,
+            accountInfo: accountInfo,
+            scope: .appFolder
         )
     }
 
@@ -96,34 +115,44 @@ extension GoogleDriveItem {
         case .children(let nextPageToken):
             urlComponents.path = "/drive/v3/files"
             addQueryItem(GoogleDriveAPI.Keys.fields, "nextPageToken,files(\(GoogleDriveAPI.fileFields))")
-            if let sharedDriveID {
-                addQueryItem(GoogleDriveAPI.Keys.includeItemsFromAllDrives, "true")
-                addQueryItem(GoogleDriveAPI.Keys.corpora, "drive")
-                addQueryItem(GoogleDriveAPI.Keys.driveID, sharedDriveID)
-            }
-            var qParamParts = ["not trashed"]
-            if id.isNotEmpty {
-                qParamParts.append("'\(id)' in parents")
-            } else if rootType == .myDrive {
-                qParamParts.append("'root' in parents")
-            }
 
-            switch rootType {
-            case .myDrive:
-                qParamParts.append("'me' in owners")
-            case .sharedWithMe:
-                qParamParts.append("sharedWithMe")
-            default:
-                break
+            if scope == .appFolder {
+                addQueryItem(GoogleDriveAPI.Keys.spaces, "appDataFolder")
+                var qParamParts = ["not trashed"]
+                if id.isNotEmpty && id != "appfolder" {
+                    qParamParts.append("'\(id)' in parents")
+                }
+                addQueryItem(GoogleDriveAPI.Keys.q, qParamParts.joined(separator: " and "))
+            } else {
+                if let sharedDriveID {
+                    addQueryItem(GoogleDriveAPI.Keys.includeItemsFromAllDrives, "true")
+                    addQueryItem(GoogleDriveAPI.Keys.corpora, "drive")
+                    addQueryItem(GoogleDriveAPI.Keys.driveID, sharedDriveID)
+                }
+                var qParamParts = ["not trashed"]
+                if id.isNotEmpty {
+                    qParamParts.append("'\(id)' in parents")
+                } else if rootType == .myDrive {
+                    qParamParts.append("'root' in parents")
+                }
+
+                switch rootType {
+                case .myDrive:
+                    qParamParts.append("'me' in owners")
+                case .sharedWithMe:
+                    qParamParts.append("sharedWithMe")
+                default:
+                    break
+                }
+                addQueryItem(GoogleDriveAPI.Keys.q, qParamParts.joined(separator: " and "))
+                addQueryItem(GoogleDriveAPI.Keys.supportsAllDrives, "true")
             }
-            addQueryItem(GoogleDriveAPI.Keys.q, qParamParts.joined(separator: " and "))
 
             if let nextPageToken {
                 addQueryItem(GoogleDriveAPI.Keys.pageToken, nextPageToken)
             }
         case .itemInfo:
             urlComponents.path = "/drive/v3/files/\(id)"
-            addQueryItem(GoogleDriveAPI.Keys.supportsAllDrives, "true")
             addQueryItem(GoogleDriveAPI.Keys.fields, GoogleDriveAPI.fileFields)
         case .content:
             urlComponents.path = "/drive/v3/files/\(id)"
@@ -135,7 +164,6 @@ extension GoogleDriveItem {
             assert(isFolder, "Parent item is a file, cannot create a subfile.")
             urlComponents.path = "/drive/v3/files/"
         }
-        addQueryItem(GoogleDriveAPI.Keys.supportsAllDrives, "true")
         return urlComponents.url!
     }
 }
