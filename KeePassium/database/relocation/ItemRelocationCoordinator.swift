@@ -455,6 +455,10 @@ extension ItemRelocationCoordinator: DatabasePickerCoordinatorDelegate {
         _router.navigationController.hideAllToasts()
         unlockDatabase(fileRef)
     }
+
+    func didPressShowDiagnostics(at popoverAnchor: PopoverAnchor?, in viewController: UIViewController) {
+        showDiagnostics()
+    }
 }
 
 extension ItemRelocationCoordinator: DatabaseUnlockerCoordinatorDelegate {

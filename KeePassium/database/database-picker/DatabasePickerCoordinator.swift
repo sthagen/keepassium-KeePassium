@@ -31,9 +31,6 @@ extension DatabasePickerCoordinatorDelegate {
     ) -> Bool {
         return true
     }
-    func didPressShowDiagnostics(at popoverAnchor: PopoverAnchor?, in viewController: UIViewController) {
-        assertionFailure("Called a method not implemented by delegate")
-    }
     func didPressShowAppSettings(at popoverAnchor: PopoverAnchor?, in viewController: UIViewController) {
         assertionFailure("Called a method not implemented by delegate")
     }

@@ -16,6 +16,14 @@ extension AutoFillCoordinator {
         crashReportVC.delegate = self
         _router.push(crashReportVC, animated: false, onPop: nil)
     }
+
+    internal func _showDiagnostics() {
+        let modalRouter = NavigationRouter.createModal(style: .formSheet)
+        let coordinator = DiagnosticsViewerCoordinator(router: modalRouter)
+        addChildCoordinator(coordinator, onDismiss: nil)
+        coordinator.start()
+        _router.present(modalRouter, animated: true, completion: nil)
+    }
 }
 
 extension AutoFillCoordinator: CrashReportDelegate {

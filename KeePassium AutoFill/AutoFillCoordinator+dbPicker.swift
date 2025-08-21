@@ -39,4 +39,8 @@ extension AutoFillCoordinator: DatabasePickerCoordinatorDelegate {
         }
 
     }
+
+    func didPressShowDiagnostics(at popoverAnchor: PopoverAnchor?, in viewController: UIViewController) {
+        _showDiagnostics()
+    }
 }
