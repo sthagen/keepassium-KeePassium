@@ -26,7 +26,7 @@ final class RemoteFileExportCoordinator: BaseCoordinator {
     init(data: ByteArray, fileName: String, router: NavigationRouter) {
         self.data = data
         self.fileName = fileName
-        connectionTypePicker = ConnectionTypePickerVC.make()
+        connectionTypePicker = ConnectionTypePickerVC()
         super.init(router: router)
         connectionTypePicker.delegate = self
         connectionTypePicker.showsOtherLocations = false
@@ -230,15 +230,8 @@ final class RemoteFileExportCoordinator: BaseCoordinator {
 }
 
 extension RemoteFileExportCoordinator: ConnectionTypePickerDelegate {
-    func isConnectionTypeEnabled(
-        _ connectionType: RemoteConnectionType,
-        in viewController: ConnectionTypePickerVC
-    ) -> Bool {
-        return true
-    }
-
-    func willSelect(
-        connectionType: KeePassiumLib.RemoteConnectionType,
+    func shouldSelect(
+        connectionType: RemoteConnectionType,
         in viewController: ConnectionTypePickerVC
     ) -> Bool {
         if connectionType.isPremiumUpgradeRequired {

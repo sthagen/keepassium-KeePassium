@@ -23,10 +23,6 @@ public enum RemoteConnectionType: Hashable {
         .webdav,
     ]
 
-    public static var availableValues: [RemoteConnectionType] {
-        return allValues
-    }
-
     case webdav
     case oneDrivePersonal(scope: OAuthScope)
     case oneDriveForBusiness(scope: OAuthScope)

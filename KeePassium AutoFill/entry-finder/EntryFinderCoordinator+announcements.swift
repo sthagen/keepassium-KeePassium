@@ -47,12 +47,14 @@ extension EntryFinderCoordinator {
         let announcement = AnnouncementItem(
             title: LString.callToActionActivateQuickAutoFill,
             body: LString.premiumFeatureQuickAutoFillDescription,
-            actionTitle: LString.actionLearnMore,
             image: .symbol(.infoCircle),
-            onDidPressAction: { [weak viewController] _ in
-                QuickAutoFillPrompt.dismissDate = Date.now
-                URLOpener(viewController).open(url: URL.AppHelp.quickAutoFillIntro)
-            },
+            action: UIAction(
+                title: LString.actionLearnMore,
+                handler: {[weak viewController] _ in
+                    QuickAutoFillPrompt.dismissDate = Date.now
+                    URLOpener(viewController).open(url: URL.AppHelp.quickAutoFillIntro)
+                }
+            ),
             onDidPressClose: { [weak self] _ in
                 guard let self else { return }
                 QuickAutoFillPrompt.dismissDate = Date.now
@@ -65,23 +67,25 @@ extension EntryFinderCoordinator {
 
     private func makeFallbackDatabaseAnnouncement(for viewController: EntryFinderVC) -> AnnouncementItem {
         let originalRef: URLReference = _databaseFile.originalReference
-        let actionTitle: String?
+        let action: UIAction?
         switch originalRef.error {
         case .authorizationRequired(_, let recoveryAction):
-            actionTitle = recoveryAction
+            action = UIAction(
+                title: recoveryAction,
+                handler: { [weak self] _ in
+                    guard let self else { return }
+                    delegate?.didPressReinstateDatabase(originalRef, in: self)
+                    refresh()
+                }
+            )
         default:
-            actionTitle = nil
+            action = nil
         }
         let announcement = AnnouncementItem(
             title: LString.databaseIsFallbackCopy,
             body: originalRef.error?.errorDescription,
-            actionTitle: actionTitle,
             image: .symbol(.iCloudSlash),
-            onDidPressAction: { [weak self] _ in
-                guard let self else { return }
-                delegate?.didPressReinstateDatabase(originalRef, in: self)
-                refresh()
-            }
+            action: action,
         )
         return announcement
     }
@@ -90,7 +94,6 @@ extension EntryFinderCoordinator {
         return AnnouncementItem(
             title: nil,
             body: LString.databaseIsReadOnly,
-            actionTitle: nil,
             image: nil
         )
     }
@@ -99,11 +102,13 @@ extension EntryFinderCoordinator {
         return AnnouncementItem(
             title: LString.titleUnsavedChanges,
             body: LString.titleOpenAppToSaveChanges,
-            actionTitle: LString.callToActionOpenTheMainApp,
             image: .symbol(.unsavedChanges, tint: .warningMessage),
-            onDidPressAction: { [weak viewController] _ in
-                URLOpener(viewController).open(url: AppGroup.launchMainAppURL)
-            }
+            action: UIAction(
+                title: LString.callToActionOpenTheMainApp,
+                handler: { [weak viewController] _ in
+                    URLOpener(viewController).open(url: AppGroup.launchMainAppURL)
+                }
+            )
         )
     }
 
@@ -113,9 +118,7 @@ extension EntryFinderCoordinator {
         return AnnouncementItem(
             title: nil,
             body: LString.callToActionSelectEntryForPasskey,
-            actionTitle: nil,
-            image: .symbol(.infoCircle),
-            onDidPressAction: nil
+            image: .symbol(.infoCircle)
         )
     }
 }

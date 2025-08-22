@@ -137,13 +137,14 @@ final class EntryFieldViewerVC: UITableViewController, Refreshable {
         return AnnouncementItem(
             title: dbRef.visibleFileName,
             body: nil,
-            actionTitle: LString.actionOpenDatabase,
             image: fpIcon,
-            onDidPressAction: { [weak self] _ in
-                guard let self else { return }
-                delegate?.didPressOpenLinkedDatabase(info, in: self)
-            },
-            onDidPressClose: nil
+            action: UIAction(
+                title: LString.actionOpenDatabase,
+                handler: { [weak self] _ in
+                    guard let self else { return }
+                    delegate?.didPressOpenLinkedDatabase(info, in: self)
+                }
+            )
         )
     }
 

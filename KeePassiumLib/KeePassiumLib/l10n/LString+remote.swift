@@ -70,6 +70,11 @@ extension LString {
         bundle: Bundle.framework,
         value: "Connection",
         comment: "Network connection. For example `Connection: WebDAV` or `Connection: MyCloud`.")
+    public static let directConnectionTitle = NSLocalizedString(
+        "[RemoteConnection/Direct/title]",
+        bundle: Bundle.framework,
+        value: "Online Services",
+        comment: "Title of a list with online storage services like OneDrive, Dropbox, etc.")
     public static let directConnectionDescription = NSLocalizedString(
         "[RemoteConnection/Direct/description]",
         bundle: Bundle.framework,

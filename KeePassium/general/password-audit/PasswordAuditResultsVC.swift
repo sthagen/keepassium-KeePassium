@@ -149,7 +149,6 @@ final class PasswordAuditResultsVC: UIViewController {
         announcements.append(AnnouncementItem(
             title: nil,
             body: LString.exposureCountDescription,
-            actionTitle: nil,
             image: .symbol(.infoCircle)
         ))
 

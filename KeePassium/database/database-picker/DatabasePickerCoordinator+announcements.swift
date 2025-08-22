@@ -15,37 +15,41 @@ extension DatabasePickerCoordinator {
         if mode == .autoFill,
            FileKeeper.shared.areSandboxFilesLikelyMissing()
         {
-            announcements.append(makeSandboxUnreachableAnnouncement())
+            announcements.append(makeSandboxUnreachableAnnouncement(for: _filePickerVC))
         }
 
         if _hasPendingTransactions {
-            announcements.append(makePendingTransactionsAnnouncement())
+            announcements.append(makePendingTransactionsAnnouncement(for: _filePickerVC))
         }
         self.announcements = announcements
     }
 
-    private func makeSandboxUnreachableAnnouncement() -> AnnouncementItem {
+    private func makeSandboxUnreachableAnnouncement(for viewController: UIViewController) -> AnnouncementItem {
         return AnnouncementItem(
             title: nil,
             body: LString.messageLocalFilesMissing,
-            actionTitle: LString.callToActionOpenTheMainApp,
             image: .symbol(.questionmarkFolder),
-            onDidPressAction: { announcementView in
-                URLOpener(announcementView).open(url: AppGroup.launchMainAppURL)
-            }
+            action: UIAction(
+                title: LString.callToActionOpenTheMainApp,
+                handler: { [weak viewController] _ in
+                    URLOpener(viewController).open(url: AppGroup.launchMainAppURL)
+                }
+            )
         )
     }
 
-    private func makePendingTransactionsAnnouncement() -> AnnouncementItem {
+    private func makePendingTransactionsAnnouncement(for viewController: UIViewController) -> AnnouncementItem {
         if AppGroup.isAppExtension {
             return AnnouncementItem(
                 title: LString.titleUnsavedChanges,
                 body: LString.titleOpenAppToSaveChanges,
-                actionTitle: LString.callToActionOpenTheMainApp,
                 image: .symbol(.unsavedChanges, tint: .warningMessage),
-                onDidPressAction: { [weak presenter = _presenterForModals] _ in
-                    URLOpener(presenter).open(url: AppGroup.launchMainAppURL)
-                }
+                action: UIAction(
+                    title: LString.callToActionOpenTheMainApp,
+                    handler: { [weak viewController] _ in
+                        URLOpener(viewController).open(url: AppGroup.launchMainAppURL)
+                    }
+                )
             )
         } else {
             return AnnouncementItem(

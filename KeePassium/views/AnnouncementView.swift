@@ -11,38 +11,29 @@ import UIKit
 struct AnnouncementItem: Hashable {
     var title: String?
     var body: String?
-    var actionTitle: String?
     var image: UIImage?
-    var onDidPressAction: ((AnnouncementView) -> Void)?
+    var action: UIAction?
     var onDidPressClose: ((AnnouncementView) -> Void)?
 
     func hash(into hasher: inout Hasher) {
         hasher.combine(title)
         hasher.combine(body)
-        hasher.combine(actionTitle)
         hasher.combine(image)
-        hasher.combine(onDidPressAction.debugDescription)
+        hasher.combine(action.debugDescription)
         hasher.combine(onDidPressClose.debugDescription)
     }
 
     static func == (lhs: Self, rhs: Self) -> Bool {
         return lhs.title == rhs.title
             && lhs.body == rhs.body
-            && lhs.actionTitle == rhs.actionTitle
             && lhs.image == rhs.image
-            && lhs.onDidPressAction.debugDescription == rhs.onDidPressAction.debugDescription
+            && lhs.action.debugDescription == rhs.action.debugDescription
             && lhs.onDidPressClose.debugDescription == rhs.onDidPressClose.debugDescription
     }
 }
 
 final class AnnouncementView: UIView {
     typealias ActionHandler = (AnnouncementView) -> Void
-
-    var onDidPressActionButton: ActionHandler? {
-        didSet {
-            setupSubviews()
-        }
-    }
 
     var onDidPressClose: ActionHandler? {
         didSet {
@@ -72,17 +63,25 @@ final class AnnouncementView: UIView {
         }
     }
 
-    var actionTitle: String? {
-        get { actionButton.currentTitle }
-        set {
-            actionButton.setTitle(newValue, for: .normal)
+    var action: UIAction? {
+        didSet {
+            var buttonConfig = UIButton.Configuration.plain()
+            buttonConfig.title = action?.title
+            buttonConfig.image = action?.image
+            buttonConfig.titleAlignment = .leading
+            buttonConfig.titleLineBreakMode = .byWordWrapping
+            buttonConfig.buttonSize = .medium
+            buttonConfig.imagePadding = 8
+            buttonConfig.contentInsets.leading = 0
+            buttonConfig.contentInsets.trailing = 0
+            actionButton.configuration = buttonConfig
             setupSubviews()
         }
     }
 
     private lazy var imageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(systemName: "info.circle")
+        imageView.image = .symbol(.infoCircle)
         imageView.preferredSymbolConfiguration = UIImage.SymbolConfiguration(textStyle: .body, scale: .large)
         imageView.tintColor = .label
         imageView.contentMode = .center
@@ -123,21 +122,16 @@ final class AnnouncementView: UIView {
             self.onDidPressClose?(self)
         })
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.widthAnchor.constraint(equalToConstant: 25).activate()
-        button.heightAnchor.constraint(equalToConstant: 25).activate()
+        button.setContentHuggingPriority(.required, for: .horizontal)
+        button.setContentHuggingPriority(.required, for: .vertical)
+        button.setContentCompressionResistancePriority(.required, for: .horizontal)
+        button.setContentCompressionResistancePriority(.required, for: .vertical)
         return button
     }()
 
     private lazy var actionButton: UIButton = {
-        let button = UIButton(primaryAction: UIAction {[weak self] _ in
-            guard let self else { return }
-            self.onDidPressActionButton?(self)
-        })
-        button.contentHorizontalAlignment = UIControl.ContentHorizontalAlignment.leading
-        button.titleLabel?.font = UIFont.preferredFont(forTextStyle: .callout)
-        button.setTitleColor(.actionTint, for: .normal)
-        button.titleLabel?.numberOfLines = 0
-        button.titleLabel?.lineBreakMode = .byWordWrapping
+        let button = UIButton(primaryAction: action)
+        button.contentHorizontalAlignment = .leading
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
@@ -160,10 +154,9 @@ final class AnnouncementView: UIView {
     public func apply(_ announcement: AnnouncementItem) {
         title = announcement.title
         body = announcement.body
-        actionTitle = announcement.actionTitle
         image = announcement.image
+        action = announcement.action
         onDidPressClose = announcement.onDidPressClose
-        onDidPressActionButton = announcement.onDidPressAction
         layoutSubviews()
     }
 
@@ -176,7 +169,7 @@ final class AnnouncementView: UIView {
         let hasImage = image != nil
         let hasTitle = !(title?.isEmpty ?? true)
         let hasBody = !(body?.isEmpty ?? true)
-        let hasButton = !(actionButton.currentTitle?.isEmpty ?? true) && (onDidPressActionButton != nil)
+        let hasButton = action != nil
         let canBeClosed = onDidPressClose != nil
 
         var stackedViews = [UIView]()
@@ -186,7 +179,7 @@ final class AnnouncementView: UIView {
         if hasImage {
             addSubview(imageView)
             imageView.leadingAnchor
-                .constraint(equalTo: layoutMarginsGuide.leadingAnchor, constant: 8)
+                .constraint(equalTo: layoutMarginsGuide.leadingAnchor, constant: 4)
                 .activate()
             imageView.topAnchor
                 .constraint(greaterThanOrEqualTo: layoutMarginsGuide.topAnchor)
@@ -216,9 +209,6 @@ final class AnnouncementView: UIView {
             titleLabel.trailingAnchor
                 .constraint(lessThanOrEqualTo: layoutMarginsGuide.trailingAnchor, constant: -8)
                 .activate()
-            titleLabel.bottomAnchor
-                .constraint(lessThanOrEqualTo: layoutMarginsGuide.bottomAnchor)
-                .activate()
             titleBottomAnchor = titleLabel.bottomAnchor
             titleBottomAnchorConstant = 8
         } else {
@@ -240,9 +230,6 @@ final class AnnouncementView: UIView {
             bodyLabel.trailingAnchor
                 .constraint(lessThanOrEqualTo: layoutMarginsGuide.trailingAnchor, constant: -8)
                 .activate()
-            bodyLabel.bottomAnchor
-                .constraint(lessThanOrEqualTo: layoutMarginsGuide.bottomAnchor)
-                .activate()
             bodyBottomAnchor = bodyLabel.bottomAnchor
             bodyBottomAnchorConstant = 8
         } else {
@@ -262,14 +249,7 @@ final class AnnouncementView: UIView {
             actionButton.trailingAnchor
                 .constraint(equalTo: layoutMarginsGuide.trailingAnchor, constant: -8)
                 .activate()
-            actionButton.bottomAnchor
-                .constraint(lessThanOrEqualTo: layoutMarginsGuide.bottomAnchor)
-                .activate()
             actionButton.titleLabel?.numberOfLines = 0
-        } else {
-            bodyBottomAnchor
-                .constraint(lessThanOrEqualTo: layoutMarginsGuide.bottomAnchor)
-                .activate()
         }
 
         if canBeClosed {
@@ -296,5 +276,8 @@ final class AnnouncementView: UIView {
                 .constraint(lessThanOrEqualTo: closeButtonBottomGuide)
                 .activate()
         }
+        stackedViews.last?.bottomAnchor
+            .constraint(equalTo: layoutMarginsGuide.bottomAnchor)
+            .activate()
     }
 }

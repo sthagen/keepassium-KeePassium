@@ -1268,11 +1268,13 @@ extension DatabaseViewerCoordinator {
         let announcement = AnnouncementItem(
             title: LString.titleAppProtection,
             body: LString.appProtectionDescription,
-            actionTitle: LString.callToActionActivateAppProtection,
             image: .symbol(.appProtection),
-            onDidPressAction: { [weak self] _ in
-                self?.startAppProtectionSetup()
-            },
+            action: UIAction(
+                title: LString.callToActionActivateAppProtection,
+                handler: { [weak self] _ in
+                    self?.startAppProtectionSetup()
+                }
+            ),
             onDidPressClose: { [weak self] _ in
                 Settings.current.isHideAppLockSetupReminder = true
                 self?.updateAnnouncements()
@@ -1285,23 +1287,25 @@ extension DatabaseViewerCoordinator {
         for viewController: GroupViewerVC
     ) -> AnnouncementItem {
         let originalRef: URLReference = databaseFile.originalReference
-        let actionTitle: String?
+        let recoveryAction: UIAction?
         switch originalRef.error {
-        case .authorizationRequired(_, let recoveryAction):
-            actionTitle = recoveryAction
+        case .authorizationRequired(_, let recoveryActionTitle):
+            recoveryAction = UIAction(
+                title: recoveryActionTitle,
+                handler: { [weak self] _ in
+                    guard let self else { return }
+                    self.delegate?.didPressReinstateDatabase(originalRef, in: self)
+                    self.updateAnnouncements()
+                }
+            )
         default:
-            actionTitle = nil
+            recoveryAction = nil
         }
         return AnnouncementItem(
             title: LString.databaseIsFallbackCopy,
             body: originalRef.error?.errorDescription,
-            actionTitle: actionTitle,
             image: .symbol(.iCloudSlash),
-            onDidPressAction: { [weak self] _ in
-                guard let self else { return }
-                self.delegate?.didPressReinstateDatabase(originalRef, in: self)
-                self.updateAnnouncements()
-            }
+            action: recoveryAction
         )
     }
 
@@ -1311,8 +1315,6 @@ extension DatabaseViewerCoordinator {
         return AnnouncementItem(
             title: nil,
             body: LString.databaseIsReadOnly,
-            actionTitle: nil,
-            image: nil
         )
     }
 
@@ -1326,22 +1328,28 @@ extension DatabaseViewerCoordinator {
             messages.append(LString.messageCouldNotApplySomeChanges)
         }
 
-        var anItem = AnnouncementItem(
+        let saveAction: UIAction?
+        if allowSaving {
+            saveAction = UIAction(
+                title: isProblematic ? LString.actionForceSave : LString.actionSaveChanges,
+                handler: { [weak self] _ in
+                    guard let self else { return }
+                    Diag.info("Will save pending changes on user request")
+                    showingProblematicOperationsAlert(isProblematic, presenter: viewController) { [weak self] in
+                        self?.maybeApplyAndSavePendingChanges(recoveryMode: isProblematic)
+                    }
+                }
+            )
+        } else {
+            saveAction = nil
+        }
+
+        return AnnouncementItem(
             title: LString.titleUnsavedChanges,
             body: messages.joined(separator: "\n\n"),
-            image: .symbol(.unsavedChanges, tint: .warningMessage)
+            image: .symbol(.unsavedChanges, tint: .warningMessage),
+            action: saveAction
         )
-        if allowSaving {
-            anItem.actionTitle = isProblematic ? LString.actionForceSave : LString.actionSaveChanges
-            anItem.onDidPressAction = { [weak self] _ in
-                guard let self else { return }
-                Diag.info("Will save pending changes on user request")
-                showingProblematicOperationsAlert(isProblematic, presenter: viewController) { [weak self] in
-                    self?.maybeApplyAndSavePendingChanges(recoveryMode: isProblematic)
-                }
-            }
-        }
-        return anItem
     }
 
     private func showingProblematicOperationsAlert(
@@ -1376,12 +1384,14 @@ extension DatabaseViewerCoordinator {
         let announcement = AnnouncementItem(
             title: nil,
             body: LString.tipBoxDescription2,
-            actionTitle: LString.tipBoxCallToAction2,
             image: .symbol(.heart)?.withTintColor(.systemRed, renderingMode: .alwaysOriginal),
-            onDidPressAction: { [weak self] _ in
-                self?.showTipBox()
-                self?.updateAnnouncements()
-            },
+            action: UIAction(
+                title: LString.tipBoxCallToAction2,
+                handler: { [weak self] _ in
+                    self?.showTipBox()
+                    self?.updateAnnouncements()
+                }
+            ),
             onDidPressClose: { [weak self] _ in
                 TipBox.registerTipBoxSeen()
                 self?.updateAnnouncements()

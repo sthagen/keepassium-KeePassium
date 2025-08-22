@@ -27,7 +27,7 @@ final class RemoteFilePickerCoordinator: BaseCoordinator {
 
     init(oldRef: URLReference?, router: NavigationRouter) {
         self.oldRef = oldRef
-        connectionTypePicker = ConnectionTypePickerVC.make()
+        connectionTypePicker = ConnectionTypePickerVC()
         super.init(router: router)
         connectionTypePicker.delegate = self
         connectionTypePicker.showsOtherLocations = true
@@ -82,14 +82,7 @@ final class RemoteFilePickerCoordinator: BaseCoordinator {
 }
 
 extension RemoteFilePickerCoordinator: ConnectionTypePickerDelegate {
-    func isConnectionTypeEnabled(
-        _ connectionType: RemoteConnectionType,
-        in viewController: ConnectionTypePickerVC
-    ) -> Bool {
-        return true
-    }
-
-    func willSelect(
+    func shouldSelect(
         connectionType: RemoteConnectionType,
         in viewController: ConnectionTypePickerVC
     ) -> Bool {
