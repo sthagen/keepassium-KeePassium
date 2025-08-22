@@ -52,6 +52,9 @@ extension HardwareKeyPickerVC: UICollectionViewDelegate {
             assertionFailure()
             return
         }
+        if cause == .touch {
+            _collectionView.deselectItem(at: indexPath, animated: true)
+        }
 
         switch selectedItem {
         case .noKey:

@@ -22,6 +22,7 @@ extension HardwareKeyPickerVC {
         _collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         _collectionView.delegate = self
         _collectionView.backgroundColor = .clear
+        _collectionView.alwaysBounceVertical = false
         _collectionView.allowsSelection = true
         _collectionView.allowsFocus = true
         _collectionView.selectionFollowsFocus = true

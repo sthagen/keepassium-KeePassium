@@ -43,7 +43,7 @@ final class HardwareKeyPickerVC: UIViewController {
         super.init(nibName: nil, bundle: nil)
 
         title = LString.titleHardwareKeys
-        view.backgroundColor = .systemGroupedBackground
+        view.backgroundColor = .systemBackground
 
         _setupCollectionView()
         _setupDataSource()
