@@ -70,9 +70,18 @@ extension KeyFilePickerCoordinator {
                 self?.didPressUseKeyFile(at: popoverAnchor)
             }
         )
+        let connectToServerAction = UIAction(
+            title: LString.actionConnectToServer,
+            image: .symbol(.network),
+            handler: { [weak self] action in
+                let popoverAnchor = action.presentationSourceItem?.asPopoverAnchor
+                self?.didPressConnectToServer(at: popoverAnchor)
+            }
+        )
         return UIMenu(children: [
             importKeyFileAction,
             useKeyFileAction,
+            UIMenu(inlineChildren: [connectToServerAction]),
             UIMenu(inlineChildren: [createKeyFileAction])
         ])
     }
@@ -93,5 +102,9 @@ extension KeyFilePickerCoordinator {
 
     private func didPressCreateKeyFile(at popoverAnchor: PopoverAnchor?) {
         startCreatingKeyFile(presenter: _filePickerVC)
+    }
+
+    private func didPressConnectToServer(at popoverAnchor: PopoverAnchor?) {
+        startRemoteKeyFilePicker(presenter: _filePickerVC)
     }
 }

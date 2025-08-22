@@ -93,3 +93,53 @@ extension KeyFilePickerCoordinator {
         return true
     }
 }
+
+extension KeyFilePickerCoordinator {
+    public func startRemoteKeyFilePicker(presenter: UIViewController) {
+        presenter.ensuringNetworkAccessPermitted { [weak self, weak presenter] in
+            guard let self, let presenter else { return }
+            startRemoteKeyFilePickerNetworkConfirmed(presenter: presenter)
+        }
+    }
+
+    private func startRemoteKeyFilePickerNetworkConfirmed(presenter: UIViewController) {
+        let modalRouter = NavigationRouter.createModal(style: .formSheet)
+        let remoteFilePickerCoordinator = RemoteFilePickerCoordinator(
+            oldRef: nil,
+            router: modalRouter
+        )
+        remoteFilePickerCoordinator.delegate = self
+        remoteFilePickerCoordinator.start()
+
+        presenter.present(modalRouter, animated: true, completion: nil)
+        addChildCoordinator(remoteFilePickerCoordinator, onDismiss: nil)
+    }
+}
+
+extension KeyFilePickerCoordinator: RemoteFilePickerCoordinatorDelegate {
+    func didPickRemoteFile(
+        url: URL,
+        credential: NetworkCredential,
+        in coordinator: RemoteFilePickerCoordinator
+    ) {
+        CredentialManager.shared.store(credential: credential, for: url)
+        addRemoteKeyFileURL(url)
+    }
+
+    private func addRemoteKeyFileURL(_ url: URL) {
+        FileKeeper.shared.addFile(url: url, fileType: .keyFile, mode: .openInPlace) { [weak self] result in
+            guard let self else { return }
+            switch result {
+            case .success(let fileRef):
+                refresh()
+                didSelectFile(fileRef, cause: .app, in: _filePickerVC)
+            case .failure(let fileKeeperError):
+                _filePickerVC.showErrorAlert(fileKeeperError)
+            }
+        }
+    }
+
+    func didSelectSystemFilePicker(in coordinator: RemoteFilePickerCoordinator) {
+        startAddingKeyFile(mode: .use, presenter: _filePickerVC)
+    }
+}

@@ -65,8 +65,9 @@ class KeyFilePickerCoordinator: FilePickerCoordinator {
         in viewController: FilePickerVC
     ) {
         assert(cause != nil, "Unexpected for single-panel mode")
-        delegate?.didSelectKeyFile(fileRef, cause: cause, in: self)
-        dismiss()
+        dismiss { [self] in
+            delegate?.didSelectKeyFile(fileRef, cause: cause, in: self)
+        }
     }
 
     override func didEliminateFile(_ fileRef: URLReference, in coordinator: FilePickerCoordinator) {
