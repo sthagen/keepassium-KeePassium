@@ -31,8 +31,9 @@ public enum FileProvider: Hashable {
         "com.keepassium.fileprovider.onedrive.personal.appfolder": .keepassiumOneDrivePersonalAppFolder,
         "com.keepassium.fileprovider.onedrive.business": .keepassiumOneDriveBusiness,
         "com.keepassium.fileprovider.onedrive.business.appfolder": .keepassiumOneDriveBusinessAppFolder,
-        "com.keepassium.fileprovider.dropbox": .keepassiumDropbox,
-        "com.keepassium.fileprovider.dropbox.appfolder": .keepassiumDropboxAppFolder,
+        "com.keepassium.fileprovider.dropbox": .keepassiumDropboxLegacy,
+        "com.keepassium.fileprovider.dropbox.personal": .keepassiumDropboxPersonal,
+        "com.keepassium.fileprovider.dropbox.personal.appfolder": .keepassiumDropboxPersonalAppFolder,
         "com.keepassium.fileprovider.dropbox.business": .keepassiumDropboxBusiness,
         "com.keepassium.fileprovider.dropbox.business.appfolder": .keepassiumDropboxBusinessAppFolder,
         "com.keepassium.fileprovider.googledrive": .keepassiumGoogleDrive,
@@ -82,8 +83,9 @@ public enum FileProvider: Hashable {
     case keepassiumOneDriveBusiness
     case keepassiumOneDriveBusinessAppFolder
 
-    case keepassiumDropbox
-    case keepassiumDropboxAppFolder
+    case keepassiumDropboxLegacy
+    case keepassiumDropboxPersonal
+    case keepassiumDropboxPersonalAppFolder
     case keepassiumDropboxBusiness
     case keepassiumDropboxBusinessAppFolder
     case keepassiumGoogleDrive
@@ -200,9 +202,12 @@ public enum FileProvider: Hashable {
             return LString.connectionTypeOneDriveForBusiness
         case .keepassiumOneDriveBusinessAppFolder:
             return Self.decorateForAppFolderScope(LString.connectionTypeOneDriveForBusiness)
-        case .keepassiumDropbox:
+        case .keepassiumDropboxLegacy:
+            assertionFailure("Unrecognized Dropbox type. Should be either Personal or Business instead")
             return LString.connectionTypeDropbox
-        case .keepassiumDropboxAppFolder:
+        case .keepassiumDropboxPersonal:
+            return LString.connectionTypeDropbox
+        case .keepassiumDropboxPersonalAppFolder:
             return Self.decorateForAppFolderScope(LString.connectionTypeDropbox)
         case .keepassiumDropboxBusiness:
             return LString.connectionTypeDropboxBusiness
@@ -379,8 +384,9 @@ public enum FileProvider: Hashable {
              .keepassiumOneDrivePersonalAppFolder,
              .keepassiumOneDriveBusiness,
              .keepassiumOneDriveBusinessAppFolder,
-             .keepassiumDropbox,
-             .keepassiumDropboxAppFolder,
+             .keepassiumDropboxLegacy,
+             .keepassiumDropboxPersonal,
+             .keepassiumDropboxPersonalAppFolder,
              .keepassiumDropboxBusiness,
              .keepassiumDropboxBusinessAppFolder,
              .keepassiumGoogleDrive,

@@ -22,8 +22,8 @@ internal final class DataSourceFactory {
              .keepassiumOneDriveBusiness,
              .keepassiumOneDriveBusinessAppFolder:
             return OneDriveDataSource(fileProvider: detectedFileProvider!)
-        case .keepassiumDropbox,
-             .keepassiumDropboxAppFolder,
+        case .keepassiumDropboxPersonal,
+             .keepassiumDropboxPersonalAppFolder,
              .keepassiumDropboxBusiness,
              .keepassiumDropboxBusinessAppFolder:
             return DropboxDataSource(fileProvider: detectedFileProvider!)
@@ -38,11 +38,17 @@ internal final class DataSourceFactory {
     public static func findInAppFileProvider(for url: URL) -> FileProvider? {
         if url.isWebDAVFileURL {
             return .keepassiumWebDAV
-        } else if url.isDropboxFileURL {
+        } else if url.isDropboxPersonalFileURL {
             if url.isDropboxAppFolderScopedURL {
-                return .keepassiumDropboxAppFolder
+                return .keepassiumDropboxPersonalAppFolder
             } else {
-                return .keepassiumDropbox
+                return .keepassiumDropboxPersonal
+            }
+        } else if url.isDropboxBusinessFileURL {
+            if url.isDropboxAppFolderScopedURL {
+                return .keepassiumDropboxBusinessAppFolder
+            } else {
+                return .keepassiumDropboxBusiness
             }
         } else if url.isGoogleDriveFileURL {
             return .keepassiumGoogleDrive

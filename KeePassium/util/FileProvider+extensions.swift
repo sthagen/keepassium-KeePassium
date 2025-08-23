@@ -34,10 +34,13 @@ extension FileProvider {
         case .keepassiumOneDriveLegacy:
             assertionFailure("Should be either Personal or Business instead")
             return .fileProviderOneDrive
-        case .keepassiumDropbox,
-             .keepassiumDropboxAppFolder,
+        case .keepassiumDropboxPersonal,
+             .keepassiumDropboxPersonalAppFolder,
              .keepassiumDropboxBusiness,
              .keepassiumDropboxBusinessAppFolder:
+            return .fileProviderDropbox
+        case .keepassiumDropboxLegacy:
+            assertionFailure("Should be either Personal or Business instead")
             return .fileProviderDropbox
         case .keepassiumGoogleDrive,
             .keepassiumGoogleDriveAppFolder:

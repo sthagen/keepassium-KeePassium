@@ -13,6 +13,32 @@ extension URL {
         return self.scheme == DropboxURLHelper.prefixedScheme
     }
 
+    var isDropboxPersonalFileURL: Bool {
+        guard isDropboxFileURL else { return false }
+        switch DropboxURLHelper.getAccountType(from: self) {
+        case .basic, .pro:
+            return true
+        case .business:
+            return false
+        case .none:
+            assertionFailure()
+            return false
+        }
+    }
+
+    var isDropboxBusinessFileURL: Bool {
+        guard isDropboxFileURL else { return false }
+        switch DropboxURLHelper.getAccountType(from: self) {
+        case .basic, .pro:
+            return false
+        case .business:
+            return true
+        case .none:
+            assertionFailure()
+            return false
+        }
+    }
+
     public var isDropboxAppFolderScopedURL: Bool {
         return isDropboxFileURL
             && DropboxURLHelper.getScope(from: self) == .appFolder
@@ -100,11 +126,21 @@ public enum DropboxURLHelper {
         let queryItems = prefixedURL.queryItems
         let accountType = DropboxAccountInfo.AccountType.from(queryItems[Key.type])
         let scope = getScope(from: prefixedURL)
-        let fileProvider = accountType?.getMatchingFileProvider(scope: scope) ?? .keepassiumDropbox
+        let fileProvider = accountType?.getMatchingFileProvider(scope: scope) ?? .keepassiumDropboxPersonal
         let serviceName = fileProvider.localizedName
         let path = prefixedURL.relativePath
         let email = queryItems[Key.email] ?? "?"
         return "\(serviceName) (\(email)) → \(path)"
+    }
+
+    fileprivate static func getAccountType(from prefixedURL: URL) -> DropboxAccountInfo.AccountType? {
+        assert(prefixedURL.isDropboxFileURL)
+        guard let accountTypeString = prefixedURL.queryItems[Key.type],
+              let accountType = DropboxAccountInfo.AccountType.from(accountTypeString)
+        else {
+            return nil
+        }
+        return accountType
     }
 
     fileprivate static func getScope(from prefixedURL: URL) -> OAuthScope {

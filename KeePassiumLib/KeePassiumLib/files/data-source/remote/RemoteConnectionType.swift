@@ -8,8 +8,8 @@
 
 public enum RemoteConnectionType: Hashable {
     public static let allValues: [RemoteConnectionType] = [
-        .dropbox(scope: .fullAccess),
-        .dropbox(scope: .appFolder),
+        .dropboxPersonal(scope: .fullAccess),
+        .dropboxPersonal(scope: .appFolder),
         .dropboxBusiness(scope: .fullAccess),
         .dropboxBusiness(scope: .appFolder),
         .googleDrive(scope: .fullAccess),
@@ -26,7 +26,7 @@ public enum RemoteConnectionType: Hashable {
     case webdav
     case oneDrivePersonal(scope: OAuthScope)
     case oneDriveForBusiness(scope: OAuthScope)
-    case dropbox(scope: OAuthScope)
+    case dropboxPersonal(scope: OAuthScope)
     case dropboxBusiness(scope: OAuthScope)
     case googleDrive(scope: OAuthScope)
     case googleWorkspace(scope: OAuthScope)
@@ -51,12 +51,12 @@ extension RemoteConnectionType: CustomStringConvertible {
             case .appFolder:
                 return FileProvider.keepassiumOneDriveBusinessAppFolder.localizedName
             }
-        case .dropbox(let scope):
+        case .dropboxPersonal(let scope):
             switch scope {
             case .fullAccess:
-                return FileProvider.keepassiumDropbox.localizedName
+                return FileProvider.keepassiumDropboxPersonal.localizedName
             case .appFolder:
-                return FileProvider.keepassiumDropboxAppFolder.localizedName
+                return FileProvider.keepassiumDropboxPersonalAppFolder.localizedName
             }
         case .dropboxBusiness(let scope):
             switch scope {
@@ -86,7 +86,7 @@ extension RemoteConnectionType: CustomStringConvertible {
         switch self {
         case .oneDrivePersonal(scope: .appFolder),
              .oneDriveForBusiness(scope: .appFolder),
-             .dropbox(scope: .appFolder),
+             .dropboxPersonal(scope: .appFolder),
              .dropboxBusiness(scope: .appFolder),
              .googleDrive(scope: .appFolder),
              .googleWorkspace(scope: .appFolder):
@@ -114,12 +114,12 @@ extension RemoteConnectionType: CustomStringConvertible {
             case .appFolder:
                 return .keepassiumOneDriveBusinessAppFolder
             }
-        case .dropbox(let scope):
+        case .dropboxPersonal(let scope):
             switch scope {
             case .fullAccess:
-                return .keepassiumDropbox
+                return .keepassiumDropboxPersonal
             case .appFolder:
-                return .keepassiumDropboxAppFolder
+                return .keepassiumDropboxPersonalAppFolder
             }
         case .dropboxBusiness(let scope):
             switch scope {
@@ -144,7 +144,7 @@ extension RemoteConnectionType {
         switch self {
         case .webdav,
              .oneDrivePersonal,
-             .dropbox,
+             .dropboxPersonal,
              .googleDrive:
             return false
         case .oneDriveForBusiness,

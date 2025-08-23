@@ -252,7 +252,7 @@ extension RemoteFileExportCoordinator: ConnectionTypePickerDelegate {
                 startWebDAVSetup(stateIndicator: viewController)
             case .oneDrivePersonal(let scope), .oneDriveForBusiness(let scope):
                 startOneDriveSetup(scope: scope, stateIndicator: viewController)
-            case .dropbox(let scope), .dropboxBusiness(let scope):
+            case .dropboxPersonal(let scope), .dropboxBusiness(let scope):
                 startDropboxSetup(scope: scope, stateIndicator: viewController)
             case .googleDrive(let scope), .googleWorkspace(let scope):
                 startGoogleDriveSetup(scope: scope, stateIndicator: viewController)

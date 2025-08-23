@@ -55,10 +55,10 @@ final class RemoteFilePickerCoordinator: BaseCoordinator {
         switch fileProvider {
         case .keepassiumWebDAV:
             return .webdav
-        case .keepassiumDropbox:
-            return .dropbox(scope: .fullAccess)
-        case .keepassiumDropboxAppFolder:
-            return .dropbox(scope: .appFolder)
+        case .keepassiumDropboxPersonal:
+            return .dropboxPersonal(scope: .fullAccess)
+        case .keepassiumDropboxPersonalAppFolder:
+            return .dropboxPersonal(scope: .appFolder)
         case .keepassiumDropboxBusiness:
             return .dropboxBusiness(scope: .fullAccess)
         case .keepassiumDropboxBusinessAppFolder:
@@ -99,7 +99,7 @@ extension RemoteFilePickerCoordinator: ConnectionTypePickerDelegate {
             startWebDAVSetup(stateIndicator: viewController)
         case .oneDrivePersonal(let scope), .oneDriveForBusiness(let scope):
             startOneDriveSetup(scope: scope, stateIndicator: viewController)
-        case .dropbox(let scope), .dropboxBusiness(let scope):
+        case .dropboxPersonal(let scope), .dropboxBusiness(let scope):
             startDropboxSetup(scope: scope, stateIndicator: viewController)
         case .googleDrive(let scope), .googleWorkspace(let scope):
             startGoogleDriveSetup(scope: scope, stateIndicator: viewController)

@@ -41,10 +41,12 @@ public struct DropboxAccountInfo: Equatable {
 
         public func getMatchingFileProvider(scope: OAuthScope) -> FileProvider {
             switch (self, scope) {
-            case (.basic, .fullAccess), (.pro, .fullAccess):
-                return .keepassiumDropbox
-            case (.basic, .appFolder), (.pro, .appFolder):
-                return .keepassiumDropboxAppFolder
+            case (.basic, .fullAccess),
+                 (.pro, .fullAccess):
+                return .keepassiumDropboxPersonal
+            case (.basic, .appFolder),
+                 (.pro, .appFolder):
+                return .keepassiumDropboxPersonalAppFolder
             case (.business, .fullAccess):
                 return .keepassiumDropboxBusiness
             case (.business, .appFolder):

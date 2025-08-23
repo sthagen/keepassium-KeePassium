@@ -31,7 +31,7 @@ extension RemoteConnectionType {
 
         func contains(connectionType: RemoteConnectionType) -> Bool {
             switch connectionType {
-            case .dropbox, .dropboxBusiness:
+            case .dropboxPersonal, .dropboxBusiness:
                 return self == .dropbox
             case .oneDrivePersonal, .oneDriveForBusiness:
                 return self == .oneDrive
@@ -45,7 +45,7 @@ extension RemoteConnectionType {
         var iconSymbol: SymbolName? {
             switch self {
             case .dropbox:
-                return FileProvider.keepassiumDropbox.iconSymbol
+                return FileProvider.keepassiumDropboxPersonal.iconSymbol
             case .googleDrive:
                 return FileProvider.keepassiumGoogleDrive.iconSymbol
             case .oneDrive:
