@@ -10,12 +10,8 @@ import KeePassiumLib
 import UIKit
 
 extension EntryFinderVC {
-    internal func _setupView() {
-        view.backgroundColor = .systemGroupedBackground
-        setupCollectionView()
-    }
 
-    private func setupCollectionView() {
+    internal func _setupCollectionView(appearance: FilePickerAppearance) {
         let trailingActionsProvider = { [weak self] (indexPath: IndexPath) -> UISwipeActionsConfiguration? in
             guard let self else { return nil }
             switch _dataSource.itemIdentifier(for: indexPath) {
@@ -51,7 +47,7 @@ extension EntryFinderVC {
             }
         }
 
-        var layoutConfig = UICollectionLayoutListConfiguration(appearance: .insetGrouped)
+        var layoutConfig = UICollectionLayoutListConfiguration(appearance: appearance)
         layoutConfig.headerMode = .supplementary
         layoutConfig.footerMode = .supplementary
         layoutConfig.leadingSwipeActionsConfigurationProvider = leadingActionsProvider
@@ -75,8 +71,10 @@ extension EntryFinderVC {
         ])
     }
 
-    internal func _setupDataSource() {
-        let announcementCellRegistration = AnnouncementCollectionCell.makeRegistration()
+    internal func _setupDataSource(appearance: FilePickerAppearance) {
+        let announcementCellRegistration = AnnouncementCollectionCell.makeRegistration(
+            appearance: appearance
+        )
         let placeholderCellRegistration = makePlaceholderCellRegistration()
         let groupCellRegistration = EntryFinderGroupCell.makeRegistration()
         let entryCellRegistration = EntryFinderEntryCell.makeRegistration(decorator: _itemDecorator)

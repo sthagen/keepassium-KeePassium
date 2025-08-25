@@ -51,8 +51,10 @@ final class EntryFinderVC: UIViewController {
         self._toolbarDecorator = toolbarDecorator
         super.init(nibName: nil, bundle: nil)
 
-        _setupView()
-        _setupDataSource()
+        view.backgroundColor = .systemGroupedBackground
+        let appearance: FilePickerAppearance = .insetGrouped
+        _setupCollectionView(appearance: appearance)
+        _setupDataSource(appearance: appearance)
         _setupSearch()
         self.title = title
     }

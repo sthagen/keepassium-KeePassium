@@ -49,10 +49,10 @@ final class AnnouncementCell: UITableViewCell {
             .constraint(equalTo: contentView.bottomAnchor, constant: -8)
             .activate()
         announcementView.leadingAnchor
-            .constraint(equalTo: contentView.layoutMarginsGuide.leadingAnchor)
+            .constraint(equalTo: contentView.leadingAnchor, constant: 16)
             .activate()
         announcementView.trailingAnchor
-            .constraint(equalTo: contentView.layoutMarginsGuide.trailingAnchor)
+            .constraint(equalTo: contentView.trailingAnchor, constant: -16)
             .activate()
     }
 }

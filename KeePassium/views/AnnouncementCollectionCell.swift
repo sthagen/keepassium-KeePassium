@@ -8,20 +8,25 @@
 
 import UIKit
 
-final class AnnouncementCollectionCell: UICollectionViewCell {
-    static let reuseIdentifier = "AnnouncementCollectionCell"
+final class AnnouncementCollectionCell: UICollectionViewListCell {
+    typealias Appearance = UICollectionLayoutListConfiguration.Appearance
 
     lazy var announcementView: AnnouncementView = {
         let view = AnnouncementView(frame: .zero)
         return view
     }()
 
-    static func makeRegistration()
+    private var topConstraint: NSLayoutConstraint!
+    private var leadingConstraint: NSLayoutConstraint!
+    private var trailingConstraint: NSLayoutConstraint!
+    private var bottomConstraint: NSLayoutConstraint!
+
+    static func makeRegistration(appearance: Appearance)
         -> UICollectionView.CellRegistration<AnnouncementCollectionCell, AnnouncementItem>
     {
         UICollectionView.CellRegistration<AnnouncementCollectionCell, AnnouncementItem> {
             cell, indexPath, announcement in
-            cell.configure(with: announcement)
+            cell.configure(with: announcement, appearance: appearance)
         }
     }
 
@@ -42,21 +47,51 @@ final class AnnouncementCollectionCell: UICollectionViewCell {
     private func setupView() {
         contentView.addSubview(announcementView)
         announcementView.translatesAutoresizingMaskIntoConstraints = false
-        announcementView.topAnchor
-            .constraint(equalTo: contentView.topAnchor, constant: 8)
-            .activate()
-        announcementView.bottomAnchor
-            .constraint(equalTo: contentView.bottomAnchor)
-            .activate()
-        announcementView.leadingAnchor
-            .constraint(equalTo: contentView.leadingAnchor)
-            .activate()
-        announcementView.trailingAnchor
-            .constraint(equalTo: contentView.trailingAnchor)
-            .activate()
+        topConstraint = announcementView.topAnchor.constraint(equalTo: contentView.topAnchor)
+        bottomConstraint = announcementView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
+        leadingConstraint = announcementView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor)
+        trailingConstraint = announcementView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor)
+        NSLayoutConstraint.activate([
+            topConstraint,
+            bottomConstraint,
+            leadingConstraint,
+            trailingConstraint
+        ])
+        separatorLayoutGuide.leadingAnchor.constraint(equalTo: trailingAnchor).activate()
     }
 
-    public func configure(with announcement: AnnouncementItem) {
+    public func configure(with announcement: AnnouncementItem, appearance: Appearance) {
+        var bgConfig = UIBackgroundConfiguration.listPlainCell()
+        bgConfig.backgroundInsets = .zero
+        bgConfig.backgroundColor = .clear
+        topConstraint.constant = 8
+        bottomConstraint.constant = -8
+        switch appearance {
+        case .plain:
+            leadingConstraint.constant = 16
+            trailingConstraint.constant = -16
+        case .insetGrouped:
+            leadingConstraint.constant = 0
+            trailingConstraint.constant = 0
+        case .grouped:
+            if ProcessInfo.isRunningOnMac {
+                leadingConstraint.constant = 0
+                trailingConstraint.constant = 0
+            } else {
+                leadingConstraint.constant = 16
+                trailingConstraint.constant = -16
+            }
+        case .sidebar:
+            leadingConstraint.constant = 0
+            trailingConstraint.constant = 0
+        case .sidebarPlain:
+            leadingConstraint.constant = 0
+            trailingConstraint.constant = 0
+        @unknown default:
+            assertionFailure("Unexpected appearance: \(appearance)")
+        }
+        self.backgroundConfiguration = bgConfig
+
         announcementView.apply(announcement)
     }
 }

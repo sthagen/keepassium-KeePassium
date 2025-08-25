@@ -46,6 +46,7 @@ class FilePickerVC: UIViewController {
     private let toolbarDecorator: FilePickerToolbarDecorator?
     private let itemDecorator: FilePickerItemDecorator?
     private let fileType: FileType
+    private let appearance: FilePickerAppearance
 
     private var announcementItems = [FilePickerItem]()
     private var noFileItem: FilePickerItem?
@@ -68,13 +69,14 @@ class FilePickerVC: UIViewController {
         self.fileType = fileType
         self.toolbarDecorator = toolbarDecorator
         self.itemDecorator = itemDecorator
+        self.appearance = appearance
         super.init(nibName: nil, bundle: nil)
-        initCollectionView(appearance: appearance)
+        initCollectionView()
         setupCollectionView()
         setupDataSource()
     }
 
-    private func initCollectionView(appearance: FilePickerAppearance) {
+    private func initCollectionView() {
         let trailingActionsProvider = { [weak self] (indexPath: IndexPath) -> UISwipeActionsConfiguration? in
             guard let self else { return nil }
             switch dataSource.itemIdentifier(for: indexPath) {
@@ -106,27 +108,18 @@ class FilePickerVC: UIViewController {
             }
         }
 
-        let layout = UICollectionViewCompositionalLayout { sectionIndex, layoutEnvironment in
-            var config: UICollectionLayoutListConfiguration
-            switch Section(rawValue: sectionIndex) {
-            case .announcements:
-                config = UICollectionLayoutListConfiguration(appearance: .sidebarPlain)
-            case .noFile:
-                config = UICollectionLayoutListConfiguration(appearance: appearance)
-            case .files:
-                config = UICollectionLayoutListConfiguration(appearance: appearance)
-            case .none:
-                assertionFailure()
-                return nil
-            }
-            config.leadingSwipeActionsConfigurationProvider = leadingActionsProvider
-            config.trailingSwipeActionsConfigurationProvider = trailingActionsProvider
-            return NSCollectionLayoutSection.list(using: config, layoutEnvironment: layoutEnvironment)
-        }
+        var layoutConfig = UICollectionLayoutListConfiguration(appearance: appearance)
+        layoutConfig.headerMode = .none
+        layoutConfig.footerMode = .none
+        layoutConfig.leadingSwipeActionsConfigurationProvider = leadingActionsProvider
+        layoutConfig.trailingSwipeActionsConfigurationProvider = trailingActionsProvider
+        let layout = UICollectionViewCompositionalLayout.list(using: layoutConfig)
+
         collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.allowsSelection = true
         collectionView.allowsFocus = true
         collectionView.selectionFollowsFocus = true
+        collectionView.delegate = self
     }
 
     required init?(coder: NSCoder) {
@@ -149,14 +142,6 @@ class FilePickerVC: UIViewController {
     }
 
     private func setupCollectionView() {
-        collectionView.register(
-            FilePickerCell.self,
-            forCellWithReuseIdentifier: FilePickerCell.reuseIdentifier)
-        collectionView.register(
-            AnnouncementCollectionCell.self,
-            forCellWithReuseIdentifier: AnnouncementCollectionCell.reuseIdentifier)
-        collectionView.delegate = self
-
         view.addSubview(collectionView)
 
         collectionView.translatesAutoresizingMaskIntoConstraints = false
@@ -173,6 +158,7 @@ class FilePickerVC: UIViewController {
     }
 
     private func setupDataSource() {
+        let announcementCellRegistration = AnnouncementCollectionCell.makeRegistration(appearance: appearance)
         let fileCellRegistration = UICollectionView.CellRegistration<FilePickerCell, FilePickerItem.FileInfo> {
             [weak itemDecorator] cell, indexPath, item in
             let accessories = itemDecorator?.getAccessories(for: item)
@@ -195,12 +181,10 @@ class FilePickerVC: UIViewController {
         ) { collectionView, indexPath, item -> UICollectionViewCell? in
             switch item {
             case .announcement(let announcement):
-                let cell = collectionView.dequeueReusableCell(
-                    withReuseIdentifier: AnnouncementCollectionCell.reuseIdentifier,
-                    for: indexPath
-                ) as! AnnouncementCollectionCell
-                cell.configure(with: announcement)
-                return cell
+                return collectionView.dequeueConfiguredReusableCell(
+                    using: announcementCellRegistration,
+                    for: indexPath,
+                    item: announcement)
             case .noFile(let item):
                 return collectionView.dequeueConfiguredReusableCell(
                     using: noFileCellRegistration,
@@ -318,13 +302,17 @@ class FilePickerVC: UIViewController {
 
     private func applySnapshot() {
         var snapshot = NSDiffableDataSourceSnapshot<Section, FilePickerItem>()
+        if !announcementItems.isEmpty {
+            snapshot.appendSections([.announcements])
+            snapshot.appendItems(announcementItems, toSection: .announcements)
+        }
+
         if let noFileItem {
-            snapshot.appendSections([.announcements, .noFile, .files])
+            snapshot.appendSections([.noFile, .files])
             snapshot.appendItems([noFileItem], toSection: .noFile)
         } else {
-            snapshot.appendSections([.announcements, .files])
+            snapshot.appendSections([.files])
         }
-        snapshot.appendItems(announcementItems, toSection: .announcements)
         snapshot.appendItems(fileItems, toSection: .files)
 
         snapshot.reconfigureItems(fileItems)
