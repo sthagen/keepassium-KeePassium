@@ -57,6 +57,12 @@ extension LString {
         value: "Continue",
         comment: "Action/button to proceed with the action"
     )
+    public static let actionGotIt = NSLocalizedString(
+        "[Generic/GotIt/action]",
+        bundle: Bundle.framework,
+        value: "Got It",
+        comment: "Action to proceed after a warning, basically 'I understand the risk'"
+    )
     public static let actionSkip = NSLocalizedString(
         "[Generic] Skip",
         bundle: Bundle.framework,

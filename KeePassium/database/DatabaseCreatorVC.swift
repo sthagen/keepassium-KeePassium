@@ -197,7 +197,7 @@ extension DatabaseCreatorVC {
             title: LString.titleWarning,
             message: LString.databasePasswordTooWeak,
             dismissButtonTitle: LString.actionCancel)
-        confirmationAlert.addAction(title: LString.actionIgnoreAndContinue) { _ in
+        confirmationAlert.addAction(title: LString.actionContinue, preferred: true) { _ in
             successHandler()
         }
         present(confirmationAlert, animated: true)

@@ -274,7 +274,7 @@ extension DatabaseCreatorCoordinator: DatabaseCreatorDelegate {
                 message: LString.warningRememberYourPassword,
                 preferredStyle: .alert)
             alert.addAction(title: LString.actionCancel, style: .cancel, handler: nil)
-            alert.addAction(title: LString.actionContinue, style: .default, preferred: true) {
+            alert.addAction(title: LString.actionGotIt, style: .default, preferred: true) {
                 [weak self] _ in
                 self?.instantiateDatabase(fileName: fileName)
             }
