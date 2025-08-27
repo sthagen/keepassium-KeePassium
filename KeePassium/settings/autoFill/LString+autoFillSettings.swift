@@ -56,4 +56,13 @@ extension LString {
         "[Settings/AutoFill/CopyOTP/Description]",
         value: "When AutoFill inserts the username and password, it can also copy the one-time password (OTP) for you.",
         comment: "Description of the 'Copy OTP to Clipboard' setting")
+
+    public static let autoFillRememberContextTitle = NSLocalizedString(
+        "[Settings/AutoFill/RememberContext/title]",
+        value: "Remember Selected Entries",
+        comment: "Title of a yes/no setting: remember which entry was used for AutoFill on which website.")
+    public static let autoFillRememberContextDescription = NSLocalizedString(
+        "[Settings/AutoFill/RememberContext/description]",
+        value: "KeePassium will remember which entry you select for each website and then suggest it automatically.",
+        comment: "Description of the 'Remember Selected Entries' setting.")
 }

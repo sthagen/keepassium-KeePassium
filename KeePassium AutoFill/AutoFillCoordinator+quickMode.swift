@@ -39,7 +39,12 @@ extension AutoFillCoordinator {
             return
         }
         log.trace("returnQuickTypeEntry")
-        _returnEntry(foundEntry, from: databaseFile, keepClipboardIntact: false)
+        _returnEntry(
+            foundEntry,
+            from: databaseFile,
+            shouldSave: false,
+            keepClipboardIntact: false
+        )
     }
 }
 

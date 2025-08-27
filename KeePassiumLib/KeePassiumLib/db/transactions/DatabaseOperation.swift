@@ -10,6 +10,7 @@ public class DatabaseOperation: Codable {
     enum Kind: String, Codable {
         case createEntry
         case editEntry
+        case addEntryURL
     }
 
     enum Error: LocalizedError {

@@ -30,6 +30,10 @@ extension EntryFinderCoordinator {
             announcements.append(makePendingChangesAnnouncement(for: _entryFinderVC))
         }
 
+        if let rememberContextAnnouncement = maybeMakeRememberContextAnnouncement(for: _entryFinderVC) {
+            announcements.append(rememberContextAnnouncement)
+        }
+
         if announcements.isEmpty,
            let qafAnnouncment = maybeMakeQuickAutoFillAnnouncment(for: _entryFinderVC)
         {
@@ -38,9 +42,42 @@ extension EntryFinderCoordinator {
         _entryFinderVC.setAnnouncements(announcements)
     }
 
+    private func maybeMakeRememberContextAnnouncement(for viewController: EntryFinderVC) -> AnnouncementItem? {
+        let alreadySeen = Settings.current.autoFillContextSavingModeChosenTimestamp != nil
+        guard !alreadySeen,
+              _canAddExtraURLs
+        else { return nil }
+
+        let announcement = AnnouncementItem(
+            title: LString.rememberAutoFillContextCallToAction,
+            body: LString.rememberAutoFillContextDescription,
+            image: .symbol(.chartLineUptrendXyaxis),
+            action: UIAction(
+                title: LString.actionRememberAutoFillContext,
+                handler: { [weak self] _ in
+                    Settings.current.autoFillContextSavingMode = .hostnameAndPath
+                    Settings.current.autoFillContextSavingModeChosenTimestamp = .now
+                    self?.refresh()
+                }
+            ),
+            onDidPressClose: { [weak self] _ in
+                Settings.current.autoFillContextSavingMode = .inactive
+                Settings.current.autoFillContextSavingModeChosenTimestamp = .now
+                self?.refresh()
+            }
+        )
+        return announcement
+    }
+
     private func maybeMakeQuickAutoFillAnnouncment(for viewController: EntryFinderVC) -> AnnouncementItem? {
         let isQuickTypeEnabled = DatabaseSettingsManager.shared.isQuickTypeEnabled(_databaseFile)
         guard !isQuickTypeEnabled && QuickAutoFillPrompt.shouldShow else {
+            return nil
+        }
+
+        if let contextSavingSetupTimestamp = Settings.current.autoFillContextSavingModeChosenTimestamp,
+           Date.now.timeIntervalSince(contextSavingSetupTimestamp) < 30
+        {
             return nil
         }
 

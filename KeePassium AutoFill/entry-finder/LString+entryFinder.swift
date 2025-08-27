@@ -45,18 +45,8 @@ extension LString {
     )
     public static let autoFillFoundEntriesSectionTitle = NSLocalizedString(
         "[AutoFill/FoundEntries/title]",
-        value: "Found Entries",
-        comment: "Title of a list (search results)"
-    )
-    public static let autoFillExactMatchesSectionTitle = NSLocalizedString(
-        "[AutoFill/FoundEntries/Exact/title]",
-        value: "Exact Matches",
-        comment: "Title of a search result list: most relevant entries"
-    )
-    public static let autoFillPartialMatchesSectionTitle = NSLocalizedString(
-        "[AutoFill/FoundEntries/Partial/title]",
-        value: "Partial Matches",
-        comment: "Title of a search result list: somewhat relevant entries"
+        value: "Best Matches",
+        comment: "Title of a list with search results"
     )
 
     public static let titleNothingSuitableFound = NSLocalizedString(
@@ -69,6 +59,26 @@ extension LString {
         "[AutoFill/Context/Empty/title]",
         value: "Unknown",
         comment: "Title of AutoFill context when no context is available. Usage: `Context: Unknown`"
+    )
+    public static let rememberAutoFillContextCallToAction = NSLocalizedString(
+        "[AutoFill/RememberContext/callToAction]",
+        value: "Improve AutoFill suggestions",
+        comment: "Call to action"
+    )
+    public static let rememberAutoFillContextDescription = NSLocalizedString(
+        "[AutoFill/RememberContext/description]",
+        value: "KeePassium will remember which entry you select for each website and then suggest it automatically.",
+        comment: "Description of the 'Remember Selected Entries` feature"
+    )
+    public static let actionRememberAutoFillContext = NSLocalizedString(
+        "[AutoFill/RememberContext/action]",
+        value: "Remember Selected Entries",
+        comment: "Not an action, but a button to activate the same-named setting"
+    )
+    public static let actionAcceptAndRemember = NSLocalizedString(
+        "[AutoFill/AcceptAndRemember/action]",
+        value: "Accept and Remember",
+        comment: "Action in AutoFill: choose the entry and remember it for future use on this website."
     )
     // swiftlint:enable line_length
 }

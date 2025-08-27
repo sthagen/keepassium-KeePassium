@@ -134,7 +134,9 @@ private struct DatabaseOperationWrapper: Codable {
             self.base = try CreateEntryOperation(from: decoder)
         case .editEntry:
             self.base = try EditEntryOperation(from: decoder)
-        default:
+        case .addEntryURL:
+            self.base = try AddEntryURLOperation(from: decoder)
+        case .none:
             Diag.error("Unexpected operation kind: \(kind)")
             throw DecodingError.dataCorruptedError(
                 forKey: .kind,

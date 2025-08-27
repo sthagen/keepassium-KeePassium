@@ -15,12 +15,16 @@ extension AutoFillCoordinator {
         warnings: DatabaseLoadingWarnings
     ) {
         log.trace("Displaying database viewer")
+        let searchContext = AutoFillSearchContext(
+            userQuery: _autoFillMode?.query,
+            serviceIdentifiers: _serviceIdentifiers,
+            passkeyRelyingParty: _passkeyRelyingParty
+        )
         let coordinator = EntryFinderCoordinator(
             router: _router,
             databaseFile: databaseFile,
             loadingWarnings: warnings,
-            serviceIdentifiers: _serviceIdentifiers,
-            passkeyRelyingParty: _passkeyRelyingParty,
+            searchContext: searchContext,
             passkeyRegistrationParams: _passkeyRegistrationParams,
             autoFillMode: _autoFillMode
         )
@@ -41,11 +45,20 @@ extension AutoFillCoordinator: EntryFinderCoordinatorDelegate {
     func didSelectEntry(
         _ entry: Entry,
         from databaseFile: DatabaseFile,
+        rememberURL contextURL: URL?,
         clipboardIsBusy: Bool,
         in coordinator: EntryFinderCoordinator
     ) {
         log.trace("didSelectEntry, clipboardIsBusy: \(String(describing: clipboardIsBusy))")
-        _returnEntry(entry, from: databaseFile, keepClipboardIntact: clipboardIsBusy)
+        if let contextURL {
+            _addExtraURL(contextURL, to: entry, in: databaseFile, presenter: _presenterForModals)
+        }
+        _returnEntry(
+            entry,
+            from: databaseFile,
+            shouldSave: contextURL != nil,
+            keepClipboardIntact: clipboardIsBusy
+        )
     }
 
     @available(iOS 18.0, *)
@@ -53,9 +66,13 @@ extension AutoFillCoordinator: EntryFinderCoordinatorDelegate {
         _ text: String,
         from entry: Entry,
         databaseFile: DatabaseFile,
+        rememberURL contextURL: URL?,
         in coordinator: EntryFinderCoordinator
     ) {
-        _returnText(text, from: entry, databaseFile: databaseFile)
+        if let contextURL {
+            _addExtraURL(contextURL, to: entry, in: databaseFile, presenter: _presenterForModals)
+        }
+        _returnText(text, from: entry, databaseFile: databaseFile, shouldSave: contextURL != nil)
     }
 
     func didPressCreatePasskey(
@@ -76,6 +93,22 @@ extension AutoFillCoordinator: EntryFinderCoordinatorDelegate {
     func didPressReinstateDatabase(_ fileRef: URLReference, in coordinator: EntryFinderCoordinator) {
         coordinator.stop(animated: true) { [weak self] in
             self?._reinstateDatabase(fileRef)
+        }
+    }
+}
+
+extension AutoFillCoordinator {
+    internal func _addExtraURL(
+        _ url: URL,
+        to entry: Entry,
+        in databaseFile: DatabaseFile,
+        presenter: UIViewController
+    ) {
+        let addOp = DatabaseOperation.addEntryURL(url, to: entry)
+        do {
+            try databaseFile.addPendingOperations([addOp], apply: true)
+        } catch {
+            presenter.showErrorAlert(error)
         }
     }
 }

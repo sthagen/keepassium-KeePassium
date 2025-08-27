@@ -15,6 +15,9 @@ final class AutoFillSettingsVC: BaseSettingsViewController<AutoFillSettingsVC.Se
         func didChangeQuickAutoFillEnabled(_ isOn: Bool, in viewController: AutoFillSettingsVC)
         func didChangeFillPerfectResult(_ isOn: Bool, in viewController: AutoFillSettingsVC)
         func didChangeCopyOTPOnFill(_ isOn: Bool, in viewController: AutoFillSettingsVC)
+        func didChangeContextSavingMode(
+            _ mode: AutoFillContextSavingMode,
+            in viewController: AutoFillSettingsVC)
     }
 
     enum AutoFillState {
@@ -29,6 +32,7 @@ final class AutoFillSettingsVC: BaseSettingsViewController<AutoFillSettingsVC.Se
     var isQuickAutoFillEnabled = false
     var isFillPerfectResult = false
     var isCopyOTPOnFill = false
+    var contextSavingMode: AutoFillContextSavingMode = .inactive
 
     override init() {
         super.init()
@@ -42,12 +46,13 @@ final class AutoFillSettingsVC: BaseSettingsViewController<AutoFillSettingsVC.Se
     enum Section: SettingsSection {
         case setup(state: AutoFillState)
         case quickAutoFill
+        case contextSaving
         case automaticSearch
         case otp
 
         var header: String? {
             switch self {
-            case .setup, .quickAutoFill:
+            case .setup, .quickAutoFill, .contextSaving:
                 return nil
             case .automaticSearch:
                 return LString.automaticSearchTitle
@@ -69,6 +74,8 @@ final class AutoFillSettingsVC: BaseSettingsViewController<AutoFillSettingsVC.Se
                 }
             case .quickAutoFill:
                 return LString.quickAutoFillDescription
+            case .contextSaving:
+                return LString.autoFillRememberContextDescription
             case .automaticSearch:
                 return LString.autoFillPerfectMatchDescription
             case .otp:
@@ -120,6 +127,20 @@ final class AutoFillSettingsVC: BaseSettingsViewController<AutoFillSettingsVC.Se
                     self.isQuickAutoFillEnabled = itemConfig.isOn
                     refresh()
                     delegate?.didChangeQuickAutoFillEnabled(isQuickAutoFillEnabled, in: self)
+                }
+            ))
+        ])
+
+        snapshot.appendSections([.contextSaving])
+        snapshot.appendItems([
+            .toggle(.init(
+                title: LString.autoFillRememberContextTitle,
+                isEnabled: isAutoFillActive,
+                isOn: contextSavingMode != .inactive,
+                handler: { [unowned self] itemConfig in
+                    self.contextSavingMode = itemConfig.isOn ? .hostnameAndPath : .inactive
+                    refresh()
+                    delegate?.didChangeContextSavingMode(contextSavingMode, in: self)
                 }
             ))
         ])

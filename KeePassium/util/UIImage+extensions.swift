@@ -74,6 +74,7 @@ public enum SymbolName: String, Equatable {
     case briefcase = "briefcase"
     case camera = "camera"
     case characterMagnify = "character.magnify"
+    case chartLineUptrendXyaxis = "chart.line.uptrend.xyaxis"
     case checkmark = "checkmark"
     case checkmarkCircle = "checkmark.circle"
     case checkmarkSeal = "checkmark.seal"

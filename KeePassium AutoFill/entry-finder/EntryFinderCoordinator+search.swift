@@ -10,13 +10,7 @@ import AuthenticationServices
 import KeePassiumLib
 
 extension EntryFinderCoordinator {
-    struct SearchContext {
-        var userQuery: String?
-        var serviceIdentifiers: [ASCredentialServiceIdentifier]
-        var passkeyRelyingParty: String?
-    }
-
-    internal func _updateData(_ context: SearchContext) {
+    internal func _updateData(_ context: AutoFillSearchContext) {
         if let userQuery = context.userQuery {
             performManualSearch(query: userQuery)
         } else {
@@ -39,7 +33,7 @@ extension EntryFinderCoordinator {
         }
     }
 
-    private func performAutomaticSearch(_ context: SearchContext) {
+    private func performAutomaticSearch(_ context: AutoFillSearchContext) {
         let searchResults = _searchHelper.find(
             database: _databaseFile.database,
             serviceIdentifiers: context.serviceIdentifiers,
@@ -58,7 +52,7 @@ extension EntryFinderCoordinator {
                Settings.current.autoFillPerfectMatch
             {
                 _entryFinderVC.selectEntry(perfectMatch, animated: true)
-                _notifyEntrySelected(perfectMatch)
+                _notifyEntrySelected(perfectMatch, rememberURL: nil)
                 return
             }
         case .passkeyRegistration:

@@ -38,7 +38,21 @@ extension EntryFinderCoordinator {
         }
 
         func getContextMenu(for entry: Entry, at popoverAnchor: PopoverAnchor) -> UIMenu? {
-            makeCopyEntryFieldMenu(for: entry, at: popoverAnchor)
+            guard let coordinator else { return nil }
+            var menuItems = [UIMenu]()
+            let rememberMenu = coordinator._makeRememberContextMenu(target: entry)
+            if let rememberMenu {
+                menuItems.append(rememberMenu)
+            }
+            if let copyFieldMenu = makeCopyEntryFieldMenu(for: entry, inline: rememberMenu == nil) {
+                menuItems.append(copyFieldMenu)
+            }
+
+            if menuItems.count > 0 {
+                return UIMenu(children: menuItems)
+            } else {
+                return nil
+            }
         }
     }
 }
@@ -61,7 +75,7 @@ extension EntryFinderCoordinator.ItemDecorator {
         EntryField.passkeyUsername
     ]
 
-    func makeCopyEntryFieldMenu(for entry: Entry, at popoverAnchor: PopoverAnchor) -> UIMenu? {
+    func makeCopyEntryFieldMenu(for entry: Entry, inline: Bool) -> UIMenu? {
         let fields = entry.fields.filter {
             !$0.value.isEmpty && !Self.fieldExcludedFromCopying.contains($0.name)
         }
@@ -93,7 +107,12 @@ extension EntryFinderCoordinator.ItemDecorator {
             fieldCopyActions.insert(copyOTPAction, at: 0)
         }
 
-        return UIMenu(children: fieldCopyActions)
+        return UIMenu(
+            title: LString.actionCopy,
+            image: .symbol(.docOnDoc),
+            options: inline ? [.displayInline] : [],
+            children: fieldCopyActions
+        )
     }
 }
 

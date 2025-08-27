@@ -92,7 +92,12 @@ extension AutoFillCoordinator: DatabaseUnlockerCoordinatorDelegate {
            _autoFillMode != .passkeyRegistration
         {
             log.trace("Unlocked and found a match")
-            _returnEntry(desiredEntry, from: databaseFile, keepClipboardIntact: false)
+            _returnEntry(
+                desiredEntry,
+                from: databaseFile,
+                shouldSave: false,
+                keepClipboardIntact: false
+            )
         } else {
             _showEntryFinder(fileRef, databaseFile: databaseFile, warnings: warnings)
         }

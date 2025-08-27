@@ -15,6 +15,7 @@ protocol EntryFinderCoordinatorDelegate: AnyObject {
     func didSelectEntry(
         _ entry: Entry,
         from databaseFile: DatabaseFile,
+        rememberURL: URL?,
         clipboardIsBusy: Bool,
         in coordinator: EntryFinderCoordinator
     )
@@ -24,6 +25,7 @@ protocol EntryFinderCoordinatorDelegate: AnyObject {
         _ text: String,
         from entry: Entry,
         databaseFile: DatabaseFile,
+        rememberURL: URL?,
         in coordinator: EntryFinderCoordinator)
 
     func didPressReinstateDatabase(_ fileRef: URLReference, in coordinator: EntryFinderCoordinator)
@@ -50,7 +52,7 @@ final class EntryFinderCoordinator: BaseCoordinator {
     internal let _databaseFile: DatabaseFile
     internal let _loadingWarnings: DatabaseLoadingWarnings?
 
-    internal var _searchContext: SearchContext
+    internal var _searchContext: AutoFillSearchContext
     internal let _searchHelper = SearchHelper()
 
     internal let _passkeyRegistrationParams: PasskeyRegistrationParams?
@@ -67,17 +69,13 @@ final class EntryFinderCoordinator: BaseCoordinator {
         router: NavigationRouter,
         databaseFile: DatabaseFile,
         loadingWarnings: DatabaseLoadingWarnings?,
-        serviceIdentifiers: [ASCredentialServiceIdentifier],
-        passkeyRelyingParty: String?,
+        searchContext: AutoFillSearchContext,
         passkeyRegistrationParams: PasskeyRegistrationParams?,
         autoFillMode: AutoFillMode?
     ) {
         self._databaseFile = databaseFile
         self._loadingWarnings = loadingWarnings
-        self._searchContext = SearchContext(
-            userQuery: autoFillMode?.query,
-            serviceIdentifiers: serviceIdentifiers,
-            passkeyRelyingParty: passkeyRelyingParty)
+        self._searchContext = searchContext
         self._passkeyRegistrationParams = passkeyRegistrationParams
         self._autoFillMode = autoFillMode
         let itemDecorator = ItemDecorator()
@@ -168,11 +166,12 @@ extension EntryFinderCoordinator {
         StoreReviewSuggester.registerEvent(.trouble)
     }
 
-    internal func _notifyEntrySelected(_ entry: Entry) {
+    internal func _notifyEntrySelected(_ entry: Entry, rememberURL: URL?) {
         let didUseManualCopy = _manualCopyTimestamp != nil
         delegate?.didSelectEntry(
             entry,
             from: _databaseFile,
+            rememberURL: rememberURL,
             clipboardIsBusy: didUseManualCopy,
             in: self)
     }
@@ -203,7 +202,11 @@ extension EntryFinderCoordinator: EntryFinderVC.Delegate {
                 in: self
             )
         case .credentials, .oneTimeCode, .passkeyAssertion:
-            _notifyEntrySelected(entry)
+            _withContextURL(of: _searchContext, presenter: viewController) {
+                [weak self, weak entry] contextURL in
+                guard let self, let entry else { return }
+                _notifyEntrySelected(entry, rememberURL: contextURL)
+            }
         case .text:
             assertionFailure("Should not be called")
         case .none:
@@ -220,15 +223,22 @@ extension EntryFinderCoordinator: EntryFinderVC.Delegate {
     func didSelectField(_ field: EntryField, in entry: Entry, in viewController: EntryFinderVC) {
         switch _autoFillMode {
         case .text:
-            let value = _getUpdatedFieldValue(field, of: entry)
-            delegate?.didSelectText(value, from: entry, databaseFile: _databaseFile, in: self)
-            return
+            _withContextURL(of: _searchContext, presenter: viewController) {
+                [weak self, weak entry] contextURL in
+                guard let self, let entry else { return }
+                let value = _getUpdatedFieldValue(field, of: entry)
+                delegate?.didSelectText(
+                    value,
+                    from: entry,
+                    databaseFile: _databaseFile,
+                    rememberURL: contextURL,
+                    in: self
+                )
+            }
         case .credentials, .oneTimeCode, .passkeyAssertion, .passkeyRegistration:
             assertionFailure("Unexpected mode for field selection")
-            return
         case .none:
             assertionFailure()
-            return
         }
     }
 }

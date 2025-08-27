@@ -61,6 +61,7 @@ final public class DatabaseSettings: Eraseable {
     public private(set) var associatedHardwareKey: HardwareKey?
 
     public var isQuickTypeEnabled: Bool?
+    public var autoFillContextSavingMode: AutoFillContextSavingMode?
 
     public var fallbackStrategy: UnreachableFileFallbackStrategy?
     public var fallbackTimeout: TimeInterval?
@@ -91,6 +92,7 @@ final public class DatabaseSettings: Eraseable {
         associatedHardwareKey = nil
 
         isQuickTypeEnabled = nil
+        autoFillContextSavingMode = nil
 
         fallbackStrategy = nil
         fallbackTimeout = nil
@@ -166,6 +168,7 @@ extension DatabaseSettings: Codable {
         case associatedYubiKey
         case associatedHardwareKey
         case isQuickTypeEnabled
+        case autoFillContextSavingMode
         case fallbackStrategy
         case fallbackTimeout
         case autofillFallbackStrategy
@@ -208,6 +211,7 @@ extension DatabaseSettings: Codable {
             self.associatedHardwareKey = try container.decodeIfPresent(HardwareKey.self, forKey: .associatedYubiKey)
         }
         self.isQuickTypeEnabled = try container.decodeIfPresent(Bool.self, forKey: .isQuickTypeEnabled)
+        self.autoFillContextSavingMode = try container.decodeIfPresent(AutoFillContextSavingMode.self, forKey: .autoFillContextSavingMode)
         self.fallbackStrategy = try container.decodeIfPresent(UnreachableFileFallbackStrategy.self, forKey: .fallbackStrategy)
         self.fallbackTimeout = try container.decodeIfPresent(TimeInterval.self, forKey: .fallbackTimeout)
         self.autofillFallbackStrategy = try container.decodeIfPresent(UnreachableFileFallbackStrategy.self, forKey: .autofillFallbackStrategy)
@@ -245,6 +249,9 @@ extension DatabaseSettings: Codable {
         }
         if let _isQuickTypeEnabled = isQuickTypeEnabled {
             try container.encode(_isQuickTypeEnabled, forKey: .isQuickTypeEnabled)
+        }
+        if let _autoFillContextSavingMode = autoFillContextSavingMode {
+            try container.encode(_autoFillContextSavingMode, forKey: .autoFillContextSavingMode)
         }
         if let _fallbackStrategy = fallbackStrategy {
             try container.encode(_fallbackStrategy, forKey: .fallbackStrategy)

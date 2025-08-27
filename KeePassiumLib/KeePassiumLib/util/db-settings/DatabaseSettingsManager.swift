@@ -193,6 +193,15 @@ public class DatabaseSettingsManager {
         return getSettings(for: databaseRef)?.externalUpdateBehavior ?? .checkAndNotify
     }
 
+    public func getAutoFillContextSavingMode(_ databaseRef: URLReference) -> AutoFillContextSavingMode {
+        let globalMode = Settings.current.autoFillContextSavingMode
+        if let fileSpecificMode = getSettings(for: databaseRef)?.autoFillContextSavingMode {
+            return fileSpecificMode
+        } else {
+            return globalMode
+        }
+    }
+
     private func getSettings(for descriptor: URLReference.Descriptor?) -> DatabaseSettings? {
         guard let descriptor else {
             Diag.warning("Cannot get database descriptor")

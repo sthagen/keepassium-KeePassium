@@ -161,7 +161,7 @@ extension DatabaseFile {
             return
         }
 
-        Diag.debug("Will apply \(unappliedOpCount) pending operations [recoveryMode: \(recoveryMode)")
+        Diag.debug("Will apply \(unappliedOpCount) pending operations [recoveryMode: \(recoveryMode)]")
         do {
             pendingOperationsApplied += try transaction.apply(
                 to: self,

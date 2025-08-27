@@ -94,3 +94,41 @@ extension Settings {
         }
     }
 }
+
+extension Settings {
+    public var autoFillContextSavingMode: AutoFillContextSavingMode {
+        get {
+            if let rawValue = UserDefaults.appGroupShared
+                    .string(forKey: Keys.autoFillContextSavingMode.rawValue),
+               let mode = AutoFillContextSavingMode(rawValue: rawValue)
+            {
+                return mode
+            }
+            return .inactive
+        }
+        set {
+            _updateAndNotify(
+                oldValue: autoFillContextSavingMode.rawValue,
+                newValue: newValue.rawValue,
+                key: .autoFillContextSavingMode)
+        }
+    }
+
+    public var autoFillContextSavingModeChosenTimestamp: Date? {
+        get {
+            if let storedTimestamp = UserDefaults.appGroupShared
+                .object(forKey: Keys.autoFillContextSavingModeChosenTimestamp.rawValue) as? Date
+            {
+                return storedTimestamp
+            }
+            return nil
+        }
+        set {
+            UserDefaults.appGroupShared
+                .set(newValue, forKey: Keys.autoFillContextSavingModeChosenTimestamp.rawValue)
+            if newValue != autoFillContextSavingModeChosenTimestamp {
+                _postChangeNotification(changedKey: .autoFillContextSavingModeChosenTimestamp)
+            }
+        }
+    }
+}

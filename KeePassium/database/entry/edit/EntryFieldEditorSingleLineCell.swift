@@ -126,6 +126,7 @@ final class EntryFieldEditorSingleLineCell: UITableViewCell, EditableFieldCell {
 
         stackView.addArrangedSubview(titleRow)
         stackView.addArrangedSubview(textField)
+        deleteButton.setContentCompressionResistancePriority(.required, for: .horizontal)
 
         NSLayoutConstraint.activate([
             stackView.topAnchor.constraint(equalTo: contentView.layoutMarginsGuide.topAnchor),
@@ -133,14 +134,13 @@ final class EntryFieldEditorSingleLineCell: UITableViewCell, EditableFieldCell {
             stackView.bottomAnchor.constraint(lessThanOrEqualTo: contentView.layoutMarginsGuide.bottomAnchor),
 
             deleteButton.centerYAnchor.constraint(equalTo: textField.centerYAnchor),
-            deleteButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -12),
+            deleteButton.trailingAnchor.constraint(equalTo: contentView.layoutMarginsGuide.trailingAnchor),
 
             textField.heightAnchor.constraint(greaterThanOrEqualToConstant: 22)
         ])
-
-        textFieldTrailingConstraint = stackView.trailingAnchor.constraint(
-            equalTo: contentView.layoutMarginsGuide.trailingAnchor)
-        textFieldTrailingConstraint?.isActive = true
+        textFieldTrailingConstraint = stackView.trailingAnchor
+            .constraint(equalTo: contentView.layoutMarginsGuide.trailingAnchor)
+            .activate()
     }
 
     private func refreshContent() {
@@ -167,12 +167,11 @@ final class EntryFieldEditorSingleLineCell: UITableViewCell, EditableFieldCell {
         textFieldTrailingConstraint?.isActive = false
 
         if isDeleteButtonVisible {
-            textFieldTrailingConstraint = stackView.trailingAnchor.constraint(
-                equalTo: deleteButton.leadingAnchor,
-                constant: -8)
+            textFieldTrailingConstraint = stackView.trailingAnchor
+                .constraint(equalTo: deleteButton.leadingAnchor, constant: -8)
         } else {
-            textFieldTrailingConstraint = stackView.trailingAnchor.constraint(
-                equalTo: contentView.layoutMarginsGuide.trailingAnchor)
+            textFieldTrailingConstraint = stackView.trailingAnchor
+                .constraint(equalTo: contentView.layoutMarginsGuide.trailingAnchor)
         }
 
         textFieldTrailingConstraint?.isActive = true

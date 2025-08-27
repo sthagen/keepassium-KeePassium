@@ -16,7 +16,7 @@ extension EntryFinderVC {
 
         case overview(_ snapshot: SectionSnapshot)
         case foundManually(_ snapshot: SectionSnapshot)
-        case foundAutomatically(_ exact: SectionSnapshot, _ partial: SectionSnapshot)
+        case foundAutomatically(_ snapshot: SectionSnapshot)
     }
 
     typealias DataSource = UICollectionViewDiffableDataSource<Section, Item>
@@ -27,8 +27,6 @@ extension EntryFinderVC {
         case recentEntry
         case allItems
         case foundItems
-        case exactMatches
-        case partialMatches
         case context
 
         public var headerTitle: String? {
@@ -37,8 +35,6 @@ extension EntryFinderVC {
             case .recentEntry: return LString.autoFillRecentlyUsedSectionTitle
             case .allItems: return LString.autoFillAllEntriesSectionTitle
             case .foundItems: return LString.autoFillFoundEntriesSectionTitle
-            case .exactMatches: return LString.autoFillExactMatchesSectionTitle
-            case .partialMatches: return LString.autoFillPartialMatchesSectionTitle
             case .context: return LString.titleAutoFillContext
             }
         }
@@ -138,15 +134,14 @@ extension EntryFinderVC {
     }
 
     public func setAutomaticallyFoundData(_ searchResults: FuzzySearchResults) {
-        var exactMatchesSnapshot = SectionSnapshot()
-        var partialMatchesSnapshot = SectionSnapshot()
+        var foundItemsSnapshot = SectionSnapshot()
         searchResults.exactMatch.forEach {
-            addGroupedItems($0, kind: .standard, to: &exactMatchesSnapshot, includeFields: isFieldPickerMode)
+            addGroupedItems($0, kind: .standard, to: &foundItemsSnapshot, includeFields: isFieldPickerMode)
         }
         searchResults.partialMatch.forEach {
-            addGroupedItems($0, kind: .standard, to: &partialMatchesSnapshot, includeFields: isFieldPickerMode)
+            addGroupedItems($0, kind: .standard, to: &foundItemsSnapshot, includeFields: isFieldPickerMode)
         }
-        self._items = .foundAutomatically(exactMatchesSnapshot, partialMatchesSnapshot)
+        self._items = .foundAutomatically(foundItemsSnapshot)
     }
 
     public func setContext(_ text: String?) {
@@ -180,13 +175,9 @@ extension EntryFinderVC {
             if hasDataItems {
                 snapshot.appendSections([.foundItems])
             }
-        case let .foundAutomatically(exactMatchesSnapshot, partialMatchesSnapshot):
-            if exactMatchesSnapshot.items.count > 0 {
-                snapshot.appendSections([.exactMatches])
-                hasDataItems = true
-            }
-            if partialMatchesSnapshot.items.count > 0 {
-                snapshot.appendSections([.partialMatches])
+        case .foundAutomatically(let foundItemsSnapshot):
+            if foundItemsSnapshot.items.count > 0 {
+                snapshot.appendSections([.foundItems])
                 hasDataItems = true
             }
         }
@@ -219,12 +210,9 @@ extension EntryFinderVC {
             if !foundItemsSnapshot.items.isEmpty {
                 _dataSource.apply(foundItemsSnapshot, to: .foundItems, animatingDifferences: true)
             }
-        case let .foundAutomatically(exactMatchesSnapshot, partialMatchesSnapshot):
-            if exactMatchesSnapshot.items.count > 0 {
-                _dataSource.apply(exactMatchesSnapshot, to: .exactMatches, animatingDifferences: true)
-            }
-            if partialMatchesSnapshot.items.count > 0 {
-                _dataSource.apply(partialMatchesSnapshot, to: .partialMatches, animatingDifferences: true)
+        case .foundAutomatically(let foundItemsSnapshot):
+            if foundItemsSnapshot.items.count > 0 {
+                _dataSource.apply(foundItemsSnapshot, to: .foundItems, animatingDifferences: true)
             }
         }
     }
@@ -293,8 +281,7 @@ extension EntryFinderVC {
             case .foundManually:
                 toggleExpanded(item, section: .foundItems)
             case .foundAutomatically:
-                toggleExpanded(item, section: .exactMatches)
-                toggleExpanded(item, section: .partialMatches)
+                toggleExpanded(item, section: .foundItems)
             }
         }
     }
@@ -321,9 +308,8 @@ extension EntryFinderVC {
             return find(entry.runtimeUUID, in: allItemsSnapshot)
         case .foundManually(let foundItemsSnapshot):
             return find(entry.runtimeUUID, in: foundItemsSnapshot)
-        case let .foundAutomatically(exactMatchesSnapshot, partialMatchesSnapshot):
-            return find(entry.runtimeUUID, in: exactMatchesSnapshot)
-                ?? find(entry.runtimeUUID, in: partialMatchesSnapshot)
+        case .foundAutomatically(let foundItemsSnapshot):
+            return find(entry.runtimeUUID, in: foundItemsSnapshot)
         }
     }
 
@@ -348,9 +334,8 @@ extension EntryFinderVC {
         case .foundManually(let foundItemsSnapshot):
             return findFirstEntry(in: foundItemsSnapshot)
                 ?? getRecentEntryIndexPath()
-        case let .foundAutomatically(exactMatchesSnapshot, partialMatchesSnapshot):
-            return findFirstEntry(in: exactMatchesSnapshot)
-                ?? findFirstEntry(in: partialMatchesSnapshot)
+        case .foundAutomatically(let foundItemsSnapshot):
+            return findFirstEntry(in: foundItemsSnapshot)
                 ?? getRecentEntryIndexPath()
         }
     }

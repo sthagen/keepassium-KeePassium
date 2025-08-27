@@ -24,28 +24,47 @@ extension AutoFillCoordinator {
     internal func _returnEntry(
         _ entry: Entry,
         from databaseFile: DatabaseFile,
+        shouldSave: Bool,
         keepClipboardIntact: Bool
     ) {
         RecentAutoFillEntryTracker.shared.recordRecentEntry(entry, from: databaseFile)
 
         switch _autoFillMode {
         case .credentials:
-            returnCredentials(from: entry, keepClipboardIntact: keepClipboardIntact)
+            returnCredentials(
+                from: entry,
+                databaseFile: databaseFile,
+                shouldSave: shouldSave,
+                keepClipboardIntact: keepClipboardIntact
+            )
         case .oneTimeCode:
             if #available(iOS 18, *) {
-                returnOneTimeCode(from: entry, databaseFile: databaseFile)
+                returnOneTimeCode(
+                    from: entry,
+                    databaseFile: databaseFile,
+                    shouldSave: shouldSave
+                )
             } else {
                 log.error("Tried to return .oneTimeCode before iOS 18, cancelling")
                 assertionFailure()
                 _cancelRequest(.failed)
             }
         case .passkeyAssertion(let allowPasswords):
-            let passkeyReturned = maybeReturnPasskeyAssertion(from: entry)
+            let passkeyReturned = maybeReturnPasskeyAssertion(
+                from: entry,
+                databaseFile: databaseFile,
+                shouldSave: shouldSave
+            )
             guard passkeyReturned || allowPasswords else {
                 _cancelRequest(.credentialIdentityNotFound)
                 return
             }
-            returnCredentials(from: entry, keepClipboardIntact: keepClipboardIntact)
+            returnCredentials(
+                from: entry,
+                databaseFile: databaseFile,
+                shouldSave: shouldSave,
+                keepClipboardIntact: keepClipboardIntact
+            )
         default:
             let mode = _autoFillMode?.debugDescription ?? "nil"
             log.error("Unexpected AutoFillMode value `\(mode, privacy: .public)`, cancelling")
@@ -54,7 +73,12 @@ extension AutoFillCoordinator {
         }
     }
 
-    private func returnCredentials(from entry: Entry, keepClipboardIntact: Bool) {
+    private func returnCredentials(
+        from entry: Entry,
+        databaseFile: DatabaseFile,
+        shouldSave: Bool,
+        keepClipboardIntact: Bool
+    ) {
         log.trace("Will return credentials")
         watchdog.restart()
 
@@ -75,7 +99,11 @@ extension AutoFillCoordinator {
         extensionContext.completeRequest(
             withSelectedCredential: passwordCredential,
             completionHandler: { [self] expired in
+                guard !expired else { return }
                 log.info("Did return credentials (exp: \(expired))")
+                if shouldSave {
+                    _saveDatabaseWithoutUI(databaseFile)
+                }
             }
         )
         if hasUI {
@@ -86,7 +114,7 @@ extension AutoFillCoordinator {
     }
 
     @available(iOS 18.0, *)
-    private func returnOneTimeCode(from entry: Entry, databaseFile: DatabaseFile) {
+    private func returnOneTimeCode(from entry: Entry, databaseFile: DatabaseFile, shouldSave: Bool) {
         log.trace("Will return one time code")
         watchdog.restart()
 
@@ -97,7 +125,16 @@ extension AutoFillCoordinator {
         }
 
         let otp = ASOneTimeCodeCredential(code: totpGenerator.generate())
-        extensionContext.completeOneTimeCodeRequest(using: otp)
+        extensionContext.completeOneTimeCodeRequest(
+            using: otp,
+            completionHandler: { [self] expired in
+                guard !expired else { return }
+                log.info("Did return OTP (exp: \(expired))")
+                if shouldSave {
+                    _saveDatabaseWithoutUI(databaseFile)
+                }
+            }
+        )
 
         if hasUI {
             HapticFeedback.play(.credentialsPasted)
@@ -107,7 +144,12 @@ extension AutoFillCoordinator {
     }
 
     @available(iOS 18, *)
-    internal func _returnText(_ text: String, from entry: Entry, databaseFile: DatabaseFile) {
+    internal func _returnText(
+        _ text: String,
+        from entry: Entry,
+        databaseFile: DatabaseFile,
+        shouldSave: Bool
+    ) {
         log.trace("Will return text")
         RecentAutoFillEntryTracker.shared.recordRecentEntry(entry, from: databaseFile)
 
@@ -117,7 +159,16 @@ extension AutoFillCoordinator {
         let alert = UIAlertController.make(title: nil, message: "This feature is broken in macOS Sequoia.\n\nInstead, use the 'key' button in the password field.")
         _router.present(alert, animated: true, completion: nil)
 #else
-        extensionContext.completeRequest(withTextToInsert: text)
+        extensionContext.completeRequest(
+            withTextToInsert: text,
+            completionHandler: { [self] expired in
+                guard !expired else { return }
+                log.info("Did return text (exp: \(expired))")
+                if shouldSave {
+                    _saveDatabaseWithoutUI(databaseFile)
+                }
+            }
+        )
         if hasUI {
             HapticFeedback.play(.credentialsPasted)
         }
@@ -161,7 +212,11 @@ extension AutoFillCoordinator {
         cleanup()
     }
 
-    private func maybeReturnPasskeyAssertion(from entry: Entry) -> Bool {
+    private func maybeReturnPasskeyAssertion(
+        from entry: Entry,
+        databaseFile: DatabaseFile,
+        shouldSave: Bool
+    ) -> Bool {
         guard let clientDataHash = _passkeyClientDataHash else {
             log.error("Passkey request parameters missing")
             return false
@@ -170,13 +225,20 @@ extension AutoFillCoordinator {
             log.error("Selected entry does not have passkeys")
             return false
         }
-        returnPasskeyAssertion(passkey: passkey, clientDataHash: clientDataHash)
+        returnPasskeyAssertion(
+            passkey: passkey,
+            clientDataHash: clientDataHash,
+            databaseFile: databaseFile,
+            shouldSave: shouldSave
+        )
         return true
     }
 
     private func returnPasskeyAssertion(
         passkey: Passkey,
-        clientDataHash: Data
+        clientDataHash: Data,
+        databaseFile: DatabaseFile,
+        shouldSave: Bool
     ) {
         log.trace("Will return passkey")
         watchdog.restart()
@@ -192,7 +254,11 @@ extension AutoFillCoordinator {
         extensionContext.completeAssertionRequest(
             using: passkeyCredential,
             completionHandler: { [self] expired in
+                guard !expired else { return }
                 log.info("Did return passkey (exp: \(expired))")
+                if shouldSave {
+                    _saveDatabaseWithoutUI(databaseFile)
+                }
             }
         )
 

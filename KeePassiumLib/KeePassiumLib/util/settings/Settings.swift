@@ -72,6 +72,8 @@ public class Settings {
         case autoFillPerfectMatch
         case acceptAutoFillInput
         case quickTypeEnabled
+        case autoFillContextSavingMode
+        case autoFillContextSavingModeChosenTimestamp
 
         case hapticFeedbackEnabled
 
@@ -227,6 +229,13 @@ public class Settings {
     }
 
     internal func _updateAndNotify<T: SignedNumeric>(oldValue: T, newValue: T, key: Keys) {
+        UserDefaults.appGroupShared.set(newValue, forKey: key.rawValue)
+        if newValue != oldValue {
+            _postChangeNotification(changedKey: key)
+        }
+    }
+
+    internal func _updateAndNotify(oldValue: String, newValue: String, key: Keys) {
         UserDefaults.appGroupShared.set(newValue, forKey: key.rawValue)
         if newValue != oldValue {
             _postChangeNotification(changedKey: key)
