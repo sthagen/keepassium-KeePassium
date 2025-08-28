@@ -13,7 +13,7 @@ import Foundation
 import KeePassiumLib
 import UIKit
 
-final class ToolbarDelegate: NSObject {
+final class MainToolbarDelegate: NSObject {
     private weak var mainCoordinator: MainCoordinator?
 
     init(mainCoordinator: MainCoordinator) {
@@ -38,7 +38,7 @@ final class ToolbarDelegate: NSObject {
 }
 
 #if targetEnvironment(macCatalyst)
-extension ToolbarDelegate: NSToolbarDelegate {
+extension MainToolbarDelegate: NSToolbarDelegate {
     private var allItems: [NSToolbarItem.Identifier] {
         return [
             .openDatabase,
