@@ -24,13 +24,13 @@ final class AutoFillSettingsCoordinator: BaseCoordinator {
 
         NotificationCenter.default.addObserver(
             self,
-            selector: #selector(appDidBecomeActive),
-            name: UIApplication.didBecomeActiveNotification,
+            selector: #selector(sceneDidBecomeActive),
+            name: UIScene.didActivateNotification,
             object: nil)
     }
 
     @objc
-    private func appDidBecomeActive(_ notification: Notification) {
+    private func sceneDidBecomeActive(_ notification: Notification) {
         refresh()
     }
 

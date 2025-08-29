@@ -11,7 +11,7 @@ import KeePassiumLib
 #if targetEnvironment(macCatalyst)
 extension MainCoordinator {
     internal func _setupMacToolbar() {
-        guard let scene = UIApplication.shared.currentScene else {
+        guard let scene = UIApplication.shared.currentActiveScene else {
             assertionFailure()
             return
         }
@@ -32,9 +32,12 @@ extension MainCoordinator {
     }
 
     internal func _removeMacToolbar() {
-        let titlebar = UIApplication.shared.currentScene?.titlebar
-        titlebar?.titleVisibility = .hidden
-        titlebar?.toolbar = nil
+        let scenes = UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }
+        scenes.forEach {
+            let titlebar = $0.titlebar
+            titlebar?.titleVisibility = .hidden
+            titlebar?.toolbar = nil
+        }
     }
 }
 #endif

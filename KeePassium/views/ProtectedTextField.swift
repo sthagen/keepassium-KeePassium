@@ -54,7 +54,7 @@ class ProtectedTextField: ValidatingTextField {
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(resetVisibility(_:)),
-            name: UIApplication.willResignActiveNotification,
+            name: UIScene.willDeactivateNotification,
             object: nil)
     }
 

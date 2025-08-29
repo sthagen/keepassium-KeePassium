@@ -39,49 +39,43 @@ class Watchdog {
     private var isIgnoringMinimizationOnce = false
     public private(set) var isFirstLaunchAfterRestart = false
 
-    private let screenIsLockedNotificationName = Notification.Name(rawValue: "com.apple.screenIsLocked")
-    private let screenIsUnlockedNotificationName = Notification.Name(rawValue: "com.apple.screenIsUnlocked")
-    private let nsWindowDidBecomeKeyNotificationName = Notification.Name(rawValue: "NSWindowDidBecomeKeyNotification")
-    private let nsWindowDidResignKeyNotificationName = Notification.Name(rawValue: "NSWindowDidResignKeyNotification")
-
     init() {
         NotificationCenter.default.addObserver(
             self,
-            selector: #selector(appDidBecomeActive),
-            name: UIApplication.didBecomeActiveNotification,
+            selector: #selector(sceneDidBecomeActive),
+            name: UIScene.didActivateNotification,
             object: nil)
         NotificationCenter.default.addObserver(
             self,
-            selector: #selector(appWillResignActive),
-            name: UIApplication.willResignActiveNotification,
+            selector: #selector(sceneWillResignActive),
+            name: UIScene.willDeactivateNotification,
             object: nil)
         #if targetEnvironment(macCatalyst)
             DistributedNotificationCenter.default().addObserver(
                 self,
                 selector: #selector(macScreenDidLock),
-                name: screenIsLockedNotificationName,
+                name: Notification.Name.macScreenIsLockedNotificationName,
                 object: nil)
             DistributedNotificationCenter.default().addObserver(
                 self,
                 selector: #selector(macScreenDidUnlock),
-                name: screenIsUnlockedNotificationName,
+                name: Notification.Name.macScreenIsUnlockedNotificationName,
                 object: nil)
 
             NotificationCenter.default.addObserver(
                 self,
                 selector: #selector(macWindowDidBecomeKey),
-                name: nsWindowDidBecomeKeyNotificationName,
+                name: Notification.Name.nsWindowDidBecomeKeyNotificationName,
                 object: nil)
             NotificationCenter.default.addObserver(
                 self,
                 selector: #selector(macWindowDidResignKey),
-                name: nsWindowDidResignKeyNotificationName,
+                name: Notification.Name.nsWindowDidResignKeyNotificationName,
                 object: nil)
         #endif
     }
 
-
-    @objc private func appDidBecomeActive(_ notification: Notification) {
+    @objc private func sceneDidBecomeActive(_ notification: Notification) {
         didBecomeActive()
     }
 
@@ -101,7 +95,7 @@ class Watchdog {
     }
 
     internal func didBecomeActive() {
-        Diag.debug("App did become active")
+        Diag.debug("Scene did become active")
         restartAppTimer()
         restartDatabaseTimer()
         if isIgnoringMinimizationOnce {
@@ -116,7 +110,7 @@ class Watchdog {
         }
     }
 
-    @objc private func appWillResignActive(_ notification: Notification) {
+    @objc private func sceneWillResignActive(_ notification: Notification) {
         willResignActive()
     }
 
@@ -137,7 +131,7 @@ class Watchdog {
     }
 
     internal func willResignActive() {
-        Diag.debug("App will resign active")
+        Diag.debug("Scene will resign active")
         guard let delegate else { return }
         delegate.showAppCover(self)
         if delegate.isAppLocked { return }
@@ -151,7 +145,7 @@ class Watchdog {
         let appTimeout = Settings.current.appLockTimeout
         if appTimeout.triggerMode == .appMinimized && !isIgnoringMinimizationOnce {
             Diag.debug("Going to background: App Lock engaged")
-            Watchdog.shared.restart() 
+            Watchdog.shared.restart()
         }
 
         if ProcessInfo.isRunningOnMac {

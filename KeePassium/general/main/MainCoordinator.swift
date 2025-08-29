@@ -78,7 +78,9 @@ final class MainCoordinator: UIResponder, Coordinator {
         window.rootViewController = _rootSplitVC
 
         #if targetEnvironment(macCatalyst)
-        _setupMacToolbar()
+        DispatchQueue.main.async { [self] in
+            _setupMacToolbar()
+        }
         #endif
 
         _setupShakeGestureObserver()

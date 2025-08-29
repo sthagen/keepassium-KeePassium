@@ -11,8 +11,8 @@ import KeePassiumLib
 import MSAL
 #endif
 
-
 extension MainCoordinator {
+    @discardableResult
     public func processIncomingURL(_ url: URL, sourceApp: String?, openInPlace: Bool?) -> Bool {
         #if INTUNE
         if url.absoluteString.hasPrefix(MSALOneDriveAuthProvider.redirectURI) {

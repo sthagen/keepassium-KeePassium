@@ -66,12 +66,12 @@ class FilePickerCoordinator: BaseCoordinator, FilePickerVC.Delegate {
         fileKeeperNotifications.startObserving()
         NotificationCenter.default.addObserver(
             self,
-            selector: #selector(appDidBecomeActive),
-            name: UIApplication.didBecomeActiveNotification,
+            selector: #selector(sceneDidBecomeActive),
+            name: UIScene.didActivateNotification,
             object: nil)
     }
 
-    @objc private func appDidBecomeActive(_ sender: AnyObject?) {
+    @objc private func sceneDidBecomeActive(_ sender: AnyObject?) {
         refresh()
     }
 

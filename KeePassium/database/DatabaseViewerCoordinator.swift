@@ -158,8 +158,8 @@ final class DatabaseViewerCoordinator: BaseCoordinator {
 
         NotificationCenter.default.addObserver(
             self,
-            selector: #selector(appDidBecomeActive),
-            name: UIApplication.didBecomeActiveNotification,
+            selector: #selector(sceneDidBecomeActive),
+            name: UIScene.didActivateNotification,
             object: nil)
     }
 
@@ -204,13 +204,13 @@ final class DatabaseViewerCoordinator: BaseCoordinator {
     }
 
     @objc
-    private func appDidBecomeActive(_ notification: Notification) {
+    private func sceneDidBecomeActive(_ notification: Notification) {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
-            self?.performAppPostActivationTasks()
+            self?.performScenePostActivationTasks()
         }
     }
 
-    private func performAppPostActivationTasks() {
+    private func performScenePostActivationTasks() {
         wasDatabaseModifiedExternally { [weak self] result in
             guard let self else { return }
             updateAnnouncements()
@@ -240,7 +240,8 @@ extension DatabaseViewerCoordinator {
         if announcements.isEmpty {
             StoreReviewSuggester.maybeShowAppReview(
                 appVersion: AppInfo.version,
-                occasion: .didOpenDatabase
+                occasion: .didOpenDatabase,
+                presenter: UIApplication.shared.currentActiveScene
             )
         }
     }
@@ -1109,7 +1110,11 @@ extension DatabaseViewerCoordinator: EntryViewerCoordinatorDelegate {
 extension DatabaseViewerCoordinator: GroupEditorCoordinatorDelegate {
     func didUpdateGroup(_ group: Group, in coordinator: GroupEditorCoordinator) {
         refresh()
-        StoreReviewSuggester.maybeShowAppReview(appVersion: AppInfo.version, occasion: .didEditItem)
+        StoreReviewSuggester.maybeShowAppReview(
+            appVersion: AppInfo.version,
+            occasion: .didEditItem,
+            presenter: UIApplication.shared.currentActiveScene
+        )
     }
 }
 
@@ -1127,7 +1132,11 @@ extension DatabaseViewerCoordinator: EntryFieldEditorCoordinatorDelegate {
         } else {
             selectEntry(entry)
         }
-        StoreReviewSuggester.maybeShowAppReview(appVersion: AppInfo.version, occasion: .didEditItem)
+        StoreReviewSuggester.maybeShowAppReview(
+            appVersion: AppInfo.version,
+            occasion: .didEditItem,
+            presenter: UIApplication.shared.currentActiveScene
+        )
     }
 }
 
@@ -1594,7 +1603,7 @@ final class DatabaseViewerActionsManager: UIResponder {
     }
 
     private func isFirstResponderReadyToCopy() -> Bool {
-        let keyWindow = UIApplication.shared.windows.first(where: { $0.isKeyWindow })
+        let keyWindow = UIApplication.shared.firstKeyWindow
         guard let firstResponder = keyWindow?.findFirstResponder() else {
             return false
         }

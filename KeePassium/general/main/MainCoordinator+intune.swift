@@ -14,7 +14,7 @@ import MSAL
 
 #if INTUNE
 extension MainCoordinator {
-    internal func _setupIntune(hasIncomingURL: Bool) {
+    internal func _setupIntune(waitForIncomingURL: Bool) {
         assert(_policyDelegate == nil && _enrollmentDelegate == nil, "Repeated call to Intune setup")
 
         _policyDelegate = IntunePolicyDelegateImpl()
@@ -26,7 +26,7 @@ extension MainCoordinator {
                 switch enrollmentResult {
                 case .success:
                     Diag.info("Intune enrollment successful")
-                    _runAfterStartTasks(hasIncomingURL: hasIncomingURL)
+                    _runAfterStartTasks(waitForIncomingURL: waitForIncomingURL)
                 case .cancelledByUser:
                     let message = [
                             LString.Intune.orgNeedsToManage,
@@ -94,13 +94,13 @@ extension MainCoordinator {
             preferredStyle: .alert
         )
         alert.addAction(title: LString.actionRetry, style: .default) { [weak self] _ in
-            self?._runAfterStartTasks(hasIncomingURL: false)
+            self?._runAfterStartTasks(waitForIncomingURL: false)
         }
         alert.addAction(title: LString.titleDiagnosticLog, style: .default) { [weak self] _ in
             guard let self else { return }
             DispatchQueue.main.async {
                 self._showDiagnostics(in: self._presenterForModals, onDismiss: { [weak self] in
-                    self?._runAfterStartTasks(hasIncomingURL: false)
+                    self?._runAfterStartTasks(waitForIncomingURL: false)
                 })
             }
         }

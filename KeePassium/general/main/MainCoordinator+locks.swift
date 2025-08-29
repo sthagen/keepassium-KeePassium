@@ -105,9 +105,11 @@ extension MainCoordinator {
     private func showAppCoverScreen() {
         guard _appCoverWindow == nil else { return }
 
-        let currentScreen = _mainWindow.screen
-        let appCoverWindow = UIWindow(frame: currentScreen.bounds)
-        appCoverWindow.setScreen(currentScreen)
+        guard let currentScene = _mainWindow.windowScene else {
+            fatalError("Main window has no scene")
+        }
+        let appCoverWindow = UIWindow(windowScene: currentScene)
+        appCoverWindow.bounds = currentScene.screen.bounds
         appCoverWindow.windowLevel = UIWindow.Level.alert
         self._appCoverWindow = appCoverWindow
 
@@ -142,15 +144,16 @@ extension MainCoordinator {
         passcodeInputVC.isCancelAllowed = false
         passcodeInputVC.isBiometricsAllowed = _canUseBiometrics()
 
-        let currentScreen = _mainWindow.screen
-        let appLockWindow = UIWindow(frame: currentScreen.bounds)
-        appLockWindow.setScreen(currentScreen)
+        guard let currentScene = _mainWindow.windowScene else {
+            fatalError("Main window has no scene")
+        }
+        let appLockWindow = UIWindow(windowScene: currentScene)
+        appLockWindow.bounds = currentScene.screen.bounds
         appLockWindow.windowLevel = UIWindow.Level.alert
         UIView.performWithoutAnimation {
             appLockWindow.rootViewController = passcodeInputVC
             appLockWindow.makeKeyAndVisible()
-            let window = UIApplication.shared.delegate!.window!
-            window?.isHidden = true
+            _mainWindow.isHidden = true
         }
         passcodeInputVC.view.accessibilityViewIsModal = true
         passcodeInputVC.view.snapshotView(afterScreenUpdates: true)
@@ -162,9 +165,11 @@ extension MainCoordinator {
     private func showBiometricsBackground() {
         guard _biometricsBackgroundWindow == nil else { return }
 
-        let currentScreen = _mainWindow.screen
-        let window = UIWindow(frame: currentScreen.bounds)
-        window.setScreen(currentScreen)
+        guard let currentScene = _mainWindow.windowScene else {
+            fatalError("Main window has no scene")
+        }
+        let window = UIWindow(windowScene: currentScene)
+        window.bounds = currentScene.screen.bounds
         window.windowLevel = UIWindow.Level.alert + 1
         let coverVC = AppCoverVC.make()
 
@@ -184,12 +189,12 @@ extension MainCoordinator {
         _setupMacToolbar()
         #endif
 
-        let window = UIApplication.shared.delegate!.window!
-        window?.makeKeyAndVisible()
         _appLockWindow?.resignKey()
         _appLockWindow?.isHidden = true
         _appLockWindow = nil
         UIMenu.rebuildMainMenu()
+
+        _mainWindow.makeKeyAndVisible()
         print("appLockWindow hidden")
     }
 

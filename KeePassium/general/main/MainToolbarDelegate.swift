@@ -57,18 +57,22 @@ extension MainToolbarDelegate: NSToolbarDelegate {
 
     @objc
     private func reload() {
-        guard let titlebar = UIApplication.shared.currentScene?.titlebar else {
+        let windowScenes = UIApplication.shared.connectedScenes.compactMap({ $0 as? UIWindowScene })
+        windowScenes.forEach {
+            guard let toolbar = $0.titlebar?.toolbar else { return }
+            while !toolbar.items.isEmpty {
+                toolbar.removeItem(at: 0)
+            }
+        }
+
+        guard mainCoordinator?.isAppLockVisible == false,
+              let titlebar = UIApplication.shared.currentActiveScene?.titlebar
+        else {
             return
         }
 
-        for _ in titlebar.toolbar?.items ?? [] {
-            titlebar.toolbar?.removeItem(at: 0)
-        }
-
-        if mainCoordinator?.isAppLockVisible == false {
-            for item in allItems.reversed() {
-                titlebar.toolbar?.insertItem(withItemIdentifier: item, at: 0)
-            }
+        for item in allItems.reversed() {
+            titlebar.toolbar?.insertItem(withItemIdentifier: item, at: 0)
         }
     }
 

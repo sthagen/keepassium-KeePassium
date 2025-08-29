@@ -136,8 +136,8 @@ final class OnboardingCoordinator: BaseCoordinator {
         }
         NotificationCenter.default.addObserver(
             self,
-            selector: #selector(appDidBecomeActive),
-            name: UIApplication.didBecomeActiveNotification,
+            selector: #selector(sceneDidBecomeActive),
+            name: UIScene.didActivateNotification,
             object: nil)
     }
 
@@ -187,7 +187,7 @@ extension OnboardingCoordinator {
     }
 
     @objc
-    private func appDidBecomeActive(_ notification: Notification) {
+    private func sceneDidBecomeActive(_ notification: Notification) {
         checkIfAutoFillSetupComplete()
     }
 

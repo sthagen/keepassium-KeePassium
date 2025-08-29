@@ -113,7 +113,11 @@ final public class StoreReviewSuggester {
         }
     }
 
-    public static func maybeShowAppReview(appVersion: String, occasion: Occasion) {
+    public static func maybeShowAppReview(appVersion: String, occasion: Occasion, presenter: UIWindowScene?) {
+        guard let presenter else {
+            assertionFailure("Current scene is unexpectedly nil")
+            return
+        }
         guard isGoodTimeForReview(appVersion: appVersion) else {
             return
         }
@@ -132,22 +136,16 @@ final public class StoreReviewSuggester {
 
         let shouldShowReview = Double.random(in: 0..<1) < reviewFrequency
         if shouldShowReview {
-            showAppReview(appVersion: appVersion)
+            showAppReview(appVersion: appVersion, presenter: presenter)
         }
     }
 
-    private static func showAppReview(appVersion: String) {
-        guard let appScenes = AppGroup.applicationShared?.connectedScenes,
-              let activeScene = appScenes.first(where: { $0.activationState == .foregroundActive }),
-              let currentWindowScene = activeScene as? UIWindowScene
-        else {
-            return
-        }
+    private static func showAppReview(appVersion: String, presenter: UIWindowScene) {
         registerEvent(.reviewRequest)
         withParams {
             $0.lastReviewedVersion = appVersion
         }
-        SKStoreReviewController.requestReview(in: currentWindowScene)
+        SKStoreReviewController.requestReview(in: presenter)
     }
 
     private static func isGoodTimeForReview(appVersion: String) -> Bool {

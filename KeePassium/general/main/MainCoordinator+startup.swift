@@ -13,7 +13,7 @@ import MSAL
 #endif
 
 extension MainCoordinator {
-    func start(hasIncomingURL: Bool, proposeReset: Bool) {
+    func start(waitForIncomingURL: Bool, proposeReset: Bool) {
         Diag.info(AppInfo.description)
         guard !proposeReset else {
             showAppResetPrompt()
@@ -35,7 +35,7 @@ extension MainCoordinator {
         _showPlaceholder()
 
         #if INTUNE
-        _setupIntune(hasIncomingURL: hasIncomingURL)
+        _setupIntune(waitForIncomingURL: waitForIncomingURL)
         guard let currentUser = IntuneMAMEnrollmentManager.instance().enrolledAccountId(),
               !currentUser.isEmpty
         else {
@@ -46,7 +46,7 @@ extension MainCoordinator {
         Diag.info("Intune account is enrolled")
         #endif
 
-        _runAfterStartTasks(hasIncomingURL: hasIncomingURL)
+        _runAfterStartTasks(waitForIncomingURL: waitForIncomingURL)
     }
 
     private func showAppResetPrompt() {
@@ -59,16 +59,16 @@ extension MainCoordinator {
         alert.addAction(title: LString.actionResetApp, style: .destructive, preferred: false) {
             [unowned self] _ in
             AppEraser.resetApp { [unowned self] in
-                start(hasIncomingURL: false, proposeReset: false)
+                start(waitForIncomingURL: false, proposeReset: false)
             }
         }
         alert.addAction(title: LString.actionCancel, style: .cancel) { [weak self] _ in
-            self?.start(hasIncomingURL: false, proposeReset: false)
+            self?.start(waitForIncomingURL: false, proposeReset: false)
         }
         _presenterForModals.present(alert, animated: true)
     }
 
-    internal func _runAfterStartTasks(hasIncomingURL: Bool) {
+    internal func _runAfterStartTasks(waitForIncomingURL: Bool) {
         #if INTUNE
         _applyIntuneAppConfig()
 
@@ -82,8 +82,8 @@ extension MainCoordinator {
             ensureAppDocumentsVisible()
         }
 
-        if hasIncomingURL {
-            Diag.info("Skipping other tasks for incoming URL")
+        if waitForIncomingURL {
+            Diag.info("Skipping other tasks, waiting for incoming URL")
             return
         }
 
