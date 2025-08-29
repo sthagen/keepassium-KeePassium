@@ -30,8 +30,6 @@ extension MainCoordinator {
             UIMenu.rebuildMainMenu()
         })
         self._databaseViewerCoordinator = dbViewerCoordinator
-
-        _deallocateDatabaseUnlocker()
         UIMenu.rebuildMainMenu()
     }
 

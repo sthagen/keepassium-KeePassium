@@ -14,7 +14,7 @@ extension MainCoordinator {
         context: DatabaseReloadContext?
     ) -> DatabaseUnlockerCoordinator {
         if let _databaseUnlockerRouter {
-            _rootSplitVC.setDetailRouter(_databaseUnlockerRouter)
+            _rootSplitVC.setSecondaryRouter(_databaseUnlockerRouter)
             if let existingDBUnlocker = childCoordinators.first(where: { $0 is DatabaseUnlockerCoordinator }) {
                 let dbUnlocker = existingDBUnlocker as! DatabaseUnlockerCoordinator
                 dbUnlocker.reloadingContext = context
@@ -25,28 +25,22 @@ extension MainCoordinator {
             }
         }
 
-        _databaseUnlockerRouter = NavigationRouter(RouterNavigationController())
-        let router = _databaseUnlockerRouter!
+        let dbUnlockerRouter = NavigationRouter(RouterNavigationController())
+        self._databaseUnlockerRouter = dbUnlockerRouter
 
-        let newDBUnlockerCoordinator = DatabaseUnlockerCoordinator(
-            router: router,
+        let dbUnlockerCoordinator = DatabaseUnlockerCoordinator(
+            router: dbUnlockerRouter,
             databaseRef: databaseRef
         )
-        newDBUnlockerCoordinator.delegate = self
-        newDBUnlockerCoordinator.reloadingContext = context
-        newDBUnlockerCoordinator.start()
-        addChildCoordinator(newDBUnlockerCoordinator, onDismiss: { [weak self] _ in
+        dbUnlockerCoordinator.delegate = self
+        dbUnlockerCoordinator.reloadingContext = context
+        dbUnlockerCoordinator.start()
+        addChildCoordinator(dbUnlockerCoordinator, onDismiss: { [weak self] _ in
             self?._databaseUnlockerRouter = nil
         })
+        _rootSplitVC.setSecondaryRouter(dbUnlockerRouter)
 
-        _rootSplitVC.setDetailRouter(router)
-
-        return newDBUnlockerCoordinator
-    }
-
-    internal func _deallocateDatabaseUnlocker() {
-        _databaseUnlockerRouter = nil
-        childCoordinators.removeAll(where: { $0 is DatabaseUnlockerCoordinator })
+        return dbUnlockerCoordinator
     }
 }
 

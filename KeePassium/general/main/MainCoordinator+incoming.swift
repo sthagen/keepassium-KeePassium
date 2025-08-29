@@ -46,7 +46,7 @@ extension MainCoordinator {
         }
 
         if _rootSplitVC.isCollapsed {
-            _rootSplitVC.ensurePrimaryVisible()
+            _rootSplitVC.show(.primary)
             _primaryRouter.dismissModals(animated: false, completion: { [weak _databasePickerCoordinator] in
                 _databasePickerCoordinator?.addDatabaseURL(url)
             })

@@ -23,7 +23,7 @@ final class MainCoordinator: UIResponder, Coordinator {
 
     internal let _rootSplitVC: RootSplitVC
     internal let _primaryRouter: NavigationRouter
-    internal let _placeholderRouter: NavigationRouter
+
     internal var _databaseUnlockerRouter: NavigationRouter?
 
     internal var _databasePickerCoordinator: DatabasePickerCoordinator!
@@ -59,22 +59,16 @@ final class MainCoordinator: UIResponder, Coordinator {
         self._autoTypeHelper = autoTypeHelper
         self._rootSplitVC = RootSplitVC()
 
-        let primaryNavVC = RouterNavigationController()
-        _primaryRouter = NavigationRouter(primaryNavVC)
-
-        let placeholderVC = PlaceholderVC.instantiateFromStoryboard()
-        let placeholderNavVC = RouterNavigationController(rootViewController: placeholderVC)
-        _placeholderRouter = NavigationRouter(placeholderNavVC)
-
-        _rootSplitVC.viewControllers = [primaryNavVC, placeholderNavVC]
+        _primaryRouter = NavigationRouter(RouterNavigationController())
+        _rootSplitVC.setViewController(
+            _primaryRouter.navigationController,
+            for: .primary)
 
         _watchdog = Watchdog.shared
         super.init()
 
         _watchdog.delegate = self
 
-        _rootSplitVC.delegate = self
-        _rootSplitVC.maximumPrimaryColumnWidth = 700
         window.rootViewController = _rootSplitVC
 
         #if targetEnvironment(macCatalyst)
@@ -102,7 +96,7 @@ extension MainCoordinator {
         self._selectedDatabaseRef = databaseRef
         _databasePickerCoordinator.selectDatabase(databaseRef, animated: false)
         guard let databaseRef else {
-            _showPlaceholder()
+            _rootSplitVC.setSecondaryRouter(nil)
             return
         }
 

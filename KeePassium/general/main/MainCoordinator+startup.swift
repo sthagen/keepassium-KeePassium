@@ -32,7 +32,6 @@ extension MainCoordinator {
         _databasePickerCoordinator.start()
         addChildCoordinator(_databasePickerCoordinator, onDismiss: nil)
 
-        _showPlaceholder()
 
         #if INTUNE
         _setupIntune(waitForIncomingURL: waitForIncomingURL)

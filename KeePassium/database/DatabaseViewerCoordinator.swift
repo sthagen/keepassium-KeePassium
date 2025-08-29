@@ -53,7 +53,6 @@ final class DatabaseViewerCoordinator: BaseCoordinator {
     public var currentGroupUUID: UUID? { currentGroup?.uuid }
 
     private var primaryRouter: NavigationRouter { _router }
-    private let placeholderRouter: NavigationRouter
     private var entryViewerRouter: NavigationRouter?
 
     private let databaseFile: DatabaseFile
@@ -75,13 +74,7 @@ final class DatabaseViewerCoordinator: BaseCoordinator {
     }
 
     private let splitViewController: RootSplitVC
-    private weak var oldSplitDelegate: UISplitViewControllerDelegate?
-    private var isSplitViewCollapsed: Bool {
-        return splitViewController.isCollapsed
-    }
 
-    private var oldPrimaryRouterDetailDismissalHandler:
-        NavigationRouter.CollapsedDetailDismissalHandler?
 
     private var progressOverlay: ProgressOverlay?
 
@@ -122,10 +115,6 @@ final class DatabaseViewerCoordinator: BaseCoordinator {
 
         self.initialGroupUUID = context?.groupUUID
 
-        let placeholderVC = PlaceholderVC.instantiateFromStoryboard()
-        let placeholderWrapperVC = RouterNavigationController(rootViewController: placeholderVC)
-        self.placeholderRouter = NavigationRouter(placeholderWrapperVC)
-
         faviconDownloader = FaviconDownloader()
         specialEntryParser = SpecialEntryParser()
         super.init(router: primaryRouter)
@@ -135,16 +124,6 @@ final class DatabaseViewerCoordinator: BaseCoordinator {
 
     override func start() {
         super.start()
-        oldSplitDelegate = splitViewController.delegate
-        splitViewController.delegate = self
-
-        oldPrimaryRouterDetailDismissalHandler = primaryRouter.collapsedDetailDismissalHandler
-        primaryRouter.collapsedDetailDismissalHandler = { [weak self] dismissedVC in
-            guard let self else { return }
-            if dismissedVC === self.entryViewerRouter?.navigationController {
-                self.showEntry(nil)
-            }
-        }
 
         showInitialGroups(replacingTopVC: splitViewController.isCollapsed)
         showEntry(nil)
@@ -367,13 +346,10 @@ extension DatabaseViewerCoordinator {
             onPop: { [weak self, previousGroup] in
                 guard let self else { return }
                 self.currentGroup = previousGroup
-                if previousGroup == nil { 
-                    self.showEntry(nil) 
-                    self.splitViewController.delegate = self.oldSplitDelegate
-                    self.primaryRouter.collapsedDetailDismissalHandler =
-                        self.oldPrimaryRouterDetailDismissalHandler
-                    self._dismissHandler?(self)
-                    self.delegate?.didLeaveDatabase(in: self)
+                if previousGroup == nil {
+                    showEntry(nil)
+                    _dismissHandler?(self)
+                    delegate?.didLeaveDatabase(in: self)
                 }
                 UIMenu.rebuildMainMenu()
             }
@@ -405,10 +381,7 @@ extension DatabaseViewerCoordinator {
         }
         currentEntry = entry
         guard let entry else {
-            if !splitViewController.isCollapsed {
-                splitViewController.setDetailRouter(placeholderRouter)
-            }
-            entryViewerRouter?.popAll()
+            splitViewController.setSecondaryRouter(nil)
             entryViewerRouter = nil
             childCoordinators.removeAll(where: { $0 is EntryViewerCoordinator })
             return
@@ -421,12 +394,12 @@ extension DatabaseViewerCoordinator {
                 isHistoryEntry: false,
                 canEditEntry: canEditDatabase && !entry.isDeleted
             )
-            guard let entryViewerRouter = self.entryViewerRouter else {
+            guard let entryViewerRouter else {
                 Diag.error("Coordinator without a router, aborting")
                 assertionFailure()
                 return
             }
-            splitViewController.setDetailRouter(entryViewerRouter)
+            splitViewController.setSecondaryRouter(entryViewerRouter)
             return
         }
 
@@ -446,7 +419,7 @@ extension DatabaseViewerCoordinator {
         })
 
         self.entryViewerRouter = entryViewerRouter
-        splitViewController.setDetailRouter(entryViewerRouter)
+        splitViewController.setSecondaryRouter(entryViewerRouter)
     }
 
     public func reloadDatabase() {
@@ -883,7 +856,7 @@ extension DatabaseViewerCoordinator: GroupViewerDelegate {
     func didSelectEntry(_ entry: Entry?, in viewController: GroupViewerVC) -> Bool {
         showEntry(entry)
 
-        let shouldRemainSelected = !isSplitViewCollapsed
+        let shouldRemainSelected = !splitViewController.isCollapsed
         return shouldRemainSelected
     }
 
@@ -1121,7 +1094,7 @@ extension DatabaseViewerCoordinator: GroupEditorCoordinatorDelegate {
 extension DatabaseViewerCoordinator: EntryFieldEditorCoordinatorDelegate {
     func didUpdateEntry(_ entry: Entry, in coordinator: EntryFieldEditorCoordinator) {
         refresh()
-        if isSplitViewCollapsed {
+        if splitViewController.isCollapsed {
             let isNewEntry = coordinator.isCreating
             if isNewEntry {
                 Settings.current.entryViewerPage = 0
@@ -1190,36 +1163,6 @@ extension DatabaseViewerCoordinator: PasscodeInputDelegate {
                     .showErrorAlert(error, title: LString.titleKeychainError)
             }
         }
-    }
-}
-
-extension DatabaseViewerCoordinator: UISplitViewControllerDelegate {
-    func splitViewController(
-        _ splitViewController: UISplitViewController,
-        collapseSecondary secondaryViewController: UIViewController,
-        onto primaryViewController: UIViewController
-    ) -> Bool {
-        if secondaryViewController === placeholderRouter.navigationController {
-            return true 
-        }
-        return false
-    }
-
-    func splitViewController(
-        _ splitViewController: UISplitViewController,
-        separateSecondaryFrom primaryViewController: UIViewController
-    ) -> UIViewController? {
-        if let entryViewerRouter {
-            return entryViewerRouter.navigationController
-        }
-        return placeholderRouter.navigationController
-    }
-
-    func primaryViewController(forExpanding splitViewController: UISplitViewController) -> UIViewController? {
-        return primaryRouter.navigationController
-    }
-    func primaryViewController(forCollapsing splitViewController: UISplitViewController) -> UIViewController? {
-        return primaryRouter.navigationController
     }
 }
 
