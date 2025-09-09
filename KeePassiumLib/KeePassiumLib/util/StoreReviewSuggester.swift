@@ -115,7 +115,6 @@ final public class StoreReviewSuggester {
 
     public static func maybeShowAppReview(appVersion: String, occasion: Occasion, presenter: UIWindowScene?) {
         guard let presenter else {
-            assertionFailure("Current scene is unexpectedly nil")
             return
         }
         guard isGoodTimeForReview(appVersion: appVersion) else {

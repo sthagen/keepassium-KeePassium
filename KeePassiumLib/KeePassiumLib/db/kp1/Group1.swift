@@ -105,6 +105,13 @@ public class Group1: Group {
         (entry as! Entry1).groupID = -1
     }
 
+    override public func isAllowedDestination(for item: DatabaseItem) -> Bool {
+        if isRoot && item is Entry1 {
+            return false
+        }
+        return super.isAllowedDestination(for: item)
+    }
+
     override public func createEntry(creationDate: Date = Date(), detached: Bool = false, uuid: UUID? = nil) -> Entry {
         let newEntry = Entry1(database: database, creationDate: creationDate)
         newEntry.uuid = uuid ?? UUID()

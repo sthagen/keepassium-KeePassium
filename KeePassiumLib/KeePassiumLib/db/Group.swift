@@ -170,10 +170,16 @@ public class Group: DatabaseItem, Eraseable {
         isChildrenModified = true
     }
 
-    public func move(to newGroup: Group) {
-        guard parent !== newGroup else { return }
+    override public func move(to newGroup: Group) {
+        guard newGroup.isAllowedDestination(for: self) else { assertionFailure(); return }
         parent?.remove(group: self)
         newGroup.add(group: self)
+    }
+
+    public func isAllowedDestination(for item: DatabaseItem) -> Bool {
+        guard item.runtimeUUID != self.runtimeUUID else { return false }
+        guard !item.isAncestor(of: self) else { return false }
+        return true
     }
 
     public func findGroup(byUUID uuid: UUID) -> Group? {

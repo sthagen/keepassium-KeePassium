@@ -13,7 +13,9 @@ final class PremiumBadgeAccessory: UIImageView {
         super.init(frame: CGRect(x: 0, y: 0, width: 25, height: 25))
         image = UIImage.premiumBadge
         contentMode = .scaleAspectFill
+        isAccessibilityElement = true
         accessibilityLabel = LString.premiumFeatureGenericTitle
+        accessibilityTraits = [.staticText]
     }
 
     required init?(coder aDecoder: NSCoder) {

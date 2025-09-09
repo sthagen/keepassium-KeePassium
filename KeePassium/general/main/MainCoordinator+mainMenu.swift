@@ -9,8 +9,8 @@
 import KeePassiumLib
 
 extension MainCoordinator {
-    private var databaseViewerActionsManager: DatabaseViewerActionsManager {
-        _databaseViewerCoordinator?.actionsManager ?? DatabaseViewerActionsManager()
+    private var databaseViewerActionsManager: DatabaseViewerCoordinator.ActionsManager {
+        _databaseViewerCoordinator?.actionsManager ?? DatabaseViewerCoordinator.defaultActionsManager
     }
 
     override func buildMenu(with builder: UIMenuBuilder) {

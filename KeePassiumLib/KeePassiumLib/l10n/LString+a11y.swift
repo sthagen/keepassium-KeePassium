@@ -18,5 +18,10 @@ public extension LString {
             bundle: Bundle.framework,
             value: "Contains a passkey.",
             comment: "Accessibility notification for entries with a passkey")
+        public static let containsAttachments = NSLocalizedString(
+            "[Accessibility/containsAttachments]",
+            bundle: Bundle.framework,
+            value: "Contains attachments.",
+            comment: "Accessibility notification for entries with attached files.")
     }
 }

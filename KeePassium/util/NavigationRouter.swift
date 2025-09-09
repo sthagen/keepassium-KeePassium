@@ -80,7 +80,6 @@ final public class NavigationRouter: NSObject {
     private var popHandlers = [(ObjectIdentifier, PopHandler, String)]()
     private weak var oldDelegate: UINavigationControllerDelegate?
 
-
     weak var dismissAttemptDelegate: NavigationRouterDismissAttemptDelegate?
 
     private var progressOverlay: ProgressOverlay?
@@ -114,6 +113,7 @@ final public class NavigationRouter: NSObject {
         navVC.modalPresentationStyle = style
         navVC.presentationController?.delegate = router
         if let popover = navVC.popoverPresentationController {
+            assert(popoverAnchor != nil, "Popover without anchor will fail")
             popoverAnchor?.apply(to: popover)
             popover.delegate = router
         }

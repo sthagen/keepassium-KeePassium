@@ -32,7 +32,6 @@ extension MainCoordinator {
         _databasePickerCoordinator.start()
         addChildCoordinator(_databasePickerCoordinator, onDismiss: nil)
 
-
         #if INTUNE
         _setupIntune(waitForIncomingURL: waitForIncomingURL)
         guard let currentUser = IntuneMAMEnrollmentManager.instance().enrolledAccountId(),

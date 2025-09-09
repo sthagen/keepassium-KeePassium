@@ -36,10 +36,6 @@ final class AnnouncementView: UIView {
     typealias ActionHandler = (AnnouncementView) -> Void
 
     private var onDidPressClose: ActionHandler?
-
-    private var title: String?
-    private var body: String?
-    private var image: UIImage?
     private var action: UIAction?
 
     private lazy var imageView: UIImageView = {
@@ -165,6 +161,9 @@ final class AnnouncementView: UIView {
             $0.removeFromSuperview()
         }
 
+        self.setContentCompressionResistancePriority(.required, for: .vertical)
+        self.clipsToBounds = true
+
         var topMargin: CGFloat = 4
         var bottomMargin: CGFloat = -4
         let imageTrailingAnchor: NSLayoutXAxisAnchor
@@ -203,6 +202,7 @@ final class AnnouncementView: UIView {
             titleLabel.trailingAnchor
                 .constraint(lessThanOrEqualTo: layoutMarginsGuide.trailingAnchor, constant: -8)
                 .activate()
+            titleLabel.setContentCompressionResistancePriority(.required, for: .vertical)
             stackedViews.append(titleLabel)
             prevViewBottom = titleLabel.lastBaselineAnchor
             topMargin = 8
@@ -221,6 +221,7 @@ final class AnnouncementView: UIView {
             bodyLabel.trailingAnchor
                 .constraint(lessThanOrEqualTo: layoutMarginsGuide.trailingAnchor, constant: -8)
                 .activate()
+            bodyLabel.setContentCompressionResistancePriority(.required, for: .vertical)
             stackedViews.append(bodyLabel)
             prevViewBottom = bodyLabel.bottomAnchor
             topMargin = 8
@@ -229,7 +230,7 @@ final class AnnouncementView: UIView {
         if let _ = action {
             addSubview(actionButtonSeparator)
             addSubview(actionButton)
-            actionButtonSeparator.heightAnchor.constraint(equalToConstant: 0.25).activate()
+            actionButtonSeparator.heightAnchor.constraint(equalToConstant: 0.5).activate()
             actionButtonSeparator.topAnchor
                 .constraint(equalTo: prevViewBottom, constant: 8).activate()
             actionButtonSeparator.leadingAnchor
@@ -247,6 +248,7 @@ final class AnnouncementView: UIView {
                 .constraint(equalTo: trailingAnchor, constant: -8)
                 .activate()
             actionButton.titleLabel?.numberOfLines = 0
+            actionButton.setContentCompressionResistancePriority(.required, for: .vertical)
             stackedViews.append(actionButton)
             bottomMargin = 4
         }

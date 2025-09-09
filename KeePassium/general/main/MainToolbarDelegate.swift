@@ -106,35 +106,35 @@ extension MainToolbarDelegate: NSToolbarDelegate {
                 itemIdentifier: itemIdentifier,
                 label: LString.actionLockDatabase,
                 symbol: .lock,
-                selector: #selector(DatabaseViewerActionsManager.kpmLockDatabase)
+                selector: #selector(DatabaseViewerCoordinator.ActionsManager.kpmLockDatabase)
             )
         case .newEntry:
             return createToolbarItem(
                 itemIdentifier: itemIdentifier,
                 label: LString.titleNewEntry,
                 symbol: .docBadgePlus,
-                selector: #selector(DatabaseViewerActionsManager.kpmCreateEntry)
+                selector: #selector(DatabaseViewerCoordinator.ActionsManager.kpmCreateEntry)
             )
         case .newGroup:
             return createToolbarItem(
                 itemIdentifier: itemIdentifier,
                 label: LString.titleNewGroup,
                 symbol: .folderBadgePlus,
-                selector: #selector(DatabaseViewerActionsManager.kpmCreateGroup)
+                selector: #selector(DatabaseViewerCoordinator.ActionsManager.kpmCreateGroup)
             )
         case .newSmartGroup:
             return createToolbarItem(
                 itemIdentifier: itemIdentifier,
                 label: LString.titleNewSmartGroup,
                 symbol: .folderGridBadgePlus,
-                selector: #selector(DatabaseViewerActionsManager.kpmCreateSmartGroup)
+                selector: #selector(DatabaseViewerCoordinator.ActionsManager.kpmCreateSmartGroup)
             )
         case .autoType:
             return createToolbarItem(
                 itemIdentifier: itemIdentifier,
                 label: LString.actionAutoType,
                 symbol: .keyboard,
-                selector: #selector(DatabaseViewerActionsManager.kpmPerformAutoType)
+                selector: #selector(DatabaseViewerCoordinator.ActionsManager.kpmPerformAutoType)
             )
         case .randomGenerator:
             return createToolbarItem(

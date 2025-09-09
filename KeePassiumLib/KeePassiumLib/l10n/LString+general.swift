@@ -1303,13 +1303,6 @@ extension LString {
         comment: "Call to action: type in the secret key for OTP setup."
     )
 
-    public static let otpCodeCopyToClipboardDemo = "Demo"
-    public static let otpCodeCopiedToClipboard = NSLocalizedString(
-        "[OTP/CopiedToClipboard/title]",
-        bundle: Bundle.framework,
-        value: "One-time password copied to clipboard",
-        comment: "Notification next to the OTP code which was copied to clipboard"
-    )
     public static let otpCodeHereItIs = NSLocalizedString(
         "[OTP/Title/sentenceCase]",
         bundle: Bundle.framework,

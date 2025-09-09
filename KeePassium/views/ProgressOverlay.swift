@@ -49,11 +49,26 @@ final class ProgressOverlay: UIView {
         }
     }
 
+    override public var isOpaque: Bool {
+        didSet {
+            if isOpaque {
+                backgroundColor = .systemGroupedBackground
+                panel.backgroundColor = .clear
+                panel.layer.shadowRadius = 0
+            } else {
+                backgroundColor = .systemGroupedBackground.withAlphaComponent(0.5)
+                panel.backgroundColor = .systemBackground
+                panel.layer.shadowRadius = 40
+            }
+        }
+    }
+
     public var cancelActionHandler: CancelActionHandler?
 
     private var cancelPressCounter = 0
     private let cancelCountConsideredUnresponsive = 3
 
+    private var panel: UIView!
     private var spinner: UIActivityIndicatorView!
     private var statusLabel: UILabel!
     private var percentLabel: UILabel!
@@ -109,6 +124,7 @@ final class ProgressOverlay: UIView {
         setupLayout()
         updateSpinner()
         updateButtons()
+        isOpaque = true
     }
 
     func dismiss(animated: Bool, completion: ((Bool) -> Void)? = nil) {
@@ -129,13 +145,23 @@ final class ProgressOverlay: UIView {
     }
 
     private func setupViews() {
-        backgroundColor = UIColor.systemGroupedBackground
+        backgroundColor = .systemBackground.withAlphaComponent(0.5)
+
+        panel = UIView()
+        panel.backgroundColor = .systemBackground
+        panel.layer.cornerRadius = 20
+        panel.layer.shadowRadius = 40
+        panel.layer.shadowOffset = CGSize(width: 0, height: 0)
+        panel.layer.shadowOpacity = 0.5
+        panel.layer.shadowColor = UIColor.label.cgColor
+        addSubview(panel)
+
         spinner = UIActivityIndicatorView(style: .medium)
         spinner.hidesWhenStopped = false
         spinner.isHidden = false
         spinner.alpha = 0.0
         spinner.isAccessibilityElement = false
-        addSubview(spinner)
+        panel.addSubview(spinner)
 
         statusLabel = UILabel()
         statusLabel.text = ""
@@ -143,36 +169,37 @@ final class ProgressOverlay: UIView {
         statusLabel.lineBreakMode = .byWordWrapping
         statusLabel.font = UIFont.preferredFont(forTextStyle: .callout)
         statusLabel.accessibilityTraits.insert(.updatesFrequently)
-        addSubview(statusLabel)
+        panel.addSubview(statusLabel)
 
         percentLabel = UILabel()
         percentLabel.text = ""
         percentLabel.numberOfLines = 1
         percentLabel.font = UIFont.preferredFont(forTextStyle: .caption1)
         statusLabel.accessibilityTraits.insert(.updatesFrequently)
-        addSubview(percentLabel)
+        panel.addSubview(percentLabel)
 
         progressView = UIProgressView()
         progressView.progress = 0.0
         progressView.accessibilityTraits.insert(.updatesFrequently)
-        addSubview(progressView)
+        panel.addSubview(progressView)
 
         var cancelConfig = UIButton.Configuration.plain()
         cancelConfig.title = LString.actionCancel
         cancelButton = UIButton(configuration: cancelConfig)
         cancelButton.role = .cancel
         cancelButton.addTarget(self, action: #selector(didPressCancel), for: .touchUpInside)
-        addSubview(cancelButton)
+        panel.addSubview(cancelButton)
 
         var fallbackConfig = UIButton.Configuration.plain()
         fallbackConfig.title = LString.actionUseFallbackDatabase
         fallbackConfig.buttonSize = .small
         fallbackButton = UIButton(configuration: fallbackConfig)
         fallbackButton.addTarget(self, action: #selector(didPressFallback), for: .touchUpInside)
-        addSubview(fallbackButton)
+        panel.addSubview(fallbackButton)
     }
 
     private func setupLayout() {
+        panel.translatesAutoresizingMaskIntoConstraints = false
         progressView.translatesAutoresizingMaskIntoConstraints = false
         spinner.translatesAutoresizingMaskIntoConstraints = false
         statusLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -181,16 +208,22 @@ final class ProgressOverlay: UIView {
         fallbackButton.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([
-            progressView.leadingAnchor.constraint(greaterThanOrEqualTo: leadingAnchor, constant: 16),
-            progressView.trailingAnchor.constraint(lessThanOrEqualTo: trailingAnchor, constant: -16),
+            panel.leadingAnchor.constraint(greaterThanOrEqualTo: leadingAnchor, constant: 8),
+            panel.trailingAnchor.constraint(lessThanOrEqualTo: trailingAnchor, constant: -8),
+            panel.centerXAnchor.constraint(equalTo: centerXAnchor),
+            panel.centerYAnchor.constraint(equalTo: centerYAnchor),
 
-            progressView.centerXAnchor.constraint(equalTo: centerXAnchor),
-            progressView.centerYAnchor.constraint(equalTo: centerYAnchor),
+            progressView.leadingAnchor.constraint(equalTo: panel.leadingAnchor, constant: 16),
+            progressView.trailingAnchor.constraint(equalTo: panel.trailingAnchor, constant: -16),
+
+            progressView.centerXAnchor.constraint(equalTo: panel.centerXAnchor),
+            progressView.centerYAnchor.constraint(equalTo: panel.centerYAnchor),
             progressView.heightAnchor.constraint(equalToConstant: 2),
 
             spinner.leadingAnchor.constraint(equalTo: progressView.leadingAnchor),
             spinner.centerYAnchor.constraint(equalTo: statusLabel.centerYAnchor),
 
+            statusLabel.topAnchor.constraint(greaterThanOrEqualTo: panel.topAnchor, constant: 16),
             statusLabel.bottomAnchor.constraint(equalTo: progressView.topAnchor, constant: -8),
             statusLabel.trailingAnchor.constraint(lessThanOrEqualTo: percentLabel.leadingAnchor, constant: 8),
 
@@ -202,9 +235,10 @@ final class ProgressOverlay: UIView {
 
             fallbackButton.topAnchor.constraint(equalTo: cancelButton.bottomAnchor, constant: 8),
             fallbackButton.centerXAnchor.constraint(equalTo: progressView.centerXAnchor),
+            fallbackButton.bottomAnchor.constraint(lessThanOrEqualTo: panel.bottomAnchor, constant: -16),
         ])
 
-        progressView.widthAnchor.constraint(equalToConstant: 400.0)
+        panel.widthAnchor.constraint(equalToConstant: 400.0)
             .setPriority(.defaultHigh)
             .activate()
         staticStatusConstraint = statusLabel.leadingAnchor

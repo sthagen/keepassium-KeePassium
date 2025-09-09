@@ -31,10 +31,11 @@ public enum SymbolName: String, Equatable {
     public static let autoFill = Self.return
     public static let fieldReference = Self.arrowRightCircle
     public static let largeType = Self.characterMagnify
+    public static let managedParameter = Self.person2BadgeGearshape
     public static let oneTimePassword = Self.clock
     public static let passkey = Self.personBadgeKey
     public static let passwordAudit = Self.networkBadgeShield
-    public static let managedParameter = Self.person2BadgeGearshape
+    public static let smartGroup = Self.magnifyingGlassCircle
     public static let unsavedChanges = Self.externalDriveTriangleBadgeExclamationMark
 
     public static let premiumBenefitMultiDB = Self.shieldBadgePlus
@@ -75,6 +76,7 @@ public enum SymbolName: String, Equatable {
     case camera = "camera"
     case characterMagnify = "character.magnify"
     case chartLineUptrendXyaxis = "chart.line.uptrend.xyaxis"
+    case checklistChecked = "checklist.checked"
     case checkmark = "checkmark"
     case checkmarkCircle = "checkmark.circle"
     case checkmarkSeal = "checkmark.seal"
@@ -124,6 +126,7 @@ public enum SymbolName: String, Equatable {
     case lock = "lock"
     case lockShield = "lock.shield"
     case magnifyingGlass = "magnifyingglass"
+    case magnifyingGlassCircle = "magnifyingglass.circle"
     case minus = "minus"
     case network = "network"
     case networkBadgeShield = "network.badge.shield"
@@ -164,6 +167,7 @@ public enum SymbolName: String, Equatable {
     case wandAndStars = "wand.and.stars"
     case waveformPathEcg = "waveform.path.ecg"
     case wifiSlash = "wifi.slash"
+    case wrenchAndScrewdriver = "wrench.and.screwdriver"
     case xmark = "xmark"
     case xmarkICloud = "xmark.icloud"
 

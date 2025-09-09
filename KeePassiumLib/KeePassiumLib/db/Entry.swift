@@ -214,7 +214,7 @@ public class Entry: DatabaseItem, Eraseable {
         parent?.remove(entry: self)
     }
 
-    public func move(to newGroup: Group) {
+    override public func move(to newGroup: Group) {
         guard newGroup !== parent else { return }
         parent?.remove(entry: self)
         newGroup.add(entry: self)

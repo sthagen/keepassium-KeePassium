@@ -49,6 +49,10 @@ open class DatabaseItem: Taggable {
         return false
     }
 
+    public func move(to parent: Group) {
+        fatalError("Pure abstract method")
+    }
+
     public func touch(_ mode: TouchMode, updateParents: Bool = true) {
         fatalError("Pure abstract method")
     }

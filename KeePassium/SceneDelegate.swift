@@ -49,15 +49,10 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
         let hasIncomingURL = !connectionOptions.urlContexts.isEmpty
 
-        if UIDevice.current.userInterfaceIdiom == .pad {
-            window.makeKeyAndVisible()
-            mainCoordinator = MainCoordinator(window: window, autoTypeHelper: appServices.autoTypeHelper)
-            mainCoordinator.start(waitForIncomingURL: hasIncomingURL, proposeReset: proposeAppReset)
-        } else {
-            mainCoordinator = MainCoordinator(window: window, autoTypeHelper: appServices.autoTypeHelper)
-            mainCoordinator.start(waitForIncomingURL: hasIncomingURL, proposeReset: proposeAppReset)
-            window.makeKeyAndVisible()
-        }
+        mainCoordinator = MainCoordinator(window: window, autoTypeHelper: appServices.autoTypeHelper)
+        mainCoordinator.start(waitForIncomingURL: hasIncomingURL, proposeReset: proposeAppReset)
+        window.makeKeyAndVisible()
+
         appServices.mainCoordinator = mainCoordinator
 
         if !connectionOptions.urlContexts.isEmpty {

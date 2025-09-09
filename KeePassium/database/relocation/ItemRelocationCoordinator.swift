@@ -103,27 +103,10 @@ extension ItemRelocationCoordinator {
             return false
         }
 
-        if let database1 = targetDatabase as? Database1,
-           let root1 = database1.root,
-           group === root1
-        {
-            for item in itemsToRelocate {
-                if item.value is Entry1 {
-                    return false
-                }
-            }
+        return itemsToRelocate.allSatisfy {
+            guard let dbItem = $0.value else { return false }
+            return group.isAllowedDestination(for: dbItem)
         }
-
-        if sourceDatabase === targetDatabase {
-            let hasImmovableItems = itemsToRelocate.contains {
-                guard let itemToMove = $0.value else { return false }
-                return itemToMove === group || itemToMove.isAncestor(of: group)
-            }
-            if hasImmovableItems {
-                return false
-            }
-        }
-        return true
     }
 
 
