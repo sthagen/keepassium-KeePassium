@@ -143,6 +143,8 @@ final class DatabaseUnlockerVC: UIViewController, Refreshable {
                 guard let self else { return }
                 URLOpener(self).open(url: helpURL)
             }
+        } else {
+            errorMessageView.action = nil
         }
         errorMessageView.show(animated: true)
         UIAccessibility.post(notification: .screenChanged, argument: errorMessageView)
