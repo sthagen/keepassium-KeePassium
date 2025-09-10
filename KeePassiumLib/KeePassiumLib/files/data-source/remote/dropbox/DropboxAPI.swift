@@ -52,6 +52,7 @@ internal enum DropboxAPI {
         static let refreshToken = "refresh_token"
         static let error = "error"
         static let errorSummary = "error_summary"
+        static let errorDescription = "error_description"
         static let authorization = "Authorization"
         static let contentType = "Content-Type"
         static let contentLength = "Content-Length"
@@ -122,12 +123,23 @@ extension DropboxAPI {
             guard let error = json[DropboxAPI.Keys.error] else {
                 return nil
             }
-            let errorDetails = json.description
-            Diag.error(errorDetails)
-            let message = (json[DropboxAPI.Keys.errorSummary] as? String) ?? "DropboxError"
-            guard let errorDict = error as? [String: Any] else {
+            Diag.error(json.description)
+            if let errorDict = error as? [String: Any] {
+                return parseErrorDict(errorDict, json: json, item: item)
+            } else if let errorID = error as? String {
+                return parseErrorString(errorID, json: json)
+            } else {
+                let message = (json[DropboxAPI.Keys.errorSummary] as? String) ?? "DropboxError"
                 return RemoteError.serverSideError(message: message)
             }
+        }
+
+        private static func parseErrorDict(
+            _ errorDict: [String: Any],
+            json: [String: Any],
+            item: DropboxItem?
+        ) -> RemoteError? {
+            let message = (json[DropboxAPI.Keys.errorSummary] as? String) ?? "DropboxError"
             guard let tag = errorDict[Keys.tag] as? String else {
                 return RemoteError.serverSideError(message: message)
             }
@@ -155,6 +167,20 @@ extension DropboxAPI {
                 return .serverSideError(message: message)
             }
         }
-    }
 
+        private static func parseErrorString(
+            _ errorID: String,
+            json: [String: Any]
+        ) -> RemoteError? {
+            switch errorID {
+            case "invalid_grant":
+                Diag.warning("Access not authorized")
+                return .authorizationRequired(message: LString.titleDropboxRequiresSignIn)
+            default:
+                let message = (json[DropboxAPI.Keys.errorDescription] as? String) ?? "DropboxError"
+                Diag.warning("Server-side Dropbox error [id: \(errorID), message: \(message)]")
+                return .serverSideError(message: message)
+            }
+        }
+    }
 }
