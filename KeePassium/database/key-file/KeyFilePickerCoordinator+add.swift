@@ -105,7 +105,7 @@ extension KeyFilePickerCoordinator {
     private func startRemoteKeyFilePickerNetworkConfirmed(presenter: UIViewController) {
         let modalRouter = NavigationRouter.createModal(style: .formSheet)
         let remoteFilePickerCoordinator = RemoteFilePickerCoordinator(
-            oldRef: nil,
+            mode: .pick(.file),
             router: modalRouter
         )
         remoteFilePickerCoordinator.delegate = self

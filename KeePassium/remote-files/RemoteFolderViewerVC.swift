@@ -21,7 +21,7 @@ final class RemoteFolderViewerVC: UITableViewController, BusyStateIndicating {
     }
 
     weak var delegate: RemoteFolderViewerDelegate?
-    var selectionMode: RemoteItemSelectionMode = .file {
+    var targetKind: RemoteItemKind = .file {
         didSet {
             refresh()
         }
@@ -129,7 +129,7 @@ final class RemoteFolderViewerVC: UITableViewController, BusyStateIndicating {
         tableView.backgroundView?.isHidden = !items.isEmpty
         tableView.reloadData()
 
-        switch selectionMode {
+        switch targetKind {
         case .file:
             navigationItem.rightBarButtonItem = nil
         case .folder:
@@ -218,7 +218,7 @@ extension RemoteFolderViewerVC {
         cell.detailTextLabel?.text = details.joined(separator: " · ")
         cell.accessoryType = .none
 
-        switch selectionMode {
+        switch targetKind {
         case .file:
             cell.selectionStyle = .default
             cell.textLabel?.textColor = .primaryText
@@ -239,7 +239,7 @@ extension RemoteFolderViewerVC {
         if isBusy {
             return nil
         }
-        switch selectionMode {
+        switch targetKind {
         case .file:
             return indexPath
         case .folder:

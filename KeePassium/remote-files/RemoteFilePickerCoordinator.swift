@@ -22,12 +22,12 @@ protocol RemoteFilePickerCoordinatorDelegate: AnyObject {
 final class RemoteFilePickerCoordinator: BaseCoordinator {
     weak var delegate: RemoteFilePickerCoordinatorDelegate?
 
+    private let mode: RemoteConnectionSetupMode
     private let connectionTypePicker: ConnectionTypePickerVC
-    private var oldRef: URLReference?
 
-    init(oldRef: URLReference?, router: NavigationRouter) {
-        self.oldRef = oldRef
-        connectionTypePicker = ConnectionTypePickerVC()
+    init(mode: RemoteConnectionSetupMode, router: NavigationRouter) {
+        self.mode = mode
+        self.connectionTypePicker = ConnectionTypePickerVC()
         super.init(router: router)
         connectionTypePicker.delegate = self
         connectionTypePicker.showsOtherLocations = true
@@ -36,7 +36,14 @@ final class RemoteFilePickerCoordinator: BaseCoordinator {
     override func start() {
         super.start()
 
-        let connectionType = getConnectionType(by: oldRef?.fileProvider)
+        let connectionType: RemoteConnectionType?
+        switch mode {
+        case .pick:
+            connectionType = nil
+        case .edit(let oldRef), .reauth(let oldRef):
+            connectionType = getConnectionType(by: oldRef.fileProvider)
+        }
+
         let animated = (connectionType == nil)
         _pushInitialViewController(connectionTypePicker, dismissButtonStyle: .cancel, animated: animated)
         if let connectionType {
@@ -115,7 +122,10 @@ extension RemoteFilePickerCoordinator: ConnectionTypePickerDelegate {
 
 extension RemoteFilePickerCoordinator: WebDAVConnectionSetupCoordinatorDelegate {
     private func startWebDAVSetup(stateIndicator: BusyStateIndicating) {
-        let setupCoordinator = WebDAVConnectionSetupCoordinator(router: _router)
+        let setupCoordinator = WebDAVConnectionSetupCoordinator(
+            mode: mode,
+            router: _router,
+        )
         setupCoordinator.delegate = self
         setupCoordinator.start()
         addChildCoordinator(setupCoordinator, onDismiss: nil)
@@ -143,10 +153,10 @@ extension RemoteFilePickerCoordinator: WebDAVConnectionSetupCoordinatorDelegate 
 extension RemoteFilePickerCoordinator: GoogleDriveConnectionSetupCoordinatorDelegate {
     private func startGoogleDriveSetup(scope: OAuthScope, stateIndicator: BusyStateIndicating) {
         let setupCoordinator = GoogleDriveConnectionSetupCoordinator(
-            router: _router,
+            mode: mode,
             scope: scope,
             stateIndicator: stateIndicator,
-            oldRef: oldRef
+            router: _router,
         )
         setupCoordinator.delegate = self
         setupCoordinator.start()
@@ -177,10 +187,10 @@ extension RemoteFilePickerCoordinator: GoogleDriveConnectionSetupCoordinatorDele
 extension RemoteFilePickerCoordinator: DropboxConnectionSetupCoordinatorDelegate {
     private func startDropboxSetup(scope: OAuthScope, stateIndicator: BusyStateIndicating) {
         let setupCoordinator = DropboxConnectionSetupCoordinator(
-            router: _router,
+            mode: mode,
+            scope: scope,
             stateIndicator: stateIndicator,
-            oldRef: oldRef,
-            scope: scope
+            router: _router,
         )
         setupCoordinator.delegate = self
         setupCoordinator.start()
@@ -211,8 +221,8 @@ extension RemoteFilePickerCoordinator: DropboxConnectionSetupCoordinatorDelegate
 extension RemoteFilePickerCoordinator: OneDriveConnectionSetupCoordinatorDelegate {
     private func startOneDriveSetup(scope: OAuthScope, stateIndicator: BusyStateIndicating) {
         let setupCoordinator = OneDriveConnectionSetupCoordinator(
+            mode: mode,
             scope: scope,
-            oldRef: oldRef,
             stateIndicator: stateIndicator,
             router: _router
         )

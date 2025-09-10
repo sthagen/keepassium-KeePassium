@@ -16,11 +16,10 @@ class RemoteDataSourceSetupCoordinator<Manager: RemoteDataSourceManager>:
     RemoteFolderViewerDelegate
 {
     let _manager: Manager
-    let selectionMode: RemoteItemSelectionMode
+    var _mode: RemoteConnectionSetupMode
     let _scope: OAuthScope
     var _token: OAuthToken?
     var _accountInfo: Manager.AccountInfo?
-    internal var _oldRef: URLReference?
     let _stateIndicator: BusyStateIndicating
 
     override var _presenterForModals: UIViewController {
@@ -28,17 +27,15 @@ class RemoteDataSourceSetupCoordinator<Manager: RemoteDataSourceManager>:
     }
 
     init(
-        mode: RemoteItemSelectionMode,
         manager: Manager,
+        mode: RemoteConnectionSetupMode,
         scope: OAuthScope,
-        oldRef: URLReference?,
         stateIndicator: BusyStateIndicating,
         router: NavigationRouter
     ) {
-        self.selectionMode = mode
+        self._mode = mode
         self._manager = manager
         self._scope = scope
-        self._oldRef = oldRef
         self._stateIndicator = stateIndicator
         super.init(router: router)
     }
@@ -88,7 +85,15 @@ class RemoteDataSourceSetupCoordinator<Manager: RemoteDataSourceManager>:
         vc.items = items
         vc.folderName = title
         vc.delegate = self
-        vc.selectionMode = selectionMode
+        switch _mode {
+        case .pick(let targetKind):
+            vc.targetKind = targetKind
+        case .edit:
+            vc.targetKind = .file
+        case .reauth:
+            assertionFailure("Tried to show a folder in reauth mode, why?")
+            vc.targetKind = .file
+        }
         if _initialViewController == nil {
             _pushInitialViewController(vc, animated: true)
         } else {

@@ -27,60 +27,64 @@ protocol GoogleDriveConnectionSetupCoordinatorDelegate: AnyObject {
 
 final class GoogleDriveConnectionSetupCoordinator: RemoteDataSourceSetupCoordinator<GoogleDriveManager> {
     weak var delegate: GoogleDriveConnectionSetupCoordinatorDelegate?
-    private let scope: OAuthScope
 
     init(
-        router: NavigationRouter,
+        mode: RemoteConnectionSetupMode,
         scope: OAuthScope = .fullAccess,
         stateIndicator: BusyStateIndicating,
-        oldRef: URLReference?,
-        selectionMode: RemoteItemSelectionMode = .file
+        router: NavigationRouter,
     ) {
-        if oldRef?.url?.isGoogleDriveAppFolderScopedURL == true {
-            self.scope = .appFolder
-        } else {
-            self.scope = scope
+        var scope = scope
+        switch mode {
+        case .pick: break
+        case .edit(let oldRef), .reauth(let oldRef):
+            if oldRef.url?.isGoogleDriveAppFolderScopedURL == true {
+                scope = .appFolder
+            }
         }
         super.init(
-            mode: selectionMode,
             manager: GoogleDriveManager.shared,
-            scope: self.scope,
-            oldRef: oldRef,
+            mode: mode,
+            scope: scope,
             stateIndicator: stateIndicator,
-            router: router)
+            router: router
+        )
     }
 
     override func onAccountInfoAcquired(_ accountInfo: GoogleDriveAccountInfo) {
         self._accountInfo = accountInfo
-        let currentFileProvider = accountInfo.getMatchingFileProvider(scope: scope)
-        if let _oldRef,
-           let url = _oldRef.url,
-           _oldRef.fileProvider == currentFileProvider
-        {
-            trySelectFile(url, onFailure: { [weak self] in
-                guard let self else { return }
-                self._oldRef = nil
-                self.onAccountInfoAcquired(accountInfo)
-            })
-            return
-        }
-
-        maybeSuggestPremium(isCorporateStorage: accountInfo.isWorkspaceAccount) { [weak self] in
-            guard let self else { return }
-            if _scope == .appFolder {
-                let appFolderItem = GoogleDriveItem.getDedicatedAppFolder(accountInfo: accountInfo)
-                showFolder(folder: appFolderItem, stateIndicator: _stateIndicator)
+        let currentFileProvider = accountInfo.getMatchingFileProvider(scope: _scope)
+        switch _mode {
+        case .edit, .pick:
+            break
+        case .reauth(let oldRef):
+            if let url = oldRef.url,
+               oldRef.fileProvider == currentFileProvider
+            {
+                trySelectFile(url, onFailure: { [weak self] in
+                    guard let self else { return }
+                    self._mode = .edit(oldRef)
+                    self.onAccountInfoAcquired(accountInfo)
+                })
                 return
             }
-
-            _showFolder(
-                items: [
-                    GoogleDriveItem.getSpecialFolder(.myDrive, accountInfo: accountInfo, scope: _scope),
-                    GoogleDriveItem.getSpecialFolder(.sharedWithMe, accountInfo: accountInfo, scope: _scope),
-                ],
-                parent: nil,
-                title: accountInfo.serviceName
-            )
+        }
+        maybeSuggestPremium(isCorporateStorage: accountInfo.isWorkspaceAccount) { [weak self] in
+            guard let self else { return }
+            switch _scope {
+            case .appFolder:
+                let appFolderItem = GoogleDriveItem.getDedicatedAppFolder(accountInfo: accountInfo)
+                showFolder(folder: appFolderItem, stateIndicator: _stateIndicator)
+            case .fullAccess:
+                _showFolder(
+                    items: [
+                        GoogleDriveItem.getSpecialFolder(.myDrive, accountInfo: accountInfo, scope: _scope),
+                        GoogleDriveItem.getSpecialFolder(.sharedWithMe, accountInfo: accountInfo, scope: _scope),
+                    ],
+                    parent: nil,
+                    title: accountInfo.serviceName
+                )
+            }
         }
     }
 

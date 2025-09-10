@@ -21,7 +21,7 @@ public enum WebDAVFileURL {
         return prefixedURL
     }
 
-    internal static func getNakedURL(from prefixedURL: URL) -> URL {
+    public static func getNakedURL(from prefixedURL: URL) -> URL {
         return prefixedURL.withoutSchemePrefix()
     }
 

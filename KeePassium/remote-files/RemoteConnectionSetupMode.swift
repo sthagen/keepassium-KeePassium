@@ -6,9 +6,13 @@
 //  by the Free Software Foundation: https://www.gnu.org/licenses/).
 //  For commercial licensing, please contact us.
 
-import Foundation
+import KeePassiumLib
+import UIKit
 
-enum RemoteItemSelectionMode {
-    case file
-    case folder
+enum RemoteConnectionSetupMode {
+    case pick(_ itemKind: RemoteItemKind)
+
+    case edit(_ oldRef: URLReference)
+
+    case reauth(_ ref: URLReference)
 }

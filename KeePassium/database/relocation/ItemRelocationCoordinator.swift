@@ -86,7 +86,9 @@ class ItemRelocationCoordinator: BaseCoordinator {
         case .external:
             databasePickerCoordinator?.startExternalDatabasePicker(fileRef, presenter: presenter)
         case .remote:
-            databasePickerCoordinator?.startRemoteDatabasePicker(fileRef, presenter: presenter)
+            databasePickerCoordinator?.startRemoteDatabasePicker(
+                mode: .reauth(fileRef),
+                presenter: presenter)
         case .internalBackup, .internalDocuments, .internalInbox:
             assertionFailure("Should not be here. Can reinstate only external or remote files.")
             return

@@ -46,7 +46,10 @@ extension MainCoordinator: OnboardingCoordinatorDelegate {
         Settings.current.isNetworkAccessAllowed = true
         coordinator.dismiss { [weak self] in
             guard let self else { return }
-            _databasePickerCoordinator.startRemoteDatabasePicker(presenter: _rootSplitVC)
+            _databasePickerCoordinator.startRemoteDatabasePicker(
+                mode: .pick(.file),
+                presenter: _rootSplitVC
+            )
         }
     }
 }

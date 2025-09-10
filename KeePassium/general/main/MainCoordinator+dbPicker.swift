@@ -67,7 +67,9 @@ extension MainCoordinator {
         case .external:
             _databasePickerCoordinator.startExternalDatabasePicker(fileRef, presenter: _presenterForModals)
         case .remote:
-            _databasePickerCoordinator.startRemoteDatabasePicker(fileRef, presenter: _presenterForModals)
+            _databasePickerCoordinator.startRemoteDatabasePicker(
+                mode: .reauth(fileRef),
+                presenter: _presenterForModals)
         case .internalBackup, .internalDocuments, .internalInbox:
             assertionFailure("Should not be here. Can reinstate only external or remote files.")
             return

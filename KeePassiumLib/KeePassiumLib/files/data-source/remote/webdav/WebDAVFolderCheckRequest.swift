@@ -9,7 +9,7 @@
 import Foundation
 
 final class WebDAVFolderCheckRequest: WebDAVRequestBase {
-    typealias Completion = (Result<Bool, FileAccessError>) -> Void
+    typealias Completion = (Result<RemoteItemKind, FileAccessError>) -> Void
 
     let completionQueue: OperationQueue
     let completion: Completion
@@ -67,9 +67,9 @@ final class WebDAVFolderCheckRequest: WebDAVRequestBase {
 
         do {
             let parser = FolderCheckResponseParser(baseURL: url)
-            let isFolder = try parser.parse(data: data)
+            let itemKind = try parser.parse(data: data)
             completionQueue.addOperation {
-                self.completion(.success(isFolder))
+                self.completion(.success(itemKind))
             }
         } catch {
             let nsError = error as NSError
@@ -89,7 +89,7 @@ final class WebDAVFolderCheckRequest: WebDAVRequestBase {
 
         if statusCode == 405 || statusCode == 404 {
             completionQueue.addOperation {
-                self.completion(.success(false))
+                self.completion(.success(.file))
             }
             return
         }
@@ -114,15 +114,19 @@ private final class FolderCheckResponseParser {
         self.baseURL = baseURL
     }
 
-    func parse(data: Data) throws -> Bool {
+    func parse(data: Data) throws -> RemoteItemKind {
         let context = ResponseReaderContext()
         let xmlReader = XMLDocumentReader(xmlData: data, documentContext: PropFindParserContext())
         xmlReader.pushReader(parseDocumentRoot, context: context)
         try xmlReader.parse()
-        return determineIsFolder(context)
+        if looksLikeFolder(context) {
+            return .folder
+        } else {
+            return .file
+        }
     }
 
-    private func determineIsFolder(_ context: ResponseReaderContext) -> Bool {
+    private func looksLikeFolder(_ context: ResponseReaderContext) -> Bool {
         if context.isCollection {
             return true
         }

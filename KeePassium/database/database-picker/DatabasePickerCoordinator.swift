@@ -45,6 +45,7 @@ class DatabasePickerCoordinator: FilePickerCoordinator {
 
     internal var _selectedDatabase: URLReference?
     internal var _hasPendingTransactions = false
+    internal var _databaseBeingEdited: URLReference?
 
     init(router: NavigationRouter, mode: DatabasePickerMode) {
         self.mode = mode

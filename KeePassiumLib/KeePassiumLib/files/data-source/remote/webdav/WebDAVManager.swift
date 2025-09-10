@@ -152,12 +152,12 @@ public final class WebDAVManager: NSObject {
         listTask.resume()
     }
 
-    public func checkIsFolder(
+    public func checkItemKind(
         url: URL,
         credential: NetworkCredential,
         timeout: Timeout,
         completionQueue: OperationQueue? = nil,
-        completion: @escaping (Result<Bool, FileAccessError>) -> Void
+        completion: @escaping (Result<RemoteItemKind, FileAccessError>) -> Void
     ) {
         let folderCheckRequest = WebDAVFolderCheckRequest(
             url: url,

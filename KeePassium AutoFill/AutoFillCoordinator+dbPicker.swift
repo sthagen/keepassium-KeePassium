@@ -15,7 +15,9 @@ extension AutoFillCoordinator {
         case .external:
             _databasePickerCoordinator.startExternalDatabasePicker(fileRef, presenter: presenter)
         case .remote:
-            _databasePickerCoordinator.startRemoteDatabasePicker(fileRef, presenter: presenter)
+            _databasePickerCoordinator.startRemoteDatabasePicker(
+                mode: .reauth(fileRef),
+                presenter: presenter)
         case .internalInbox, .internalBackup, .internalDocuments:
             assertionFailure("Should not be here. Can reinstate only external or remote files.")
             return

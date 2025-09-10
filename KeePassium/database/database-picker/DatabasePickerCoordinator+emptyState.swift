@@ -38,7 +38,10 @@ extension DatabasePickerCoordinator {
                 config.secondaryButtonProperties.primaryAction = UIAction {
                     [weak coordinator] action in
                     guard let coordinator else { return }
-                    coordinator.startRemoteDatabasePicker(presenter: coordinator._filePickerVC)
+                    coordinator.startRemoteDatabasePicker(
+                        mode: .pick(.file),
+                        presenter: coordinator._filePickerVC
+                    )
                 }
             }
             if appConfig.areSystemFileProvidersAllowed && appConfig.areInAppFileProvidersAllowed {

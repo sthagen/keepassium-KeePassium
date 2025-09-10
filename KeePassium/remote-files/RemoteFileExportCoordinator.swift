@@ -268,11 +268,10 @@ extension RemoteFileExportCoordinator: ConnectionTypePickerDelegate {
 extension RemoteFileExportCoordinator: GoogleDriveConnectionSetupCoordinatorDelegate {
     private func startGoogleDriveSetup(scope: OAuthScope, stateIndicator: BusyStateIndicating) {
         let setupCoordinator = GoogleDriveConnectionSetupCoordinator(
-            router: _router,
+            mode: .pick(.folder),
             scope: scope,
             stateIndicator: stateIndicator,
-            oldRef: nil,
-            selectionMode: .folder
+            router: _router,
         )
         setupCoordinator.delegate = self
         setupCoordinator.start()
@@ -308,11 +307,10 @@ extension RemoteFileExportCoordinator: GoogleDriveConnectionSetupCoordinatorDele
 extension RemoteFileExportCoordinator: DropboxConnectionSetupCoordinatorDelegate {
     private func startDropboxSetup(scope: OAuthScope, stateIndicator: BusyStateIndicating) {
         let setupCoordinator = DropboxConnectionSetupCoordinator(
-            router: _router,
-            stateIndicator: stateIndicator,
-            oldRef: nil,
+            mode: .pick(.folder),
             scope: scope,
-            selectionMode: .folder
+            stateIndicator: stateIndicator,
+            router: _router,
         )
         setupCoordinator.delegate = self
         setupCoordinator.start()
@@ -348,9 +346,8 @@ extension RemoteFileExportCoordinator: DropboxConnectionSetupCoordinatorDelegate
 extension RemoteFileExportCoordinator: OneDriveConnectionSetupCoordinatorDelegate {
     private func startOneDriveSetup(scope: OAuthScope, stateIndicator: BusyStateIndicating) {
         let setupCoordinator = OneDriveConnectionSetupCoordinator(
-            selectionMode: .folder,
+            mode: .pick(.folder),
             scope: scope,
-            oldRef: nil,
             stateIndicator: stateIndicator,
             router: _router
         )
@@ -388,8 +385,8 @@ extension RemoteFileExportCoordinator: OneDriveConnectionSetupCoordinatorDelegat
 extension RemoteFileExportCoordinator: WebDAVConnectionSetupCoordinatorDelegate {
     private func startWebDAVSetup(stateIndicator: BusyStateIndicating) {
         let setupCoordinator = WebDAVConnectionSetupCoordinator(
+            mode: .pick(.folder),
             router: _router,
-            selectionMode: .folder
         )
         setupCoordinator.delegate = self
         setupCoordinator.start()

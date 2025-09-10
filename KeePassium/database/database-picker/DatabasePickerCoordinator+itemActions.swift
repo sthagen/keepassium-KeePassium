@@ -126,6 +126,18 @@ extension DatabasePickerCoordinator {
             )
             menuItems.append(fileInfoAction)
 
+            if fileRef.location == .remote {
+                let editConnectionAction = UIAction(
+                    title: LString.actionEditConnection,
+                    image: .symbol(.network),
+                    handler: { [weak coordinator] action in
+                        let popoverAnchor = action.presentationSourceItem?.asPopoverAnchor ?? popoverAnchor
+                        coordinator?.didPressEditConnection(for: fileRef, at: popoverAnchor)
+                    }
+                )
+                menuItems.append(editConnectionAction)
+            }
+
             if ProcessInfo.isRunningOnMac {
                 let revealInFinderAction = UIAction(
                     title: LString.actionRevealInFinder,
@@ -172,6 +184,10 @@ extension DatabasePickerCoordinator {
         showFileInfo(fileRef, fileType: .database, allowExport: true, at: popoverAnchor, in: _filePickerVC)
     }
 
+    private func didPressEditConnection(for fileRef: URLReference, at popoverAnchor: PopoverAnchor?) {
+        editRemoteConnection(fileRef, at: popoverAnchor, in: _filePickerVC)
+    }
+
     private func didPressRevealInFinder(_ fileRef: URLReference, at popoverAnchor: PopoverAnchor?) {
         revealInFinder(fileRef)
     }
@@ -204,6 +220,16 @@ extension DatabasePickerCoordinator {
         in viewController: UIViewController
     ) {
         FileExportHelper.showFileExportSheet(fileRef, at: popoverAnchor, parent: viewController)
+    }
+
+    func editRemoteConnection(
+        _ fileRef: URLReference,
+        at popoverAnchor: PopoverAnchor?,
+        in viewController: UIViewController
+    ) {
+        assert(fileRef.location == .remote, "Edit connection is only available for remote files")
+        _databaseBeingEdited = fileRef
+        startRemoteDatabasePicker(mode: .edit(fileRef), presenter: viewController)
     }
 
     func eliminateDatabase(

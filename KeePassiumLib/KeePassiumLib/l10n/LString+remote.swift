@@ -15,6 +15,12 @@ extension LString {
         value: "Connect to Server",
         comment: "Action: connect to a network server ")
 
+    public static let actionEditConnection = NSLocalizedString(
+        "[RemoteConnection/Edit/action]",
+        bundle: Bundle.framework,
+        value: "Edit Connection…",
+        comment: "Action: change properties of a remote network connection")
+
     public static let titleRemoteConnection = NSLocalizedString(
         "[RemoteConnection/title]",
         bundle: Bundle.framework,
