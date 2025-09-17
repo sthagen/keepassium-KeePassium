@@ -52,7 +52,7 @@ extension UICellAccessory {
         let imageView = UIImageView(image: .symbol(
             .oneTimePassword,
             tint: .secondaryLabel,
-            accessibilityLabel: LString.fieldOTP
+            accessibilityLabel: LString.A11y.containsOTP
         ))
         imageView.isAccessibilityElement = true
         imageView.accessibilityTraits = [.staticText]

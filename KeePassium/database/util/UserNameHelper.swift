@@ -10,14 +10,16 @@ import KeePassiumLib
 
 class UserNameHelper {
     static func getUserNameSuggestions(from database: Database, count: Int) -> [String] {
-        assert(count >= 2)
+        assert(count >= 1)
         var result = [String]()
         var namesLeft = count
         if let defaultUserName = getDefaultUserName(from: database) {
             result.append(defaultUserName)
             namesLeft -= 1
         }
-        result.append(contentsOf: getUniqueUserNames(from: database).prefix(namesLeft))
+        if namesLeft > 0 {
+            result.append(contentsOf: getUniqueUserNames(from: database).prefix(namesLeft))
+        }
         return result
     }
 

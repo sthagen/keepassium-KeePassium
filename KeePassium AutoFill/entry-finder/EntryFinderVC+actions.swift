@@ -77,6 +77,9 @@ extension EntryFinderVC {
         case .announcement, .emptyStatePlaceholder, .group, .autoFillContext:
             assertionFailure("This item should not be selectable")
             return
+        case .entryCreator:
+            _collectionView.deselectItem(at: indexPath, animated: true)
+            delegate?.didPressCreateEntry(in: self)
         case let .entry(entry, kind):
             if isFieldPickerMode {
                 _toggleExpanded(selectedItem, kind: kind)

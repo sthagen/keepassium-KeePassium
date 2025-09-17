@@ -323,9 +323,3 @@ extension Array where Element == Group {
         }
     }
 }
-
-extension DatabaseOperation {
-    public static func createEntry(in group: Group) -> CreateEntryOperation {
-        return CreateEntryOperation(uuid: UUID(), parentUUID: group.uuid, creationTime: .now)
-    }
-}

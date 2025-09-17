@@ -370,5 +370,22 @@ extension LString {
         bundle: Bundle.framework,
         value: "Open another database in one step — using credentials stored in an entry.",
         comment: "Explanation of the premium feature")
+
+    public static let premiumFeatureCreativeAutoFillTitle = NSLocalizedString(
+        "[PremiumFeature/CreativeAutoFill/title]",
+        bundle: Bundle.framework,
+        value: "Faster Sign-Ups",
+        comment: "Title of a premium feature: easier registration of new accounts, directly in AutoFill dialog")
+    public static let premiumFeatureCreativeAutoFillDescription = NSLocalizedString(
+        "[PremiumFeature/CreativeAutoFill/description]",
+        bundle: Bundle.framework,
+        value: "Create new entries in AutoFill with main fields pre-filled.",
+        comment: "Description/advertisement for the `Faster Sign-Ups` premium feature")
+    public static let premiumBenefitCreativeAutoFillTitle = NSLocalizedString(
+        "[Premium/Benefits/CreativeAutoFill/title]",
+        bundle: Bundle.framework,
+        value: "Create accounts faster",
+        comment: "Call to action / Title of a premium feature")
+    public static let premiumBenefitCreativeAutoFillDescription = premiumFeatureCreativeAutoFillDescription
 }
 // swiftlint:enable line_length

@@ -19,6 +19,9 @@ final class EntryFinderVC: UIViewController {
 
         @available(iOS 18.0, *)
         func didSelectField(_ field: EntryField, in entry: Entry, in viewController: EntryFinderVC)
+
+        func shouldAllowEntryCreation(in viewController: EntryFinderVC) -> Bool
+        func didPressCreateEntry(in viewController: EntryFinderVC)
     }
 
     weak var delegate: Delegate?
@@ -76,8 +79,8 @@ final class EntryFinderVC: UIViewController {
 
     private func setupNavbar() {
         navigationItem.leftItemsSupplementBackButton = true
-        navigationItem.leadingItemGroups = _toolbarDecorator?.getLeadingItemGroups() ?? []
-        navigationItem.trailingItemGroups = _toolbarDecorator?.getTrailingItemGroups() ?? []
+        navigationItem.leftBarButtonItems = _toolbarDecorator?.getLeftBarButtonItems() ?? []
+        navigationItem.rightBarButtonItems = _toolbarDecorator?.getRightBarButtonItems() ?? []
     }
 
     public func selectEntry(_ entry: Entry?, animated: Bool) {

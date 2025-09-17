@@ -21,9 +21,7 @@ extension AutoFillCoordinator {
         databaseUnlockerCoordinator.setDatabase(databaseRef, andThen: activation)
 
         databaseUnlockerCoordinator.start()
-        addChildCoordinator(databaseUnlockerCoordinator, onDismiss: { [weak self] _ in
-            self?._databaseUnlockerCoordinator = nil
-        })
+        addChildCoordinator(databaseUnlockerCoordinator, onDismiss: nil)
         self._databaseUnlockerCoordinator = databaseUnlockerCoordinator
     }
 }

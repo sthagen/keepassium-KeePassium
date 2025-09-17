@@ -9,7 +9,6 @@
 import KeePassiumLib
 
 final class EntryFinderGroupCell: SelectableCollectionViewListCell {
-
     static func makeRegistration() -> UICollectionView.CellRegistration<EntryFinderGroupCell, Group> {
         UICollectionView.CellRegistration<EntryFinderGroupCell, Group> {
             cell, indexPath, group in
@@ -32,5 +31,6 @@ final class EntryFinderGroupCell: SelectableCollectionViewListCell {
         config.textProperties.lineBreakMode = .byTruncatingHead
         config.textProperties.font = .preferredFont(forTextStyle: .subheadline)
         self.contentConfiguration = config
+        self.accessibilityHint = LString.titleGroup
     }
 }

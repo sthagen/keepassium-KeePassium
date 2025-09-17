@@ -16,12 +16,20 @@ extension EntryFinderCoordinator {
             return nil
         }
 
-        func getLeadingItemGroups() -> [UIBarButtonItemGroup]? {
+        func getLeftBarButtonItems() -> [UIBarButtonItem]? {
             return nil
         }
 
-        func getTrailingItemGroups() -> [UIBarButtonItemGroup]? {
-            return nil
+        func getRightBarButtonItems() -> [UIBarButtonItem]? {
+            let createEntryButton = UIBarButtonItem(
+                title: LString.actionCreateEntry,
+                image: .symbol(.plus),
+                primaryAction: UIAction { [weak coordinator] _ in
+                    coordinator?._showEntryCreator()
+                }
+            )
+            createEntryButton.isEnabled = coordinator?._canCreateEntries ?? false
+            return [createEntryButton]
         }
     }
 }

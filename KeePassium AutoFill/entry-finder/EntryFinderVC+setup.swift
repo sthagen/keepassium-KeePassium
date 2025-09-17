@@ -15,7 +15,7 @@ extension EntryFinderVC {
         let trailingActionsProvider = { [weak self] (indexPath: IndexPath) -> UISwipeActionsConfiguration? in
             guard let self else { return nil }
             switch _dataSource.itemIdentifier(for: indexPath) {
-            case .announcement, .emptyStatePlaceholder, .group, .autoFillContext:
+            case .announcement, .entryCreator, .emptyStatePlaceholder, .group, .autoFillContext:
                 return nil
             case let .entry(entry, _):
                 if let actions = _itemDecorator?.getTrailingSwipeActions(for: entry) {
@@ -32,7 +32,7 @@ extension EntryFinderVC {
         let leadingActionsProvider = { [weak self] (indexPath: IndexPath) -> UISwipeActionsConfiguration? in
             guard let self else { return nil }
             switch _dataSource.itemIdentifier(for: indexPath) {
-            case .announcement, .emptyStatePlaceholder, .group, .autoFillContext:
+            case .announcement, .entryCreator, .emptyStatePlaceholder, .group, .autoFillContext:
                 return nil
             case .entry(let entry, _):
                 if let actions = _itemDecorator?.getLeadingSwipeActions(for: entry) {
@@ -75,6 +75,7 @@ extension EntryFinderVC {
         let announcementCellRegistration = AnnouncementCollectionCell.makeRegistration(
             appearance: appearance
         )
+        let entryCreatorCellRegistration = makeEntryCreatorCellRegistration()
         let placeholderCellRegistration = makePlaceholderCellRegistration()
         let groupCellRegistration = EntryFinderGroupCell.makeRegistration()
         let entryCellRegistration = EntryFinderEntryCell.makeRegistration(decorator: _itemDecorator)
@@ -91,6 +92,11 @@ extension EntryFinderVC {
                     using: announcementCellRegistration,
                     for: indexPath,
                     item: announcement)
+            case .entryCreator(let needsPremium):
+                return collectionView.dequeueConfiguredReusableCell(
+                    using: entryCreatorCellRegistration,
+                    for: indexPath,
+                    item: needsPremium)
             case .emptyStatePlaceholder(let text):
                 return collectionView.dequeueConfiguredReusableCell(
                     using: placeholderCellRegistration,
@@ -131,6 +137,22 @@ extension EntryFinderVC {
             default:
                 return nil
             }
+        }
+    }
+
+    private func makeEntryCreatorCellRegistration() ->
+        UICollectionView.CellRegistration<SelectableCollectionViewListCell, Bool>
+    {
+        return UICollectionView.CellRegistration<SelectableCollectionViewListCell, Bool> {
+            cell, indexPath, needsPremium in
+            var content = UIListContentConfiguration.cell()
+            content.text = LString.actionCreateEntry
+            content.textProperties.color = .actionTint
+            content.image = .symbol(.plus)
+            content.imageProperties.reservedLayoutSize = EntryFinderEntryCell.reservedImageSize
+            cell.contentConfiguration = content
+            cell.accessibilityTraits.insert(.button)
+            cell.accessories = needsPremium ? [.premiumFeatureIndicator()] : []
         }
     }
 

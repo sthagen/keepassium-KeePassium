@@ -46,6 +46,7 @@ public enum SymbolName: String, Equatable {
     public static let premiumBenefitBusinessClouds = Self.briefcase
     public static let premiumBenefitPasswordAudit = Self.networkBadgeShield
     public static let premiumBenefitLinkedDatabases = Self.squareOnSquare
+    public static let premiumBenefitCreativeAutoFill = Self.personBadgePlus
     public static let premiumBenefitSupport = Self.questionmarkBubble
     public static let premiumBenefitShiny = Self.faceSmiling
 
@@ -139,6 +140,7 @@ public enum SymbolName: String, Equatable {
     case personBadgeKey = "person.badge.key"
     case pencil = "pencil"
     case person = "person"
+    case personBadgePlus = "person.badge.plus"
     case person2BadgeGearshape = "person.2.badge.gearshape"
     case person3 = "person.3"
     case photo = "photo"

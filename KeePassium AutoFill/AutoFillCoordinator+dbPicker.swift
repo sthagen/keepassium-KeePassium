@@ -9,6 +9,17 @@
 import KeePassiumLib
 
 extension AutoFillCoordinator {
+    internal func _showDatabasePicker() {
+        let dbPickerCoordinator = DatabasePickerCoordinator(router: _router, mode: .autoFill)
+        dbPickerCoordinator.delegate = self
+        dbPickerCoordinator.start()
+        addChildCoordinator(dbPickerCoordinator, onDismiss: { [weak self] _ in
+            guard let self else { return }
+            dismissAndQuit()
+        })
+        _databasePickerCoordinator = dbPickerCoordinator
+    }
+
     internal func _reinstateDatabase(_ fileRef: URLReference) {
         let presenter = _router.navigationController
         switch fileRef.location {

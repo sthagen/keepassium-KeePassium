@@ -23,5 +23,10 @@ public extension LString {
             bundle: Bundle.framework,
             value: "Contains attachments.",
             comment: "Accessibility notification for entries with attached files.")
+        public static let containsOTP = NSLocalizedString(
+            "[Accessibility/containsOTP]",
+            bundle: Bundle.framework,
+            value: "Contains one-time password.",
+            comment: "Accessibility notification for entries with OTP codes.")
     }
 }

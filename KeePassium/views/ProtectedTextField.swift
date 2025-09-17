@@ -11,14 +11,14 @@ import KeePassiumLib
 class ProtectedTextField: ValidatingTextField {
     private let horizontalInsets = CGFloat(8.0)
     private let verticalInsets = CGFloat(2.0)
-
     private let unhideImage = UIImage.symbol(.eye)!
     private let hideImage = UIImage.symbol(.eyeFill)!
 
-    private var toggleButton: UIButton! 
+    public var onSecureTextEntryChanged: ((_ isSecureTextEntry: Bool) -> Void)?
+
+    private var toggleButton: UIButton!
     private var originalContentType: UITextContentType?
     private var originalAutocorrectionType: UITextAutocorrectionType = .default
-
     private var qualityIndicator: UIProgressView!
 
     public var quality: PasswordQuality? {
@@ -30,6 +30,7 @@ class ProtectedTextField: ValidatingTextField {
     override var isSecureTextEntry: Bool {
         didSet {
             toggleButton?.isSelected = !isSecureTextEntry
+            onSecureTextEntryChanged?(isSecureTextEntry)
         }
     }
     var isToggleEnabled: Bool {

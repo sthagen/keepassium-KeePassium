@@ -7,10 +7,13 @@
 //  For commercial licensing, please contact us.
 
 import KeePassiumLib
-import UIKit
 
-protocol EntryFinderToolbarDecorator {
-    func getToolbarItems() -> [UIBarButtonItem]?
-    func getLeftBarButtonItems() -> [UIBarButtonItem]?
-    func getRightBarButtonItems() -> [UIBarButtonItem]?
+struct EntryCreatorEntryData {
+    var parentGroup: Group
+    var title: String
+    var username: String
+    var password: String
+    var isPasswordProtected: Bool
+    var url: String
+    var notes: String
 }

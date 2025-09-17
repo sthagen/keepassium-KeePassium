@@ -31,9 +31,7 @@ extension AutoFillCoordinator {
         coordinator.delegate = self
 
         coordinator.start()
-        addChildCoordinator(coordinator, onDismiss: { [weak self] _ in
-            self?._entryFinderCoordinator = nil
-        })
+        addChildCoordinator(coordinator, onDismiss: nil)
         self._entryFinderCoordinator = coordinator
     }
 }
@@ -59,6 +57,11 @@ extension AutoFillCoordinator: EntryFinderCoordinatorDelegate {
             shouldSave: contextURL != nil,
             keepClipboardIntact: clipboardIsBusy
         )
+    }
+
+    func didCreateEntry(_ entry: Entry, in databaseFile: DatabaseFile, coordinator: EntryFinderCoordinator) {
+        log.trace("didCreateEntry")
+        _returnEntry(entry, from: databaseFile, shouldSave: true, keepClipboardIntact: false)
     }
 
     @available(iOS 18.0, *)

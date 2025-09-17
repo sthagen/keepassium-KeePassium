@@ -7,9 +7,8 @@
 //  For commercial licensing, please contact us.
 
 import KeePassiumLib
-import UIKit
 
-protocol EntryFinderToolbarDecorator {
+protocol EntryCreatorToolbarDecorator: AnyObject {
     func getToolbarItems() -> [UIBarButtonItem]?
     func getLeftBarButtonItems() -> [UIBarButtonItem]?
     func getRightBarButtonItems() -> [UIBarButtonItem]?

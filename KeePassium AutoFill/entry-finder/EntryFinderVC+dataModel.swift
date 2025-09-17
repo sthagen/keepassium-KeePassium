@@ -47,6 +47,7 @@ extension EntryFinderVC {
             case standard
         }
         case announcement(_ item: AnnouncementItem)
+        case entryCreator(needsPremium: Bool)
         case emptyStatePlaceholder(_ text: String) // "Nothing suitable found"
         case group(_ group: Group)
         case entry(_ entry: Entry, _ kind: Kind)
@@ -79,6 +80,8 @@ extension EntryFinderVC {
             switch self {
             case .announcement(let item):
                 hasher.combine(item)
+            case .entryCreator(let needsPremium):
+                hasher.combine(needsPremium)
             case .emptyStatePlaceholder(let text):
                 hasher.combine(text)
             case .group(let group):
@@ -122,6 +125,10 @@ extension EntryFinderVC {
         groupedItems.forEach {
             addGroupedItems($0, kind: .standard, to: &itemsSnapshot, includeFields: isFieldPickerMode)
         }
+        if itemsSnapshot.items.isEmpty {
+            itemsSnapshot.append([.emptyStatePlaceholder(LString.titleNothingSuitableFound)])
+        }
+        appendEntryCreatorItem(to: &itemsSnapshot)
         self._items = .overview(itemsSnapshot)
     }
 
@@ -130,6 +137,10 @@ extension EntryFinderVC {
         foundItems.forEach {
             addGroupedItems($0, kind: .standard, to: &itemsSnapshot, includeFields: isFieldPickerMode)
         }
+        if itemsSnapshot.items.isEmpty {
+            itemsSnapshot.append([.emptyStatePlaceholder(LString.titleNothingSuitableFound)])
+        }
+        appendEntryCreatorItem(to: &itemsSnapshot)
         self._items = .foundManually(itemsSnapshot)
     }
 
@@ -141,11 +152,24 @@ extension EntryFinderVC {
         searchResults.partialMatch.forEach {
             addGroupedItems($0, kind: .standard, to: &foundItemsSnapshot, includeFields: isFieldPickerMode)
         }
+        if foundItemsSnapshot.items.isEmpty {
+            foundItemsSnapshot.append([.emptyStatePlaceholder(LString.titleNothingSuitableFound)])
+        }
+        appendEntryCreatorItem(to: &foundItemsSnapshot)
         self._items = .foundAutomatically(foundItemsSnapshot)
     }
 
     public func setContext(_ text: String?) {
         self._callerID = Item.autoFillContext(text ?? "")
+    }
+
+    private func appendEntryCreatorItem(to snapshot: inout SectionSnapshot) {
+        guard delegate?.shouldAllowEntryCreation(in: self) == true else {
+            return
+        }
+        let needsPremium = !PremiumManager.shared.isAvailable(feature: .canCreateEntriesInAutoFill)
+        let entryCreatorItem = Item.entryCreator(needsPremium: needsPremium)
+        snapshot.append([entryCreatorItem])
     }
 }
 
@@ -180,12 +204,6 @@ extension EntryFinderVC {
                 snapshot.appendSections([.foundItems])
                 hasDataItems = true
             }
-        }
-
-        if !hasDataItems {
-            snapshot.appendSections([.foundItems])
-            let placeholderItem = Item.emptyStatePlaceholder(LString.titleNothingSuitableFound)
-            snapshot.appendItems([placeholderItem], toSection: .foundItems)
         }
 
         if let _callerID {

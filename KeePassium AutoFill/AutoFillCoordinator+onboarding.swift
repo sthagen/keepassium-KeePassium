@@ -20,17 +20,6 @@ extension AutoFillCoordinator {
         return validDatabases.isEmpty
     }
 
-    internal func _showDatabasePicker() {
-        _databasePickerCoordinator = DatabasePickerCoordinator(router: _router, mode: .autoFill)
-        _databasePickerCoordinator.delegate = self
-        _databasePickerCoordinator.start()
-        addChildCoordinator(_databasePickerCoordinator, onDismiss: { [weak self] _ in
-            guard let self else { return }
-            _databasePickerCoordinator = nil
-            dismissAndQuit()
-        })
-    }
-
     internal func _presentOnboarding() {
         let firstSetupVC = FirstSetupVC.make(delegate: self)
         firstSetupVC.navigationItem.hidesBackButton = true

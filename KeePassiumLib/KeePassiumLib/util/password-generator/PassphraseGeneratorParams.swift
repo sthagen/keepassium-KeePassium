@@ -10,8 +10,14 @@ import Foundation
 
 public class PassphraseGeneratorParams: Codable, Equatable {
     public static let wordCountRange = 4...20
-    public var wordCount: Int = 7
+    enum CodingKeys: CodingKey {
+        case wordCount
+        case separator
+        case wordCase
+        case wordlist
+    }
 
+    public var wordCount: Int = 7
     public var separator: String = " "
     public var wordCase: PassphraseGenerator.WordCase = .lowerCase
     public var wordlist: PassphraseWordlist = .effLarge {

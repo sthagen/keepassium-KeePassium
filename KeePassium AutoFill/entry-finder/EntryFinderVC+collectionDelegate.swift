@@ -14,7 +14,7 @@ extension EntryFinderVC: UICollectionViewDelegate {
         switch _dataSource.itemIdentifier(for: indexPath) {
         case .announcement, .emptyStatePlaceholder, .group, .autoFillContext:
             return false
-        case .entry, .field:
+        case .entryCreator, .entry, .field:
             return true
         case .none:
             return false
@@ -55,7 +55,7 @@ extension EntryFinderVC: UICollectionViewDelegate {
         point: CGPoint
     ) -> UIContextMenuConfiguration? {
         switch _dataSource.itemIdentifier(for: indexPath) {
-        case .announcement, .emptyStatePlaceholder, .group, .autoFillContext:
+        case .announcement, .entryCreator, .emptyStatePlaceholder, .group, .autoFillContext:
             return nil
         case let .entry(entry, _):
             guard let popoverAnchor = _collectionView.cellForItem(at: indexPath)?.asPopoverAnchor else {

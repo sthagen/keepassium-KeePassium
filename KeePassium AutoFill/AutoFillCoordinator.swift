@@ -32,9 +32,9 @@ class AutoFillCoordinator: BaseCoordinator {
 
     internal var _isInDeviceAutoFillSettings = false
 
-    internal var _databasePickerCoordinator: DatabasePickerCoordinator!
-    internal var _entryFinderCoordinator: EntryFinderCoordinator?
-    internal var _databaseUnlockerCoordinator: DatabaseUnlockerCoordinator?
+    internal unowned var _databasePickerCoordinator: DatabasePickerCoordinator!
+    internal weak var _entryFinderCoordinator: EntryFinderCoordinator?
+    internal weak var _databaseUnlockerCoordinator: DatabaseUnlockerCoordinator?
 
     internal var _serviceIdentifiers = [ASCredentialServiceIdentifier]()
     internal var _passkeyRelyingParty: String?

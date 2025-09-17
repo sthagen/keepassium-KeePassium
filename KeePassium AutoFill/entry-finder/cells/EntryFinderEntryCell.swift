@@ -9,6 +9,7 @@
 import KeePassiumLib
 
 final class EntryFinderEntryCell: SelectableCollectionViewListCell {
+    public static let reservedImageSize = CGSize(width: 34, height: 34)
 
     private weak var decorator: EntryFinderItemDecorator?
     private var fixedAccessories = [UICellAccessory]()
@@ -33,6 +34,7 @@ final class EntryFinderEntryCell: SelectableCollectionViewListCell {
         config.secondaryTextProperties.numberOfLines = 1
 
         config.image = UIImage.kpIcon(forEntry: entry)
+        config.imageProperties.reservedLayoutSize = Self.reservedImageSize
         config.imageProperties.maximumSize = UIImage.kpIconMaxSize
         self.contentConfiguration = config
 

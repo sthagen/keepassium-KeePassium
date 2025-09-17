@@ -20,6 +20,8 @@ protocol EntryFinderCoordinatorDelegate: AnyObject {
         in coordinator: EntryFinderCoordinator
     )
 
+    func didCreateEntry(_ entry: Entry, in databaseFile: DatabaseFile, coordinator: EntryFinderCoordinator)
+
     @available(iOS 18.0, *)
     func didSelectText(
         _ text: String,
@@ -175,6 +177,10 @@ extension EntryFinderCoordinator {
             clipboardIsBusy: didUseManualCopy,
             in: self)
     }
+
+    internal func _notifyEntryCreated(_ entry: Entry) {
+        delegate?.didCreateEntry(entry, in: _databaseFile, coordinator: self)
+    }
 }
 
 extension EntryFinderCoordinator: EntryFinderVC.Delegate {
@@ -212,6 +218,14 @@ extension EntryFinderCoordinator: EntryFinderVC.Delegate {
         case .none:
             assertionFailure()
         }
+    }
+
+    func shouldAllowEntryCreation(in viewController: EntryFinderVC) -> Bool {
+        return _canCreateEntries
+    }
+
+    func didPressCreateEntry(in viewController: EntryFinderVC) {
+        _showEntryCreator()
     }
 
     @available(iOS 18.0, *)
