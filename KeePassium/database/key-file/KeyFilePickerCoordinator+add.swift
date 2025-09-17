@@ -82,7 +82,7 @@ extension KeyFilePickerCoordinator {
         }
     }
 
-    private func sanityCheck(_ url: URL, presenter: UIViewController) -> Bool {
+    func sanityCheck(_ url: URL, presenter: UIViewController) -> Bool {
         if FileType.isDatabaseFile(url: url) {
             Diag.warning("Tried to add database as a key file, refusing")
             presenter.showErrorAlert(

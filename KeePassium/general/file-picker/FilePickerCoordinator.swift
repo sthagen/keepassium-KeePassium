@@ -7,6 +7,7 @@
 //  For commercial licensing, please contact us.
 
 import KeePassiumLib
+import UniformTypeIdentifiers
 
 class FilePickerCoordinator: BaseCoordinator, FilePickerVC.Delegate {
     internal var _contentUnavailableConfiguration: UIContentUnavailableConfiguration? { nil }
@@ -34,6 +35,8 @@ class FilePickerCoordinator: BaseCoordinator, FilePickerVC.Delegate {
 
     internal let _filePickerVC: FilePickerVC
 
+    internal var _allowedDropUTIs: [UTType] { [UTType.fileURL] }
+
     init(
         router: NavigationRouter,
         fileType: FileType,
@@ -51,6 +54,7 @@ class FilePickerCoordinator: BaseCoordinator, FilePickerVC.Delegate {
         )
         self._dismissButtonStyle = dismissButtonStyle
         super.init(router: router)
+        _filePickerVC.allowedDropUTIs = _allowedDropUTIs
         _filePickerVC.delegate = self
         fileKeeperNotifications = FileKeeperNotifications(observer: self)
     }
@@ -140,6 +144,55 @@ class FilePickerCoordinator: BaseCoordinator, FilePickerVC.Delegate {
     }
 
     func didEliminateFile(_ fileRef: URLReference, in coordinator: FilePickerCoordinator) {
+    }
+
+    func didDropItem(_ itemProvider: NSItemProvider, in viewController: FilePickerVC) {
+        let matchingUTI = _allowedDropUTIs
+            .map { $0.identifier }
+            .first { itemProvider.hasItemConformingToTypeIdentifier($0) }
+
+        if let matchingUTI {
+            Diag.debug("Received a dropped item [uti: \(matchingUTI)]")
+            itemProvider.loadItem(forTypeIdentifier: matchingUTI, options: nil) {
+                [weak self] data, error in
+                self?.processDroppedFile(
+                    url: data as? URL,
+                    error: error,
+                    isTemporary: false,
+                    viewController: viewController
+                )
+            }
+        } else {
+            itemProvider.loadFileRepresentation(forTypeIdentifier: UTType.item.identifier) {
+                [weak self] url, error in
+                self?.processDroppedFile(url: url, error: error, isTemporary: true, viewController: viewController)
+            }
+        }
+    }
+
+    private func processDroppedFile(url: URL?, error: Error?, isTemporary: Bool, viewController: FilePickerVC) {
+        if let error {
+            Diag.error("Failed to load file [message: \(error.localizedDescription)]")
+            return
+        }
+
+        guard let url else {
+            Diag.error("Dropped URL is nil")
+            return
+        }
+
+        if isTemporary {
+            guard let inboxURL = FileKeeper.shared.copyToInboxSync(from: url) else {
+                Diag.error("Failed to copy dropped file to inbox, ignoring it")
+                return
+            }
+            didDropFile(inboxURL, to: viewController)
+        } else {
+            didDropFile(url, to: viewController)
+        }
+    }
+
+    func didDropFile(_ fileURL: URL, to viewController: FilePickerVC) {
     }
 }
 

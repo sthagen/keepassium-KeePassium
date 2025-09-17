@@ -112,6 +112,29 @@ extension DatabasePickerCoordinator: RemoteFilePickerCoordinatorDelegate {
 }
 
 extension DatabasePickerCoordinator {
+    func _didDropFile(_ fileURL: URL, to viewController: FilePickerVC) {
+        Diag.debug("Processing dropped database file")
+
+        guard needsPremiumToAddDatabase() else {
+            processDroppedDatabase(fileURL, presenter: viewController)
+            return
+        }
+
+        performPremiumActionOrOfferUpgrade(for: .canUseMultipleDatabases, in: viewController) {
+            [weak self] in
+            guard let self else { return }
+            processDroppedDatabase(fileURL, presenter: viewController)
+        }
+    }
+
+    private func processDroppedDatabase(_ fileURL: URL, presenter: UIViewController) {
+        warnIfNotADatabase(fileURL, presenter: presenter) { [weak self] url in
+            self?.addDatabaseURL(url)
+        }
+    }
+}
+
+extension DatabasePickerCoordinator {
     public func needsPremiumToAddDatabase() -> Bool {
         let validDatabases = _fileReferences
             .filter { !$0.needsReinstatement }
@@ -160,7 +183,7 @@ extension DatabasePickerCoordinator {
         }
     }
 
-    private func warnIfNotADatabase(
+    internal func warnIfNotADatabase(
         _ url: URL,
         presenter: UIViewController,
         onConfirm confirmationHandler: @escaping (URL) -> Void

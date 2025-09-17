@@ -7,6 +7,7 @@
 //  For commercial licensing, please contact us.
 
 import KeePassiumLib
+import UniformTypeIdentifiers
 
 protocol DatabasePickerCoordinatorDelegate: AnyObject {
     func didPressShowDiagnostics(at popoverAnchor: PopoverAnchor?, in viewController: UIViewController)
@@ -46,6 +47,7 @@ class DatabasePickerCoordinator: FilePickerCoordinator {
     internal var _selectedDatabase: URLReference?
     internal var _hasPendingTransactions = false
     internal var _databaseBeingEdited: URLReference?
+    override var _allowedDropUTIs: [UTType] { FileType.databaseUTIs }
 
     init(router: NavigationRouter, mode: DatabasePickerMode) {
         self.mode = mode
@@ -129,5 +131,9 @@ class DatabasePickerCoordinator: FilePickerCoordinator {
             selectDatabase(fileRef, animated: true)
             delegate?.didSelectDatabase(fileRef, cause: nil, in: self)
         }
+    }
+
+    override func didDropFile(_ fileURL: URL, to viewController: FilePickerVC) {
+        _didDropFile(fileURL, to: viewController)
     }
 }

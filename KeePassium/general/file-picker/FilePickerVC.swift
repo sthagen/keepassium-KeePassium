@@ -7,6 +7,7 @@
 //  For commercial licensing, please contact us.
 
 import KeePassiumLib
+import UniformTypeIdentifiers
 
 protocol FilePickerToolbarDecorator {
     func getToolbarItems() -> [UIBarButtonItem]?
@@ -33,9 +34,13 @@ class FilePickerVC: UIViewController {
             _ fileRef: URLReference?,
             cause: ItemActivationCause?,
             in viewController: FilePickerVC)
+
+        func didDropItem(_ itemProvider: NSItemProvider, in viewController: FilePickerVC)
     }
 
     weak var delegate: Delegate?
+    var allowedDropUTIs: [UTType] = [.item]
+    let forbiddenDropUTIs: [UTType] = [.folder]
 
     private enum Section: Int, CaseIterable {
         case announcements
@@ -155,6 +160,7 @@ class FilePickerVC: UIViewController {
         refreshControl.backgroundColor = .clear
         refreshControl.addTarget(self, action: #selector(didPullToRefresh), for: .valueChanged)
         collectionView.refreshControl = refreshControl
+        collectionView.dropDelegate = self
     }
 
     private func setupDataSource() {
@@ -488,6 +494,50 @@ extension FilePickerVC: BusyStateIndicating {
             view.makeToastActivity(.center)
         } else {
             view.hideToastActivity()
+        }
+    }
+}
+
+extension FilePickerVC: UICollectionViewDropDelegate {
+    private func isAcceptableDropItem(_ itemProvider: NSItemProvider) -> Bool {
+        let isAllowed = allowedDropUTIs.contains {
+            itemProvider.hasItemConformingToTypeIdentifier($0.identifier)
+        }
+        let isForbidden = forbiddenDropUTIs.contains {
+            itemProvider.hasItemConformingToTypeIdentifier($0.identifier)
+        }
+        return isAllowed && !isForbidden
+    }
+
+    func collectionView(_ collectionView: UICollectionView, canHandle session: UIDropSession) -> Bool {
+        let hasAcceptableItems = session.items.contains { isAcceptableDropItem($0.itemProvider) }
+        return hasAcceptableItems
+    }
+
+    func collectionView(
+        _ collectionView: UICollectionView,
+        dropSessionDidUpdate session: UIDropSession,
+        withDestinationIndexPath destinationIndexPath: IndexPath?
+    ) -> UICollectionViewDropProposal {
+        guard session.localDragSession == nil else {
+            return UICollectionViewDropProposal(operation: .cancel)
+        }
+        let hasAcceptableItems = session.items.contains { isAcceptableDropItem($0.itemProvider) }
+        guard hasAcceptableItems else {
+            return UICollectionViewDropProposal(operation: .forbidden)
+        }
+        return UICollectionViewDropProposal(operation: .copy, intent: .unspecified)
+    }
+
+    func collectionView(
+        _ collectionView: UICollectionView,
+        performDropWith coordinator: UICollectionViewDropCoordinator
+    ) {
+        for item in coordinator.items {
+            let itemProvider = item.dragItem.itemProvider
+            if isAcceptableDropItem(itemProvider) {
+                delegate?.didDropItem(itemProvider, in: self)
+            }
         }
     }
 }

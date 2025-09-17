@@ -645,6 +645,18 @@ public class FileKeeper {
     }
 
 
+    public func copyToInboxSync(from sourceURL: URL) -> URL? {
+        let targetURL = inboxDirURL.appendingPathComponent(sourceURL.lastPathComponent)
+        do {
+            try FileManager().copyItem(at: sourceURL, to: targetURL)
+            Diag.debug("Successfully copied file to Inbox")
+            return targetURL
+        } catch {
+            Diag.debug("Failed to copy file to Inbox")
+            return nil
+        }
+    }
+
     private func copyToDocumentsResolvingConflicts(
         from sourceURL: URL,
         fileProvider: FileProvider?,

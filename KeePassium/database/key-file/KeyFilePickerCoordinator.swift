@@ -7,6 +7,7 @@
 //  For commercial licensing, please contact us.
 
 import KeePassiumLib
+import UniformTypeIdentifiers
 
 protocol KeyFilePickerCoordinatorDelegate: AnyObject {
     func didSelectKeyFile(
@@ -29,6 +30,7 @@ class KeyFilePickerCoordinator: FilePickerCoordinator {
     internal var _selectedKeyFile: URLReference?
     internal var _addingMode: AddingMode?
     internal var _fileExportHelper: FileExportHelper?
+    override var _allowedDropUTIs: [UTType] { FileType.keyFileUTIs }
 
     init(router: NavigationRouter) {
         let itemDecorator = ItemDecorator()
@@ -68,6 +70,11 @@ class KeyFilePickerCoordinator: FilePickerCoordinator {
         dismiss { [self] in
             delegate?.didSelectKeyFile(fileRef, cause: cause, in: self)
         }
+    }
+
+    override func didDropFile(_ fileURL: URL, to viewController: FilePickerVC) {
+        Diag.debug("Importing the dropped key file")
+        _addKeyFile(url: fileURL, accessMode: .import, presenter: viewController)
     }
 
     override func didEliminateFile(_ fileRef: URLReference, in coordinator: FilePickerCoordinator) {
