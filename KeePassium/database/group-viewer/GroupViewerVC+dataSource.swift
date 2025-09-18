@@ -14,7 +14,7 @@ extension GroupViewerVC {
     private static let minItemsForStatsFooter = 4
 
     typealias Item = GroupViewerItem
-    typealias DataSource = UICollectionViewDiffableDataSource<Section, Item>
+    typealias DataSource = GroupViewerDataSource
     typealias SectionSnapshot = NSDiffableDataSourceSectionSnapshot<Item>
 
     enum DataViewModel {
