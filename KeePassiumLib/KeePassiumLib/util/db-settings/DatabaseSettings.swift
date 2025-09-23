@@ -9,6 +9,8 @@
 import Foundation
 
 final public class DatabaseSettings: Eraseable {
+    public var recentUserActivityTimestamp: Date?
+
     public var isReadOnlyFile: Bool = false
 
     private var _isRememberMasterKey: Bool?
@@ -79,6 +81,7 @@ final public class DatabaseSettings: Eraseable {
     }
 
     public func erase() {
+        recentUserActivityTimestamp = nil
         self.isReadOnlyFile = false
 
         isRememberMasterKey = nil
@@ -158,6 +161,7 @@ final public class DatabaseSettings: Eraseable {
 extension DatabaseSettings: Codable {
 
     private enum CodingKeys: String, CodingKey {
+        case recentUserActivityTimestamp
         case isReadOnlyFile
         case isRememberMasterKey
         case isRememberFinalKey
@@ -198,6 +202,7 @@ extension DatabaseSettings: Codable {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.init()
         // swiftlint:disable line_length
+        self.recentUserActivityTimestamp = try container.decodeIfPresent(Date.self, forKey: .recentUserActivityTimestamp)
         self.isReadOnlyFile = try container.decodeIfPresent(Bool.self, forKey: .isReadOnlyFile) ?? false
         self.isRememberMasterKey = try container.decodeIfPresent(Bool.self, forKey: .isRememberMasterKey)
         self.isRememberFinalKey = try container.decodeIfPresent(Bool.self, forKey: .isRememberFinalKey)
@@ -225,6 +230,9 @@ extension DatabaseSettings: Codable {
 
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
+        if let _recentUserActivityTimestamp = recentUserActivityTimestamp {
+            try container.encode(_recentUserActivityTimestamp, forKey: .recentUserActivityTimestamp)
+        }
         try container.encode(isReadOnlyFile, forKey: .isReadOnlyFile)
         if let _isRememberMasterKey = isRememberMasterKey {
             try container.encode(_isRememberMasterKey, forKey: .isRememberMasterKey)

@@ -101,6 +101,33 @@ public class DatabaseSettingsManager {
     }
 
 
+    public func updateUserActivityTimestamp(for databaseRef: URLReference) {
+        updateSettings(for: databaseRef) { dbSettings in
+            dbSettings.recentUserActivityTimestamp = .now
+        }
+    }
+
+    public func isLockExpired(_ databaseRef: URLReference) -> Bool {
+        let dbTimeout = Settings.current.databaseLockTimeout
+        switch dbTimeout {
+        case .immediately:
+            return false
+        case .never:
+            return false
+        default:
+            guard let activityTimestamp = getSettings(for: databaseRef)?.recentUserActivityTimestamp else {
+                return false
+            }
+            let timePassed = Date.now.timeIntervalSince(activityTimestamp)
+            if timePassed < 0 {
+                Diag.warning("Time travel detected")
+                return true
+            } else {
+                return timePassed >= TimeInterval(dbTimeout.seconds)
+            }
+        }
+    }
+
     public func isReadOnly(_ databaseRef: URLReference) -> Bool {
         switch databaseRef.location {
         case .internalBackup:

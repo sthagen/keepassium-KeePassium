@@ -138,6 +138,13 @@ final class EntryFinderCoordinator: BaseCoordinator {
         let passkeyRP = _searchContext.passkeyRelyingParty
         _entryFinderVC.setContext(serviceID ?? passkeyRP)
     }
+
+    override func settingsDidChange(key: Settings.Keys) {
+        super.settingsDidChange(key: key)
+        if key == .recentUserActivityTimestamp {
+            DatabaseSettingsManager.shared.updateUserActivityTimestamp(for: _databaseFile.originalReference)
+        }
+    }
 }
 
 extension EntryFinderCoordinator {

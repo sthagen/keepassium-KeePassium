@@ -61,6 +61,9 @@ final class DatabaseViewerCoordinator: BaseCoordinator {
     internal let _searchHelper = SearchHelper()
     internal var _isSearchOngoing: Bool { _searchQuery?.isNotEmpty ?? false }
 
+    internal var _databaseLockTimer: DispatchSourceTimer!
+    internal var _cachedUserActivityTimestamp: Date?
+
     internal var _databaseUpdateCheckTimer: Timer?
     internal var _databaseUpdateCheckStatus: DatabaseUpdateCheckStatus = .idle
 
@@ -117,6 +120,9 @@ final class DatabaseViewerCoordinator: BaseCoordinator {
 
         Settings.current.startupDatabase = _databaseFile.originalReference
 
+        _updateUserActivityTimestamp()
+        _setupDatabaseLockTimer()
+
         DispatchQueue.main.asyncAfter(deadline: .now() + 2 * vcAnimationDuration) { [weak self] in
             self?._processJustOpenedDatabase()
         }
@@ -127,6 +133,11 @@ final class DatabaseViewerCoordinator: BaseCoordinator {
             name: UIScene.didActivateNotification,
             object: nil)
         refresh(animated: false)
+    }
+
+    deinit {
+        _databaseLockTimer.cancel()
+        _databaseLockTimer = nil
     }
 
     public func stop(animated: Bool, completion: (() -> Void)?) {
@@ -160,6 +171,13 @@ final class DatabaseViewerCoordinator: BaseCoordinator {
         UIMenu.rebuildMainMenu()
     }
 
+    override func settingsDidChange(key: Settings.Keys) {
+        super.settingsDidChange(key: key)
+        if key == .recentUserActivityTimestamp {
+            _updateUserActivityTimestamp()
+        }
+    }
+
     public func closeDatabase(
         shouldLock: Bool,
         reason: DatabaseCloseReason,
@@ -179,6 +197,7 @@ final class DatabaseViewerCoordinator: BaseCoordinator {
 
 extension DatabaseViewerCoordinator {
     @objc private func sceneDidBecomeActive(_ notification: Notification) {
+        _lockDatabaseIfExpired()
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
             self?._checkAndProcessExternalChanges()
         }
