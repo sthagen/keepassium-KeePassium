@@ -49,6 +49,8 @@ class AutoFillCoordinator: BaseCoordinator {
     internal var _isBiometricAuthShown = false
     internal var _isPasscodeInputShown = false
 
+    internal var _lastSuccessfulBiometricAuthTime: Date = .distantPast
+
     internal var _databaseSaver: DatabaseSaver?
 
     internal var _memoryFootprintBeforeDatabaseMiB: Float?

@@ -42,7 +42,7 @@ extension MainCoordinator {
         }
 
         let timeSinceLastSuccess = abs(Date.now.timeIntervalSince(_lastSuccessfulBiometricAuthTime))
-        if timeSinceLastSuccess < _biometricAuthReuseDuration {
+        if timeSinceLastSuccess < LAContext.biometricAuthReuseDuration {
             print("Skipping repeated biometric prompt")
             _watchdog.unlockApp()
             return

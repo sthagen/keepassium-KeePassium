@@ -104,16 +104,25 @@ extension AutoFillCoordinator: WatchdogDelegate {
             return
         }
 
+        let timeSinceLastSuccess = abs(_lastSuccessfulBiometricAuthTime.timeIntervalSinceNow)
+        if timeSinceLastSuccess < LAContext.biometricAuthReuseDuration {
+            print("Skipping repeated biometric prompt")
+            watchdog.unlockApp()
+        }
+
         Diag.debug("Biometric auth: showing request")
+        _lastSuccessfulBiometricAuthTime = .distantPast
         Keychain.shared.performBiometricAuth { [weak self] success in
             guard let self else { return }
             BiometricsHelper.biometricPromptLastSeenTime = Date.now
             _isBiometricAuthShown = false
             if success {
                 Diag.info("Biometric auth successful")
+                _lastSuccessfulBiometricAuthTime = .now
                 watchdog.unlockApp()
             } else {
                 Diag.warning("Biometric auth failed")
+                _lastSuccessfulBiometricAuthTime = .distantPast
                 _passcodeInputController?.showKeyboard()
             }
         }

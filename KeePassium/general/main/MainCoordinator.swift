@@ -36,7 +36,7 @@ final class MainCoordinator: UIResponder, Coordinator {
     internal var _biometricsBackgroundWindow: UIWindow?
     internal var _isBiometricAuthShown = false
     internal var _isInitialAppLock = true
-    internal let _biometricAuthReuseDuration = TimeInterval(3.0)
+
     internal var _lastSuccessfulBiometricAuthTime: Date = .distantPast
 
     #if INTUNE
