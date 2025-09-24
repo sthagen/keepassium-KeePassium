@@ -1928,7 +1928,7 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/keepassium/yubikit-ios.git";
 			requirement = {
-				branch = "keepassium-156";
+				branch = "keepassium-165";
 				kind = branch;
 			};
 		};

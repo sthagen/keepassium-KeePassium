@@ -51,8 +51,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/keepassium/yubikit-ios.git",
       "state" : {
-        "branch" : "keepassium-156",
-        "revision" : "36537977b644dc70155fbe9862835eb6b82b303b"
+        "branch" : "keepassium-165",
+        "revision" : "9a463723b88af1fdc4f0f4350aeee4e156bf2cf9"
       }
     },
     {
