@@ -86,9 +86,8 @@ class DatabasePickerCoordinator: FilePickerCoordinator {
         return _fileReferences.first
     }
 
-    override func refresh() {
-        _updateAnnouncements()
-        super.refresh()
+    override func _updateAnnouncements() {
+        self.announcements = _makeAnnouncements()
     }
 
     override func _didUpdateFileReferences() {
@@ -121,6 +120,7 @@ class DatabasePickerCoordinator: FilePickerCoordinator {
             assertionFailure("DB Picker does not have no-selection option")
             return
         }
+
         if let cause {
             _paywallDatabaseSelection(fileRef, animated: true, in: viewController) { [weak self] fileRef in
                 guard let self else { return }

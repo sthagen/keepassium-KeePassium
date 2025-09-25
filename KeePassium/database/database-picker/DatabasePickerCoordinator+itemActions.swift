@@ -77,11 +77,12 @@ extension DatabasePickerCoordinator {
 
             let fileMenuAccessory = UICellAccessory.customView(configuration: .init(
                 customView: makeFileMenuButton(for: fileItem),
-                placement: .trailing(displayed: .always),
+                placement: .trailing(displayed: .whenNotEditing),
                 tintColor: .actionTint,
                 maintainsFixedSize: false)
             )
             result.append(fileMenuAccessory)
+            result.append(.multiselect(displayed: .whenEditing))
             return result
         }
 

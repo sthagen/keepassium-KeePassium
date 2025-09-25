@@ -8,10 +8,12 @@
 
 import KeePassiumLib
 
-extension LString {
-    public static let titleNothingSuitableFound = NSLocalizedString(
-        "[Search/EmptyResult/title]",
-        value: "Nothing suitable found",
-        comment: "Placeholder text for empty search results"
-    )
+extension AnnouncementItem {
+    static func macMultiSelectHint() -> AnnouncementItem {
+        return AnnouncementItem(
+            title: nil,
+            body: LString.messageHoldKeyForMultiSelection,
+            image: .symbol(.checklistChecked)
+        )
+    }
 }

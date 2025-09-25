@@ -1436,5 +1436,12 @@ extension LString {
         value: "Database file has changed. Reload?",
         comment: "Notification message about external changes to the loaded file."
     )
+
+    public static let messageHoldKeyForMultiSelection = NSLocalizedString(
+        "[General/MultiSelectionKeys/hint]",
+        bundle: Bundle.framework,
+        value: "Press and hold Cmd or Shift key to select multiple items.",
+        comment: "Info message for keyboard-assisted selection"
+    )
 }
 // swiftlint:enable line_length

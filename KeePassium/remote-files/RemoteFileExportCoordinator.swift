@@ -37,7 +37,7 @@ final class RemoteFileExportCoordinator: BaseCoordinator {
         _pushInitialViewController(connectionTypePicker, animated: true)
     }
 
-    private func upload<Manager: RemoteDataSourceManager> (
+    private func upload<Manager: RemoteDataSourceManager>(
         _ folder: Manager.ItemType,
         oauthToken: OAuthToken,
         timeout: Timeout,

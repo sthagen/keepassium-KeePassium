@@ -9,10 +9,15 @@
 import KeePassiumLib
 import UniformTypeIdentifiers
 
+enum FilePickerToolbarMode {
+    case normal(hasSelectableFiles: Bool)
+    case bulkEdit(selectedItems: [URLReference])
+}
+
 protocol FilePickerToolbarDecorator {
-    func getToolbarItems() -> [UIBarButtonItem]?
-    func getLeftBarButtonItems() -> [UIBarButtonItem]?
-    func getRightBarButtonItems() -> [UIBarButtonItem]?
+    func getToolbarItems(mode: FilePickerToolbarMode) -> [UIBarButtonItem]?
+    func getLeftBarButtonItems(mode: FilePickerToolbarMode) -> [UIBarButtonItem]?
+    func getRightBarButtonItems(mode: FilePickerToolbarMode) -> [UIBarButtonItem]?
 }
 
 protocol FilePickerItemDecorator: AnyObject {
@@ -36,11 +41,18 @@ class FilePickerVC: UIViewController {
             in viewController: FilePickerVC)
 
         func didDropItem(_ itemProvider: NSItemProvider, in viewController: FilePickerVC)
+
+        func didToggleEditing(_ editing: Bool, in viewController: FilePickerVC)
+
+        func didPressEliminateFiles(_ fileRefs: [URLReference], in viewController: FilePickerVC)
     }
 
     weak var delegate: Delegate?
     var allowedDropUTIs: [UTType] = [.item]
     let forbiddenDropUTIs: [UTType] = [.folder]
+    var isMultipleItemsSelected: Bool {
+        return (collectionView.indexPathsForSelectedItems?.count ?? 0) > 1
+    }
 
     private enum Section: Int, CaseIterable {
         case announcements
@@ -124,6 +136,9 @@ class FilePickerVC: UIViewController {
         collectionView.allowsSelection = true
         collectionView.allowsFocus = true
         collectionView.selectionFollowsFocus = true
+        collectionView.allowsMultipleSelectionDuringEditing = true
+        collectionView.allowsMultipleSelection = true
+        collectionView.remembersLastFocusedIndexPath = true
         collectionView.delegate = self
     }
 
@@ -227,23 +242,31 @@ class FilePickerVC: UIViewController {
         }
     }
 
-    func refreshControls() {
-        setupToolbar()
-        setupNavbar()
+    func refresh(animated: Bool) {
+        applySnapshot(animated: animated)
+        updateToolbars(animated: animated)
     }
 
-    private func setupToolbar() {
-        let toolbarItems = toolbarDecorator?.getToolbarItems()
-        setToolbarItems(toolbarItems, animated: false)
-    }
+    private func updateToolbars(animated: Bool) {
+        let mode: FilePickerToolbarMode
+        let selectedFileRefs = getSelectedFileRefs()
+        if isEditing || selectedFileRefs.count > 1 {
+            mode = .bulkEdit(selectedItems: selectedFileRefs)
+        } else {
+            mode = .normal(hasSelectableFiles: !fileItems.isEmpty)
+        }
+        let toolbarItems = toolbarDecorator?.getToolbarItems(mode: mode)
+        setToolbarItems(toolbarItems, animated: animated)
+        let isToolbarEmpty = toolbarItems?.isEmpty ?? true
+        navigationController?.setToolbarHidden(isToolbarEmpty, animated: animated)
 
-    private func setupNavbar() {
-        if let leftItems = toolbarDecorator?.getLeftBarButtonItems() {
-            navigationItem.leftBarButtonItems = leftItems
+        navigationItem.leftItemsSupplementBackButton = true
+        if let leftItems = toolbarDecorator?.getLeftBarButtonItems(mode: mode) {
+            navigationItem.setLeftBarButtonItems(leftItems, animated: animated)
         }
-        if let rightItems = toolbarDecorator?.getRightBarButtonItems() {
-            navigationItem.rightBarButtonItems = rightItems
-        }
+        navigationItem.setRightBarButtonItems(
+            toolbarDecorator?.getRightBarButtonItems(mode: mode),
+            animated: animated)
     }
 
     public func setFileRefs(_ refs: [URLReference]) {
@@ -289,6 +312,13 @@ class FilePickerVC: UIViewController {
     }
 
     public func selectFile(_ fileRef: URLReference?, animated: Bool) {
+        collectionView.selectItem(at: nil, animated: false, scrollPosition: [])
+
+        if ProcessInfo.isRunningOnMac && fileRef != nil {
+            collectionView.setNeedsFocusUpdate()
+            collectionView.updateFocusIfNeeded()
+        }
+
         if let fileRef {
             guard let indexPath = getIndexPath(for: fileRef) else {
                 return
@@ -306,14 +336,16 @@ class FilePickerVC: UIViewController {
         }
     }
 
-    private func applySnapshot() {
+    private func applySnapshot(animated: Bool = true) {
         var snapshot = NSDiffableDataSourceSnapshot<Section, FilePickerItem>()
         if !announcementItems.isEmpty {
             snapshot.appendSections([.announcements])
             snapshot.appendItems(announcementItems, toSection: .announcements)
         }
 
-        if let noFileItem {
+        if let noFileItem,
+           !isEditing
+        {
             snapshot.appendSections([.noFile, .files])
             snapshot.appendItems([noFileItem], toSection: .noFile)
         } else {
@@ -322,7 +354,7 @@ class FilePickerVC: UIViewController {
         snapshot.appendItems(fileItems, toSection: .files)
 
         snapshot.reconfigureItems(fileItems)
-        dataSource.apply(snapshot, animatingDifferences: true)
+        dataSource.apply(snapshot, animatingDifferences: animated)
 
     }
 
@@ -361,7 +393,7 @@ class FilePickerVC: UIViewController {
 
 extension FilePickerVC {
     override var keyCommands: [UIKeyCommand]? {
-        return [
+        var commands: [UIKeyCommand] = [
             UIKeyCommand(input: "\r", modifierFlags: [], action: #selector(didPressEnter)),
             UIKeyCommand(
                 action: #selector(didPressRefresh),
@@ -369,6 +401,23 @@ extension FilePickerVC {
                 discoverabilityTitle: LString.actionRefreshList
             )
         ]
+        if isEditing {
+            commands.append(
+                UIKeyCommand(
+                    input: UIKeyCommand.inputEscape,
+                    modifierFlags: [],
+                    action: #selector(didPressDoneBulkEditing)
+                )
+            )
+        }
+        commands.append(
+            UIKeyCommand(
+                input: UIKeyCommand.inputDelete,
+                modifierFlags: [],
+                action: #selector(didPressDeleteSelection)
+            )
+        )
+        return commands
     }
 
     @objc private func didPressEnter() {
@@ -381,11 +430,46 @@ extension FilePickerVC {
     @objc private func didPressRefresh() {
         delegate?.needsRefresh(self)
     }
+
+    @objc private func didPressDoneBulkEditing() {
+        setEditing(false, animated: true)
+    }
+
+    @objc private func didPressDeleteSelection() {
+        delegate?.didPressEliminateFiles(getSelectedFileRefs(), in: self)
+    }
+
+    override func selectAll(_ sender: Any?) {
+        let snapshot = dataSource.snapshot()
+        for item in snapshot.itemIdentifiers {
+            if isSelectableItem(item, multiSelection: true) {
+                let indexPath = dataSource.indexPath(for: item)
+                collectionView.selectItem(at: indexPath, animated: false, scrollPosition: [])
+            }
+        }
+    }
+
+    private func isSelectableItem(_ item: FilePickerItem?, multiSelection: Bool) -> Bool {
+        switch item {
+        case .announcement:
+            return false
+        case .noFile:
+            return !multiSelection
+        case .file:
+            return true
+        case .none:
+            return false
+        }
+    }
 }
 
 extension FilePickerVC: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, canFocusItemAt indexPath: IndexPath) -> Bool {
-        return isSelectableCell(at: indexPath)
+        if isEditing {
+            return false
+        } else {
+            return isSelectableCell(at: indexPath)
+        }
     }
 
     func collectionView(
@@ -399,41 +483,51 @@ extension FilePickerVC: UICollectionViewDelegate {
         _ collectionView: UICollectionView,
         canPerformPrimaryActionForItemAt indexPath: IndexPath
     ) -> Bool {
+        if collectionView.isEditing {
+            return false
+        }
         return isSelectableCell(at: indexPath)
     }
 
     private func isSelectableCell(at indexPath: IndexPath) -> Bool {
-        switch dataSource.itemIdentifier(for: indexPath) {
-        case .announcement:
-            return false
-        case .noFile, .file:
-            return true
-        case .none:
-            return false
-        }
+        let selectedCellCount = collectionView.indexPathsForSelectedItems?.count ?? 0
+        let isMultiSelection = isEditing || (selectedCellCount > 1)
+        return isSelectableItem(dataSource.itemIdentifier(for: indexPath), multiSelection: isMultiSelection)
     }
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        updateToolbars(animated: true)
         if isInSinglePanelMode {
             return
         }
+
         switch dataSource.itemIdentifier(for: indexPath) {
         case .announcement:
+            assertionFailure("Selected a non-selectable item")
             return
         case .noFile:
             delegate?.didSelectFile(nil, cause: nil, in: self)
-            return
         case .file(let fileItem):
+            if isEditing {
+                return
+            }
             guard let fileRef = fileItem.source else { assertionFailure(); return }
             guard delegate?.shouldAcceptUserSelection(fileRef, in: self) ?? true else {
                 animateSelectionDenied(at: indexPath)
-                break
+                return
             }
-            delegate?.didSelectFile(fileRef, cause: nil, in: self)
+            if isMultipleItemsSelected {
+            } else {
+                delegate?.didSelectFile(fileRef, cause: nil, in: self)
+            }
         case .none:
             assertionFailure()
             return
         }
+    }
+
+    func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
+        updateToolbars(animated: true)
     }
 
     func collectionView(
@@ -495,6 +589,35 @@ extension FilePickerVC: BusyStateIndicating {
         } else {
             view.hideToastActivity()
         }
+    }
+}
+
+extension FilePickerVC {
+    override func setEditing(_ editing: Bool, animated: Bool) {
+        super.setEditing(editing, animated: animated)
+        collectionView.isEditing = editing
+        if !editing {
+            collectionView.indexPathsForSelectedItems?.forEach {
+                collectionView.deselectItem(at: $0, animated: false)
+            }
+        }
+        refresh(animated: animated)
+        delegate?.didToggleEditing(editing, in: self)
+    }
+
+    private func getSelectedFileRefs() -> [URLReference] {
+        let selectedItems = collectionView.indexPathsForSelectedItems?.compactMap {
+            dataSource.itemIdentifier(for: $0)
+        }
+        let refs = selectedItems?.compactMap { filePickerItem -> URLReference? in
+            switch filePickerItem {
+            case .announcement, .noFile:
+                return nil
+            case .file(let fileInfo):
+                return fileInfo.source
+            }
+        }
+        return refs ?? []
     }
 }
 

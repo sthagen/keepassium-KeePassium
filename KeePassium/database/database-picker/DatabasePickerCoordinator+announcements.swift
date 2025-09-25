@@ -9,9 +9,8 @@
 import KeePassiumLib
 
 extension DatabasePickerCoordinator {
-    internal func _updateAnnouncements() {
-        var announcements: [AnnouncementItem] = []
-
+    internal func _makeAnnouncements() -> [AnnouncementItem] {
+        var announcements = [AnnouncementItem]()
         if mode == .autoFill,
            FileKeeper.shared.areSandboxFilesLikelyMissing()
         {
@@ -21,7 +20,13 @@ extension DatabasePickerCoordinator {
         if _hasPendingTransactions {
             announcements.append(makePendingTransactionsAnnouncement(for: _filePickerVC))
         }
-        self.announcements = announcements
+
+        if ProcessInfo.isRunningOnMac,
+           _filePickerVC.isEditing
+        {
+            announcements.append(.macMultiSelectHint())
+        }
+        return announcements
     }
 
     private func makeSandboxUnreachableAnnouncement(for viewController: UIViewController) -> AnnouncementItem {

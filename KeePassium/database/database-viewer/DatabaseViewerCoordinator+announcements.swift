@@ -39,7 +39,7 @@ extension DatabaseViewerCoordinator {
         if ProcessInfo.isRunningOnMac,
            _topGroupViewer.isEditing
         {
-            announcements.append(makeMacMultiSelectionAnnouncement())
+            announcements.append(.macMultiSelectHint())
         }
 
         if announcements.isEmpty,
@@ -152,14 +152,6 @@ extension DatabaseViewerCoordinator {
             body: messages.joined(separator: "\n\n"),
             image: .symbol(.unsavedChanges, tint: .warningMessage),
             action: saveAction
-        )
-    }
-
-    private func makeMacMultiSelectionAnnouncement() -> AnnouncementItem {
-        return AnnouncementItem(
-            title: nil,
-            body: LString.messageHoldKeyForMultiSelection,
-            image: .symbol(.checklistChecked)
         )
     }
 

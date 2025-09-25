@@ -59,7 +59,7 @@ class FileDestructionHelper {
         parent: UIViewController,
         completion: CompletionHandler?
     ) {
-        if urlRef.hasError {
+        if urlRef.hasError || !withConfirmation {
             destroyFileNow(
                 urlRef,
                 fileType: fileType,

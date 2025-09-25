@@ -57,6 +57,16 @@ class KeyFilePickerCoordinator: FilePickerCoordinator {
         selectFile(fileRef, animated: animated)
     }
 
+    override func _updateAnnouncements() {
+        var announcements = [AnnouncementItem]()
+        if ProcessInfo.isRunningOnMac,
+           _filePickerVC.isEditing
+        {
+            announcements.append(.macMultiSelectHint())
+        }
+        self.announcements = announcements
+    }
+
     override var _contentUnavailableConfiguration: UIContentUnavailableConfiguration? {
         return EmptyListConfigurator.makeConfiguration(for: self)
     }

@@ -50,6 +50,7 @@ enum FilePickerItem: Hashable {
             hasher.combine(item)
         case let .file(item):
             hasher.combine(item.uuid)
+            hasher.combine(item.isBusy)
         }
     }
 
@@ -59,6 +60,7 @@ enum FilePickerItem: Hashable {
             return item1 == item2
         case let (.file(item1), .file(item2)):
             return item1.uuid == item2.uuid
+                && item1.isBusy == item2.isBusy
         case let (.noFile(item1), .noFile(item2)):
             return item1 == item2
         default:

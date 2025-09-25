@@ -191,7 +191,7 @@ final class MainSettingsVC: BaseSettingsViewController<MainSettingsVC.Section> {
         snapshot.appendItems([
             .basic(.init(
                 title: LString.databaseBackupSettingsTitle,
-                image: .symbol(.clockArrowCirclepath),
+                image: .symbol(.databaseBackup),
                 fixedAccessories: [.disclosureIndicator()],
                 handler: { [unowned self] in
                     delegate?.didPressBackupSettings(in: self)

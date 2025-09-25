@@ -66,7 +66,7 @@ class FilePickerCoordinator: BaseCoordinator, FilePickerVC.Delegate {
     override func start() {
         super.start()
         _pushInitialViewController(_filePickerVC, dismissButtonStyle: _dismissButtonStyle, animated: true)
-        refresh()
+        refresh(animated: false, reloadInfo: true)
         fileKeeperNotifications.startObserving()
         NotificationCenter.default.addObserver(
             self,
@@ -76,12 +76,15 @@ class FilePickerCoordinator: BaseCoordinator, FilePickerVC.Delegate {
     }
 
     @objc private func sceneDidBecomeActive(_ sender: AnyObject?) {
-        refresh()
+        refresh(animated: true, reloadInfo: true)
     }
 
     override func refresh() {
         super.refresh()
+        refresh(animated: false, reloadInfo: true)
+    }
 
+    func refresh(animated: Bool, reloadInfo: Bool) {
         _fileReferences = FileKeeper.shared.getAllReferences(
             fileType: fileType,
             includeBackup: Settings.current.isBackupFilesVisible)
@@ -90,19 +93,25 @@ class FilePickerCoordinator: BaseCoordinator, FilePickerVC.Delegate {
         _fileReferences.sort { sortOrder.compare($0, $1) }
 
         showFileRefs(_fileReferences)
+        if reloadInfo {
+            fileInfoReloader.getInfo(
+                for: _fileReferences,
+                update: { [weak self] _ in
+                    guard let self else { return }
+                    showFileRefs(self._fileReferences)
+                },
+                completion: { [weak self] in
+                    guard let self else { return }
+                    _fileReferences.sort { sortOrder.compare($0, $1) }
+                    showFileRefs(self._fileReferences)
+                }
+            )
+        }
+        _updateAnnouncements()
+        _filePickerVC.refresh(animated: animated)
+    }
 
-        fileInfoReloader.getInfo(
-            for: _fileReferences,
-            update: { [weak self] _ in
-                guard let self else { return }
-                showFileRefs(self._fileReferences)
-            },
-            completion: { [weak self] in
-                guard let self else { return }
-                showFileRefs(self._fileReferences)
-            }
-        )
-        _filePickerVC.refreshControls()
+    internal func _updateAnnouncements() {
     }
 
     internal func _didUpdateFileReferences() {
@@ -112,6 +121,14 @@ class FilePickerCoordinator: BaseCoordinator, FilePickerVC.Delegate {
         _didUpdateFileReferences()
         _filePickerVC.contentUnavailableConfiguration = refs.isEmpty ? _contentUnavailableConfiguration : nil
         _filePickerVC.setFileRefs(refs)
+    }
+
+    internal func _startSelecting() {
+        _filePickerVC.setEditing(true, animated: true)
+    }
+
+    internal func _didPressDoneBulkEditing() {
+        _filePickerVC.setEditing(false, animated: true)
     }
 
     @discardableResult
@@ -128,7 +145,7 @@ class FilePickerCoordinator: BaseCoordinator, FilePickerVC.Delegate {
     }
 
     func needsRefresh(_ viewController: FilePickerVC) {
-        refresh()
+        refresh(animated: true, reloadInfo: true)
     }
 
     func shouldAcceptUserSelection(_ fileRef: URLReference, in viewController: FilePickerVC) -> Bool {
@@ -143,7 +160,60 @@ class FilePickerCoordinator: BaseCoordinator, FilePickerVC.Delegate {
         assertionFailure("Pure virtual method, override this")
     }
 
+    func didPressEliminateFiles(_ fileRefs: [URLReference], in viewController: FilePickerVC) {
+        _confirmAndBulkDeleteFiles(fileRefs, at: nil)
+    }
+
+    func didToggleEditing(_ editing: Bool, in viewController: FilePickerVC) {
+        refresh(animated: true, reloadInfo: false)
+    }
+
     func didEliminateFile(_ fileRef: URLReference, in coordinator: FilePickerCoordinator) {
+    }
+
+    internal func _confirmAndBulkDeleteFiles(_ fileRefs: [URLReference], at popoverAnchor: PopoverAnchor?) {
+        guard fileRefs.count > 0 else { return }
+
+        let confirmation = UIAlertController(
+            title: String.localizedStringWithFormat(LString.itemsSelectedCountTemplate, fileRefs.count),
+            message: nil,
+            preferredStyle: popoverAnchor != nil ? .actionSheet : .alert
+        )
+
+        let destructiveTitle = (fileRefs.count > 1) ? LString.actionDeleteAll : LString.actionDelete
+        confirmation.addAction(title: destructiveTitle, style: .destructive) { [weak self] _ in
+            guard let self else { return }
+            eliminateFilesConfirmed(fileRefs, in: _filePickerVC)
+        }
+        confirmation.addAction(title: LString.actionCancel, style: .cancel, handler: nil)
+        if let popoverAnchor {
+            confirmation.modalPresentationStyle = .popover
+            popoverAnchor.apply(to: confirmation.popoverPresentationController)
+        }
+        _filePickerVC.present(confirmation, animated: true)
+    }
+
+    private func eliminateFilesConfirmed(_ fileRefs: [URLReference], in viewController: FilePickerVC) {
+        var remaining = fileRefs.count
+        for ref in fileRefs {
+            FileDestructionHelper.destroyFile(
+                ref,
+                fileType: fileType,
+                withConfirmation: false,
+                at: nil,
+                parent: viewController,
+                completion: { [weak self] isEliminated in
+                    guard let self else { return }
+                    if isEliminated {
+                        didEliminateFile(ref, in: self)
+                    }
+                    remaining -= 1
+                    if remaining == 0 {
+                        refresh(animated: true, reloadInfo: false)
+                    }
+                }
+            )
+        }
     }
 
     func didDropItem(_ itemProvider: NSItemProvider, in viewController: FilePickerVC) {
@@ -198,6 +268,6 @@ class FilePickerCoordinator: BaseCoordinator, FilePickerVC.Delegate {
 
 extension FilePickerCoordinator: FileKeeperObserver {
     func fileKeeperDidUpdate() {
-        refresh()
+        refresh(animated: true, reloadInfo: true)
     }
 }

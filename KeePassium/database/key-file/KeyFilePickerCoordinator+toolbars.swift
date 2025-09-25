@@ -12,34 +12,73 @@ extension KeyFilePickerCoordinator {
     class ToolbarDecorator: FilePickerToolbarDecorator {
         weak var coordinator: KeyFilePickerCoordinator?
 
-        func getToolbarItems() -> [UIBarButtonItem]? {
+        func getLeftBarButtonItems(mode: FilePickerToolbarMode) -> [UIBarButtonItem]? {
             return nil
         }
 
-        func getLeftBarButtonItems() -> [UIBarButtonItem]? {
-            return nil
-        }
-
-        func getRightBarButtonItems() -> [UIBarButtonItem]? {
+        func getRightBarButtonItems(mode: FilePickerToolbarMode) -> [UIBarButtonItem]? {
             guard let coordinator else { assertionFailure(); return nil }
-            var barItems = [UIBarButtonItem]()
-            if ProcessInfo.isRunningOnMac {
-                let refreshAction = UIBarButtonItem(
-                    systemItem: .refresh,
-                    primaryAction: UIAction { [weak coordinator] action in
-                        coordinator?.refresh()
+            switch mode {
+            case let .normal(hasSelectableFiles):
+                var barItems = [UIBarButtonItem]()
+                let selectItemsAction = UIBarButtonItem(
+                    title: LString.actionSelect,
+                    primaryAction: UIAction { [weak coordinator] _ in
+                        coordinator?._startSelecting()
                     }
                 )
-                barItems.append(refreshAction)
+                selectItemsAction.isEnabled = hasSelectableFiles
+                let addKeyFileBarButton = UIBarButtonItem(
+                    title: LString.actionAddKeyFile,
+                    image: .symbol(.plus),
+                    primaryAction: nil,
+                    menu: coordinator._makeAddKeyFileMenu()
+                )
+
+                barItems.append(addKeyFileBarButton)
+                barItems.append(selectItemsAction)
+                return barItems
+            case .bulkEdit:
+                let doneBulkEditingButton = UIBarButtonItem(systemItem: .done, primaryAction: UIAction {
+                    [weak coordinator] _ in
+                    coordinator?._didPressDoneBulkEditing()
+                })
+                return [doneBulkEditingButton]
             }
-            let addKeyFileBarButton = UIBarButtonItem(
-                title: LString.actionAddKeyFile,
-                image: .symbol(.plus),
-                primaryAction: nil,
-                menu: coordinator._makeAddKeyFileMenu()
-            )
-            barItems.append(addKeyFileBarButton)
-            return barItems
+        }
+
+        func getToolbarItems(mode: FilePickerToolbarMode) -> [UIBarButtonItem]? {
+            switch mode {
+            case .normal:
+                if ProcessInfo.isRunningOnMac {
+                    let refreshAction = UIBarButtonItem(
+                        systemItem: .refresh,
+                        primaryAction: UIAction { [weak coordinator] action in
+                            coordinator?.refresh()
+                        }
+                    )
+                    return [
+                        .flexibleSpace(),
+                        refreshAction,
+                        .flexibleSpace(),
+                    ]
+                } else {
+                    return nil
+                }
+            case .bulkEdit(let selectedFiles):
+                let bulkDeleteButton = UIBarButtonItem(
+                    systemItem: .trash,
+                    primaryAction: UIAction { [weak coordinator] action in
+                        coordinator?._confirmAndBulkDeleteFiles(
+                            selectedFiles,
+                            at: action.presentationSourceItem?.asPopoverAnchor
+                        )
+                    }
+                )
+                bulkDeleteButton.title = LString.actionDelete
+                bulkDeleteButton.isEnabled = selectedFiles.count > 0
+                return [.flexibleSpace(), bulkDeleteButton]
+            }
         }
     }
 

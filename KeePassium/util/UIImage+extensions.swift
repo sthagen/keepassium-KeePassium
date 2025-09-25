@@ -29,6 +29,7 @@ public enum SymbolName: String, Equatable {
     public static let actionRestore = Self.clockArrowCirclepath
     public static let appPasscode = Self.entryLeverKeypad
     public static let autoFill = Self.return
+    public static let databaseBackup = Self.clockArrowCirclepath
     public static let fieldReference = Self.arrowRightCircle
     public static let largeType = Self.characterMagnify
     public static let managedParameter = Self.person2BadgeGearshape
