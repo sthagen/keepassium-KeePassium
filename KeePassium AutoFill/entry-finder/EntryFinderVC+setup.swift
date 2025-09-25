@@ -102,7 +102,7 @@ extension EntryFinderVC {
                     using: placeholderCellRegistration,
                     for: indexPath,
                     item: text)
-            case .group(let group):
+            case let .group(group, _):
                 return collectionView.dequeueConfiguredReusableCell(
                     using: groupCellRegistration,
                     for: indexPath,

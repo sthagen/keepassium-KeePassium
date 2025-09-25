@@ -44,12 +44,13 @@ extension EntryFinderVC {
     enum Item: Hashable, Equatable {
         enum Kind: Hashable, Equatable {
             case recent
+            case exact
             case standard
         }
         case announcement(_ item: AnnouncementItem)
         case entryCreator(needsPremium: Bool)
         case emptyStatePlaceholder(_ text: String) // "Nothing suitable found"
-        case group(_ group: Group)
+        case group(_ group: Group, _ kind: Kind)
         case entry(_ entry: Entry, _ kind: Kind)
         case field(_ field: EntryField, _ entry: Entry, _ kind: Kind)
         case autoFillContext(_ text: String)
@@ -60,8 +61,9 @@ extension EntryFinderVC {
                 return lhsItem == rhsItem
             case (.emptyStatePlaceholder, .emptyStatePlaceholder):
                 return true
-            case let (.group(lhsItem), .group(rhsItem)):
+            case let (.group(lhsItem, lhsKind), .group(rhsItem, rhsKind)):
                 return lhsItem.runtimeUUID == rhsItem.runtimeUUID
+                    && lhsKind == rhsKind
             case let (.entry(lhsItem, lhsKind), .entry(rhsItem, rhsKind)):
                 return lhsItem.runtimeUUID == rhsItem.runtimeUUID
                     && lhsKind == rhsKind
@@ -84,8 +86,9 @@ extension EntryFinderVC {
                 hasher.combine(needsPremium)
             case .emptyStatePlaceholder(let text):
                 hasher.combine(text)
-            case .group(let group):
+            case let .group(group, kind):
                 hasher.combine(group.runtimeUUID)
+                hasher.combine(kind)
             case let .entry(entry, kind):
                 hasher.combine(entry.runtimeUUID)
                 hasher.combine(kind)
@@ -147,7 +150,7 @@ extension EntryFinderVC {
     public func setAutomaticallyFoundData(_ searchResults: FuzzySearchResults) {
         var foundItemsSnapshot = SectionSnapshot()
         searchResults.exactMatch.forEach {
-            addGroupedItems($0, kind: .standard, to: &foundItemsSnapshot, includeFields: isFieldPickerMode)
+            addGroupedItems($0, kind: .exact, to: &foundItemsSnapshot, includeFields: isFieldPickerMode)
         }
         searchResults.partialMatch.forEach {
             addGroupedItems($0, kind: .standard, to: &foundItemsSnapshot, includeFields: isFieldPickerMode)
@@ -241,7 +244,7 @@ extension EntryFinderVC {
         to snapshot: inout SectionSnapshot,
         includeFields: Bool,
     ) {
-        let groupItem = Item.group(groupedItems.group)
+        let groupItem = Item.group(groupedItems.group, kind)
         snapshot.append([groupItem])
 
         var itemsAdded = 0
@@ -292,7 +295,7 @@ extension EntryFinderVC {
         switch kind {
         case .recent:
             toggleExpanded(item, section: .recentEntry)
-        case .standard:
+        case .exact, .standard:
             switch _items {
             case .overview:
                 toggleExpanded(item, section: .allItems)
