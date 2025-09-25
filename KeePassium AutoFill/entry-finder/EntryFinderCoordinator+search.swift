@@ -37,7 +37,9 @@ extension EntryFinderCoordinator {
         let searchResults = _searchHelper.find(
             database: _databaseFile.database,
             serviceIdentifiers: context.serviceIdentifiers,
-            passkeyRelyingParty: context.passkeyRelyingParty)
+            passkeyRelyingParty: context.passkeyRelyingParty,
+            allowOnly: context.itemKind
+        )
 
         _entryFinderVC.setRecentEntry(_recentEntry)
 

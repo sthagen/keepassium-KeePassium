@@ -16,9 +16,10 @@ extension AutoFillCoordinator {
     ) {
         log.trace("Displaying database viewer")
         let searchContext = AutoFillSearchContext(
-            userQuery: _autoFillMode?.query,
+            userQuery: nil,
             serviceIdentifiers: _serviceIdentifiers,
-            passkeyRelyingParty: _passkeyRelyingParty
+            passkeyRelyingParty: _passkeyRelyingParty,
+            itemKind: .fromAutoFillMode(_autoFillMode)
         )
         let coordinator = EntryFinderCoordinator(
             router: _router,

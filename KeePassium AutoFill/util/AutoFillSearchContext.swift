@@ -13,6 +13,7 @@ struct AutoFillSearchContext {
     var userQuery: String?
     var serviceIdentifiers: [ASCredentialServiceIdentifier]
     var passkeyRelyingParty: String?
+    var itemKind: AutoFillItemKind?
 
     func getRepresentativeURL(mode: AutoFillContextSavingMode = .hostnameAndPath) -> URL? {
         switch mode {

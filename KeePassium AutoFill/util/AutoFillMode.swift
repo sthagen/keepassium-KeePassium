@@ -16,25 +16,6 @@ enum AutoFillMode: Equatable {
     case passkeyAssertion(_ allowPasswords: Bool)
 }
 
-extension AutoFillMode {
-    var query: String? {
-        switch self {
-        case .credentials,
-             .passkeyRegistration,
-             .text:
-            return nil
-        case .passkeyAssertion(let allowPasswords):
-            if allowPasswords {
-                return nil
-            } else {
-                return "is:passkey"
-            }
-        case .oneTimeCode:
-            return "otp:* "
-        }
-    }
-}
-
 extension AutoFillMode: CustomDebugStringConvertible {
     var debugDescription: String {
         switch self {

@@ -14,7 +14,8 @@ extension SearchHelper {
     func find(
         database: Database,
         serviceIdentifiers: [ASCredentialServiceIdentifier],
-        passkeyRelyingParty: String?
+        passkeyRelyingParty: String?,
+        allowOnly itemKind: AutoFillItemKind?
     ) -> FuzzySearchResults {
         var relevantEntries = [ScoredItem]()
         if let passkeyRelyingParty {
@@ -33,7 +34,9 @@ extension SearchHelper {
                 }
             }
         }
-
+        if let itemKind {
+            relevantEntries = relevantEntries.filter { itemKind.matches($0.item) }
+        }
         let exactMatchEntries = relevantEntries.filter { $0.similarityScore >= 0.99 }
         let partialMatchEntries = relevantEntries.filter { $0.similarityScore < 0.99 }
         let exactMatch = arrangeByGroups(scoredItems: exactMatchEntries)
