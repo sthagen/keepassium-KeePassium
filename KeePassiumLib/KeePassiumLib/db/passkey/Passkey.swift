@@ -290,24 +290,24 @@ public class NewPasskey: Passkey {
 
         let x = Array(rawPublicKey.prefix(upTo: 33))
         let y = Array(rawPublicKey.suffix(32))
-        let dict: CBOR = [
+        let dict: KeyValuePairs = [
             1: CBOR(integerLiteral: 2),
             3: CBOR(integerLiteral: ASCOSEAlgorithmIdentifier.ES256.rawValue),
             -1: CBOR(integerLiteral: ASCOSEEllipticCurveIdentifier.P256.rawValue),
             -2: CBOR.byteString(x),
             -3: CBOR.byteString(y)
         ]
-        let encoded = Data(dict.encode())
+        let encoded = Data(dict.encode(useStringKeys: false))
         return encoded
     }
 
     private func cborEncodeAttestation(_ authData: Data) -> Data {
-        let dict: CBOR = [
+        let dict: KeyValuePairs = [
             "fmt": "none",
             "attStmt": CBOR.map([:]),
             "authData": CBOR.byteString(Array(authData))
         ]
-        let encoded = dict.encode()
+        let encoded = dict.encode(useStringKeys: true)
         return Data(encoded)
     }
 }
