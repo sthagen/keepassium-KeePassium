@@ -149,6 +149,24 @@ extension DatabaseViewerCoordinator {
         }
         Clipboard.general.copyWithTimeout(value)
     }
+
+    internal func _canOpenCurrentEntryURL() -> Bool {
+        if let _currentEntry,
+           let _ = URL.from(malformedString: _currentEntry.resolvedURL)
+        {
+            return true
+        }
+        return false
+    }
+
+    internal func _openCurrentEntryURL() {
+        guard let _currentEntry else { return }
+        guard let url = URL.from(malformedString: _currentEntry.resolvedURL) else {
+            Diag.debug("Unexpected URL format, skipping")
+            return
+        }
+        URLOpener(_topGroupViewer).open(url: url)
+    }
 }
 
 extension DatabaseViewerCoordinator {

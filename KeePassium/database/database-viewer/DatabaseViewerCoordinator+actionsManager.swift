@@ -75,6 +75,8 @@ extension DatabaseViewerCoordinator {
                 return coordinator._canCopyCurrentEntryField(EntryField.password)
             case #selector(kpmCopyEntryURL):
                 return coordinator._canCopyCurrentEntryField(EntryField.url)
+            case #selector(kpmOpenEntryURL):
+                return coordinator._canOpenCurrentEntryURL()
             #if targetEnvironment(macCatalyst)
             case #selector(kpmPerformAutoType):
                 return coordinator._canPerformAutoType()
@@ -275,10 +277,19 @@ extension DatabaseViewerCoordinator {
                     LString.fieldURL),
                 action: #selector(kpmCopyEntryURL),
                 hotkey: .copyURL)
+            let openURLAction = UIKeyCommand(
+                title: LString.actionOpenURL,
+                action: #selector(kpmOpenEntryURL),
+                hotkey: .openURL)
 
             assert(Hotkey.copyPassword == Hotkey.systemCopyToClipboard)
 
-            return UIMenu(inlineChildren: [copyUserNameAction, copyPasswordAction, copyURLAction])
+            return UIMenu(inlineChildren: [
+                copyUserNameAction,
+                copyPasswordAction,
+                copyURLAction,
+                openURLAction
+            ])
         }
 
         private func makeSelectMenu() -> UIMenu {
@@ -344,6 +355,9 @@ extension DatabaseViewerCoordinator {
         }
         @objc func kpmCopyEntryURL() {
             coordinator?._copyCurrentEntryField(EntryField.url)
+        }
+        @objc func kpmOpenEntryURL() {
+            coordinator?._openCurrentEntryURL()
         }
         #if targetEnvironment(macCatalyst)
         @objc func kpmPerformAutoType() {
