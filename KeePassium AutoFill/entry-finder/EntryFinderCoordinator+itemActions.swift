@@ -22,9 +22,13 @@ extension EntryFinderCoordinator {
 
         func getAccessories(for entry: Entry) -> [UICellAccessory]? {
             var result = [UICellAccessory]()
-            if Passkey.probablyPresent(in: entry) {
-                result.append(.passkeyPresenceIndicator())
+            switch Passkey.checkPresence(in: entry) {
+            case .noPasskey:
+                break
+            case let .passkeyPresent(isUsable):
+                result.append(.passkeyPresenceIndicator(isUsable: isUsable))
             }
+
             if entry.hasValidTOTP {
                 result.append(.otpPresenceIndicator())
             }

@@ -131,7 +131,12 @@ extension SearchQuery {
                 return searchable.isExpired
             case .passkey:
                 guard let entry = searchable as? Entry else { return false }
-                return Passkey.probablyPresent(in: entry)
+                switch Passkey.checkPresence(in: entry) {
+                case .noPasskey:
+                    return false
+                case .passkeyPresent:
+                    return true
+                }
             case .large:
                 let underestimatedSize = searchable.getUnderestimatedSize()
                 return underestimatedSize > 100_000

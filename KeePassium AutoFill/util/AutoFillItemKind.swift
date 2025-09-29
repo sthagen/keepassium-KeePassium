@@ -37,7 +37,12 @@ enum AutoFillItemKind {
         case .otp:
             return entry2.hasValidTOTP
         case .passkey:
-            return Passkey.probablyPresent(in: entry2)
+            switch Passkey.checkPresence(in: entry2) {
+            case .noPasskey:
+                return false
+            case .passkeyPresent:
+                return true
+            }
         }
     }
 }

@@ -35,6 +35,7 @@ public enum SymbolName: String, Equatable {
     public static let managedParameter = Self.person2BadgeGearshape
     public static let oneTimePassword = Self.clock
     public static let passkey = Self.personBadgeKey
+    public static let passkeyBroken = Self.keySlash
     public static let passwordAudit = Self.networkBadgeShield
     public static let smartGroup = Self.magnifyingGlassCircle
     public static let unsavedChanges = Self.externalDriveTriangleBadgeExclamationMark
@@ -123,6 +124,7 @@ public enum SymbolName: String, Equatable {
     case iPhone = "iphone"
     case iPhoneHomeButton = "iphone.homebutton"
     case key = "key.diagonal"
+    case keySlash = "key.slash"
     case keyHorizontal = "key.horizontal"
     case keyboard = "keyboard"
     case listBullet = "list.bullet"

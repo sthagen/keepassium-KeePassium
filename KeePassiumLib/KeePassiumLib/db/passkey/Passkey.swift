@@ -41,24 +41,33 @@ public class Passkey {
         static let ed: UInt8   = 0x80
     }
 
+    fileprivate static let defaultBEFlagSet = true
+    fileprivate static let defaultBSFlagSet = true
+
     let credentialID: Data
     private(set) var privateKeyPEM: String
     public let relyingParty: String
     public let username: String
     let userHandle: Data
+    let beFlag: Bool
+    let bsFlag: Bool
 
     init(
         credentialID: Data,
         privateKeyPEM: String,
         relyingParty: String,
         username: String,
-        userHandle: Data
+        userHandle: Data,
+        beFlag: Bool,
+        bsFlag: Bool
     ) {
         self.credentialID = credentialID
         self.privateKeyPEM = privateKeyPEM
         self.relyingParty = relyingParty
         self.username = username
         self.userHandle = userHandle
+        self.beFlag = beFlag
+        self.bsFlag = bsFlag
     }
 
     public static func make(from entry: Entry) -> Passkey? {
@@ -86,31 +95,17 @@ public class Passkey {
             privateKeyPEM: privateKeyPEM,
             relyingParty: relyingParty,
             username: username,
-            userHandle: userHandle
+            userHandle: userHandle,
+            beFlag: isFlagSet(EntryField.passkeyFlagBE, in: entry2) ?? defaultBEFlagSet,
+            bsFlag: isFlagSet(EntryField.passkeyFlagBS, in: entry2) ?? defaultBSFlagSet
         )
     }
 
-    public static func probablyPresent(in entry: Entry) -> Bool {
-        guard let entry2 = entry as? Entry2 else { return false }
-
-        guard let credentialID = entry2.getField(EntryField.passkeyCredentialID)?.resolvedValue,
-              let privateKeyPEM = entry2.getField(EntryField.passkeyPrivateKeyPEM)?.resolvedValue,
-              let relyingParty = entry2.getField(EntryField.passkeyRelyingParty)?.resolvedValue,
-              let userHandle = entry2.getField(EntryField.passkeyUserHandle)?.resolvedValue,
-              let username = entry2.getField(EntryField.passkeyUsername)?.resolvedValue
-        else {
-            return false
+    fileprivate static func isFlagSet(_ fieldName: String, in entry: Entry2) -> Bool? {
+        guard let flagFieldValue = entry.getField(fieldName)?.resolvedValue else {
+            return nil
         }
-
-        guard credentialID.isNotEmpty,
-              privateKeyPEM.isNotEmpty,
-              relyingParty.isNotEmpty,
-              userHandle.isNotEmpty,
-              username.isNotEmpty
-        else {
-            return false
-        }
-        return true
+        return flagFieldValue == "1"
     }
 
     public func asCredentialIdentity(recordIdentifier: String?) -> ASPasskeyCredentialIdentity {
@@ -121,7 +116,39 @@ public class Passkey {
             userHandle: userHandle,
             recordIdentifier: recordIdentifier)
     }
+}
 
+extension Passkey {
+    public enum PresenceHint {
+        case noPasskey
+        case passkeyPresent(isUsable: Bool)
+    }
+
+    public static func checkPresence(in entry: Entry) -> PresenceHint {
+        guard let entry2 = entry as? Entry2 else { return .noPasskey }
+
+        guard let credentialID = entry2.getField(EntryField.passkeyCredentialID)?.resolvedValue,
+              let privateKeyPEM = entry2.getField(EntryField.passkeyPrivateKeyPEM)?.resolvedValue,
+              let relyingParty = entry2.getField(EntryField.passkeyRelyingParty)?.resolvedValue,
+              let userHandle = entry2.getField(EntryField.passkeyUserHandle)?.resolvedValue,
+              let username = entry2.getField(EntryField.passkeyUsername)?.resolvedValue
+        else {
+            return .noPasskey
+        }
+
+        guard credentialID.isNotEmpty,
+              privateKeyPEM.isNotEmpty,
+              relyingParty.isNotEmpty,
+              userHandle.isNotEmpty,
+              username.isNotEmpty
+        else {
+            return .noPasskey
+        }
+        let flagBE = isFlagSet(EntryField.passkeyFlagBE, in: entry2) ?? defaultBEFlagSet
+        let flagBS = isFlagSet(EntryField.passkeyFlagBS, in: entry2) ?? defaultBSFlagSet
+        let isUsable = flagBE && flagBS
+        return .passkeyPresent(isUsable: isUsable)
+    }
 }
 
 extension Passkey {
@@ -147,7 +174,13 @@ extension Passkey {
     private func getAuthenticatorData() -> Data {
         let rpIDHash = relyingParty.utf8data.sha256.asData
 
-        let flags = AuthDataFlags.uv | AuthDataFlags.up | AuthDataFlags.be | AuthDataFlags.bs
+        var flags = AuthDataFlags.uv | AuthDataFlags.up
+        if beFlag {
+            flags |= AuthDataFlags.be
+        }
+        if bsFlag {
+            flags |= AuthDataFlags.bs
+        }
 
         let counter = Data(repeating: 0, count: 4)
 
@@ -256,7 +289,9 @@ public class NewPasskey: Passkey {
             privateKeyPEM: privateKey.pemRepresentation,
             relyingParty: relyingParty,
             username: username,
-            userHandle: userHandle
+            userHandle: userHandle,
+            beFlag: Self.defaultBEFlagSet,
+            bsFlag: Self.defaultBSFlagSet
         )
     }
 
@@ -286,11 +321,11 @@ public class NewPasskey: Passkey {
         let rpIdHash = CryptoKit.SHA256.hash(data: relyingParty.data(using: .utf8)!)
         authData.append(contentsOf: rpIdHash)
 
-        let flags = AuthDataFlags.at
+        var flags = AuthDataFlags.at
                   | AuthDataFlags.uv
                   | AuthDataFlags.up
-                  | AuthDataFlags.be
-                  | AuthDataFlags.bs
+                  | (beFlag ? AuthDataFlags.be : 0)
+                  | (bsFlag ? AuthDataFlags.bs : 0)
         authData.append(flags)
 
         authData.append(contentsOf: UInt32(0).bigEndian.bytes)
@@ -369,7 +404,15 @@ extension DatabaseOperation {
             EntryField(
                 name: EntryField.passkeyUsername,
                 value: passkey.username,
-                isProtected: false)
+                isProtected: false),
+            EntryField(
+                name: EntryField.passkeyFlagBE,
+                value: passkey.beFlag ? "1" : "0",
+                isProtected: false),
+            EntryField(
+                name: EntryField.passkeyFlagBS,
+                value: passkey.bsFlag ? "1" : "0",
+                isProtected: false),
         ])
         return result
     }

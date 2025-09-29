@@ -289,9 +289,13 @@ extension DatabaseViewerCoordinator.ItemDecorator {
         if entry.attachments.count > 0 {
             result.append(.attachmentPresenceIndicator())
         }
-        if Passkey.probablyPresent(in: entry) {
-            result.append(.passkeyPresenceIndicator())
+
+        switch Passkey.checkPresence(in: entry) {
+        case let .passkeyPresent(isUsable):
+            result.append(.passkeyPresenceIndicator(isUsable: isUsable))
+        case .noPasskey: break
         }
+
         if let otpGenerator = entry.totpGenerator() {
             result.append(.otpCode(
                 generator: otpGenerator,

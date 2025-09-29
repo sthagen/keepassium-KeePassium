@@ -24,12 +24,20 @@ extension UICellAccessory {
         ))
     }
 
-    static func passkeyPresenceIndicator() -> UICellAccessory {
-        let imageView = UIImageView(image: .symbol(
-            .passkey,
-            tint: .secondaryLabel,
-            accessibilityLabel: LString.A11y.containsPasskey
-        ))
+    static func passkeyPresenceIndicator(isUsable: Bool) -> UICellAccessory {
+        let image: UIImage?
+        if isUsable {
+            image = .symbol(
+                .passkey,
+                tint: .secondaryLabel,
+                accessibilityLabel: LString.A11y.containsPasskey)
+        } else {
+            image = .symbol(
+                .passkeyBroken,
+                tint: .errorMessage,
+                accessibilityLabel: LString.A11y.containsIncompatiblePasskey)
+        }
+        let imageView = UIImageView(image: image)
         imageView.isAccessibilityElement = true
         imageView.accessibilityTraits = [.staticText]
         imageView.preferredSymbolConfiguration = UIImage.SymbolConfiguration(textStyle: .body, scale: .default)
