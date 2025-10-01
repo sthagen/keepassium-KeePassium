@@ -125,7 +125,8 @@ class PricingPlanFactory {
              .version99,
              .version120,
              .version139,
-             .version154:
+             .version154,
+             .version166:
             return PricingPlanVersionPurchase(product)
         case .donationSmall,
              .donationMedium,

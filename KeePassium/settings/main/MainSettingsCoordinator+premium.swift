@@ -108,7 +108,8 @@ extension MainSettingsCoordinator {
              .version99,
              .version120,
              .version139,
-             .version154:
+             .version154,
+             .version166:
             assertionFailure("Cannot be subscribed to a version purchase")
             return ""
         case .donationSmall,
