@@ -161,7 +161,9 @@ extension Passkey {
     }
 
     private func signWithPrivateKey(_ challenge: Data) -> Data? {
-        return signUsingES256(challenge) ?? signUsingEd25519(challenge)
+        return signUsingES256(challenge)
+            ?? signUsingEd25519(challenge)
+            ?? signUsingRS256(challenge)
     }
 
     private func signUsingES256(_ challenge: Data) -> Data? {
@@ -207,6 +209,29 @@ extension Passkey {
             let message = (error as NSError).debugDescription
             log.error("Failed to sign using EdDSA: \(message, privacy: .public)")
             Diag.error("Failed to sign using EdDSA [message: \(message)]")
+            return nil
+        }
+    }
+
+    private func signUsingRS256(_ challenge: Data) -> Data? {
+        let privateKey: RS256PrivateKey
+        do {
+            privateKey = try RS256PrivateKey(pemRepresentation: privateKeyPEM)
+        } catch {
+            let message = (error as NSError).debugDescription
+            log.debug("Failed to parse as RS256 private key: \(message, privacy: .public)")
+            Diag.debug("Failed to parse as RS256 private key [message: \(message)]")
+            return nil
+        }
+        do {
+            let signature = try privateKey.signature(for: challenge)
+            log.debug("Signed with RS256")
+            Diag.debug("Signed with RS256")
+            return signature
+        } catch {
+            let message = (error as NSError).debugDescription
+            log.error("Failed to sign using RS256: \(message, privacy: .public)")
+            Diag.error("Failed to sign using RS256 [message: \(message)]")
             return nil
         }
     }
