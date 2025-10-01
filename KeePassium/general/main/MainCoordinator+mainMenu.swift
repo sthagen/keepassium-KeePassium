@@ -15,7 +15,7 @@ extension MainCoordinator {
 
     override func buildMenu(with builder: UIMenuBuilder) {
         guard builder.system == UIMenuSystem.main,
-              ProcessInfo.isRunningOnMac
+              UIDevice.current.userInterfaceIdiom == .mac || UIDevice.current.userInterfaceIdiom == .pad
         else {
             return
         }

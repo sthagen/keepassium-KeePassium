@@ -109,6 +109,7 @@ class FilePickerCoordinator: BaseCoordinator, FilePickerVC.Delegate {
         }
         _updateAnnouncements()
         _filePickerVC.refresh(animated: animated)
+        UIMenu.rebuildMainMenu()
     }
 
     internal func _updateAnnouncements() {

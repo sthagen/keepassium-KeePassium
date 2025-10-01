@@ -111,9 +111,12 @@ final public class NavigationRouter: NSObject {
         let navVC = RouterNavigationController()
         let router = NavigationRouter(navVC)
         navVC.modalPresentationStyle = style
+        if style == .popover && popoverAnchor == nil {
+            assert(popoverAnchor != nil, "Popover without anchor would fail")
+            navVC.modalPresentationStyle = .pageSheet
+        }
         navVC.presentationController?.delegate = router
         if let popover = navVC.popoverPresentationController {
-            assert(popoverAnchor != nil, "Popover without anchor will fail")
             popoverAnchor?.apply(to: popover)
             popover.delegate = router
         }
