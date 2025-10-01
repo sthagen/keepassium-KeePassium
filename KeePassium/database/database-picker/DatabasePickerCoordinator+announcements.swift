@@ -21,6 +21,15 @@ extension DatabasePickerCoordinator {
             announcements.append(makePendingTransactionsAnnouncement(for: _filePickerVC))
         }
 
+        #if MAIN_APP
+        if let whatsNewAnnouncement = WhatsNewHelper.makeAnnouncement(
+            presenter: _filePickerVC,
+            completion: { [weak self] in self?.refresh(animated: true, reloadInfo: false) }
+        ) {
+            announcements.append(whatsNewAnnouncement)
+        }
+        #endif
+
         if ProcessInfo.isRunningOnMac,
            _filePickerVC.isEditing
         {

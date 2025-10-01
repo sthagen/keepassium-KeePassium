@@ -32,6 +32,13 @@ extension DatabaseViewerCoordinator {
             ))
         }
 
+        if let whatsNewAnnouncement = WhatsNewHelper.makeAnnouncement(
+            presenter: _topGroupViewer,
+            completion: { [weak self] in self?.refresh(animated: true) }
+        ) {
+            announcements.append(whatsNewAnnouncement)
+        }
+
         if let appLockSetupAnnouncement = maybeMakeAppLockSetupAnnouncement(for: _topGroupViewer) {
             announcements.append(appLockSetupAnnouncement)
         }

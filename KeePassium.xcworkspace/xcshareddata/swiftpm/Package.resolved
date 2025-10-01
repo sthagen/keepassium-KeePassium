@@ -1,5 +1,5 @@
 {
-  "originHash" : "7f5b2f481ce083b4b27ca9bfc941bdd488b028105752a5a62d1afca50f3a5f43",
+  "originHash" : "8046833e31d20d3895f6c779280ffa5759be7f989043e021d84b8bb0ff8bb3c6",
   "pins" : [
     {
       "identity" : "asn1swift",
@@ -44,6 +44,15 @@
       "state" : {
         "branch" : "keepassium",
         "revision" : "2f8a1cae6b578423d9941b89a0f07c6cce1e1c22"
+      }
+    },
+    {
+      "identity" : "whatsnewkit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/keepassium/WhatsNewKit",
+      "state" : {
+        "branch" : "keepassium-166",
+        "revision" : "e64c7d625ca65dfaeeddb1045757619328beff01"
       }
     },
     {

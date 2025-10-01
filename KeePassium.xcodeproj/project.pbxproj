@@ -14,6 +14,8 @@
 		750CFBD321BA9ACD00E62B09 /* KeePassium AutoFill.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 750CFBC721BA9ACD00E62B09 /* KeePassium AutoFill.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		750CFBD721BA9B6200E62B09 /* KeePassiumLib.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 75FEC2222175292C0034334B /* KeePassiumLib.framework */; };
 		751146E6233F9E2900443BCD /* KeePassiumLib.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 751146E5233F9E2900443BCD /* KeePassiumLib.framework */; };
+		7521EAD82E8D55B700016FB8 /* WhatsNewKit in Frameworks */ = {isa = PBXBuildFile; productRef = 7521EAD72E8D55B700016FB8 /* WhatsNewKit */; };
+		7521EADA2E8D55BE00016FB8 /* WhatsNewKit in Frameworks */ = {isa = PBXBuildFile; productRef = 7521EAD92E8D55BE00016FB8 /* WhatsNewKit */; };
 		7550D242215D792000360E0C /* AuthenticationServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7550D231215D758800360E0C /* AuthenticationServices.framework */; };
 		756D946D2BA2F27D0084BDF5 /* YubiKit in Frameworks */ = {isa = PBXBuildFile; productRef = 756D946C2BA2F27D0084BDF5 /* YubiKit */; settings = {ATTRIBUTES = (Weak, ); }; };
 		756D946F2BA2F29F0084BDF5 /* YubiKit in Frameworks */ = {isa = PBXBuildFile; productRef = 756D946E2BA2F29F0084BDF5 /* YubiKit */; };
@@ -56,6 +58,7 @@
 		F331EF2C2A8509AC0084473D /* Zxcvbn in Frameworks */ = {isa = PBXBuildFile; productRef = F331EF2B2A8509AC0084473D /* Zxcvbn */; };
 		F331EF2E2A8509B30084473D /* Zxcvbn in Frameworks */ = {isa = PBXBuildFile; productRef = F331EF2D2A8509B30084473D /* Zxcvbn */; };
 		F331EF302A8509BA0084473D /* Zxcvbn in Frameworks */ = {isa = PBXBuildFile; productRef = F331EF2F2A8509BA0084473D /* Zxcvbn */; };
+		F33344362E844F90002EE262 /* WhatsNewKit in Frameworks */ = {isa = PBXBuildFile; productRef = F33344352E844F90002EE262 /* WhatsNewKit */; };
 		F37CAA492A88F7E30000EF64 /* YubiKit in Frameworks */ = {isa = PBXBuildFile; productRef = F37CAA482A88F7E30000EF64 /* YubiKit */; };
 		F37CAA4B2A88F7E30000EF64 /* Zxcvbn in Frameworks */ = {isa = PBXBuildFile; productRef = F37CAA4A2A88F7E30000EF64 /* Zxcvbn */; };
 /* End PBXBuildFile section */
@@ -667,6 +670,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				75FEC2232175292C0034334B /* KeePassiumLib.framework in Frameworks */,
+				F33344362E844F90002EE262 /* WhatsNewKit in Frameworks */,
 				75CD363F21521FAF0018AF46 /* LocalAuthentication.framework in Frameworks */,
 				7550D242215D792000360E0C /* AuthenticationServices.framework in Frameworks */,
 				75A26778228F4E820097C693 /* StoreKit.framework in Frameworks */,
@@ -680,6 +684,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7598963F2341590300DF39AA /* KeePassiumLib.framework in Frameworks */,
+				7521EAD82E8D55B700016FB8 /* WhatsNewKit in Frameworks */,
 				75B38C4E233E5B7C006BDEFC /* LocalAuthentication.framework in Frameworks */,
 				75B38C4D233E5B7C006BDEFC /* AuthenticationServices.framework in Frameworks */,
 				75B38C4F233E5B7C006BDEFC /* StoreKit.framework in Frameworks */,
@@ -704,6 +709,7 @@
 				75D218F829C21FCB00D6F327 /* MessageUI.framework in Frameworks */,
 				75D218FC29C2205700D6F327 /* CoreServices.framework in Frameworks */,
 				75A5452728B64F9000B942FE /* IntuneMAMSwiftStub.xcframework in Frameworks */,
+				7521EADA2E8D55BE00016FB8 /* WhatsNewKit in Frameworks */,
 				75D2191629C2215600D6F327 /* libsqlite3.tbd in Frameworks */,
 				75D0766E28B639D200F02E39 /* AuthenticationServices.framework in Frameworks */,
 				75D2192F29C4C24800D6F327 /* MSAL in Frameworks */,
@@ -859,6 +865,7 @@
 			packageProductDependencies = (
 				75D1C58527B415480079E97E /* YubiKit */,
 				F331EF272A8509860084473D /* Zxcvbn */,
+				F33344352E844F90002EE262 /* WhatsNewKit */,
 			);
 			productName = KeePassium;
 			productReference = 754BF07B2082A6BD00E3A292 /* KeePassium.app */;
@@ -887,6 +894,7 @@
 			packageProductDependencies = (
 				75D1C58727B4155E0079E97E /* YubiKit */,
 				F331EF2B2A8509AC0084473D /* Zxcvbn */,
+				7521EAD72E8D55B700016FB8 /* WhatsNewKit */,
 			);
 			productName = KeePassium;
 			productReference = 75B38C81233E5B7C006BDEFC /* KeePassium Pro.app */;
@@ -915,6 +923,7 @@
 				75D075AE28B639D200F02E39 /* YubiKit */,
 				75D2192E29C4C24800D6F327 /* MSAL */,
 				F331EF2F2A8509BA0084473D /* Zxcvbn */,
+				7521EAD92E8D55BE00016FB8 /* WhatsNewKit */,
 			);
 			productName = KeePassium;
 			productReference = 75D076D828B639D200F02E39 /* KeePassium Org.app */;
@@ -1072,6 +1081,7 @@
 				75D1C58427B415480079E97E /* XCRemoteSwiftPackageReference "yubikit-ios" */,
 				75D2192B29C4C23700D6F327 /* XCRemoteSwiftPackageReference "microsoft-authentication-library-for-objc" */,
 				F331EF262A8509860084473D /* XCRemoteSwiftPackageReference "zxcvbn-ios" */,
+				F33344342E844F90002EE262 /* XCRemoteSwiftPackageReference "WhatsNewKit" */,
 			);
 			preferredProjectObjectVersion = 48;
 			productRefGroup = 754BF07C2082A6BD00E3A292 /* Products */;
@@ -1948,9 +1958,27 @@
 				kind = branch;
 			};
 		};
+		F33344342E844F90002EE262 /* XCRemoteSwiftPackageReference "WhatsNewKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/keepassium/WhatsNewKit";
+			requirement = {
+				branch = "keepassium-166";
+				kind = branch;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		7521EAD72E8D55B700016FB8 /* WhatsNewKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F33344342E844F90002EE262 /* XCRemoteSwiftPackageReference "WhatsNewKit" */;
+			productName = WhatsNewKit;
+		};
+		7521EAD92E8D55BE00016FB8 /* WhatsNewKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F33344342E844F90002EE262 /* XCRemoteSwiftPackageReference "WhatsNewKit" */;
+			productName = WhatsNewKit;
+		};
 		756D946C2BA2F27D0084BDF5 /* YubiKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 75D1C58427B415480079E97E /* XCRemoteSwiftPackageReference "yubikit-ios" */;
@@ -2005,6 +2033,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = F331EF262A8509860084473D /* XCRemoteSwiftPackageReference "zxcvbn-ios" */;
 			productName = Zxcvbn;
+		};
+		F33344352E844F90002EE262 /* WhatsNewKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F33344342E844F90002EE262 /* XCRemoteSwiftPackageReference "WhatsNewKit" */;
+			productName = WhatsNewKit;
 		};
 		F37CAA482A88F7E30000EF64 /* YubiKit */ = {
 			isa = XCSwiftPackageProductDependency;

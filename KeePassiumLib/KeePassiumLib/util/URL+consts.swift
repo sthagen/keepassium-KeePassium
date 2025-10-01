@@ -36,8 +36,10 @@ extension URL {
             }
         }
     }
+
     public enum AppHelp {
         public static let helpIndex = URL(string: "https://keepassium.com/apphelp/")!
+        public static var changeLog = URL(string: "https://keepassium.com/changelog/")!
 
         public static let termsAndConditions = URL(string: "https://keepassium.com/terms/app")!
         public static let privacyPolicyOfflineMode = URL(string: "https://keepassium.com/privacy/app")!
