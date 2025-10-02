@@ -79,13 +79,17 @@ final class LargeTypeVC: UICollectionViewController {
         collectionView.contentInsetAdjustmentBehavior = .always
 
         registerCellClasses(collectionView)
-        computePreferredSize()
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(refresh),
             name: UIAccessibility.differentiateWithoutColorDidChangeNotification,
             object: nil
         )
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        computePreferredSize()
     }
 
     private func registerCellClasses(_ collectionView: UICollectionView) {
@@ -114,7 +118,7 @@ final class LargeTypeVC: UICollectionViewController {
     }
 
     func getEstimatedRowCount(atSize size: CGSize) -> Int {
-        computePreferredSize()
+        computeRowsAndColumns(for: size)
         return rows
     }
 
