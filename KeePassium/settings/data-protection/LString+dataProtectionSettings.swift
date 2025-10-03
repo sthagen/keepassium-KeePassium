@@ -19,10 +19,6 @@ extension LString {
         "[Settings/QuickUnlock/title]",
         value: "Quick Unlock",
         comment: "Title of a section in settings")
-    public static let rememberMasterKeysLongDescription = NSLocalizedString(
-        "[Settings/MasterKeys/Remember/longDescription]",
-        value: "Once you unlock a database, its master key can be stored in device's secure keychain. The next time, KeePassium will use that key so you won't have to type your full master password again. \n\n(Master keys are automatically cleared on database timeout.)",
-        comment: "Description of the 'Remember Master Keys' setting.")
     public static let rememberMasterKeysDescription = NSLocalizedString(
         "[Settings/MasterKeys/Remember/description]",
         value: "Once you unlock a database, its master key can be stored in device's secure keychain. The next time, KeePassium will use that key so you won't have to type your full master password again.",

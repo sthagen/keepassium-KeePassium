@@ -26,13 +26,6 @@ extension LString {
         value: "Select Field",
         comment: "Call for action to select an entry field for filling out."
     )
-
-    public static let autoCopyMenuTitle = NSLocalizedString(
-        "[AutoFill/Search/autoCopyMenuTitle]",
-        value: "Auto-copy to Clipboard",
-        comment: "Title for the menu that allows selecting a field to be copied to clipboard automatically."
-    )
-
     public static let autoFillRecentlyUsedSectionTitle = NSLocalizedString(
         "[AutoFill/RecentlyUsed/title]",
         value: "Recently Used",
