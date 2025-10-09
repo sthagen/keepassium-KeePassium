@@ -30,6 +30,15 @@ extension AutoFillCoordinator: WatchdogDelegate {
         }
         let shouldUseBiometrics = canUseBiometrics()
 
+        let timeSinceLastBiometricSuccess = abs(_lastSuccessfulBiometricAuthTime.timeIntervalSinceNow)
+        if shouldUseBiometrics
+            && timeSinceLastBiometricSuccess < LAContext.biometricAuthReuseDuration
+        {
+            print("Skipping repeated biometric prompt")
+            watchdog.unlockApp()
+            return
+        }
+
         let passcodeInputVC = PasscodeInputVC.instantiateFromStoryboard()
         passcodeInputVC.delegate = self
         passcodeInputVC.mode = .verification
@@ -108,6 +117,7 @@ extension AutoFillCoordinator: WatchdogDelegate {
         if timeSinceLastSuccess < LAContext.biometricAuthReuseDuration {
             print("Skipping repeated biometric prompt")
             watchdog.unlockApp()
+            return
         }
 
         Diag.debug("Biometric auth: showing request")
