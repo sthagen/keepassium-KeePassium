@@ -9,6 +9,7 @@
 extension LString {
     public static let titleDiagnosticLog = NSLocalizedString(
         "[DiagLog/title]",
+        bundle: Bundle.framework,
         value: "Diagnostic Log",
         comment: "Title of the diagnostic info screen")
 
