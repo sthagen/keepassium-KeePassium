@@ -92,19 +92,8 @@ final class OnboardingCoordinator: BaseCoordinator {
                 UIAction(title: LString.Onboarding.createNewDatabaseAction) { [unowned self] _ in
                     self.delegate?.didPressCreateDatabase(in: self)
                 },
-                UIAction(
-                    title: LString.Onboarding.addExistingDatabaseAction,
-                    attributes: ManagedAppConfig.shared.areSystemFileProvidersAllowed ? [] : [.hidden]
-                ) { [unowned self] _ in
-                    self.delegate?.didPressAddExistingDatabase(in: self)
-                },
-                UIAction(
-                    title: LString.Onboarding.connectToServerAction,
-                    attributes: ManagedAppConfig.shared.areInAppFileProvidersAllowed ? [] : [.hidden]
-                ) { [unowned self] _ in
-                    self.delegate?.didPressConnectToServer(in: self)
-                }
-            ]
+            ],
+            skipAction: UIAction(title: LString.actionContinue) { [weak self] _ in self?.showNext() }
         ),
     ]
 
