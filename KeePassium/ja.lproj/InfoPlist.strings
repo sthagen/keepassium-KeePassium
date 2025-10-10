@@ -16,6 +16,6 @@
 /* Privacy - Photo Library Additions Usage Description */
 "NSPhotoLibraryAddUsageDescription" = "写真ライブラリにファイルをエクスポートするには権限をKeePassiumに与える必要があります。";
 
-/* (No Comment) */
-"NSPhotoLibraryUsageDescription" = "カスタムアイコンをグループやエントリに設定するには、写真へのアクセスをKeePassiumに与える必要があります。";
+/* Privacy - Photo Library Usage Description */
+"NSPhotoLibraryUsageDescription" = "カスタムアイコン用画像の選択とOTP設定用のQRコードのスキャンを行うには、KeePassiumにアクセス許可を与える必要があります。";
 

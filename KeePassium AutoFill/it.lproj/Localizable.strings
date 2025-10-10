@@ -1,17 +1,38 @@
 /* Notification when user tries to set up too weak an app protection passcode. */
-"[AppLock/weakPasscodeWarning]" = "Questo codice è facile da indovinare. Prova a inserirne uno più forte.";
+"[AppLock/weakPasscodeWarning]" = "Questo codice è facile da indovinare. Prova a inserirne uno più complesso.";
+
+/* Action in AutoFill: choose the entry and remember it for future use on this website. */
+"[AutoFill/AcceptAndRemember/action]" = "Accetta e ricorda";
+
+/* Title of a list */
+"[AutoFill/AllEntries/title]" = "Tutte le voci";
+
+/* Title of AutoFill context when no context is available. Usage: `Context: Unknown` */
+"[AutoFill/Context/Empty/title]" = "Sconosciuto";
+
+/* Title of a list with search results */
+"[AutoFill/FoundEntries/title]" = "Migliori corrispondenze";
 
 /* Call for action to select an entry field for filling out. */
 "[AutoFill/InsertText/select]" = "Seleziona campo";
 
-/* An identifier of the app that called AutoFill. The term is intentionally similar to https://ru.wikipedia.org/wiki/Caller_ID. [callerID: String] */
-"[AutoFill/Search/callerID]" = "ID chiamante: %@";
+/* Section title for the recently used entry in AutoFill */
+"[AutoFill/RecentlyUsed/title]" = "Usati di recente";
 
-/* Status message, shows which app or webpage launched AutoFill. For example: `Context: google.com` */
-"[AutoFill/Search/context]" = "Contesto: %@";
+/* Not an action, but a button to activate the same-named setting */
+"[AutoFill/RememberContext/action]" = "Ricorda le voci selezionate";
+
+/* Call to action */
+"[AutoFill/RememberContext/callToAction]" = "Migliora i suggerimenti di Inserimento automatico";
+
+/* Description of the 'Remember Selected Entries` feature */
+"[AutoFill/RememberContext/description]" = "KeePassium ricorderà le voci che selezioni per ogni sito web e quindi le suggerirà automaticamente.";
+
+/* Title for referring to the app or webpage that launched AutoFill. For example: `Context: google.com` */
+"[AutoFill/Search/Context/title]" = "Contesto";
 
 /* No comment provided by engineer. */
-"[AutoFill/Setup/footer]" = "L'inserimento automatico non può accedere automaticamente ai file che hai già nell'app principale di KeePassium.\n\nPerché? Dietro le quinte, il sistema tratta l'inserimento automatico come un'app separata, indipendente dal processo principale di KeePassium. Per ragioni di sicurezza, un’app non può semplicemente accedere a qualsiasi file esterno, a meno che non si colleghino esplicitamente questi file all'app. In questo modo, il sistema garantisce che l'applicazione possa accedere solo ai file per cui ha il permesso.\n\nDi conseguenza, sia l'inserimento automatico che l'app principale di KeePassium devono avere la loro autorizzazione per ogni file esterno. Per fortuna si tratta di una procedura da eseguire una sola volta.";
+"[AutoFill/Setup/footer]" = "L'inserimento automatico non può accedere automaticamente ai file che hai già nell'app principale di KeePassium.\n\nPerché? Dietro le quinte, il sistema tratta l'inserimento automatico come un'app separata, indipendente dal processo principale di KeePassium. Per ragioni di sicurezza, un’app non può semplicemente accedere a qualsiasi file esterno, a meno che il file non venga esplicitamente collegato all'app. In questo modo, il sistema si assicura che l'app abbia accesso solo ai file che tu hai autorizzato.\n\nDi conseguenza, sia l'inserimento automatico che l'app principale di KeePassium devono avere la loro autorizzazione specifica per ogni file esterno. Fortunatamente, dovrai dare questa autorizzazione una sola volta.";
 
 /* Must match Apple's translation, as found in iOS 18 Settings → General → AutoFill & Passwords. If unsure, leave untranslated. */
 "[AutoFill/Setup/UncheckKeychain/autofillFrom]" = "Inserisci automaticamente da:";
@@ -20,19 +41,34 @@
 "[AutoFill/Setup/UncheckKeychain/callToAction]" = "Deseleziona Portachiavi";
 
 /* Instruction to deselect another app in the settings [appName: String] */
-"[AutoFill/Setup/UncheckKeychain/message]" = "Per assicurare che KeePassium sia il tuo gestore password di default, deseleziona \"%@\".";
+"[AutoFill/Setup/UncheckKeychain/message]" = "Per rendere KeePassium il tuo gestore password di default, deseleziona \"%@\".";
 
 /* Must match Apple's translation, as found in iOS 17 Settings → Passwords → Password Options. If unsure, leave untranslated. */
 "[AutoFill/Setup/UncheckKeychain/usePasswordsAndPasskeysFrom]" = "Utilizza le password e le passkey da:";
 
+/* Field title: name of the group that contains the entry */
+"[Database/Entry/Location/title]" = "Posizione";
+
+/* Title of a list with randomly generated usernames */
+"[Database/Entry/RandomUsernames/title]" = "Nomi utente casuali";
+
+/* Action/button that shows a list of usernames to pick from */
+"[Database/Entry/SelectUsername/action]" = "Seleziona nome utente";
+
+/* Action: select item from a list/menu, with item name in quotes. For example: `Select "Sample Group"` */
+"[Database/Item/SelectNamed/action]" = "Seleziona \"%@\"";
+
 /* Action: create a passkey and add it to existing entry */
-"[Database/Passkey/AddToExisting/action]" = "Aggiungi una chiave d'accesso alla voce esistente";
+"[Database/Passkey/AddToExisting/action]" = "Aggiungi una passkey alla voce esistente";
+
+/* Call to action: select an existing entry to add a new passkey to */
+"[Database/Passkey/AddToExisting/callToAction]" = "Scegliere una voce per la nuova passkey";
 
 /* Confirmation message before replacing an existing passkey. */
-"[Database/Passkey/AddToExisting/confirm]" = "Questa voce ha già una chiave d'accesso. Sostituirla?";
+"[Database/Passkey/AddToExisting/confirm]" = "A questa voce è già stata associata una passkey. Vuoi sostituirla?";
 
 /* Title of an optional dialog for creating new passkeys */
-"[Database/Passkey/Create/title]" = "Creare una chiave d'accesso?";
+"[Database/Passkey/Create/title]" = "Creare una passkey?";
 
 /* Name of the Apple Passwords application, see https://support.apple.com/120758 */
 "[Generic/ApplePasswordsApp/title]" = "Password";
@@ -53,7 +89,7 @@
 "[PasswordQuality/Level] Very good" = "Ottima";
 
 /* Very weak password quality */
-"[PasswordQuality/Level] Very weak" = "Molto debole";
+"[PasswordQuality/Level] Very weak" = "Pessima";
 
 /* Weak password quality */
 "[PasswordQuality/Level] Weak" = "Debole";
@@ -69,4 +105,7 @@
 
 /* Call to action, invites the user to enable the Quick AutoFill feature */
 "[QuickAutoFill/Activate/callToAction]" = "Attiva inserimento automatico rapido";
+
+/* Placeholder text for empty search results */
+"[Search/EmptyResult/title]" = "Nessuna corrispondenza trovata";
 

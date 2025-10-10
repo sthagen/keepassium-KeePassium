@@ -1,6 +1,3 @@
-/* Menu item that shows info about KeePassium app */
-"[About/altTitle]" = "Про KeePassium";
-
 /* Copyright notice */
 "[About/CopyrightAuthor]" = "©Андрій Поплетєєв";
 
@@ -10,6 +7,15 @@
 /* Call to action: perform accessibilty `activate` action to listen to text/content. */
 "[Accessibility/activateToListen]" = "Активуйте, щоб слухати.";
 
+/* Accessibility notification for entries with attached files. */
+"[Accessibility/containsAttachments]" = "Містить прикріплені файли.";
+
+/* Accessibility notification for entries with a problematic passkey */
+"[Accessibility/containsIncompatiblePasskey]" = "Містить ключ допуску, несумісний із цим пристроєм.";
+
+/* Accessibility notification for entries with OTP codes. */
+"[Accessibility/containsOTP]" = "Містить одноразовий пароль.";
+
 /* Accessibility notification for entries with a passkey */
 "[Accessibility/containsPasskey]" = "Містить ключ допуску.";
 
@@ -18,24 +24,6 @@
 
 /* Confirmation message before resetting the app to just-installed state. */
 "[App/ResetEverything/title]" = "Скинути застосунок?";
-
-/* Section in settings: icon for the app */
-"[Appearance/AppIcon/title]" = "Значок програми";
-
-/* Section in settings: icons for database */
-"[Appearance/DatabaseIcons/title]" = "Іконки бази даних";
-
-/* Short name of the default/system font. For example: `Font: Default` */
-"[Appearance/DefaultFont/shortTitle]" = "За замовчуванням";
-
-/* Title of a setting option: font */
-"[Appearance/Font/title]" = "Шрифт";
-
-/* Title of a setting option: font size */
-"[Appearance/TextSize/title]" = "Розмір тексту";
-
-/* Group of settings for user interface appearance (text size, icons, etc) */
-"[Appearance/title]" = "Зовнішній вигляд";
 
 /* Action/button to unlock the App Lock with passcode */
 "[AppLock] Unlock" = "Розблокувати";
@@ -85,6 +73,24 @@
 /* Title of a message related to upgrading to the premium version */
 "[AutoFill/Premium/Upgrade/Manual/title] Premium Upgrade" = "Перейти на преміум";
 
+/* Call to action / instruction on how to enable accessibility permission */
+"[AutoType/AccessibilityPrompt/callToAction]" = "Відкрийте системні налаштування → Конфіденційність і безпека → Універсальний доступ і увімкніть KeePassium там.";
+
+/* Message explaining why accessibility permission is needed */
+"[AutoType/AccessibilityPrompt/message]" = "KeePassium потрібен дозвіл на надсилання натискань клавіш в інші додатки.";
+
+/* Title of a dialog asking user to provide a security permission */
+"[AutoType/AccessibilityPrompt/title]" = "KeePassium потрібен дозвіл";
+
+/* Action: send key presses to 'type in' entry data into another app */
+"[AutoType/action]" = "Виконати автозаповнення";
+
+/* Button to open system settings (accessibility, permissions, etc) */
+"[AutoType/Action/OpenSettings]" = "Відкрити налаштування";
+
+/* Title for error when auto-type fails */
+"[AutoType/Error/Title]" = "Помилка автозаповнення";
+
 /* Name of biometric authentication method. Trademarked, do not translate unless Apple traslated it to your language. */
 "[BiometricAuthType] Face ID" = "Face ID";
 
@@ -121,9 +127,6 @@
 /* Notification: an item has been copied to clipboard */
 "[Clipboard/Copy/notification]" = "Скопійовано";
 
-/* Subtitle for `Contact Us`. Keep it short. */
-"[ContactUs/subtitle]" = "Ідеї? Питання? Повідомте нас!";
-
 /* Error message about AES cipher. [errorCode: Int] */
 "[CryptoError] AES decryption error (code %d)" = "Помилка розшифровки AES (код %d)";
 
@@ -156,6 +159,12 @@
 
 /* Action: add/import an image as a custom icon */
 "[Database/CustomIcon/add]" = "Додати свою іконку";
+
+/* Notification when some custom icons are about to be deleted [iconCount: Int] */
+"[Database/CustomIcon/All/count]" = "Усі свої іконки: %d";
+
+/* Action: delete all custom icons */
+"[Database/CustomIcon/deleteAll]" = "Видалити все";
 
 /* Action: delete unused icons */
 "[Database/CustomIcon/deleteUnused]" = "Видалити невикористані значки";
@@ -246,6 +255,12 @@
 
 /* Notification when user tries to copy data from KDBX to older KDB database. */
 "[Database/LesserTargetFormat/warning]" = "Це старий формат бази даних, деякі дані можуть бути втрачені.";
+
+/* Placeholder shown when there are no database files available */
+"[Database/List/empty]" = "Відсутні бази паролів";
+
+/* Call to action. 'Open' here is used as 'launch'. */
+"[Database/List/LocalMissing/callToAction]" = "Відкрити додаток";
 
 /* Recommendation for solving a problem with a list of files. */
 "[Database/List/LocalMissing/message]" = "Якщо деяких локальних файлів немає в списку, спочатку запустіть головний застосунок KeePassium.";
@@ -379,6 +394,9 @@
 /* Status message: saving a database */
 "[Database/Saving/Status] Saving..." = "Збереження...";
 
+/* File access parameter. Will be shown as 'Consider File Unreachable: Immediately' */
+"[Database/Settings/ConsiderFileUnreachable/Immediately]" = "Негайно";
+
 /* File settings parameter: time after which file will be considered unreachable. Example: `Consider File Unreachable: in 10 seconds`.) */
 "[Database/Settings/ConsiderFileUnreachable/title]" = "Вважати файл недоступним";
 
@@ -445,14 +463,14 @@
 /* Title of a message shown when saving to a database that has already been modified elsewhere. */
 "[Database/SyncConflict/title]" = "Конфлікт синхронізації";
 
-/* Error message related to key file. [errorDetails: String] */
-"[Database/Unlock] Key file error: %@" = "Проблема з файл-ключом: %@";
-
 /* Error message */
 "[Database/Unlock/Error] Failed to open key file" = "Не вдалося відкрити файл-ключ";
 
 /* Error message */
 "[Database/Unlock/Error] Password and key file are both empty." = "І пароль, і файл-ключ порожні.";
+
+/* Action: load a local (on-device) copy of a remote database */
+"[Database/Unlock/UseFallback/action]" = "Використовувати локальну копію";
 
 /* Message shown when user enters an invalid database password */
 "[Database/Unlock/wrongPassword/question]" = "Забули свій пароль?";
@@ -463,8 +481,17 @@
 /* Notification message */
 "[Database/UnsavedChanges/cannotModifyYet]" = "На жаль, автозаповнення поки що не може змінити великі бази паролів. Ми працюємо над цим.";
 
+/* Notification message */
+"[Database/UnsavedChanges/couldNotApply]" = "Деякі зміни в черзі не вдалося застосувати автоматично; останні модифікації можуть бути відсутніми.";
+
 /* Call to action shown in AutoFill module. */
 "[Database/UnsavedChanges/OpenAppCallToAction]" = "Щоб зберегти зміни, відкрийте основний додаток KeePassium.";
+
+/* Notification message about a problem with unsaved/pending changes. */
+"[Database/UnsavedChanges/Problematic/info]" = "Деякі зміни в черзі стосуються відсутніх записів або груп. KeePassium створить ці елементи в окремій групі й застосує зміни там.";
+
+/* Title of a group where problematic pending changes are saved. %@ is the date of recovery. */
+"[Database/UnsavedChanges/RecoveredEntriesGroup/name]" = "Відновлені зміни (%@)";
 
 /* Action/button to save accummulated modifications */
 "[Database/UnsavedChanges/saveAction]" = "Зберегти зміни";
@@ -628,9 +655,6 @@
 /* Error message: user provided a wrong master key for decryption. */
 "[DatabaseError] Invalid password or key file" = "Неправильний пароль або файл-ключ";
 
-/* Subtitle for `Diagnostic Log`. Keep it short. */
-"[DiagLog/subtitle]" = "Для вирішення проблем";
-
 /* Title of the diagnostic info screen */
 "[DiagLog/title]" = "Діагностика";
 
@@ -670,11 +694,20 @@
 /* Default name of a newly created entry field */
 "[Entry/Edit/CreateField/defaultName] Field Name" = "Назва поля";
 
+/* Action/button to add a new field to the entry */
+"[Entry/Field/Add/action]" = "Додати поле";
+
+/* On/off state: whether to show full-size or compact menu */
+"[Entry/Field/CompactMenu/title]" = "Компактне подання";
+
 /* Notification: a reference to an entry field has been copied to clipboard */
 "[Entry/Field/CopyReference/acknowledgement]" = "Посилання на поле скопійовано в буфер обміну";
 
 /* Action: copy a reference to the selected entry field to clipboard */
 "[Entry/Field/CopyReference/action]" = "Скопіювати посилання на поле";
+
+/* Title for a generic user-defined entry field. */
+"[Entry/Field/Custom/title]" = "Своє поле";
 
 /* Action: display text using large font */
 "[Entry/Field/LargeType/action]" = "Використати великий шрифт";
@@ -703,11 +736,20 @@
 /* Title of a setting: whether the entry's field is protected (shown as asterisks). */
 "[Entry/Field/Protected/title]" = "Захищене поле";
 
+/* Action: display text using QR code */
+"[Entry/Field/QRCode/action]" = "Показати як QR-код";
+
 /* Name of an entry field */
 "[Entry/Field/tags] Tags" = "Теги";
 
+/* Title of an alternative URL, with a number [number: String] */
+"[Entry/Field/URL/Extra/title]" = "URL (%d)";
+
 /* Status message: loading file to be attached to an entry */
 "[Entry/Files/Add] Loading attachment file" = "Завантаження прикріпленого файлу";
+
+/* Title of a list with frequently used entry fields. */
+"[Entry/FrequentlyUsedFields/title]" = "Часто використовувані";
 
 /* Title of a field with entry creation date and time */
 "[Entry/History] Creation Date" = "Дата створення";
@@ -949,6 +991,9 @@
 /* Placeholder for folders without files */
 "[General/FileList/Empty/title]" = "Папка порожня";
 
+/* Info message for keyboard-assisted selection */
+"[General/MultiSelectionKeys/hint]" = "Натисніть і утримуйте клавішу Cmd або Shift для вибору декількох елементів.";
+
 /* Action/button to cancel whatever is going on */
 "[Generic] Cancel" = "Скасувати";
 
@@ -990,6 +1035,9 @@
 
 /* Action/button shown below error messages. Tapping the button will start the fixing/repairing workflow described in the error message. */
 "[Generic] Fix this" = "Виправити це";
+
+/* Action/button to import an item to another app */
+"[Generic] Import" = "Імпортувати";
 
 /* Action/button to view more help/info about some topic */
 "[Generic] Learn more" = "Детальніше…";
@@ -1048,6 +1096,9 @@
 /* Action/button to select some items in a list. */
 "[Generic/Action/SelectItems]" = "Вибрати";
 
+/* Number of entries found in an incoming file. For example: 'Found entries: 42' [itemCount: Int] */
+"[Generic/Count/ImportedEntries]" = "Знайдено записів: %d";
+
 /* Name of the Recently Deleted (Recycle Bin) directory, as shown in the Files app */
 "[Generic/Directory/Recently Deleted/name]" = "Нещодавно видалені";
 
@@ -1063,6 +1114,9 @@
 /* Title of a generic file export screen. */
 "[Generic/File/Export/title]" = "Експорт файлів";
 
+/* Action to save data, when we ignore minor problems in the process. */
+"[Generic/File/ForceSave]" = "Примусово зберегти";
+
 /* Action/button to save data to a different file */
 "[Generic/File/Save as]" = "Зберегти як…";
 
@@ -1074,6 +1128,9 @@
 
 /* Title of an error message about file import */
 "[Generic/File/title] Import Error" = "Помилка імпорту";
+
+/* Action to proceed after a warning, basically 'I understand the risk' */
+"[Generic/GotIt/action]" = "Зрозуміло";
 
 /* Title of a list with predefined quick-choice values (for example: 'Presets: 1 week, 1 months, 1 year') */
 "[Generic/Presets]" = "Додатково";
@@ -1192,14 +1249,20 @@
 /* Title of a list with possible hardware key connections */
 "[HardwareKey/Picker/title]" = "Апаратні ключі";
 
+/* Title of a slot of a hardware key. For example: `YubiKey Slot 1`. */
+"[HardwareKey/Slot/title]" = "%1$@ роз’єм %2$d";
+
+/* Hardware key slot number. [slotNumber: Int] */
+"[HardwareKey/SlotN]" = "Роз’єм %d";
+
+/* Title for hardware key slot selection menu. */
+"[HardwareKey/SlotTitle]" = "Роз’єм";
+
 /* Information notice. 'Challenge-response' is a glossary term. */
 "[HardwareKey/USB/chalRespNotSupported]" = "Цей пристрій не підтримує спосіб автентифікації «Виклик-відповідь» через USB-з’єднання.";
 
 /* Information notice */
 "[HardwareKey/USB/iPadAppOnMac]" = "USB-з’єднання не доступне, тому що це додаток iPad, який працює на macOS. Використайте нативний додаток для Mac.";
-
-/* Master key/unlock option: use given slot of YubiKey */
-"[HardwareKey/YubiKey/Slot] YubiKey Slot #%d" = "YubiKey роз'єм %d";
 
 /* Generic title of in-app help article */
 "[Help Viewer/title]" = "Довідка";
@@ -1273,6 +1336,9 @@
 /* Error message about system keychain. */
 "[KeychainError/unexpectedFormat] Keychain error: unexpected data format" = "Помилка при роботі зі зв'язкою ключів: неочікуваний формат даних";
 
+/* Action: add a key file into the app, by importing or creating one. `Key file` is a glossary term. */
+"[KeyFile/Add/action]" = "Додати файл-ключ";
+
 /* Action: create new key file. */
 "[KeyFile/Create/action]" = "Створити файл-ключ";
 
@@ -1282,6 +1348,9 @@
 /* Message to confirm deletion of a key file. */
 "[KeyFile/Delete/Confirm/text] Delete key file?\n Make sure you have a backup." = "Видалити файл-ключ?\nПереконайтеся, що у вас є резервна копія.";
 
+/* Error message related to key file. [errorDetails: String] */
+"[KeyFile/error]" = "Проблема з файл-ключом: %@";
+
 /* Name of an input field which shows selected key file */
 "[KeyFile/Field/title]" = "Файл-ключ";
 
@@ -1290,6 +1359,18 @@
 
 /* Description of the `Import Key File` action. */
 "[KeyFile/Import/actionDescription]" = "Додати файл у додаток";
+
+/* Placeholder shown when there are no key files available */
+"[KeyFile/List/empty]" = "Файлів-ключів немає";
+
+/* Title of the list with key files. */
+"[KeyFile/List/title]" = "Ключові файли";
+
+/* Description of the 'No Key File' option. */
+"[KeyFile/None/description]" = "Використовувати лише пароль";
+
+/* Title: don't use key file */
+"[KeyFile/None/title]" = "Без ключового файлу";
 
 /* Message to confirm removal of a key file from the app. (This keeps the file, but removes its reference from the app.) */
 "[KeyFile/Remove/Confirm/text] Remove key file from the list?\n The file will remain intact and you can add it again later." = "Прибрати файл-ключ зі списку?\nФайл залишиться недоторканим, ви зможете додати його пізніше.";
@@ -1310,7 +1391,7 @@
 "[Menu/FileInfo/title]" = "Відомості про файл";
 
 /* Menu title: app settings */
-"[Menu/Preferences/title]" = "Налаштування…";
+"[Menu/Settings/title]" = "Налаштування…";
 
 /* Title of a menu: sort order of files in a list */
 "[Menu/Sort] Sort Files By" = "Сортувати файли за";
@@ -1323,9 +1404,6 @@
 
 /* Error message, euphemism for missing corporate license */
 "[Org/LicenseMissing]" = "KeePassium не вдалося знайти корпоративний обліковий запис вашої організації.";
-
-/* Notification next to the OTP code which was copied to clipboard */
-"[OTP/CopiedToClipboard/title]" = "Одноразовий пароль скопійовано в буфер обміну";
 
 /* Name of an entry field */
 "[OTP/FieldName]" = "Одноразовий пароль";
@@ -1350,6 +1428,12 @@
 
 /* Button/action: proceed with QR code based OTP setup */
 "[OTP/Setup/ScanQRCode]" = "Відсканувати QR-код";
+
+/* Action: pick an image (from files) to scan as QR code */
+"[OTP/Setup/ScanQRImageFile]" = "Сканувати QR з файлу";
+
+/* Action: pick a photo (from gallery) to scan as QR code */
+"[OTP/Setup/ScanQRPhoto]" = "Сканувати QR з фото";
 
 /* Description of an OTP code; sentence case. */
 "[OTP/Title/sentenceCase]" = "Одноразовий пароль";
@@ -1471,6 +1555,9 @@
 /* Title of a premium feature */
 "[Premium/Benefits/BusinessClouds/title]" = "Синхронізувати з корпоративним сховищем";
 
+/* Call to action / Title of a premium feature */
+"[Premium/Benefits/CreativeAutoFill/title]" = "Швидше створення облікових записів";
+
 /* Explanation of the premium feature */
 "[Premium/Benefits/HardwareKeys/details]" = "Захистіть свої секрети апаратним ключем YubiKey.";
 
@@ -1564,27 +1651,6 @@
 /* Marks the default pricing plan */
 "[Premium/Price Plan/popular]" = "Популярний";
 
-/* Status: special premium for beta-testing environment is active */
-"[Premium/status] Beta testing" = "Бета-тестування";
-
-/* Status: current version of the app. For example: `Current version: 1.23`. Should be similar to the `Licensed version` string. [version: String] */
-"[Premium/status] Current version: %@" = "Поточна версія: %@";
-
-/* Status: premium subscription has expired. For example: `Expired 1 day ago`. [timeFormatted: String, includes the time unit (day, hour, minute)] */
-"[Premium/status] Expired %@ ago. Please renew." = "Підписка закінчилася %@ тому. Поновіть її.";
-
-/* Status: licensed premium version of the app. For example: `Licensed version: 1.23`. [version: String] */
-"[Premium/status] Licensed version: %@" = "Версія з ліцензією: %@";
-
-/* Status: scheduled renewal date of a premium subscription. For example: `Next renewal on 1 Jan 2050`. [expiryDateString: String] */
-"[Premium/status] Next renewal on %@" = "Наступне відновлення підписки %@";
-
-/* Status: validity period of once-and-forever premium */
-"[Premium/status] Valid forever" = "Назавжди";
-
-/* Status when the user has a premium version */
-"[Premium/Status/title]" = "Преміум-версія";
-
 /* Subscription conditions */
 "[Premium/Subscription/Legal/text]" = "Оплата буде знята з вашого облікового запису Apple ID після підтвердження покупки.\n\nПідписка автоматично поновлюється, якщо не скасована мінімум за 24 години до кінця поточного періоду. Плата за продовження підписки буде знята з вашого облікового запису протягом доби до закінчення поточного періоду.\n\nВи можете змінити або скасувати підписки, зайшовши в налаштування свого облікового запису в App Store після покупки.";
 
@@ -1636,14 +1702,17 @@
 /* Message shown after buying or subscribing. */
 "[Premium/Upgrade/Success/thankYou]" = "Дякую за покупку!";
 
-/* Status: how long the app has been used during some time period. For example: `App being useful: 1hr/month, about 12hr/year`. [monthlyUsage: String, annualUsage: String — already include the time unit (hours, minutes)] */
-"[Premium/usage] App being useful: %@/month, that is around %@/year." = "Додаток корисно %1$@ на місяць, тобто близько %2$@ в рік.";
-
 /* Description/call to action for the `Business Cloud Storage` premium feature. */
 "[PremiumFeature/BusinessClouds/description]" = "Підключіться безпосередньо до облікових записів корпоративного сховища, як-от OneDrive для бізнесу.";
 
 /* Title of a premium feature: access to company's cloud accounts like 'OneDrive for Business' */
 "[PremiumFeature/BusinessClouds/title]" = "Корпоративне хмарне сховище";
+
+/* Description/advertisement for the `Faster Sign-Ups` premium feature */
+"[PremiumFeature/CreativeAutoFill/description]" = "Створюйте нові записи в автозаповненні з попередньо заповненими основними полями.";
+
+/* Title of a premium feature: easier registration of new accounts, directly in AutoFill dialog */
+"[PremiumFeature/CreativeAutoFill/title]" = "Швидша реєстрація";
 
 /* A generic description of a premium feature */
 "[PremiumFeature/Generic/description]" = "Перейдіть на повну версію KeePassium та користуйтеся усіма можливостями програми.";
@@ -1696,9 +1765,6 @@
 /* Error message when a long-running operation was cancelled due to the lack of free memory (RAM). */
 "[Progress/CancellationReason/lowMemory]" = "Бракує пам'яті щоб продовжити.\nМожливо, база паролів занадто велика або вимагає дуже багато пам'яті (для Argon2).";
 
-/* Description of the Quick AutoFill feature. */
-"[QuickAutoFill/description]" = "Швидке автозаповнення показує потрібні записи поруч із полями введення, не відкриваючи KeePassium.";
-
 /* Name of a feature that shows relevant entries directly next to the login/password forms. */
 "[QuickAutoFill/title]" = "Швидке автозаповнення";
 
@@ -1716,6 +1782,12 @@
 
 /* Description of the `Direct connection` sync method. */
 "[RemoteConnection/Direct/description]" = "KeePassium безпосередньо зв’яжеться з вашим онлайновим сховищем. Це гарантує надійну передачу файлу. ";
+
+/* Title of a list with online storage services like OneDrive, Dropbox, etc. */
+"[RemoteConnection/Direct/title]" = "Онлайнові служби";
+
+/* Action: change properties of a remote network connection */
+"[RemoteConnection/Edit/action]" = "Редагувати підключення…";
 
 /* Error message: user credentials rejected by the server */
 "[RemoteConnection/Error/AuthenticationFailed/title]" = "Помилка автентифікації";
@@ -1771,134 +1843,17 @@
 /* Name of an input field for entering the password again */
 "[Repeat Password/Field/title]" = "Повторіть пароль";
 
-/* Call to action (protect the app from unauthorized access) */
-"[Settings/AppLoc/Activate/callToAction]" = "Активувати захист додатку";
+/* Description of the auto-download favicons feature */
+"[Settings/AutoDownloadFavicons/description]" = "Автоматично завантажувати значок вебсайту після редагування запису.";
 
-/* Description of `Activate app protection` call to action. */
-"[Settings/AppLock/Activate/description]" = "Захищає KeePassium від несанкціонованого доступу.";
-
-/* Settings switch: whether AppLock is allowed to use Touch ID/Face ID. Example: 'Use Touch ID'. [biometryTypeName: String] */
-"[Settings/AppLock/Biometric/title] Use %@" = "Використовувати %@";
-
-/* Explanation for the `Lock on App Launch` setting */
-"[Settings/AppLock/LockOnLaunch/description]" = "KeePassium буде заблокований після примусового закриття програми або перезавантаження пристрою.";
-
-/* Setting switch: whether to lock the app after it was terminated and relaunched. */
-"[Settings/AppLock/LockOnLaunch/title]" = "Блокувати додаток при запуску";
-
-/* Settings: subtitle of the `App Protection` section. biometryTypeName will be either 'Touch ID' or 'Face ID'. [biometryTypeName: String] */
-"[Settings/AppLock/subtitle] App Lock, %@, timeout" = "Блокування додатку, %@, затримки";
-
-/* Settings: subtitle of the `App Protection` section when biometric auth is not available. */
-"[Settings/AppLock/subtitle] App Lock, passcode, timeout" = "Блокування, код доступу, затримки";
-
-/* Settings section: protection of the app from unauthorized access */
-"[Settings/AppLock/title]" = "Захист додатку";
-
-/* A description/subtitle for Settings/AppLockTimeout options that trigger when the user has been idle for a while. For example: 'AppLock Timeout: 3 seconds (After last interaction) */
-"[Settings/AppLockTimeout/description] After last interaction" = "Після бездіяльності";
-
-/* A description/subtitle for Settings/AppLock/Timeout options that trigger when the app is minimized. For example: 'AppLock Timeout: 3 seconds (After leaving the app) */
-"[Settings/AppLockTimeout/description] After leaving the app" = "Після виходу з додатку";
-
-/* An option in Settings. Will be shown as 'App Lock: Timeout: Immediately' */
-"[Settings/AppLockTimeout/fullTitle] Immediately" = "Негайно";
-
-/* An option in Settings. Will be shown as 'App Lock: Timeout: Never' */
-"[Settings/AppLockTimeout/fullTitle] Never" = "Ніколи";
-
-/* An option in Settings. Will be shown as 'App Lock: Timeout: Immediately' */
-"[Settings/AppLockTimeout/shortTitle] Immediately" = "Негайно";
-
-/* An option in Settings. Will be shown as 'App Lock: Timeout: Never' */
-"[Settings/AppLockTimeout/shortTitle] Never" = "Ніколи";
-
-/* Action that opens system settings or instructions */
-"[Settings/AutoFill/Activate/action]" = "Увімкнути Автозаповнення";
-
-/* Description for the AutoFill setup instructions */
-"[Settings/AutoFill/Activate/description]" = "Спочатку потрібно увімкнути Автозаповнення у налаштуваннях системи.";
-
-/* Title of an option: copy one-time password to clipboard when using AutoFill */
-"[Settings/AutoFill/CopyOTP/title]" = "Скопіювати одноразовий пароль";
-
-/* Title of a help article on how to activate AutoFill. */
-"[Settings/AutoFill/Setup Guide/title]" = "Інструкція з налаштування Автозаповнення";
+/* Settings option: automatically download website icons/favicons */
+"[Settings/AutoDownloadFavicons/title]" = "Автоматичне завантаження значків сайтів";
 
 /* Title of AutoFill settings screen */
 "[Settings/AutoFill/title]" = "Натисніть \"Автозаповнення паролів\"";
 
-/* No comment provided by engineer. */
-"[Settings/AutoFill/UnavailableInIntune/description]" = "Автозаповнення недоступне в KeePassium для Intune.";
-
-/* Title of an option: automatically use the single best match found by AutoFill search */
-"[Settings/AutoFill/UsePerfectMatch/title]" = "Автоматично підставляти ідеальний варіант";
-
-/* Option in settings: whether to open the last used database automatically on start. */
-"[Settings/AutoOpenPreviousDatabase/title]" = "Автоматично відкривати попередню базу";
-
-/* Action to delete all backup files from the app. `ALL` is in capitals as a highlight. [backupFileCount: Int] */
-"[Settings/Backup] Delete ALL Backup Files (%d)" = "Видалити ВСІ резервні копії (%d)";
-
-/* Status message: there are no backup files to delete */
-"[Settings/Backup] No Backup Files Found" = "Немає резервних копій";
-
-/* Confirmation dialog message to delete all backup files */
-"[Settings/Backup/Delete/title] Delete all backup files?" = "Видалити усі резервні копії?";
-
-/* An option in Settings. Please keep it short. Will be shown as 'Keep Backup Files: Forever' */
-"[Settings/BackupKeepingDuration/shortTitle] Forever" = "Завжди";
-
-/* Text of the success message for `Clear Key File Associations` button */
-"[Settings/ClearKeyFileAssociations/Cleared/text] Associations between key files and databases have been removed." = "Зв'язки між файл-ключами і базами паролів були видалені.";
-
-/* Title of the success message for `Clear Key File Associations` button */
-"[Settings/ClearKeyFileAssociations/Cleared/title] Cleared" = "Очищено";
-
-/* Text of the success message for `Clear Master Keys` button */
-"[Settings/ClearMasterKeys/Cleared/text] All master keys have been deleted." = "Всі майстер-ключі були видалені.";
-
-/* Title of the success message for `Clear Master Keys` button */
-"[Settings/ClearMasterKeys/Cleared/title] Cleared" = "Очищено";
-
-/* Description of the clipboard/pasteboard timeout. */
-"[Settings/ClipboardTimeout/description] When you copy some text from an entry, the app will automatically clear your clipboard (pasteboard) after this time." = "При копіюванні будь-якого тексту із запису він буде автоматично видалений з буфера обміну через заданий час.";
-
-/* An option in Settings. Will be shown as 'Clipboard Timeout: Never' */
-"[Settings/ClipboardTimeout/fullTitle] Never" = "Ніколи";
-
-/* An option in Settings. Will be shown as 'Clipboard Timeout: Never' */
-"[Settings/ClipboardTimeout/shortTitle] Never" = "Ніколи";
-
-/* Title of a settings section: backup of databases */
-"[Settings/DatabaseBackup/title]" = "Резервування";
-
-/* Description of the Database Lock Timeout */
-"[Settings/DatabaseLockTimeout/description] If you are not interacting with the app for some time, the database will be closed for your safety. To open it, you will need to enter its master password again." = "Якщо ви не використовуєте додаток протягом деякого часу, база паролів буде автоматично закрита і заблокована. Щоб відкрити її, потрібно буде знову ввести майстер-пароль.";
-
-/* A description/subtitle for the 'DatabaseLockTimeout: Immediately'. */
-"[Settings/DatabaseLockTimeout/description] When leaving the app" = "При виході з додатку";
-
-/* An option in Settings. Will be shown as 'Database Lock: Timeout: Immediately' */
-"[Settings/DatabaseLockTimeout/fullTitle] Immediately" = "Негайно";
-
-/* An option in Settings. Will be shown as 'Database Lock: Timeout: Never' */
-"[Settings/DatabaseLockTimeout/fullTitle] Never" = "Ніколи";
-
-/* An option in Settings. Will be shown as 'Database Lock: Timeout: Immediately' */
-"[Settings/DatabaseLockTimeout/shortTitle] Immediately" = "Негайно";
-
-/* An option in Settings. Will be shown as 'Database Lock: Timeout: Never' */
-"[Settings/DatabaseLockTimeout/shortTitle] Never" = "Ніколи";
-
-/* Title of a setting: the time after which databases will be locked. */
-"[Settings/DatabaseLockTimeout/title]" = "Затримка закриття баз";
-
-/* Setting switch: whether to lock databases after device reboot. */
-"[Settings/DataProtection/LockOnReboot/title]" = "Закривати під час перезавантаження пристрою";
-
-/* Subtitle for `Data Protection` section in settings */
-"[Settings/DataProtection/subtitle]" = "Мастер-ключі, ключові файли";
+/* Title of a yes/no setting: whether to include backup copies in the file list */
+"[Settings/DatabaseBackup/ShowBackupFiles/title]" = "Показувати резервні копії";
 
 /* Settings section: protection of databases, their keys and data inside them */
 "[Settings/DataProtection/title]" = "Захист даних";
@@ -1912,6 +1867,9 @@
 /* Title of a settings section: sort order of groups and entries in a list */
 "[Settings/GroupViewer] Sort Order" = "Сортування";
 
+/* Title of a yes/no setting */
+"[Settings/KeyFiles/Remember/title]" = "Запам'ятовувати файл-ключ";
+
 /* Title of list view configuration screen */
 "[Settings/ListSettings/title]" = "Вид списку";
 
@@ -1920,6 +1878,12 @@
 
 /* Notification when corporate user tries to change an app setting controlled by organization's IT department. */
 "[Settings/Managed/notification]" = "Цим параметром керує ваша організація.";
+
+/* Setting: preserve (cache) calculated database keys */
+"[Settings/MasterKeys/CacheDerived/title]" = "Кешувати обчислені ключі шифрування";
+
+/* Title of a yes/no setting */
+"[Settings/MasterKeys/Remember/title]" = "Запам'ятовувати майстер-ключі";
 
 /* Confirmation dialog message */
 "[Settings/NetworkAccess/Confirmation/text]" = "Дозволити KeePassium здійснювати мережеві підключення до зовнішніх сервісів?";
@@ -1942,11 +1906,32 @@
 /* Action/button which resets some settings to their default state. */
 "[Settings/RestoreDefaults/action]" = "Відновити налаштування за замовчуванням";
 
-/* Section title in settings */
-"[Settings/Search/title]" = "Пошук";
+/* Call to action (explains why a setting is disabled) */
+"[Settings/ShakeGestureAction/LockApp/disabledTitle]" = "Спершу активуйте захист додатка";
+
+/* An option in Settings. Will be shown as 'When Shaken: Lock App' */
+"[Settings/ShakeGestureAction/LockApp/shortTitle]" = "Заблокувати додаток";
+
+/* An option in Settings. Will be shown as 'When Shaken: Lock All Databases' */
+"[Settings/ShakeGestureAction/LockDatabases/shortTitle]" = "Заблокувати всі бази паролів";
+
+/* An option in Settings. Will be shown as 'When Shaken: Do Nothing' */
+"[Settings/ShakeGestureAction/Nothing/shortTitle]" = "Нічого не робити";
+
+/* An option in Settings. Will be shown as 'When Shaken: Quit App' */
+"[Settings/ShakeGestureAction/QuitApp/shortTitle]" = "Вийти з додатка";
 
 /* Title of the app settings screen */
 "[Settings/title]" = "Налаштування";
+
+/* Title of a settings value. For example: `Remember Master Keys: No` */
+"[Settings/Value/No/title]" = "Ні";
+
+/* Title of a settings value, when it is not customized and we default to app's global settings. For example: `Remember Master Keys: Use App Settings (No)` */
+"[Settings/Value/UseAppSettings/title]" = "Використовувати налаштування додатка (%@)";
+
+/* Title of a settings value. For example: `Remember Master Keys: Yes` */
+"[Settings/Value/Yes/title]" = "Так";
 
 /* List sorting option (for file names). Example: 'Sort by: Name' */
 "[SortBy/FileName]" = "Назва";
@@ -1956,6 +1941,9 @@
 
 /* List sorting option, when items are manually ordered by the user. Example: 'Sort order: Custom' */
 "[SortOrder/Custom]" = "Власні параметри";
+
+/* Subtitle for a storage service: the app will have access only to its own dedicated folder. */
+"[StorageService/DedicatedAppFolder/title]" = "Тільки папка додатка";
 
 /* Name of a cloud storage service */
 "[StorageService/DropboxBusiness/title]" = "Dropbox Business";
@@ -2020,8 +2008,8 @@
 /* Human-readable file location. Example: 'File Location: Remote server' */
 "[URLReference/Location/RemoteServer]" = "Віддалений сервер";
 
-/* Selector choice: don't use YubiKey to encrypt/decrypt database */
-"[YubiKey] Don't use YubiKey" = "Без YubiKey";
+/* Error shown when user selects a file path instead of folder path in WebDAV. */
+"[WebDAV/Export/NeedsFolder]" = "Виберіть шлях до папки";
 
 /* Call for action: insert YubiKey 5Ci to the Lightning port */
 "[YubiKey] Insert the key" = "Вставте ключ";
@@ -2029,18 +2017,9 @@
 /* Call for action: touch the sides of YubiKey 5Ci to continue */
 "[YubiKey] Touch the key" = "Торкніться ключа";
 
-/* Selector choice: use YubiKey to encrypt/decrypt database. For example: `Use YubiKey Slot 1`. [slotID: Int] */
-"[YubiKey] Use YubiKey Slot %d" = "Використовувати YubiKey роз'єм %d";
-
 /* Action/button to add database to the app */
 "Add Database" = "Додати базу паролів";
 
 /* Warning message when the user tries to use a database as a key file */
 "KeePass database should not be used as key file. Please pick a different file." = "База паролів KeePass не повинна використовуватися в якості файл-ключа. Виберіть інший файл.";
-
-/* Placeholder shown when there are no database files available */
-"No database files" = "Відсутні бази паролів";
-
-/* Settings switch: whether to include backup copies in the file list */
-"Show Backup Files" = "Показувати резервні копії";
 

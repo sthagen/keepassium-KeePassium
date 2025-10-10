@@ -16,6 +16,6 @@
 /* Privacy - Photo Library Additions Usage Description */
 "NSPhotoLibraryAddUsageDescription" = "Pro export souborů do vaší knihovny s fotkami je nutné vaše povolení.";
 
-/* (No Comment) */
-"NSPhotoLibraryUsageDescription" = "KeePassium potřebuje přístup do knihovny fotografií pro přidání vlastních ikon skupin a záznamů";
+/* Privacy - Photo Library Usage Description */
+"NSPhotoLibraryUsageDescription" = "Aby bylo možné nastavit OTP, KeePassium potřebuje pro vlastní ikony a ke skenování QR kódů přístup k vybraným obrázkům.";
 

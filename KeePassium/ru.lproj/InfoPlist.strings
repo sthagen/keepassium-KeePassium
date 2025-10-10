@@ -16,6 +16,6 @@
 /* Privacy - Photo Library Additions Usage Description */
 "NSPhotoLibraryAddUsageDescription" = "KeePassium нужно разрешение на сохранение файлов в медиатеке.";
 
-/* (No Comment) */
-"NSPhotoLibraryUsageDescription" = "Приложению нужен доступ к фотографиям, чтобы добавлять свои значки к группам и записям";
+/* Privacy - Photo Library Usage Description */
+"NSPhotoLibraryUsageDescription" = "KeePassium нуждается в доступе к выбору изображений для своих значков и сканирования QR-кодов для настройки OTP.";
 

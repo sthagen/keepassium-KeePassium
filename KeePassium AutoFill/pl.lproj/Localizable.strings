@@ -1,14 +1,35 @@
 /* Notification when user tries to set up too weak an app protection passcode. */
 "[AppLock/weakPasscodeWarning]" = "Ten kod dostępu jest łatwy do odgadnięcia. Spróbuj wprowadzić silniejszy.";
 
+/* Action in AutoFill: choose the entry and remember it for future use on this website. */
+"[AutoFill/AcceptAndRemember/action]" = "Zaakceptuj i zapamiętaj";
+
+/* Title of a list */
+"[AutoFill/AllEntries/title]" = "Wszystkie wpisy";
+
+/* Title of AutoFill context when no context is available. Usage: `Context: Unknown` */
+"[AutoFill/Context/Empty/title]" = "Nieznany";
+
+/* Title of a list with search results */
+"[AutoFill/FoundEntries/title]" = "Najlepsze dopasowania";
+
 /* Call for action to select an entry field for filling out. */
 "[AutoFill/InsertText/select]" = "Wybierz pole";
 
-/* An identifier of the app that called AutoFill. The term is intentionally similar to https://ru.wikipedia.org/wiki/Caller_ID. [callerID: String] */
-"[AutoFill/Search/callerID]" = "Caller ID: %@";
+/* Section title for the recently used entry in AutoFill */
+"[AutoFill/RecentlyUsed/title]" = "Ostatnio używane";
 
-/* Status message, shows which app or webpage launched AutoFill. For example: `Context: google.com` */
-"[AutoFill/Search/context]" = "Kontekst: %@";
+/* Not an action, but a button to activate the same-named setting */
+"[AutoFill/RememberContext/action]" = "Zapamiętaj wybrane wpisy";
+
+/* Call to action */
+"[AutoFill/RememberContext/callToAction]" = "Popraw propozycje Autouzupełniania";
+
+/* Description of the 'Remember Selected Entries` feature */
+"[AutoFill/RememberContext/description]" = "Aplikacja KeePassium zapamięta, który wpis wybierzesz na poszczególnych stronach internetowych, a następnie automatycznie go zasugeruje.";
+
+/* Title for referring to the app or webpage that launched AutoFill. For example: `Context: google.com` */
+"[AutoFill/Search/Context/title]" = "Kontekst";
 
 /* No comment provided by engineer. */
 "[AutoFill/Setup/footer]" = "Autouzupełnianie nie może automatycznie uzyskać dostępu do plików znajdujących się w głównej aplikacji KeePassium.\n\nDlaczego? System traktuje Autouzupełnianie jako oddzielną aplikację, niezależną do głównego procesu KeePassium. Ze względów bezpieczeństwa aplikacja nie może mieć dostępu do zewnętrznych plików - chyba, że celowo dołączysz te pliki do tej aplikacji. To gwarantuje, że aplikacja może mieć dostęp do tylko plików, na które zezwolisz.\n\nW rezultacie zarówno Autouzupełnianie, jak i główna aplikacja KeePassium, muszą otrzymać własne uprawnienia do zewnętrznego pliku. Na szczęście jest to jednorazowa procedura.";
@@ -25,8 +46,23 @@
 /* Must match Apple's translation, as found in iOS 17 Settings → Passwords → Password Options. If unsure, leave untranslated. */
 "[AutoFill/Setup/UncheckKeychain/usePasswordsAndPasskeysFrom]" = "Dostawcy haseł i kluczy:";
 
+/* Field title: name of the group that contains the entry */
+"[Database/Entry/Location/title]" = "Lokalizacja";
+
+/* Title of a list with randomly generated usernames */
+"[Database/Entry/RandomUsernames/title]" = "Losowe nazwy użytkowników";
+
+/* Action/button that shows a list of usernames to pick from */
+"[Database/Entry/SelectUsername/action]" = "Wybierz nazwę użytkownika";
+
+/* Action: select item from a list/menu, with item name in quotes. For example: `Select "Sample Group"` */
+"[Database/Item/SelectNamed/action]" = "Wybierz „%@”";
+
 /* Action: create a passkey and add it to existing entry */
 "[Database/Passkey/AddToExisting/action]" = "Dodaj klucz do istniejącego wpisu";
+
+/* Call to action: select an existing entry to add a new passkey to */
+"[Database/Passkey/AddToExisting/callToAction]" = "Wybierz wpis dla nowego klucza";
 
 /* Confirmation message before replacing an existing passkey. */
 "[Database/Passkey/AddToExisting/confirm]" = "Ten wpis ma już klucz. Zastąpić go?";
@@ -69,4 +105,7 @@
 
 /* Call to action, invites the user to enable the Quick AutoFill feature */
 "[QuickAutoFill/Activate/callToAction]" = "Aktywuj autouzupełnianie";
+
+/* Placeholder text for empty search results */
+"[Search/EmptyResult/title]" = "Nic nie znaleziono";
 

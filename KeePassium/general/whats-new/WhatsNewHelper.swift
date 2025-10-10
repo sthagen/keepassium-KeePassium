@@ -93,7 +93,7 @@ final class WhatsNewHelper {
                 )),
                 subtitle: .init(NSLocalizedString(
                     "[WhatsNew/Feature/AutoType/description]",
-                    value: "Quickly sign in to any app or web service using key-press emulation.",
+                    value: "Quickly sign in to any app or web browser using key-press emulation.",
                     comment: "Description of a feature highlight, a call to action."
                 ))
             ))

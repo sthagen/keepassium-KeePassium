@@ -1,8 +1,41 @@
+/* Menu item that shows info about KeePassium app */
+"[About/altTitle]" = "关于 KeePassium";
+
+/* Section in settings: icon for the app */
+"[Appearance/AppIcon/title]" = "应用图标";
+
+/* Section in settings: icons for database */
+"[Appearance/DatabaseIcons/title]" = "数据库图标";
+
+/* Short name of the default/system font. For example: `Font: Default` */
+"[Appearance/DefaultFont/shortTitle]" = "默认";
+
+/* Title of a setting: whether the Entry Viewer should open on the same tab/page when switching between entries, or switch to the first tab instead. */
+"[Appearance/EntryViewer/OpenLastUsedTab/title]" = "打开上次使用的标签页";
+
+/* Section in settings: parameters related to entry viewer component */
+"[Appearance/EntryViewer/title]" = "条目检视";
+
+/* Title of a setting option: font */
+"[Appearance/Font/title]" = "字体";
+
+/* Action: set text size to standard size */
+"[Appearance/TextSize/reset]" = "重置文本大小为默认值";
+
+/* Title of a setting option: font size */
+"[Appearance/TextSize/title]" = "文本大小";
+
+/* Group of settings for user interface appearance (text size, icons, etc) */
+"[Appearance/title]" = "界面外观";
+
 /* Title of the app history (changelog) screen */
 "[AppHistory/title]" = "更新了什么";
 
 /* Notification when user tries to set up too weak an app protection passcode. */
 "[AppLock/weakPasscodeWarning]" = "此解锁密码很容易被猜到。请尝试输入一个更强的解锁密码。";
+
+/* Subtitle for `Contact Us`. Keep it short. */
+"[ContactUs/subtitle]" = "建议? 问题? 让我们知道!";
 
 /* Item in the credits list */
 "[Credits/Item/aexml]" = "AEXML 来自 Marko Tadić";
@@ -63,6 +96,9 @@
 
 /* Item in the credits list */
 "[Credits/Item/twoFish]" = "Twofish 由 Niels Ferguson 实现";
+
+/* Item in the credits list */
+"[Credits/Item/whatsNewKit]" = "WhatsNewKit，作者：Sven Tiigi";
 
 /* Item in the credits list */
 "[Credits/Item/wordlists]" = "EFF 密码词列表";
@@ -148,6 +184,9 @@
 /* Description of favicon downloader feature. 'Doing this' refers to downloading favicons. */
 "[Database/DownloadFavicons/warning]" = "在公共或受监控的网络上执行此操作可能会暴露您拥有账户的网站列表。";
 
+/* Placeholder text in an empty group */
+"[Database/Group/empty]" = "这个群组是空的";
+
 /* Warning that one key derivation function (KDF) should be preferred to another. Example: 'AES-KDF is considered weak. Use Argon2id instead.' */
 "[Database/KDF/consideredWeak]" = "%1$@ 被认为不够安全。建议改用 %2$@。";
 
@@ -156,6 +195,9 @@
 
 /* Call to action when encryption settings are too weak. */
 "[Database/KDF/tooWeak]" = "提高设置以获得最佳的数据保护。";
+
+/* Subtitle for `Diagnostic Log`. Keep it short. */
+"[DiagLog/subtitle]" = "用于给作者排除故障";
 
 /* Confirmation message to replace an existing entry attachment with a new one. */
 "[Entry/Files/Add] Replace existing attachment?" = "替换现有的附件？";
@@ -177,6 +219,27 @@
 
 /* Title of entry viewer's tab with advanced/secondary properties */
 "[Entry/Tab/More/title]" = "更多";
+
+/* Name of Apple Passwords' CSV file format */
+"[Format/ApplePasswordsCSV]" = "Apple 密码 (.csv)";
+
+/* Name of Enpass' JSON file format */
+"[Format/EnpassJSON]" = "Enpass (.json)";
+
+/* Error message when CSV parsing fails [lineNumber: Int] */
+"[Import/CSV/Error/InvalidFormat]" = "第 %d 行的 CSV 格式无效。";
+
+/* Error message when CSV parsing fails [lineNumber: Int, colNumber: Int] */
+"[Import/CSV/Error/InvalidFormat/withColumn]" = "第 %1$d 行、第 %2$d 列的 CSV 格式无效。";
+
+/* Error message when Enpass import fails due to corrupted attachment data [attachmentName: String, itemName: String] */
+"[Import/Enpass/Error/CorruptedAttachment]" = "项目“%2$@”中的附件“%1$@”数据已损坏。";
+
+/* Error shown when trying to import from an empty file */
+"[Import/Error/EmptyFile]" = "传入文件为空。";
+
+/* Error message when JSON parsing fails */
+"[Import/JSON/ParsingError]" = "无法解析 JSON 文件。";
 
 /* Action/button */
 "[Onboarding/AddExistingDatabase/action]" = "添加现有数据库";
@@ -289,14 +352,344 @@
 /* Password quality description. For example: `Very good (234 bits of entropy)`. [level: String, formattedBitCount: String] */
 "[PasswordQuality/LevelWithEntropy/description]" = "%1$@ (%2$@ 熵值)";
 
+/* Status: special premium for beta-testing environment is active */
+"[Premium/Status/BetaTesting/title]" = "测试版本";
+
+/* Status: current version of the app. For example: `Current version: 1.23`. Should be similar to the `Licensed version` string. [version: String] */
+"[Premium/Status/currentVersion]" = "当前版本： %@";
+
+/* Status: premium subscription has expired. For example: `Expired 1 day ago`. [timeFormatted: String, includes the time unit (day, hour, minute)] */
+"[Premium/Status/expiredAgo]" = "已经到期 %@ 天, 请续订。";
+
+/* Status: licensed premium version of the app. For example: `Licensed version: 1.23`. [version: String] */
+"[Premium/Status/licensedVersion]" = "许可版本: %@";
+
+/* Status: scheduled renewal date of a premium subscription. For example: `Next renewal on 1 Jan 2050`. [expiryDateString: String] */
+"[Premium/Status/nextRenewal]" = "下次续订时间: %@";
+
+/* Status when the user has a premium version */
+"[Premium/Status/title]" = "高级版本";
+
+/* Status: validity period of once-and-forever premium */
+"[Premium/Status/ValidForever/title]" = "永远有效";
+
+/* Status: how long the app has been used during some time period. For example: `App being useful: 1hr/month, about 12hr/year`. [monthlyUsage: String, annualUsage: String — already include the time unit (hours, minutes)] */
+"[Premium/usage] App being useful: %@/month, that is around %@/year." = "程序已使用: %1$@/月, 大约%2$@/年";
+
 /* Action/button to make password visible as plain-text */
 "[ProtectedTextField] Show Password" = "显示密码";
+
+/* Explanation why the app needs camera access permission. */
+"[QRCodeScanner/CameraPermission/description]" = "KeePassium 需要相机访问权限以扫描二维码。";
+
+/* Error message when the app cannot use the camera. */
+"[QRCodeScanner/Error/CameraBusy]" = "相机已在使用中。";
+
+/* Error message */
+"[QRCodeScanner/Error/ImageCorrupted]" = "所选图像已损坏。";
+
+/* Error message with a suggested action. */
+"[QRCodeScanner/Error/Internal]" = "二维码读取器内部错误。请检查诊断日志获取详细信息。";
+
+/* Notification message */
+"[QRCodeScanner/Error/NoQRCodeFound]" = "该图像中似乎没有二维码。";
+
+/* Error message when camera/gallery/etc is either missing or forbidden. */
+"[QRCodeScanner/Error/SourceNoAvailable]" = "图像来源不可用。";
+
+/* Call to action/instruction for QR code scanner. */
+"[QRCodeScanner/Info/callToAction]" = "将相机对准二维码。";
+
+/* Description of the Quick AutoFill feature. */
+"[QuickAutoFill/description]" = "快速自动填充会在密码字段旁显示相关条目，无需打开 KeePassium。";
+
+/* Placeholder text for empty search results */
+"[Search/EmptyResult/title]" = "没有找到适合的东西";
 
 /* Title of the confirmation dialog for `Delete` action for several items */
 "[Selection/Delete/confirmation]" = "删除所选内容？";
 
 /* Title of the confirmation dialog for `Exclude from audit` action for several items */
 "[Selection/ExcludeFromAudit/confirmation]" = "从密码检查器中排除已选中的项目？";
+
+/* Title of a section in settings: parameters that protect access to data */
+"[Settings/AccessControl/title]" = "访问控制";
+
+/* Call to action (protect the app from unauthorized access) */
+"[Settings/AppLoc/Activate/callToAction]" = "启用应用解锁密码";
+
+/* Description of `Activate app protection` call to action. */
+"[Settings/AppLock/Activate/description]" = "保护 KeePassium 免受未经授权的访问.";
+
+/* Description of biometric unlock settings */
+"[Settings/AppLock/Biometric/description]" = "可以使用生物识别身份验证作为应用解锁密码(但可能不这么安全) 快速解锁的替代方案。";
+
+/* Settings switch: whether App Protection is allowed to use Touch ID/Face ID. Example: 'Use Touch ID'. [biometryTypeName: String] */
+"[Settings/AppLock/Biometric/title] Use %@" = "使用 %@";
+
+/* Explanation for the `Lock on App Launch` setting */
+"[Settings/AppLock/LockOnLaunch/description]" = "确保KeePassium在强制关闭应用程序或重新启动设备后被锁定。";
+
+/* Setting switch: whether to lock the app after it was terminated and relaunched. */
+"[Settings/AppLock/LockOnLaunch/title]" = "应用程序启动时锁定";
+
+/* Explanation for the `Lock on macOS Screen Lock` setting */
+"[Settings/AppLock/LockOnScreenLock/description]" = "确保当您锁定 Mac 时，KeePassium 也会被锁定。";
+
+/* Title of a yes/no setting: whether to lock app when computer screen is locked (see https://support.apple.com/en-gb/guide/mac-help/mchl8e8b6a34/mac) */
+"[Settings/AppLock/LockOnScreenLock/title]" = "在 macOS 屏幕锁定时锁定";
+
+/* Description of the `Lock on Wrong Passcode` setting */
+"[Settings/AppLock/LockOnWrongPasscode/description]" = "如果您使用了错误的应用解锁密码, KeePassium 将会关闭所有的数据库并从系统钥匙圈中清除所有的主密钥。";
+
+/* Title in the settings: whether to lock databases when user enters a wrong app protection passcode. */
+"[Settings/AppLock/LockOnWrongPasscode/title]" = "解锁密码错误时锁定";
+
+/* Description of the `Passcode Attempts Until App Reset` setting */
+"[Settings/AppLock/PasscodeAttemptsUntilAppReset/description]" = "应用重置将删除所有存储的密钥、设置、数据库备份、导入的文件以及外部文件的链接。但是，如果应用重置由“自动填充”触发，由于技术限制，导入的文件可能会保留。";
+
+/* An option in Settings. Will be shown as 'Passcode Attempts Until App Reset: Do not reset' */
+"[Settings/AppLock/PasscodeAttemptsUntilAppReset/Never/title]" = "不重置";
+
+/* Title in the settings: number of failed passcode attempts that will reset the app into 'just installed' state. */
+"[Settings/AppLock/PasscodeAttemptsUntilAppReset/title]" = "应用重置前的尝试次数";
+
+/* Settings: subtitle of the `App Protection` section. biometryTypeName will be either 'Touch ID' or 'Face ID'. [biometryTypeName: String] */
+"[Settings/AppLock/subtitle] App Lock, %@, timeout" = "应用锁定,%@, 超时";
+
+/* Settings: subtitle of the `App Protection` section when biometric auth is not available. */
+"[Settings/AppLock/subtitle] App Lock, passcode, timeout" = "应用锁定, 应用解锁密码, 超时";
+
+/* Description of the App Lock Timeout setting */
+"[Settings/AppLock/Timeout/description]" = "应用程序将在此时间后自动锁定。";
+
+/* Title for App Lock Timeout setting */
+"[Settings/AppLock/Timeout/title]" = "超时";
+
+/* Settings section: protection of the app from unauthorized access */
+"[Settings/AppLock/title]" = "应用保护";
+
+/* Settings section: what happens if user enters incorrect App Protection passcode. */
+"[Settings/AppLock/WrongPasscode/title]" = "错误的应用解锁密码";
+
+/* Description of those 'App Protection Timeout' options that trigger when the app is minimized. For example: 'Timeout: 3 seconds (After leaving the app) */
+"[Settings/AppLockTimeout/AfterLeavingApp/description]" = "离开程序后";
+
+/* Description of those 'App Protection Timeout' options that trigger when the user has been idle for a while. For example: 'Timeout: 3 seconds (After last interaction) */
+"[Settings/AppLockTimeout/description] After last interaction" = "最近一次交互之后";
+
+/* An option in Settings. Will be shown as 'App Lock: Timeout: Immediately' */
+"[Settings/AppLockTimeout/Immediately/title] " = "立刻";
+
+/* An option in Settings. Will be shown as 'App Lock: Timeout: Never' */
+"[Settings/AppLockTimeout/Never/title]" = "永不";
+
+/* Action that opens system settings or instructions */
+"[Settings/AutoFill/Activate/action]" = "激活自动填充";
+
+/* Description for the AutoFill setup instructions */
+"[Settings/AutoFill/Activate/description]" = "在首次使用之前，您需要在系统设置中激活自动填充。";
+
+/* Description of the 'Copy OTP to Clipboard' setting */
+"[Settings/AutoFill/CopyOTP/Description]" = "当自动填充写入用户名和密码时，它还可以自动为您复制一次性密码（OTP）。";
+
+/* Title of a yes/no setting: copy one-time password to clipboard when using AutoFill */
+"[Settings/AutoFill/CopyOTP/title]" = "复制 一次性密码OTP 到剪贴板";
+
+/* Description of the 'Remember Selected Entries' setting. */
+"[Settings/AutoFill/RememberContext/description]" = "KeePassium 会记住您为每个网站选择的条目，然后自动建议该条目。";
+
+/* Title of a yes/no setting: remember which entry was used for AutoFill on which website. */
+"[Settings/AutoFill/RememberContext/title]" = "记住所选条目";
+
+/* Title of a help article on how to activate AutoFill. */
+"[Settings/AutoFill/Setup Guide/title]" = "自动填充设置指南";
+
+/* No comment provided by engineer. */
+"[Settings/AutoFill/UnavailableInIntune/description]" = "自动填充无法用于 KeePassium Intune 版";
+
+/* Description of the 'Fill-In Perfect Result Automatically' setting */
+"[Settings/AutoFill/UsePerfectMatch/description]" = "当自动填充只有一个完全匹配的条目——该条目将被自动粘贴。";
+
+/* Title of a yes/no setting: automatically use the single best match found by AutoFill search */
+"[Settings/AutoFill/UsePerfectMatch/title]" = "自动填充合适的内容";
+
+/* Option in settings: whether to open the last used database automatically on start. */
+"[Settings/AutoOpenPreviousDatabase/title]" = "自动打开之前的数据库";
+
+/* Title of a section in settings */
+"[Settings/AutoSearch/title]" = "自动搜索";
+
+/* Action to clear/erase info about which database uses which key file */
+"[Settings/ClearKeyFileAssociations/action]" = "清除密钥文件的关联";
+
+/* Title of the success message for `Clear Key File Associations` button */
+"[Settings/ClearKeyFileAssociations/Cleared/title]" = "已清除";
+
+/* Title of the success message for `Clear Master Keys` button */
+"[Settings/ClearMasterKeys/Cleared/title]" = "已清除";
+
+/* Title of a setting: time after which clipboard will be cleared */
+"[Settings/Clipboard/Timeout/title]" = "剪贴板超时";
+
+/* Section title in Settings */
+"[Settings/Clipboard/title]" = "剪贴板";
+
+/* Description of the 'Clipboard Timeout' setting. */
+"[Settings/ClipboardTimeout/description]" = "当您复制任何东西, KeePassium 会在稍后自动的为您清除剪贴板。";
+
+/* An option in Settings. Will be shown as 'Clipboard Timeout: Never' */
+"[Settings/ClipboardTimeout/Never/title]" = "永不";
+
+/* Description of the 'Make Backup Copies' setting */
+"[Settings/DatabaseBackup/Active/description]" = "在保存数据库时, KeePassium 会自动创建一个副本, 以防万一。";
+
+/* Title of a yes/no setting: whether to back up databases before saving them */
+"[Settings/DatabaseBackup/Active/title]" = "创建备份副本";
+
+/* Confirmation dialog message to delete all backup files */
+"[Settings/DatabaseBackup/DeleteAll/confirm]" = "删除所有备份文件?";
+
+/* Action to delete all backup files from the app. `ALL` is in capitals as a highlight. [backupFileCount: Int] */
+"[Settings/DatabaseBackup/DeleteAll/title]" = "删除所有备份文件(%d)";
+
+/* Description of the 'Exclude Backup Files from System Backup' setting */
+"[Settings/DatabaseBackup/ExcludeFromSystemBackup/description]" = "定义是否将 KeePassium 创建的备份数据库在iCloud/iTunes 备份中排除。应用于所有现有和未来的备份文件。";
+
+/* Title of a yes/no setting: whether app's internal backup copies should be excluded from global system backup */
+"[Settings/DatabaseBackup/ExcludeFromSystemBackup/title]" = "从系统备份中排除备份文件";
+
+/* Setting title: how long to keep backup copies. Example: 'Keep Backup Files: Forever' */
+"[Settings/DatabaseBackup/KeepingDuration/Forever/title]" = "永远";
+
+/* Setting title: how long to keep backup copies. For example: `Keep Backup Files: 3 days` */
+"[Settings/DatabaseBackup/KeepingDuration/title]" = "保留备份文件";
+
+/* Status message: there are no backup files to delete */
+"[Settings/DatabaseBackup/NoFiles/title]" = "没有找到备份文件";
+
+/* Description of the `Periodic Cleanup` settings */
+"[Settings/DatabaseBackup/PeriodicCleanup/description]" = "KeePassium 可以自动删除旧的备份文件以释放部分存储空间。";
+
+/* Settings section: automatic deletion of old backup files */
+"[Settings/DatabaseBackup/PeriodicCleanup/title]" = "定期清理";
+
+/* Description of the 'Show Backup Files' setting */
+"[Settings/DatabaseBackup/ShowBackupFiles/description]" = "备份副本将与原始文件一起显示。";
+
+/* Section header, refers to Apple's backup services (https://support.apple.com/HT203977) */
+"[Settings/DatabaseBackup/SystemBackup/title]" = "iTunes 与 iCloud 备份";
+
+/* Title of a settings section: backup of databases */
+"[Settings/DatabaseBackup/title]" = "数据库备份";
+
+/* Description of the `Database Timeout` setting */
+"[Settings/DatabaseLockTimeout/description]" = "如果您在一段时间内没有与KeePassium程序交互, 数据库将会自动关闭, 以确保您的安全。如果重新打开KeePassium程序您需要重新输入主密码。";
+
+/* Title of a setting: the time after which databases will be locked. */
+"[Settings/DatabaseLockTimeout/title]" = "数据库超时";
+
+/* A description/subtitle for the 'Database Timeout: Immediately'. */
+"[Settings/DatabaseTimeout/Immediately/description]" = "离开程序时";
+
+/* An option in Settings. Will be shown as 'Database Timeout: Immediately' */
+"[Settings/DatabaseTimeout/Immediately/title" = "立刻";
+
+/* An option in Settings. Will be shown as 'Database Timeout: Never' */
+"[Settings/DatabaseTimeout/Never/title]" = "永不";
+
+/* Section title: advanced/expert settings */
+"[Settings/DataProtection/Advanced/title]" = "高级选项";
+
+/* Title of a section in settings */
+"[Settings/DataProtection/AutomaticLock/title]" = "自动锁定";
+
+/* Setting switch: whether to lock databases after device reboot. */
+"[Settings/DataProtection/LockOnReboot/title]" = "设备重启时锁定";
+
+/* Title of a yes/no setting: whether to lock databases when computer screen is locked (see https://support.apple.com/en-gb/guide/mac-help/mchl8e8b6a34/mac) */
+"[Settings/DataProtection/LockOnScreenLock/title]" = "在 macOS 屏幕锁定时锁定";
+
+/* Subtitle for `Data Protection` section in settings */
+"[Settings/DataProtection/subtitle]" = "主密钥, 密钥文件";
+
+/* Description of the 'Hide Passwords' setting. */
+"[Settings/HidePasswords/description]" = "隐藏星号后面的密码和其他受保护字段 (推荐)。";
+
+/* Title of a yes/no setting */
+"[Settings/HidePasswords/title]" = "隐藏密码";
+
+/* Description of the 'Remember Key Files' setting */
+"[Settings/KeyFiles/Remember/description]" = "记住并自动使用该数据库上次使用的密钥文件。清除关联不会对文件本身做修改。";
+
+/* Title of a section in Settings */
+"[Settings/KeyFiles/title]" = "密钥文件";
+
+/* Description of the 'Cache Derived Encryption Keys' setting */
+"[Settings/MasterKeys/CacheDerived/description]" = "缓存的密钥允许 KeePassium 尽可能跳过密钥衍生和 YubiKey 扫描。";
+
+/* Action: clear/erase/delete stored master keys */
+"[Settings/MasterKeys/Clear/action]" = "清除主密钥";
+
+/* Title of a yes/no setting. */
+"[Settings/MasterKeys/ClearOnTimeout/title]" = "超时清除主密钥";
+
+/* Description of the 'Remember Master Keys' setting. */
+"[Settings/MasterKeys/Remember/description]" = "当解锁数据库时, 主密钥将会安全的保存在系统钥匙圈中。在下次登入KeePassium 将会自动使用该密钥文件, 所以您无须再输入您完整的主密码。";
+
+/* Title of a section in settings */
+"[Settings/OTP/title]" = "一次性密码";
+
+/* Title of a section in settings */
+"[Settings/Premium/title]" = "高级版";
+
+/* Title of a section in Settings */
+"[Settings/ProtectedFields/title]" = "受保护字段";
+
+/* Title of a section in settings */
+"[Settings/QuickUnlock/title]" = "快速解锁";
+
+/* Title of a setting: whether search looks in field names */
+"[Settings/Search/InFieldNames/title]" = "搜索字段名称";
+
+/* Title of a setting: whether search looks in passwords */
+"[Settings/Search/InPasswords/title]" = "搜索密码";
+
+/* Title of a setting: whether search looks in values of protected fields */
+"[Settings/Search/InProtectValues/title]" = "搜索受保护的值";
+
+/* Title of a setting: which fields to consider in search */
+"[Settings/Search/Scope/title]" = "搜索范围";
+
+/* Description of the 'Start with Search' setting. */
+"[Settings/Search/StartWithSearch/description]" = "打开数据库后，自动显示搜索字段。";
+
+/* Title of a setting: whether to open search field immediately after opening a database */
+"[Settings/Search/StartWithSearch/title]" = "进入时弹出搜索框";
+
+/* Section title in settings */
+"[Settings/Search/title]" = "搜索​​​​";
+
+/* Description of the 'Ask for Confirmation' setting. */
+"[Settings/ShakeGestureAction/Confirm/description]" = "如果应用锁定则无需确认。";
+
+/* Title for a setting: whether the app should show an 'Are you sure?' before continuing */
+"[Settings/ShakeGestureAction/Confirm/title]" = "要求确认";
+
+/* Title for a setting: what the app should do when the user shakes the device */
+"[Settings/ShakeGestureAction/title]" = "摇动时";
+
+/* Title of a section in settings: parameters that control what happens when the app is started. */
+"[Settings/Start/title]" = "启动";
+
+/* Title of a section in settings: technical support and diagnostics */
+"[Settings/Support/title]" = "支持";
+
+/* Description of the 'Universal Clipboard' setting. */
+"[Settings/UniversalClipboard/description]" = "使用通用剪贴板在您的苹果设备之间复制和粘贴。在外部设备上，这个剪贴板在两分钟后被清除。";
+
+/* Apple's term: https://support.apple.com/102430 */
+"[Settings/UniversalClipboard/title]" = "通用剪贴板";
 
 /* Action/button to create a new item tag */
 "[Tags/Create/action]" = "创建标签";
@@ -330,4 +723,46 @@
 
 /* Title: the number of times a tag is encountered in the database. */
 "[Tags/UsageCount/title]" = "使用次数";
+
+/* Call to action in What's New announcement */
+"[WhatsNew/Announcement/body]" = "探索 KeePassium 中的新功能和改进。";
+
+/* Button which opens the What's New screen. */
+"[WhatsNew/Announcement/button]" = "更新了什么";
+
+/* Description of a feature highlight, a call to action. */
+"[WhatsNew/Feature/AppScopedConnections/description]" = "使用“仅限应用文件夹”权限来保护您的云端数据。";
+
+/* Title of a feature highlight, a noun phrase. */
+"[WhatsNew/Feature/AppScopedConnections/title]" = "更安全的云端访问";
+
+/* Description of a feature highlight, a call to action. */
+"[WhatsNew/Feature/AutoFillWithMemory/description]" = "KeePassium 会记住您在每个网站选择的条目。";
+
+/* Title of a feature highlight, a noun phrase. */
+"[WhatsNew/Feature/AutoFillWithMemory/title]" = "更智能的自动填充";
+
+/* Description of a feature highlight, a call to action. */
+"[WhatsNew/Feature/AutoType/description]" = "使用按键模拟，快速登录任何应用或网页浏览器。";
+
+/* Title of a feature highlight, a noun phrase. */
+"[WhatsNew/Feature/AutoType/title]" = "自动输入密码";
+
+/* Description of a feature highlight, a call to action. */
+"[WhatsNew/Feature/CreativeAutoFill/description]" = "在自动填充中自动创建新条目，并自动预填主要字段。";
+
+/* Title of a feature highlight, a noun phrase. */
+"[WhatsNew/Feature/CreativeAutoFill/title]" = "注册速度更快";
+
+/* Description of a feature highlight, a call to action. `Browse alphabetically` refers to a phonebook-like index with letters. */
+"[WhatsNew/Feature/MoreInteractions/description]" = "拖放、选择多个项目，并按字母顺序浏览。";
+
+/* Title of a feature highlight, a noun phrase. */
+"[WhatsNew/Feature/MoreInteractions/title]" = "更多交互方式";
+
+/* Title of the detailed history of app changes over time. */
+"[WhatsNew/FullChangelog/title]" = "详细更新日志";
+
+/* Full title for release highlights */
+"[WhatsNew/fullTitle]" = "KeePassium 最新变化";
 

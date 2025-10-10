@@ -1,5 +1,29 @@
+/* Menu item that shows info about KeePassium app */
+"[About/altTitle]" = "حَول KeePassium";
+
+/* Section in settings: icon for the app */
+"[Appearance/AppIcon/title]" = "أيقونة التطبيق";
+
+/* Section in settings: icons for database */
+"[Appearance/DatabaseIcons/title]" = "أيقونات قاعدة البيانات";
+
+/* Section in settings: parameters related to entry viewer component */
+"[Appearance/EntryViewer/title]" = "مُستعرض المدخلات";
+
+/* Action: set text size to standard size */
+"[Appearance/TextSize/reset]" = "إعادة تعيين حجم النص إلى الافتراضي";
+
+/* Title of a setting option: font size */
+"[Appearance/TextSize/title]" = "حجم النص";
+
+/* Group of settings for user interface appearance (text size, icons, etc) */
+"[Appearance/title]" = "المظهر";
+
 /* Title of the app history (changelog) screen */
 "[AppHistory/title]" = "ما هو الجديد";
+
+/* Subtitle for `Contact Us`. Keep it short. */
+"[ContactUs/subtitle]" = "اقتراحات؟ مشاكل؟ دعنا نعلم!";
 
 /* Hint shown when both password and key file are empty. */
 "[Database/Create] Please enter a password or choose a key file." = "يُرجى إدخال كلمة مرور أو اختيار ملف مفتاح.";
@@ -34,6 +58,12 @@
 /* Predefined `Operating system` group in a new database */
 "[Database/Create/TemplateGroup/title] OS" = "نظام التشغيل";
 
+/* Placeholder text in an empty group */
+"[Database/Group/empty]" = "هذه المجموعة فارغة";
+
+/* Subtitle for `Diagnostic Log`. Keep it short. */
+"[DiagLog/subtitle]" = "اصلاح المشاكل للمستخدمين المتقدمين";
+
 /* Confirmation message to replace an existing entry attachment with a new one. */
 "[Entry/Files/Add] Replace existing attachment?" = "استبدال الملف المرفق الحالي؟";
 
@@ -58,6 +88,270 @@
 /* Action/button to set up the Password AutoFill feature. Not a call to action. */
 "[Onboarding/AutoFill/activate]" = "تنشيط التعبئة التلقائية";
 
+/* Status: special premium for beta-testing environment is active */
+"[Premium/Status/BetaTesting/title]" = "اختبار إصدار البيتا";
+
+/* Status: current version of the app. For example: `Current version: 1.23`. Should be similar to the `Licensed version` string. [version: String] */
+"[Premium/Status/currentVersion]" = "الإصدار الحالي: %@";
+
+/* Status: premium subscription has expired. For example: `Expired 1 day ago`. [timeFormatted: String, includes the time unit (day, hour, minute)] */
+"[Premium/Status/expiredAgo]" = "انتهت صلاحيتها منذ %@ جدد من فضلك.";
+
+/* Status: licensed premium version of the app. For example: `Licensed version: 1.23`. [version: String] */
+"[Premium/Status/licensedVersion]" = "إصدار الرخصة: %@";
+
+/* Status: scheduled renewal date of a premium subscription. For example: `Next renewal on 1 Jan 2050`. [expiryDateString: String] */
+"[Premium/Status/nextRenewal]" = "التجديد التالي في %@";
+
+/* Status when the user has a premium version */
+"[Premium/Status/title]" = "النُسخة المُمَيَزة";
+
+/* Status: validity period of once-and-forever premium */
+"[Premium/Status/ValidForever/title]" = "صالحة للأبد";
+
+/* Status: how long the app has been used during some time period. For example: `App being useful: 1hr/month, about 12hr/year`. [monthlyUsage: String, annualUsage: String — already include the time unit (hours, minutes)] */
+"[Premium/usage] App being useful: %@/month, that is around %@/year." = "التطبيق كان مفيد: %1$@ في الشهر، أي حوالي %2$@ في السنة.";
+
 /* Action/button to make password visible as plain-text */
 "[ProtectedTextField] Show Password" = "إظهار كلمة المرور";
+
+/* Description of the Quick AutoFill feature. */
+"[QuickAutoFill/description]" = "التعبئة التلقائية السريعة تظهر المُدخلات ذات الصلة بجانب حقل رمز المرور، دون فتح KeePassium.";
+
+/* Placeholder text for empty search results */
+"[Search/EmptyResult/title]" = "لا توجد نتائج مُناسبة";
+
+/* Title of a section in settings: parameters that protect access to data */
+"[Settings/AccessControl/title]" = "صلاحيات الوصول";
+
+/* Call to action (protect the app from unauthorized access) */
+"[Settings/AppLoc/Activate/callToAction]" = "تمكين قفل التطبيق";
+
+/* Description of `Activate app protection` call to action. */
+"[Settings/AppLock/Activate/description]" = "إحمِ KeePassium مِنَ الوصول غير المُصرَّح به.";
+
+/* Description of biometric unlock settings */
+"[Settings/AppLock/Biometric/description]" = "السماح بالمصادقة البيومترية كبديل سريع (لكن أقل أمانًا) لكلمة مرور قفل التطبيق.";
+
+/* Settings switch: whether App Protection is allowed to use Touch ID/Face ID. Example: 'Use Touch ID'. [biometryTypeName: String] */
+"[Settings/AppLock/Biometric/title] Use %@" = "استخدام %@";
+
+/* Explanation for the `Lock on App Launch` setting */
+"[Settings/AppLock/LockOnLaunch/description]" = "يضمن قفل KeePassium بعد إغلاق التطبيق بالقوة أو إعادة تشغيل الجهاز.";
+
+/* Setting switch: whether to lock the app after it was terminated and relaunched. */
+"[Settings/AppLock/LockOnLaunch/title]" = "قفل عند تشغيل التطبيق";
+
+/* Description of the `Lock on Wrong Passcode` setting */
+"[Settings/AppLock/LockOnWrongPasscode/description]" = "إذا قمت بإدخال كلمة المرور بشكل خاطيء في قفل التطبيق، سيقوم KeePassium بإغلاق جميع قواعد البيانات وإزالة جميع المفاتيح الرئيسة من سلسلة المفاتيح.";
+
+/* Settings: subtitle of the `App Protection` section. biometryTypeName will be either 'Touch ID' or 'Face ID'. [biometryTypeName: String] */
+"[Settings/AppLock/subtitle] App Lock, %@, timeout" = "قفل التطبيق، %@، مهلة الخروج";
+
+/* Settings: subtitle of the `App Protection` section when biometric auth is not available. */
+"[Settings/AppLock/subtitle] App Lock, passcode, timeout" = "قفل التطبيق، كلمة المرور، مهلة الخروج";
+
+/* Description of the App Lock Timeout setting */
+"[Settings/AppLock/Timeout/description]" = "سيتم قفل التطبيق تلقائيًا بعد هذا الوقت.";
+
+/* Title for App Lock Timeout setting */
+"[Settings/AppLock/Timeout/title]" = "المُهلة";
+
+/* Settings section: protection of the app from unauthorized access */
+"[Settings/AppLock/title]" = "حماية التطبيق";
+
+/* Settings section: what happens if user enters incorrect App Protection passcode. */
+"[Settings/AppLock/WrongPasscode/title]" = "كلمة مرور خاطئة";
+
+/* Description of those 'App Protection Timeout' options that trigger when the app is minimized. For example: 'Timeout: 3 seconds (After leaving the app) */
+"[Settings/AppLockTimeout/AfterLeavingApp/description]" = "بعد مغادرة التطبيق";
+
+/* Description of those 'App Protection Timeout' options that trigger when the user has been idle for a while. For example: 'Timeout: 3 seconds (After last interaction) */
+"[Settings/AppLockTimeout/description] After last interaction" = "بعد آخر تفاعل";
+
+/* An option in Settings. Will be shown as 'App Lock: Timeout: Immediately' */
+"[Settings/AppLockTimeout/Immediately/title] " = "فورًا";
+
+/* An option in Settings. Will be shown as 'App Lock: Timeout: Never' */
+"[Settings/AppLockTimeout/Never/title]" = "ابدًا";
+
+/* Action that opens system settings or instructions */
+"[Settings/AutoFill/Activate/action]" = "تنشيط التعبئة التلقائية";
+
+/* Description for the AutoFill setup instructions */
+"[Settings/AutoFill/Activate/description]" = "قبل الاستخدام الأول، تحتاج إلى تفعيل التعبئة التلقائية من إعدادات النظام.";
+
+/* Description of the 'Copy OTP to Clipboard' setting */
+"[Settings/AutoFill/CopyOTP/Description]" = "عندما تدرج تلقائياً اسم المستخدم وكلمة المرور، يمكنك أيضاً نسخ كلمة المرور لمرة واحدة (OTP).";
+
+/* Title of a yes/no setting: copy one-time password to clipboard when using AutoFill */
+"[Settings/AutoFill/CopyOTP/title]" = "نسخ OTP إلى الحافظة";
+
+/* Title of a help article on how to activate AutoFill. */
+"[Settings/AutoFill/Setup Guide/title]" = "دليل إعداد الملء التلقائي";
+
+/* Description of the 'Fill-In Perfect Result Automatically' setting */
+"[Settings/AutoFill/UsePerfectMatch/description]" = "عند العثور على سجل واحد متطابق تماما، سيتم لصق هذا السجل تلقائيا.";
+
+/* Title of a yes/no setting: automatically use the single best match found by AutoFill search */
+"[Settings/AutoFill/UsePerfectMatch/title]" = "املأ النتائج المتطابقة تلقائيًا";
+
+/* Option in settings: whether to open the last used database automatically on start. */
+"[Settings/AutoOpenPreviousDatabase/title]" = "الفتح التلقائي لقاعدة البيانات السابقة";
+
+/* Title of a section in settings */
+"[Settings/AutoSearch/title]" = "البحث التلقائي";
+
+/* Action to clear/erase info about which database uses which key file */
+"[Settings/ClearKeyFileAssociations/action]" = "حذف ملفات المفاتيح المرتبطة";
+
+/* Title of the success message for `Clear Key File Associations` button */
+"[Settings/ClearKeyFileAssociations/Cleared/title]" = "تم المسح";
+
+/* Title of the success message for `Clear Master Keys` button */
+"[Settings/ClearMasterKeys/Cleared/title]" = "تم المسح";
+
+/* Title of a setting: time after which clipboard will be cleared */
+"[Settings/Clipboard/Timeout/title]" = "مُهلَة الحافظة";
+
+/* Section title in Settings */
+"[Settings/Clipboard/title]" = "الحافظة";
+
+/* Description of the 'Clipboard Timeout' setting. */
+"[Settings/ClipboardTimeout/description]" = "عند نسخ اي شيء من السجلات، سيحذف التطبيق تلقائياً الحافظة الخاصة بك بعد هذا الوقت.";
+
+/* An option in Settings. Will be shown as 'Clipboard Timeout: Never' */
+"[Settings/ClipboardTimeout/Never/title]" = "ابدًا";
+
+/* Description of the 'Make Backup Copies' setting */
+"[Settings/DatabaseBackup/Active/description]" = "قبل حفظ قاعدة بيانات، سيقوم KeePassium تلقائياً بصنع نسخة، فقط للحيطة.";
+
+/* Title of a yes/no setting: whether to back up databases before saving them */
+"[Settings/DatabaseBackup/Active/title]" = "إنشاء نُسَخ احتياطية";
+
+/* Confirmation dialog message to delete all backup files */
+"[Settings/DatabaseBackup/DeleteAll/confirm]" = "حذف جميع ملفات النَسخ الاحتياطي؟";
+
+/* Action to delete all backup files from the app. `ALL` is in capitals as a highlight. [backupFileCount: Int] */
+"[Settings/DatabaseBackup/DeleteAll/title]" = "حذف جميع ملفات النسخ الاحتياطي (%d)";
+
+/* Description of the 'Exclude Backup Files from System Backup' setting */
+"[Settings/DatabaseBackup/ExcludeFromSystemBackup/description]" = "يحدِّد إذا ما كان يجب فصل قواعد البيانات الاحتياطية التي أنشأها KeePassium من نسخة iCloud / iTunes الاحتياطية. يطَّبق على جميع ملفات النسخ الاحتياطي الحالية والمُستقبلية.";
+
+/* Title of a yes/no setting: whether app's internal backup copies should be excluded from global system backup */
+"[Settings/DatabaseBackup/ExcludeFromSystemBackup/title]" = "فصل ملفات النسخ الاحتياطي عن النسخ الاحتياطي للنظام";
+
+/* Setting title: how long to keep backup copies. Example: 'Keep Backup Files: Forever' */
+"[Settings/DatabaseBackup/KeepingDuration/Forever/title]" = "إلى الأبد";
+
+/* Setting title: how long to keep backup copies. For example: `Keep Backup Files: 3 days` */
+"[Settings/DatabaseBackup/KeepingDuration/title]" = "الاحتفاظ بملفات نَسخ احتياطي";
+
+/* Status message: there are no backup files to delete */
+"[Settings/DatabaseBackup/NoFiles/title]" = "لم يتم العثور على ملفات نسخ احتياطي";
+
+/* Description of the `Periodic Cleanup` settings */
+"[Settings/DatabaseBackup/PeriodicCleanup/description]" = "إنَّ KeePassium يُمكنه حذف ملفات النَسخ الاحتياطي القديمة تلقائيًا لتحرير بعض مساحة التخزين.";
+
+/* Settings section: automatic deletion of old backup files */
+"[Settings/DatabaseBackup/PeriodicCleanup/title]" = "التنظيف الدوري";
+
+/* Description of the 'Show Backup Files' setting */
+"[Settings/DatabaseBackup/ShowBackupFiles/description]" = "ستظهر النسخ الاحتياطية مع الملفات الأصلية.";
+
+/* Section header, refers to Apple's backup services (https://support.apple.com/HT203977) */
+"[Settings/DatabaseBackup/SystemBackup/title]" = "نُسخ iTunes و iCloud الاحتياطي";
+
+/* Title of a settings section: backup of databases */
+"[Settings/DatabaseBackup/title]" = "النسخ الاحتياطي لقاعدة البيانات";
+
+/* Description of the `Database Timeout` setting */
+"[Settings/DatabaseLockTimeout/description]" = "إذا كنت لا تتفاعل مع التطبيق لبعض الوقت، فسيتم إغلاق قاعدة البيانات لسلامتك. لفتحها، سوف تحتاج إلى إدخال كلمة المرور الرئيسة مرة أخرى.";
+
+/* Title of a setting: the time after which databases will be locked. */
+"[Settings/DatabaseLockTimeout/title]" = "مُهلَة قاعدة البيانات";
+
+/* A description/subtitle for the 'Database Timeout: Immediately'. */
+"[Settings/DatabaseTimeout/Immediately/description]" = "عِندَ مُغادرة التطبيق";
+
+/* An option in Settings. Will be shown as 'Database Timeout: Immediately' */
+"[Settings/DatabaseTimeout/Immediately/title" = "فورًا";
+
+/* An option in Settings. Will be shown as 'Database Timeout: Never' */
+"[Settings/DatabaseTimeout/Never/title]" = "ابدًا";
+
+/* Section title: advanced/expert settings */
+"[Settings/DataProtection/Advanced/title]" = "مُتقدِم";
+
+/* Title of a section in settings */
+"[Settings/DataProtection/AutomaticLock/title]" = "قفل تلقائي";
+
+/* Subtitle for `Data Protection` section in settings */
+"[Settings/DataProtection/subtitle]" = "المفاتيح الرئيسة وملفات المفاتيح";
+
+/* Description of the 'Hide Passwords' setting. */
+"[Settings/HidePasswords/description]" = "إخفاء كلمات المرور وغيرها من الحقول المحمية خلف النُجُوم (مُستَحسَن).";
+
+/* Title of a yes/no setting */
+"[Settings/HidePasswords/title]" = "إخفاء كلمات المرور";
+
+/* Description of the 'Remember Key Files' setting */
+"[Settings/KeyFiles/Remember/description]" = "التذكُّر والتَّحديد التلقائي لآخر مَلف مفتاح مُستخدَم لكُل قاعدة بيانات. مَسح الروابط لا يؤثر على الملفات.";
+
+/* Title of a section in Settings */
+"[Settings/KeyFiles/title]" = "ملفات المفاتيح";
+
+/* Description of the 'Cache Derived Encryption Keys' setting */
+"[Settings/MasterKeys/CacheDerived/description]" = "تسمح المفاتيح المخزنة مؤقتًا لـKeePassium أن يتخطي اشتقاق المفتاح ومسح YubiKey كلما أمكن ذلك.";
+
+/* Action: clear/erase/delete stored master keys */
+"[Settings/MasterKeys/Clear/action]" = "مسح المفاتيح الرئيسة";
+
+/* Title of a yes/no setting. */
+"[Settings/MasterKeys/ClearOnTimeout/title]" = "مسح المفاتيح الرئيسة عند انتهاء المهلة";
+
+/* Title of a section in settings */
+"[Settings/OTP/title]" = "كلمة السر لمرة واحدة OTP";
+
+/* Title of a section in settings */
+"[Settings/Premium/title]" = "المميز";
+
+/* Title of a section in Settings */
+"[Settings/ProtectedFields/title]" = "الحُقُول المَحمية";
+
+/* Title of a section in settings */
+"[Settings/QuickUnlock/title]" = "الفتح سريع";
+
+/* Title of a setting: whether search looks in field names */
+"[Settings/Search/InFieldNames/title]" = "البحث في اسماء الحقول";
+
+/* Title of a setting: whether search looks in values of protected fields */
+"[Settings/Search/InProtectValues/title]" = "البحث في الحقول المحمية";
+
+/* Title of a setting: which fields to consider in search */
+"[Settings/Search/Scope/title]" = "نطاق البحث";
+
+/* Description of the 'Start with Search' setting. */
+"[Settings/Search/StartWithSearch/description]" = "إظهار حقل البحث تلقائيا، بعد فتح قاعدة بيانات.";
+
+/* Title of a setting: whether to open search field immediately after opening a database */
+"[Settings/Search/StartWithSearch/title]" = "ابدأ بالبحث";
+
+/* Section title in settings */
+"[Settings/Search/title]" = "البحث";
+
+/* Title of a section in settings: parameters that control what happens when the app is started. */
+"[Settings/Start/title]" = "البداية";
+
+/* Title of a section in settings: technical support and diagnostics */
+"[Settings/Support/title]" = "الدعم الفني";
+
+/* Description of the 'Universal Clipboard' setting. */
+"[Settings/UniversalClipboard/description]" = "استخدام الحافظة العامة للنسخ والصق بين أجهزة Apple الخاصة بك. على الأجهزة الخارجية، يتم مسح هذه الحافظة بعد دقيقتين.";
+
+/* Apple's term: https://support.apple.com/102430 */
+"[Settings/UniversalClipboard/title]" = "الحافظة العامة";
+
+/* Button which opens the What's New screen. */
+"[WhatsNew/Announcement/button]" = "ما هو الجديد";
 

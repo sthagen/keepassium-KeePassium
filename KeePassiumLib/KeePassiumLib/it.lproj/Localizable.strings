@@ -1,6 +1,3 @@
-/* Menu item that shows info about KeePassium app */
-"[About/altTitle]" = "Informazioni su KeePassium";
-
 /* Copyright notice */
 "[About/CopyrightAuthor]" = "©Andrei Popleteev";
 
@@ -10,32 +7,23 @@
 /* Call to action: perform accessibilty `activate` action to listen to text/content. */
 "[Accessibility/activateToListen]" = "Attiva per ascoltare.";
 
+/* Accessibility notification for entries with attached files. */
+"[Accessibility/containsAttachments]" = "Contiene allegati.";
+
+/* Accessibility notification for entries with a problematic passkey */
+"[Accessibility/containsIncompatiblePasskey]" = "Contiene una passkey non compatibile con questo dispositivo.";
+
+/* Accessibility notification for entries with OTP codes. */
+"[Accessibility/containsOTP]" = "Contiene una password monouso.";
+
 /* Accessibility notification for entries with a passkey */
-"[Accessibility/containsPasskey]" = "Contiene una chiave d'accesso.";
+"[Accessibility/containsPasskey]" = "Contiene una passkey.";
 
 /* Action which resets the app as if it was just installed. */
 "[App/ResetEverything/action]" = "Inizializza";
 
 /* Confirmation message before resetting the app to just-installed state. */
 "[App/ResetEverything/title]" = "Inizializzare l'app?";
-
-/* Section in settings: icon for the app */
-"[Appearance/AppIcon/title]" = "Icona app";
-
-/* Section in settings: icons for database */
-"[Appearance/DatabaseIcons/title]" = "Icone database";
-
-/* Short name of the default/system font. For example: `Font: Default` */
-"[Appearance/DefaultFont/shortTitle]" = "Default";
-
-/* Title of a setting option: font */
-"[Appearance/Font/title]" = "Font";
-
-/* Title of a setting option: font size */
-"[Appearance/TextSize/title]" = "Dimensione testo";
-
-/* Group of settings for user interface appearance (text size, icons, etc) */
-"[Appearance/title]" = "Aspetto";
 
 /* Action/button to unlock the App Lock with passcode */
 "[AppLock] Unlock" = "Sblocca";
@@ -85,6 +73,24 @@
 /* Title of a message related to upgrading to the premium version */
 "[AutoFill/Premium/Upgrade/Manual/title] Premium Upgrade" = "Versione Premium";
 
+/* Call to action / instruction on how to enable accessibility permission */
+"[AutoType/AccessibilityPrompt/callToAction]" = "Aprire le impostazioni di sistema → Privacy & Sicurezza → Accessibilità e abilitare KeePassium.";
+
+/* Message explaining why accessibility permission is needed */
+"[AutoType/AccessibilityPrompt/message]" = "KeePassium richiede il tuo permesso per inviare pressioni di tasti ad altre app.";
+
+/* Title of a dialog asking user to provide a security permission */
+"[AutoType/AccessibilityPrompt/title]" = "KeePassium richiede il tuo permesso";
+
+/* Action: send key presses to 'type in' entry data into another app */
+"[AutoType/action]" = "Esegui completamento automatico";
+
+/* Button to open system settings (accessibility, permissions, etc) */
+"[AutoType/Action/OpenSettings]" = "Apri Impostazioni";
+
+/* Title for error when auto-type fails */
+"[AutoType/Error/Title]" = "Completamento automatico non riuscito";
+
 /* Name of biometric authentication method. Trademarked, do not translate unless Apple traslated it to your language. */
 "[BiometricAuthType] Face ID" = "Face ID";
 
@@ -98,10 +104,10 @@
 "[ChallengeResponseError] keyNotConnected" = "Chiave fisica non connessa.";
 
 /* Error message when trying to use challenge-response hardware in AutoFill. */
-"[ChallengeResponseError] notAvailableInAutoFill" = "Le chiavi fisiche non sono disponibili nell'inserimento automatico.";
+"[ChallengeResponseError] notAvailableInAutoFill" = "L'inserimento automatico non supporta le chiavi fisiche.";
 
 /* Error message when trying to use challenge-response with a kdb database. */
-"[ChallengeResponseError] notSupportedByDatabaseFormat" = "Le chiavi fisiche non sono supportate da questo formato di database.";
+"[ChallengeResponseError] notSupportedByDatabaseFormat" = "Questo formato di database non supporta le chiavi fisiche.";
 
 /* Error message when trying to use a hardware challenge-response key on unsupported device/iOS version. %@ will be the name of the hardware interface, such as `NFC` or `Lightning`. */
 "[ChallengeResponseError] notSupportedByDeviceOrSystem" = "Questo dispositivo o versione di iOS non supporta le chiavi fisiche (%@)";
@@ -120,9 +126,6 @@
 
 /* Notification: an item has been copied to clipboard */
 "[Clipboard/Copy/notification]" = "Copiato";
-
-/* Subtitle for `Contact Us`. Keep it short. */
-"[ContactUs/subtitle]" = "Suggerimenti? Problemi? Facci sapere!";
 
 /* Error message about AES cipher. [errorCode: Int] */
 "[CryptoError] AES decryption error (code %d)" = "Errore decrittazione AES (codice %d)";
@@ -156,6 +159,12 @@
 
 /* Action: add/import an image as a custom icon */
 "[Database/CustomIcon/add]" = "Aggiungi icona personalizzata";
+
+/* Notification when some custom icons are about to be deleted [iconCount: Int] */
+"[Database/CustomIcon/All/count]" = "Tutte le icone personalizzate: %d";
+
+/* Action: delete all custom icons */
+"[Database/CustomIcon/deleteAll]" = "Elimina tutti";
 
 /* Action: delete unused icons */
 "[Database/CustomIcon/deleteUnused]" = "Elimina le icone non utilizzate";
@@ -212,7 +221,7 @@
 "[Database/Entry/LinkedDatabase/message]" = "Questa voce punta a un altro database.";
 
 /* Notification message before database export. */
-"[Database/Export/PlainText/warning]" = "Il file esportato conterrà i tuoi dati in formato plaintext, senza alcuna protezione.";
+"[Database/Export/PlainText/warning]" = "Il file esportato conterrà i tuoi dati sotto forma di semplice testo, senza alcuna protezione.";
 
 /* Notification message about external changes to the loaded file. */
 "[Database/ExternalChange/notification]" = "Il file database è cambiato. Ricaricare?";
@@ -230,7 +239,7 @@
 "[Database/FormatVersion/Conversion/allDataPreserved]" = "Tutti i tuoi dati saranno conservati.";
 
 /* Error message when creating a new passkey. */
-"[Database/FormatVersion/PasskeysNotSupported]" = "Il formato attuale del database non supporta le chiavi d'accesso.";
+"[Database/FormatVersion/PasskeysNotSupported]" = "Il formato attuale del database non supporta le passkey.";
 
 /* Info message when the app needs to change database file format. [oldFormat, newFormat: String] */
 "[Database/FormatVersion/Upgrade/text]" = "KeePassium deve aggiornare il formato del file del database (da %1$@ a %2$@). Potrebbe essere necessario aggiornare altre applicazioni che utilizzano questo database.";
@@ -245,10 +254,16 @@
 "[Database/Item/Edited/state]" = "Modificato";
 
 /* Notification when user tries to copy data from KDBX to older KDB database. */
-"[Database/LesserTargetFormat/warning]" = "Questo è un formato di database vecchio, alcuni dati potrebbero andare persi.";
+"[Database/LesserTargetFormat/warning]" = "Questo database è in un formato vecchio, alcuni dati potrebbero andare persi.";
+
+/* Placeholder shown when there are no database files available */
+"[Database/List/empty]" = "Nessun file database";
+
+/* Call to action. 'Open' here is used as 'launch'. */
+"[Database/List/LocalMissing/callToAction]" = "Apri l'app";
 
 /* Recommendation for solving a problem with a list of files. */
-"[Database/List/LocalMissing/message]" = "Se dei file locali non sono elencati, avvia prima l'app principale di KeePassium.";
+"[Database/List/LocalMissing/message]" = "Se nella lista mancano dei file locali, apri prima l'app principale di KeePassium.";
 
 /* Title of the database picker list */
 "[Database/List/title]" = "Database";
@@ -320,19 +335,19 @@
 "[Database/Opened/Warning/lastEdited] Database was last edited by: %@" = "L'ultima modifica del database è di: %@";
 
 /* Title of a warning message, shown after opening a problematic database */
-"[Database/Opened/Warning/title] Your database is ready, but there was an issue." = "Il tuo database è pronto, ma aveva un problema.";
+"[Database/Opened/Warning/title] Your database is ready, but there was an issue." = "Il tuo database è pronto, ma c'è un problema.";
 
 /* Title of a list with database-related actions (e.g. lock database, change master key, etc) */
 "[Database/Operations/title]" = "Operazioni database";
 
 /* Error message about creation of a new passkey. */
-"[Database/Passkey/Error/UnsupportedAlgorithm/description]" = "Algoritmo di chiavi d'accesso non supportato";
+"[Database/Passkey/Error/UnsupportedAlgorithm/description]" = "Algoritmo passkey non supportato";
 
 /* Status message: preparing database print preview. */
 "[Database/Print/preparingPreview]" = "Preparo anteprima…";
 
 /* Progress status: finished loading database */
-"[Database/Progress] Done" = "Fatto";
+"[Database/Progress] Done" = "Fine";
 
 /* Progress status */
 "[Database/Progress] Loading key file..." = "Carico file chiave…";
@@ -365,7 +380,7 @@
 "[Database/Reload/action]" = "Ricarica database";
 
 /* Message to confirm removal of database file from the app. (This keeps the file, but removes its reference from the app.) */
-"[Database/Remove/Confirm/text] Remove database from the list?\n The file will remain intact and you can add it again later." = "Rimuovere il database dalla lista?\nIl file rimarrà intatto e potrai aggiungerlo di nuovo in seguito.";
+"[Database/Remove/Confirm/text] Remove database from the list?\n The file will remain intact and you can add it again later." = "Rimuovere il database dalla lista?\nIl file rimarrà intatto e potrai riaggiungerlo in seguito.";
 
 /* Action/button to save the current database. */
 "[Database/Save/action] Save Database" = "Salva database";
@@ -374,10 +389,13 @@
 "[Database/SaveToServer/action]" = "Salva sul server";
 
 /* Status message: finished saving a database */
-"[Database/Saving/Status] Done" = "Fatto";
+"[Database/Saving/Status] Done" = "Fine";
 
 /* Status message: saving a database */
 "[Database/Saving/Status] Saving..." = "Salvo…";
+
+/* File access parameter. Will be shown as 'Consider File Unreachable: Immediately' */
+"[Database/Settings/ConsiderFileUnreachable/Immediately]" = "Immediatamente";
 
 /* File settings parameter: time after which file will be considered unreachable. Example: `Consider File Unreachable: in 10 seconds`.) */
 "[Database/Settings/ConsiderFileUnreachable/title]" = "Considera file irraggiungibile";
@@ -445,14 +463,14 @@
 /* Title of a message shown when saving to a database that has already been modified elsewhere. */
 "[Database/SyncConflict/title]" = "Conflitto di sincronizzazione";
 
-/* Error message related to key file. [errorDetails: String] */
-"[Database/Unlock] Key file error: %@" = "Errore file chiave: %@";
-
 /* Error message */
 "[Database/Unlock/Error] Failed to open key file" = "Apertura file chiave fallita";
 
 /* Error message */
 "[Database/Unlock/Error] Password and key file are both empty." = "Password e file chiave sono entrambi vuoti.";
+
+/* Action: load a local (on-device) copy of a remote database */
+"[Database/Unlock/UseFallback/action]" = "Usa copia locale";
 
 /* Message shown when user enters an invalid database password */
 "[Database/Unlock/wrongPassword/question]" = "Hai dimenticato la password?";
@@ -463,8 +481,17 @@
 /* Notification message */
 "[Database/UnsavedChanges/cannotModifyYet]" = "Purtroppo, l'inserimento automatico non è attualmente in grado di modificare database di grandi dimensioni. Stiamo lavorando per risolvere il problema.";
 
+/* Notification message */
+"[Database/UnsavedChanges/couldNotApply]" = "Non è stato possibile applicare automaticamente alcune modifiche in sospeso; le modifiche recenti potrebbero essere mancanti.";
+
 /* Call to action shown in AutoFill module. */
 "[Database/UnsavedChanges/OpenAppCallToAction]" = "Per salvare le modifiche, aprire l'app principale di KeePassium.";
+
+/* Notification message about a problem with unsaved/pending changes. */
+"[Database/UnsavedChanges/Problematic/info]" = "Alcune modifiche in sospeso si riferiscono a voci o gruppi mancanti. KeePassium creerà tali elementi in un gruppo separato e applicherà le modifiche lì.";
+
+/* Title of a group where problematic pending changes are saved. %@ is the date of recovery. */
+"[Database/UnsavedChanges/RecoveredEntriesGroup/name]" = "Modifiche recuperate (%@)";
 
 /* Action/button to save accummulated modifications */
 "[Database/UnsavedChanges/saveAction]" = "Salva modifiche";
@@ -569,16 +596,16 @@
 "[Database2/Loading/Error] Error unpacking database: %@" = "Errore di decompressione database: %@";
 
 /* A warning about missing attachments after loading the database. [lastUsedAppName: String, attachmentNames: String] */
-"[Database2/Loading/Warning/missingBinaries]" = "Gli allegati di alcune voci hanno dati mancanti. Questo è un indice di corruzione del database, molto probabilmente dall'ultima app utilizzata (%1$@). KeePassium manterrà gli allegati vuoti, ma non può ripristinarli. Dovresti ripristinare il database da una copia di sicurezza.\n\nAllegati mancanti: %2$@";
+"[Database2/Loading/Warning/missingBinaries]" = "Gli allegati di alcune voci hanno dati mancanti. Questo indica una corruzione del database causata con ogni probabilità dall'ultima app utilizzata (%1$@). KeePassium manterrà gli allegati vuoti, ma non può ripristinarli. Dovresti ripristinare il database da una copia di sicurezza.\n\nAllegati mancanti: %2$@";
 
 /* A warning about nameless attachments, shown after loading the database. [listOfEntryNames: String] */
-"[Database2/Loading/Warning/namelessAttachments]" = "Alcune voci hanno allegati senza un nome. Questo è un indice di una precedente corruzione del database.\n\nControlla i file allegati nelle seguenti voci (e la loro cronologia):\n%@";
+"[Database2/Loading/Warning/namelessAttachments]" = "Alcune voci hanno allegati senza un nome. Questo indica una corruzione del database.\n\nControlla i file allegati nelle seguenti voci (e la loro cronologia):\n%@";
 
 /* A warning about misformatted custom fields after loading the database. [entryPaths: String] */
-"[Database2/Loading/Warning/namelessCustomFields]" = "Alcune voci hanno campi personalizzati con nomi vuoti. Questo può essere un indice di corruzione dei dati. Controlla queste voci:\n\n%@";
+"[Database2/Loading/Warning/namelessCustomFields]" = "Alcune voci hanno campi personalizzati con nomi vuoti. Questo può indicare una corruzione dei dati. Controlla queste voci:\n\n%@";
 
 /* A warning about unused attachments after loading the database. [lastUsedAppName: String] */
-"[Database2/Loading/Warning/unusedAttachments]" = "Il database contiene alcuni allegati non usati in nessuna voce. Molto probabilmente, sono stati dimenticati dall'ultima applicazione utilizzata (%@). Tuttavia, questo può anche essere un indice di corruzione dei dati.\nAssicurati di avere una copia del database prima di fare qualsiasi modifica.";
+"[Database2/Loading/Warning/unusedAttachments]" = "Il database contiene alcuni allegati non usati in nessuna voce. Con ogni probabilità, sono stati dimenticati dall'ultima applicazione utilizzata (%@). Tuttavia, questo può anche indicare una corruzione dei dati.\nAssicurati di avere una copia del database prima di fare qualsiasi modifica.";
 
 /* Progress bar status */
 "[Database2/Progress] Loading database" = "Carico database";
@@ -599,10 +626,10 @@
 "[Database2/Progress/parsingXML]" = "Analizzo database";
 
 /* Error message while saving a database. [errorDescription: String] */
-"[Database2/Saving/Error] Data compression error: %@" = "Errore compressione dati: %@";
+"[Database2/Saving/Error] Data compression error: %@" = "Errore durante la compressione dei dati: %@";
 
 /* Error message while saving a database. [errorDescription: String] */
-"[Database2/Saving/Error] Encryption error: %@" = "Errore cifratura: %@";
+"[Database2/Saving/Error] Encryption error: %@" = "Errore di crittografia: %@";
 
 /* Error message about XML parsing. [value: String, tag: String] */
 "[Database2/Xml2/ParsingError] Malformed value '%@' in %@" = "Valore malformato '%1$@' in %2$@";
@@ -627,9 +654,6 @@
 
 /* Error message: user provided a wrong master key for decryption. */
 "[DatabaseError] Invalid password or key file" = "Password o file chiave non validi";
-
-/* Subtitle for `Diagnostic Log`. Keep it short. */
-"[DiagLog/subtitle]" = "Per troubleshooting avanzato";
 
 /* Title of the diagnostic info screen */
 "[DiagLog/title]" = "Registro diagnostico";
@@ -670,11 +694,20 @@
 /* Default name of a newly created entry field */
 "[Entry/Edit/CreateField/defaultName] Field Name" = "Nome campo";
 
+/* Action/button to add a new field to the entry */
+"[Entry/Field/Add/action]" = "Aggiungi campo";
+
+/* On/off state: whether to show full-size or compact menu */
+"[Entry/Field/CompactMenu/title]" = "Vista compatta";
+
 /* Notification: a reference to an entry field has been copied to clipboard */
 "[Entry/Field/CopyReference/acknowledgement]" = "Riferimento campo copiato negli appunti";
 
 /* Action: copy a reference to the selected entry field to clipboard */
 "[Entry/Field/CopyReference/action]" = "Copia riferimento campo";
+
+/* Title for a generic user-defined entry field. */
+"[Entry/Field/Custom/title]" = "Campo personalizzato";
 
 /* Action: display text using large font */
 "[Entry/Field/LargeType/action]" = "Mostra con testo grande";
@@ -686,7 +719,7 @@
 "[Entry/Field/name] Notes" = "Note";
 
 /* Title of an entry field */
-"[Entry/Field/name] Passkey" = "Chiave d'accesso";
+"[Entry/Field/name] Passkey" = "Passkey";
 
 /* Name of an entry field */
 "[Entry/Field/name] Password" = "Password";
@@ -703,11 +736,20 @@
 /* Title of a setting: whether the entry's field is protected (shown as asterisks). */
 "[Entry/Field/Protected/title]" = "Campo protetto";
 
+/* Action: display text using QR code */
+"[Entry/Field/QRCode/action]" = "Mostra come codice QR";
+
 /* Name of an entry field */
 "[Entry/Field/tags] Tags" = "Tag";
 
+/* Title of an alternative URL, with a number [number: String] */
+"[Entry/Field/URL/Extra/title]" = "URL (%d)";
+
 /* Status message: loading file to be attached to an entry */
 "[Entry/Files/Add] Loading attachment file" = "Carico file allegato";
+
+/* Title of a list with frequently used entry fields. */
+"[Entry/FrequentlyUsedFields/title]" = "Usati di frequente";
 
 /* Title of a field with entry creation date and time */
 "[Entry/History] Creation Date" = "Data di creazione";
@@ -746,7 +788,7 @@
 "[File/Re-add/title]" = "Aggiungi di nuovo il file";
 
 /* Notification when user opens an in-app backup database. */
-"[File/TemporaryBackup/warning]" = "Questa è una copia temporanea di un database. Può essere eliminata automaticamente senza preavviso. Non usarla come database principale.";
+"[File/TemporaryBackup/warning]" = "Questa è una copia temporanea di un database. Potrebbe venire eliminata automaticamente senza preavviso. Non usarla come database principale.";
 
 /* Error message: storage provider app was logged out or uninstalled. */
 "[FileAccessError/FileProvider/NotFound/generic]" = "Il fornitore di spazio di archiviazione non è disponibile. Controlla che sia installato e connesso al tuo account.";
@@ -779,7 +821,7 @@
 "[FileAccessError/NoWritePermission/title]" = "Impossibile salvare il file (%@)";
 
 /* Explanation of a file writing error */
-"[FileAccessError/OneDriveReadOnly/reason]" = "Microsoft di recente ha bloccato l'integrazione di OneDrive con iOS in modalità Sola lettura. Temporaneamente, dicono.";
+"[FileAccessError/OneDriveReadOnly/reason]" = "Microsoft ha bloccato l'integrazione di OneDrive con iOS in modalità Sola lettura. Temporaneamente, dicono.";
 
 /* Suggestion for error recovery */
 "[FileAccessError/OneDriveReadOnly/recoverySuggestion]" = "Utilizza l'opzione Esporta per salvare il file da un'altra parte.";
@@ -949,6 +991,9 @@
 /* Placeholder for folders without files */
 "[General/FileList/Empty/title]" = "La cartella è vuota";
 
+/* Info message for keyboard-assisted selection */
+"[General/MultiSelectionKeys/hint]" = "Premere e tenere premuto il tasto Cmd o Maiusc per selezionare più elementi.";
+
 /* Action/button to cancel whatever is going on */
 "[Generic] Cancel" = "Annulla";
 
@@ -980,7 +1025,7 @@
 "[Generic] Dismiss" = "Ignora";
 
 /* Action/button to finish (editing) and keep changes */
-"[Generic] Done" = "Fatto";
+"[Generic] Done" = "Fine";
 
 /* Action/button to edit an item */
 "[Generic] Edit" = "Modifica";
@@ -991,8 +1036,11 @@
 /* Action/button shown below error messages. Tapping the button will start the fixing/repairing workflow described in the error message. */
 "[Generic] Fix this" = "Risolvi";
 
+/* Action/button to import an item to another app */
+"[Generic] Import" = "Importa";
+
 /* Action/button to view more help/info about some topic */
-"[Generic] Learn more" = "Maggiori informazioni...";
+"[Generic] Learn more" = "Scopri di più…";
 
 /* Checkbox/Button to show additional actions */
 "[Generic] More Actions" = "Altre azioni";
@@ -1048,6 +1096,9 @@
 /* Action/button to select some items in a list. */
 "[Generic/Action/SelectItems]" = "Seleziona";
 
+/* Number of entries found in an incoming file. For example: 'Found entries: 42' [itemCount: Int] */
+"[Generic/Count/ImportedEntries]" = "Voci trovate: %d";
+
 /* Name of the Recently Deleted (Recycle Bin) directory, as shown in the Files app */
 "[Generic/Directory/Recently Deleted/name]" = "Eliminati di recente";
 
@@ -1063,6 +1114,9 @@
 /* Title of a generic file export screen. */
 "[Generic/File/Export/title]" = "Esportazione file";
 
+/* Action to save data, when we ignore minor problems in the process. */
+"[Generic/File/ForceSave]" = "Forza salvataggio";
+
 /* Action/button to save data to a different file */
 "[Generic/File/Save as]" = "Salva con nome…";
 
@@ -1074,6 +1128,9 @@
 
 /* Title of an error message about file import */
 "[Generic/File/title] Import Error" = "Errore importazione";
+
+/* Action to proceed after a warning, basically 'I understand the risk' */
+"[Generic/GotIt/action]" = "Ho capito";
 
 /* Title of a list with predefined quick-choice values (for example: 'Presets: 1 week, 1 months, 1 year') */
 "[Generic/Presets]" = "Preimpostate";
@@ -1100,7 +1157,7 @@
 "[Generic/ViewHelpArticle/action]" = "Visualizza articolo di assistenza";
 
 /* Title of a screen/list view configuration: sort order, visible items, etc */
-"[Generic/ViewOptions/title]" = "Opzioni visualizzazione";
+"[Generic/ViewOptions/title]" = "Opzioni vista";
 
 /* Warning message template. Swap the icon and message for right-to-left languages. */
 "[Generic/WarningWithIcon/template]" = "⚠️ %@";
@@ -1157,7 +1214,7 @@
 "[Group/Smart/Preset/otpEntries]" = "Voci con OTP";
 
 /* Title of a list: entries that contain passkeys */
-"[Group/Smart/Preset/passkeyEntries]" = "Voci con chiavi d'accesso";
+"[Group/Smart/Preset/passkeyEntries]" = "Voci con passkey";
 
 /* Title for the Smart Group search conditions in group editor */
 "[Group/Smart/Query/title]" = "Filtro gruppo smart";
@@ -1172,7 +1229,7 @@
 "[GroupEditor/Name/placeholder]" = "Nome gruppo";
 
 /* A notification that hardware keys (e.g. YubiKey) cannot be used in AutoFill (the OS does not allow the AutoFill to use NFC/MFI). */
-"[HardwareKey/AutoFill/NotAvailable] Hardware keys are not available in AutoFill." = "Le chiavi fisiche non sono disponibili nell'inserimento automatico.";
+"[HardwareKey/AutoFill/NotAvailable] Hardware keys are not available in AutoFill." = "L'inserimento automatico non supporta le chiavi fisiche.";
 
 /* Information notice for a list of hardware keys. */
 "[HardwareKey/AutoFill/TheseNotAvailable]" = "Queste chiavi fisiche non sono compatibili con l'inserimento automatico.";
@@ -1192,14 +1249,20 @@
 /* Title of a list with possible hardware key connections */
 "[HardwareKey/Picker/title]" = "Chiavi fisiche";
 
+/* Title of a slot of a hardware key. For example: `YubiKey Slot 1`. */
+"[HardwareKey/Slot/title]" = "Slot %1$@ %2$d";
+
+/* Hardware key slot number. [slotNumber: Int] */
+"[HardwareKey/SlotN]" = "Slot %d";
+
+/* Title for hardware key slot selection menu. */
+"[HardwareKey/SlotTitle]" = "Slot";
+
 /* Information notice. 'Challenge-response' is a glossary term. */
 "[HardwareKey/USB/chalRespNotSupported]" = "Questo dispositivo non supporta challenge-response tramite connessione USB.";
 
 /* Information notice */
 "[HardwareKey/USB/iPadAppOnMac]" = "USB non è disponibile, perché questa è un'app per iPad eseguita su macOS. Usa l'app nativa per Mac.";
-
-/* Master key/unlock option: use given slot of YubiKey */
-"[HardwareKey/YubiKey/Slot] YubiKey Slot #%d" = "Slot Yubikey %d";
 
 /* Generic title of in-app help article */
 "[Help Viewer/title]" = "Aiuto";
@@ -1273,6 +1336,9 @@
 /* Error message about system keychain. */
 "[KeychainError/unexpectedFormat] Keychain error: unexpected data format" = "Errore portachiavi: formato dati inaspettato";
 
+/* Action: add a key file into the app, by importing or creating one. `Key file` is a glossary term. */
+"[KeyFile/Add/action]" = "Aggiungi file chiave";
+
 /* Action: create new key file. */
 "[KeyFile/Create/action]" = "Crea file chiave";
 
@@ -1282,6 +1348,9 @@
 /* Message to confirm deletion of a key file. */
 "[KeyFile/Delete/Confirm/text] Delete key file?\n Make sure you have a backup." = "Eliminare il file chiave?\nAssicurati di avere una copia.";
 
+/* Error message related to key file. [errorDetails: String] */
+"[KeyFile/error]" = "Errore file chiave: %@";
+
 /* Name of an input field which shows selected key file */
 "[KeyFile/Field/title]" = "File chiave";
 
@@ -1290,6 +1359,18 @@
 
 /* Description of the `Import Key File` action. */
 "[KeyFile/Import/actionDescription]" = "Aggiungi file all'app";
+
+/* Placeholder shown when there are no key files available */
+"[KeyFile/List/empty]" = "Nessun file chiave";
+
+/* Title of the list with key files. */
+"[KeyFile/List/title]" = "File chiave";
+
+/* Description of the 'No Key File' option. */
+"[KeyFile/None/description]" = "Usa solo la password";
+
+/* Title: don't use key file */
+"[KeyFile/None/title]" = "Nessun file chiave";
 
 /* Message to confirm removal of a key file from the app. (This keeps the file, but removes its reference from the app.) */
 "[KeyFile/Remove/Confirm/text] Remove key file from the list?\n The file will remain intact and you can add it again later." = "Rimuovere il file chiave dalla lista?\nIl file rimarrà intatto e potrai aggiungerlo di nuovo in seguito.";
@@ -1310,7 +1391,7 @@
 "[Menu/FileInfo/title]" = "Info file";
 
 /* Menu title: app settings */
-"[Menu/Preferences/title]" = "Preferenze…";
+"[Menu/Settings/title]" = "Impostazioni…";
 
 /* Title of a menu: sort order of files in a list */
 "[Menu/Sort] Sort Files By" = "Ordina file per";
@@ -1323,9 +1404,6 @@
 
 /* Error message, euphemism for missing corporate license */
 "[Org/LicenseMissing]" = "KeePassium non ha trovato l'account aziendale della tua istituzione.";
-
-/* Notification next to the OTP code which was copied to clipboard */
-"[OTP/CopiedToClipboard/title]" = "Password monouso copiata negli appunti";
 
 /* Name of an entry field */
 "[OTP/FieldName]" = "Password monouso";
@@ -1350,6 +1428,12 @@
 
 /* Button/action: proceed with QR code based OTP setup */
 "[OTP/Setup/ScanQRCode]" = "Scansiona codice QR";
+
+/* Action: pick an image (from files) to scan as QR code */
+"[OTP/Setup/ScanQRImageFile]" = "Scansiona QR da file";
+
+/* Action: pick a photo (from gallery) to scan as QR code */
+"[OTP/Setup/ScanQRPhoto]" = "Scansiona QR da foto";
 
 /* Description of an OTP code; sentence case. */
 "[OTP/Title/sentenceCase]" = "Password monouso";
@@ -1471,6 +1555,9 @@
 /* Title of a premium feature */
 "[Premium/Benefits/BusinessClouds/title]" = "Sincronizza con cloud aziendali";
 
+/* Call to action / Title of a premium feature */
+"[Premium/Benefits/CreativeAutoFill/title]" = "Crea account più velocemente";
+
 /* Explanation of the premium feature */
 "[Premium/Benefits/HardwareKeys/details]" = "Proteggi i tuoi segreti con una chiave fisica, tipo YubiKey.";
 
@@ -1564,27 +1651,6 @@
 /* Marks the default pricing plan */
 "[Premium/Price Plan/popular]" = "Popolare";
 
-/* Status: special premium for beta-testing environment is active */
-"[Premium/status] Beta testing" = "In beta";
-
-/* Status: current version of the app. For example: `Current version: 1.23`. Should be similar to the `Licensed version` string. [version: String] */
-"[Premium/status] Current version: %@" = "Versione attuale: %@";
-
-/* Status: premium subscription has expired. For example: `Expired 1 day ago`. [timeFormatted: String, includes the time unit (day, hour, minute)] */
-"[Premium/status] Expired %@ ago. Please renew." = "Scaduto %@ fa. Rinnovo richiesto.";
-
-/* Status: licensed premium version of the app. For example: `Licensed version: 1.23`. [version: String] */
-"[Premium/status] Licensed version: %@" = "Versione autorizzata: %@";
-
-/* Status: scheduled renewal date of a premium subscription. For example: `Next renewal on 1 Jan 2050`. [expiryDateString: String] */
-"[Premium/status] Next renewal on %@" = "Prossimo rinnovo il %@";
-
-/* Status: validity period of once-and-forever premium */
-"[Premium/status] Valid forever" = "Valido per sempre";
-
-/* Status when the user has a premium version */
-"[Premium/Status/title]" = "Versione Premium";
-
 /* Subscription conditions */
 "[Premium/Subscription/Legal/text]" = "Il pagamento verrà addebitato sul tuo ID Apple alla conferma dell'acquisto. \n\nL'abbonamento si rinnova automaticamente a meno che non venga annullato almeno 24 ore prima del termine del periodo corrente. Il rinnovo verrà addebitaato sul tuo account nelle 24 ore precedenti il termine del periodo corrente. \n\nPuoi gestire e disdire gli abbonamenti nelle impostazioni del tuo account sull'App Store dopo l'acquisto.";
 
@@ -1636,14 +1702,17 @@
 /* Message shown after buying or subscribing. */
 "[Premium/Upgrade/Success/thankYou]" = "Grazie per l'acquisto!";
 
-/* Status: how long the app has been used during some time period. For example: `App being useful: 1hr/month, about 12hr/year`. [monthlyUsage: String, annualUsage: String — already include the time unit (hours, minutes)] */
-"[Premium/usage] App being useful: %@/month, that is around %@/year." = "Utilità app: %1$@/ mese, circa %2$@/anno.";
-
 /* Description/call to action for the `Business Cloud Storage` premium feature. */
 "[PremiumFeature/BusinessClouds/description]" = "Connettiti direttamente ad account aziendali di archiviazione, come OneDrive for Business.";
 
 /* Title of a premium feature: access to company's cloud accounts like 'OneDrive for Business' */
 "[PremiumFeature/BusinessClouds/title]" = "Archiviazione cloud aziendale";
+
+/* Description/advertisement for the `Faster Sign-Ups` premium feature */
+"[PremiumFeature/CreativeAutoFill/description]" = "Crea nuove voci in Inserimento automatico con i campi principali precompilati.";
+
+/* Title of a premium feature: easier registration of new accounts, directly in AutoFill dialog */
+"[PremiumFeature/CreativeAutoFill/title]" = "Iscrizioni più rapide";
 
 /* A generic description of a premium feature */
 "[PremiumFeature/Generic/description]" = "Passa a Premium e goditi al meglio KeePassium.";
@@ -1696,9 +1765,6 @@
 /* Error message when a long-running operation was cancelled due to the lack of free memory (RAM). */
 "[Progress/CancellationReason/lowMemory]" = "Memoria insufficiente per continuare.\nPuò succedere con database di grandi dimensioni o con impostazioni database troppo ambiziose (parametro di memoria Argon2).";
 
-/* Description of the Quick AutoFill feature. */
-"[QuickAutoFill/description]" = "L'inserimento automatico rapido mostra le voci rilevanti di fianco ai campi password, senza aprire KeePassium.";
-
 /* Name of a feature that shows relevant entries directly next to the login/password forms. */
 "[QuickAutoFill/title]" = "Inserimento automatico rapido";
 
@@ -1716,6 +1782,12 @@
 
 /* Description of the `Direct connection` sync method. */
 "[RemoteConnection/Direct/description]" = "KeePassium comunicherà direttamente con il tuo spazio di archiviazione online. Questo assicura un trasferimento file affidabile.";
+
+/* Title of a list with online storage services like OneDrive, Dropbox, etc. */
+"[RemoteConnection/Direct/title]" = "Servizi online";
+
+/* Action: change properties of a remote network connection */
+"[RemoteConnection/Edit/action]" = "Modifica connessione…";
 
 /* Error message: user credentials rejected by the server */
 "[RemoteConnection/Error/AuthenticationFailed/title]" = "Autenticazione fallita";
@@ -1771,134 +1843,17 @@
 /* Name of an input field for entering the password again */
 "[Repeat Password/Field/title]" = "Ripeti password";
 
-/* Call to action (protect the app from unauthorized access) */
-"[Settings/AppLoc/Activate/callToAction]" = "Attiva protezione app";
+/* Description of the auto-download favicons feature */
+"[Settings/AutoDownloadFavicons/description]" = "Scarica automaticamente l'icona del sito web dopo aver modificato una voce.";
 
-/* Description of `Activate app protection` call to action. */
-"[Settings/AppLock/Activate/description]" = "Proteggi KeePassium da accessi non autorizzati.";
-
-/* Settings switch: whether AppLock is allowed to use Touch ID/Face ID. Example: 'Use Touch ID'. [biometryTypeName: String] */
-"[Settings/AppLock/Biometric/title] Use %@" = "Usa %@";
-
-/* Explanation for the `Lock on App Launch` setting */
-"[Settings/AppLock/LockOnLaunch/description]" = "Assicura che KeePassium venga bloccato dopo la chiusura forzata dell'app o il riavvio del dispositivo.";
-
-/* Setting switch: whether to lock the app after it was terminated and relaunched. */
-"[Settings/AppLock/LockOnLaunch/title]" = "Blocca all'avvio dell'app";
-
-/* Settings: subtitle of the `App Protection` section. biometryTypeName will be either 'Touch ID' or 'Face ID'. [biometryTypeName: String] */
-"[Settings/AppLock/subtitle] App Lock, %@, timeout" = "Blocco app, %@, timeout";
-
-/* Settings: subtitle of the `App Protection` section when biometric auth is not available. */
-"[Settings/AppLock/subtitle] App Lock, passcode, timeout" = "Blocco app, codice, timeout";
-
-/* Settings section: protection of the app from unauthorized access */
-"[Settings/AppLock/title]" = "Protezione app";
-
-/* A description/subtitle for Settings/AppLockTimeout options that trigger when the user has been idle for a while. For example: 'AppLock Timeout: 3 seconds (After last interaction) */
-"[Settings/AppLockTimeout/description] After last interaction" = "Dopo ultima interazione";
-
-/* A description/subtitle for Settings/AppLock/Timeout options that trigger when the app is minimized. For example: 'AppLock Timeout: 3 seconds (After leaving the app) */
-"[Settings/AppLockTimeout/description] After leaving the app" = "Dopo aver lasciato l'app";
-
-/* An option in Settings. Will be shown as 'App Lock: Timeout: Immediately' */
-"[Settings/AppLockTimeout/fullTitle] Immediately" = "Immediatamente";
-
-/* An option in Settings. Will be shown as 'App Lock: Timeout: Never' */
-"[Settings/AppLockTimeout/fullTitle] Never" = "Mai";
-
-/* An option in Settings. Will be shown as 'App Lock: Timeout: Immediately' */
-"[Settings/AppLockTimeout/shortTitle] Immediately" = "Immediatamente";
-
-/* An option in Settings. Will be shown as 'App Lock: Timeout: Never' */
-"[Settings/AppLockTimeout/shortTitle] Never" = "Mai";
-
-/* Action that opens system settings or instructions */
-"[Settings/AutoFill/Activate/action]" = "Attiva inserimento automatico";
-
-/* Description for the AutoFill setup instructions */
-"[Settings/AutoFill/Activate/description]" = "Prima di utilizzarlo, devi attivare l'inserimento automatico in Impostazioni.";
-
-/* Title of an option: copy one-time password to clipboard when using AutoFill */
-"[Settings/AutoFill/CopyOTP/title]" = "Copia OTP negli appunti";
-
-/* Title of a help article on how to activate AutoFill. */
-"[Settings/AutoFill/Setup Guide/title]" = "Guida per l'inserimento automatico";
+/* Settings option: automatically download website icons/favicons */
+"[Settings/AutoDownloadFavicons/title]" = "Scarica automaticamente favicon";
 
 /* Title of AutoFill settings screen */
 "[Settings/AutoFill/title]" = "Inserimento automatico password";
 
-/* No comment provided by engineer. */
-"[Settings/AutoFill/UnavailableInIntune/description]" = "L'inserimento automatico non è disponibile in KeePassium per Intune.";
-
-/* Title of an option: automatically use the single best match found by AutoFill search */
-"[Settings/AutoFill/UsePerfectMatch/title]" = "Inserisci risultato perfetto in automatico";
-
-/* Option in settings: whether to open the last used database automatically on start. */
-"[Settings/AutoOpenPreviousDatabase/title]" = "Apri ultimo database";
-
-/* Action to delete all backup files from the app. `ALL` is in capitals as a highlight. [backupFileCount: Int] */
-"[Settings/Backup] Delete ALL Backup Files (%d)" = "Elimina TUTTE le copie di sicurezza (%d)";
-
-/* Status message: there are no backup files to delete */
-"[Settings/Backup] No Backup Files Found" = "Nessuna copia di sicurezza trovata";
-
-/* Confirmation dialog message to delete all backup files */
-"[Settings/Backup/Delete/title] Delete all backup files?" = "Eliminare tutte le copie di sicurezza?";
-
-/* An option in Settings. Please keep it short. Will be shown as 'Keep Backup Files: Forever' */
-"[Settings/BackupKeepingDuration/shortTitle] Forever" = "Per sempre";
-
-/* Text of the success message for `Clear Key File Associations` button */
-"[Settings/ClearKeyFileAssociations/Cleared/text] Associations between key files and databases have been removed." = "Le associazioni tra file chiave e database sono state dimenticate.";
-
-/* Title of the success message for `Clear Key File Associations` button */
-"[Settings/ClearKeyFileAssociations/Cleared/title] Cleared" = "Dimenticate";
-
-/* Text of the success message for `Clear Master Keys` button */
-"[Settings/ClearMasterKeys/Cleared/text] All master keys have been deleted." = "Tutte le chiavi principali sono state eliminate.";
-
-/* Title of the success message for `Clear Master Keys` button */
-"[Settings/ClearMasterKeys/Cleared/title] Cleared" = "Dimenticate";
-
-/* Description of the clipboard/pasteboard timeout. */
-"[Settings/ClipboardTimeout/description] When you copy some text from an entry, the app will automatically clear your clipboard (pasteboard) after this time." = "Quando copi del testo da una voce, l'app svuoterà in automatico gli appunti dopo un po' di tempo.";
-
-/* An option in Settings. Will be shown as 'Clipboard Timeout: Never' */
-"[Settings/ClipboardTimeout/fullTitle] Never" = "Mai";
-
-/* An option in Settings. Will be shown as 'Clipboard Timeout: Never' */
-"[Settings/ClipboardTimeout/shortTitle] Never" = "Mai";
-
-/* Title of a settings section: backup of databases */
-"[Settings/DatabaseBackup/title]" = "Backup database";
-
-/* Description of the Database Lock Timeout */
-"[Settings/DatabaseLockTimeout/description] If you are not interacting with the app for some time, the database will be closed for your safety. To open it, you will need to enter its master password again." = "Se non interagisci con l'app per un po' di tempo, il database verrà chiuso per la tua sicurezza. Per aprirlo, dovrai reinserire la password principale.";
-
-/* A description/subtitle for the 'DatabaseLockTimeout: Immediately'. */
-"[Settings/DatabaseLockTimeout/description] When leaving the app" = "All'uscita dall'app";
-
-/* An option in Settings. Will be shown as 'Database Lock: Timeout: Immediately' */
-"[Settings/DatabaseLockTimeout/fullTitle] Immediately" = "Immediatamente";
-
-/* An option in Settings. Will be shown as 'Database Lock: Timeout: Never' */
-"[Settings/DatabaseLockTimeout/fullTitle] Never" = "Mai";
-
-/* An option in Settings. Will be shown as 'Database Lock: Timeout: Immediately' */
-"[Settings/DatabaseLockTimeout/shortTitle] Immediately" = "Immediatamente";
-
-/* An option in Settings. Will be shown as 'Database Lock: Timeout: Never' */
-"[Settings/DatabaseLockTimeout/shortTitle] Never" = "Mai";
-
-/* Title of a setting: the time after which databases will be locked. */
-"[Settings/DatabaseLockTimeout/title]" = "Timeout database";
-
-/* Setting switch: whether to lock databases after device reboot. */
-"[Settings/DataProtection/LockOnReboot/title]" = "Blocca al riavvio del dispositivo";
-
-/* Subtitle for `Data Protection` section in settings */
-"[Settings/DataProtection/subtitle]" = "Chiavi principali, file chiave";
+/* Title of a yes/no setting: whether to include backup copies in the file list */
+"[Settings/DatabaseBackup/ShowBackupFiles/title]" = "Mostra file di backup";
 
 /* Settings section: protection of databases, their keys and data inside them */
 "[Settings/DataProtection/title]" = "Protezione dati";
@@ -1912,6 +1867,9 @@
 /* Title of a settings section: sort order of groups and entries in a list */
 "[Settings/GroupViewer] Sort Order" = "Ordine";
 
+/* Title of a yes/no setting */
+"[Settings/KeyFiles/Remember/title]" = "Ricorda file chiave";
+
 /* Title of list view configuration screen */
 "[Settings/ListSettings/title]" = "Impostazioni lista";
 
@@ -1920,6 +1878,12 @@
 
 /* Notification when corporate user tries to change an app setting controlled by organization's IT department. */
 "[Settings/Managed/notification]" = "Questa impostazione è gestita dalla tua istituzione.";
+
+/* Setting: preserve (cache) calculated database keys */
+"[Settings/MasterKeys/CacheDerived/title]" = "Precarica chiavi crittografiche derivate";
+
+/* Title of a yes/no setting */
+"[Settings/MasterKeys/Remember/title]" = "Ricorda chiavi principali";
 
 /* Confirmation dialog message */
 "[Settings/NetworkAccess/Confirmation/text]" = "Consentire a KeePassium di connettersi a servizi esterni in rete?";
@@ -1942,11 +1906,32 @@
 /* Action/button which resets some settings to their default state. */
 "[Settings/RestoreDefaults/action]" = "Ripristina default";
 
-/* Section title in settings */
-"[Settings/Search/title]" = "Cerca";
+/* Call to action (explains why a setting is disabled) */
+"[Settings/ShakeGestureAction/LockApp/disabledTitle]" = "Attiva prima la protezione dell'app";
+
+/* An option in Settings. Will be shown as 'When Shaken: Lock App' */
+"[Settings/ShakeGestureAction/LockApp/shortTitle]" = "Blocca l'app";
+
+/* An option in Settings. Will be shown as 'When Shaken: Lock All Databases' */
+"[Settings/ShakeGestureAction/LockDatabases/shortTitle]" = "Blocca tutti i database";
+
+/* An option in Settings. Will be shown as 'When Shaken: Do Nothing' */
+"[Settings/ShakeGestureAction/Nothing/shortTitle]" = "Nessuna azione";
+
+/* An option in Settings. Will be shown as 'When Shaken: Quit App' */
+"[Settings/ShakeGestureAction/QuitApp/shortTitle]" = "Esci dall'app";
 
 /* Title of the app settings screen */
 "[Settings/title]" = "Impostazioni";
+
+/* Title of a settings value. For example: `Remember Master Keys: No` */
+"[Settings/Value/No/title]" = "No";
+
+/* Title of a settings value, when it is not customized and we default to app's global settings. For example: `Remember Master Keys: Use App Settings (No)` */
+"[Settings/Value/UseAppSettings/title]" = "Usa impostazioni app (%@)";
+
+/* Title of a settings value. For example: `Remember Master Keys: Yes` */
+"[Settings/Value/Yes/title]" = "Sì";
 
 /* List sorting option (for file names). Example: 'Sort by: Name' */
 "[SortBy/FileName]" = "Nome";
@@ -1956,6 +1941,9 @@
 
 /* List sorting option, when items are manually ordered by the user. Example: 'Sort order: Custom' */
 "[SortOrder/Custom]" = "Personalizzato";
+
+/* Subtitle for a storage service: the app will have access only to its own dedicated folder. */
+"[StorageService/DedicatedAppFolder/title]" = "Solo cartella dell'app";
 
 /* Name of a cloud storage service */
 "[StorageService/DropboxBusiness/title]" = "Dropbox Business";
@@ -2020,8 +2008,8 @@
 /* Human-readable file location. Example: 'File Location: Remote server' */
 "[URLReference/Location/RemoteServer]" = "Server remoto";
 
-/* Selector choice: don't use YubiKey to encrypt/decrypt database */
-"[YubiKey] Don't use YubiKey" = "Senza YubiKey";
+/* Error shown when user selects a file path instead of folder path in WebDAV. */
+"[WebDAV/Export/NeedsFolder]" = "Selezionare il percorso di una cartella";
 
 /* Call for action: insert YubiKey 5Ci to the Lightning port */
 "[YubiKey] Insert the key" = "Inserisci la chiave";
@@ -2029,18 +2017,9 @@
 /* Call for action: touch the sides of YubiKey 5Ci to continue */
 "[YubiKey] Touch the key" = "Tocca la chiave";
 
-/* Selector choice: use YubiKey to encrypt/decrypt database. For example: `Use YubiKey Slot 1`. [slotID: Int] */
-"[YubiKey] Use YubiKey Slot %d" = "Usa slot Yubikey %d";
-
 /* Action/button to add database to the app */
 "Add Database" = "Aggiungi database";
 
 /* Warning message when the user tries to use a database as a key file */
-"KeePass database should not be used as key file. Please pick a different file." = "Il database KeePass non dovrebbe essere utilizzato come file chiave. Scegli un altro file.";
-
-/* Placeholder shown when there are no database files available */
-"No database files" = "Nessun file database";
-
-/* Settings switch: whether to include backup copies in the file list */
-"Show Backup Files" = "Mostra copie di sicurezza";
+"KeePass database should not be used as key file. Please pick a different file." = "Il database KeePass non può essere utilizzato come file chiave. Scegli un altro file.";
 

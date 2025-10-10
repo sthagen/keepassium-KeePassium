@@ -1,6 +1,3 @@
-/* Menu item that shows info about KeePassium app */
-"[About/altTitle]" = "Om KeePassium";
-
 /* Copyright notice */
 "[About/CopyrightAuthor]" = "©Andrei Popleteev";
 
@@ -18,24 +15,6 @@
 
 /* Confirmation message before resetting the app to just-installed state. */
 "[App/ResetEverything/title]" = "Återställ appen?";
-
-/* Section in settings: icon for the app */
-"[Appearance/AppIcon/title]" = "App-ikon";
-
-/* Section in settings: icons for database */
-"[Appearance/DatabaseIcons/title]" = "Databasikoner";
-
-/* Short name of the default/system font. For example: `Font: Default` */
-"[Appearance/DefaultFont/shortTitle]" = "Förvalt";
-
-/* Title of a setting option: font */
-"[Appearance/Font/title]" = "Typsnitt";
-
-/* Title of a setting option: font size */
-"[Appearance/TextSize/title]" = "Textstorlek";
-
-/* Group of settings for user interface appearance (text size, icons, etc) */
-"[Appearance/title]" = "Utseende";
 
 /* Action/button to unlock the App Lock with passcode */
 "[AppLock] Unlock" = "Lås upp";
@@ -121,9 +100,6 @@
 /* Notification: an item has been copied to clipboard */
 "[Clipboard/Copy/notification]" = "Kopierad";
 
-/* Subtitle for `Contact Us`. Keep it short. */
-"[ContactUs/subtitle]" = "Förslag? Problem? Hör av dig!";
-
 /* Error message about AES cipher. [errorCode: Int] */
 "[CryptoError] AES decryption error (code %d)" = "AES Dekrypteringsfel (Felkod %d)";
 
@@ -156,6 +132,9 @@
 
 /* Action: add/import an image as a custom icon */
 "[Database/CustomIcon/add]" = "Lägg till egenvald ikon";
+
+/* Action: delete all custom icons */
+"[Database/CustomIcon/deleteAll]" = "Radera allt";
 
 /* Action: delete unused icons */
 "[Database/CustomIcon/deleteUnused]" = "Radera oanvända ikoner";
@@ -246,6 +225,9 @@
 
 /* Notification when user tries to copy data from KDBX to older KDB database. */
 "[Database/LesserTargetFormat/warning]" = "Det här är ett äldre databasformat, viss data kan gå förlorade.";
+
+/* Placeholder shown when there are no database files available */
+"[Database/List/empty]" = "Inga databasfiler";
 
 /* Recommendation for solving a problem with a list of files. */
 "[Database/List/LocalMissing/message]" = "Om några lokala filer inte anges kan du först starta KeePassium-huvudappen.";
@@ -379,6 +361,9 @@
 /* Status message: saving a database */
 "[Database/Saving/Status] Saving..." = "Sparar...";
 
+/* File access parameter. Will be shown as 'Consider File Unreachable: Immediately' */
+"[Database/Settings/ConsiderFileUnreachable/Immediately]" = "Omedelbart";
+
 /* File settings parameter: time after which file will be considered unreachable. Example: `Consider File Unreachable: in 10 seconds`.) */
 "[Database/Settings/ConsiderFileUnreachable/title]" = "Anse fil otillgänglig";
 
@@ -445,14 +430,14 @@
 /* Title of a message shown when saving to a database that has already been modified elsewhere. */
 "[Database/SyncConflict/title]" = "Synk-konflikt";
 
-/* Error message related to key file. [errorDetails: String] */
-"[Database/Unlock] Key file error: %@" = "Nyckelfil-fel: %@";
-
 /* Error message */
 "[Database/Unlock/Error] Failed to open key file" = "Misslyckades med att öppna nyckelfil";
 
 /* Error message */
 "[Database/Unlock/Error] Password and key file are both empty." = "Både lösenord och nyckelfil saknas.";
+
+/* Action: load a local (on-device) copy of a remote database */
+"[Database/Unlock/UseFallback/action]" = "Använd lokal kopia";
 
 /* Message shown when user enters an invalid database password */
 "[Database/Unlock/wrongPassword/question]" = "Har du glömt lösenordet?";
@@ -628,9 +613,6 @@
 /* Error message: user provided a wrong master key for decryption. */
 "[DatabaseError] Invalid password or key file" = "Felaktigt lösenord eller nyckelfil";
 
-/* Subtitle for `Diagnostic Log`. Keep it short. */
-"[DiagLog/subtitle]" = "För felsökning av experter";
-
 /* Title of the diagnostic info screen */
 "[DiagLog/title]" = "Diagnostisk logg";
 
@@ -705,6 +687,9 @@
 
 /* Name of an entry field */
 "[Entry/Field/tags] Tags" = "Taggar";
+
+/* Title of an alternative URL, with a number [number: String] */
+"[Entry/Field/URL/Extra/title]" = "URL (%d)";
 
 /* Status message: loading file to be attached to an entry */
 "[Entry/Files/Add] Loading attachment file" = "Laddar fil att bifoga";
@@ -1198,9 +1183,6 @@
 /* Information notice */
 "[HardwareKey/USB/iPadAppOnMac]" = "USB är inte tillgängligt eftersom denna iPad använder macOS. Använd den inbyggda Mac-appen istället.";
 
-/* Master key/unlock option: use given slot of YubiKey */
-"[HardwareKey/YubiKey/Slot] YubiKey Slot #%d" = "YubiKey Slot %d";
-
 /* Generic title of in-app help article */
 "[Help Viewer/title]" = "Hjälp";
 
@@ -1273,6 +1255,9 @@
 /* Error message about system keychain. */
 "[KeychainError/unexpectedFormat] Keychain error: unexpected data format" = "Nyckelring-fel: Oväntat dataformat";
 
+/* Action: add a key file into the app, by importing or creating one. `Key file` is a glossary term. */
+"[KeyFile/Add/action]" = "Lägg till nyckelfil";
+
 /* Action: create new key file. */
 "[KeyFile/Create/action]" = "Skapa nyckelfil";
 
@@ -1282,6 +1267,9 @@
 /* Message to confirm deletion of a key file. */
 "[KeyFile/Delete/Confirm/text] Delete key file?\n Make sure you have a backup." = "Radera nyckelfil?\nSe till att du har en säkerhetskopia.";
 
+/* Error message related to key file. [errorDetails: String] */
+"[KeyFile/error]" = "Nyckelfil-fel: %@";
+
 /* Name of an input field which shows selected key file */
 "[KeyFile/Field/title]" = "Nyckel-fil";
 
@@ -1290,6 +1278,15 @@
 
 /* Description of the `Import Key File` action. */
 "[KeyFile/Import/actionDescription]" = "Lägg till fil i appen";
+
+/* Title of the list with key files. */
+"[KeyFile/List/title]" = "Nyckelfiler";
+
+/* Description of the 'No Key File' option. */
+"[KeyFile/None/description]" = "Använd endast lösenord";
+
+/* Title: don't use key file */
+"[KeyFile/None/title]" = "Ingen nyckel-fil";
 
 /* Message to confirm removal of a key file from the app. (This keeps the file, but removes its reference from the app.) */
 "[KeyFile/Remove/Confirm/text] Remove key file from the list?\n The file will remain intact and you can add it again later." = "Ta bort nyckelfil från listan?\n Filen kommer vara kvar oförändrad och du kan lägga till den igen senare.";
@@ -1310,7 +1307,7 @@
 "[Menu/FileInfo/title]" = "Filinfo";
 
 /* Menu title: app settings */
-"[Menu/Preferences/title]" = "Inställningar…";
+"[Menu/Settings/title]" = "Inställningar…";
 
 /* Title of a menu: sort order of files in a list */
 "[Menu/Sort] Sort Files By" = "Sortera filer efter";
@@ -1323,9 +1320,6 @@
 
 /* Error message, euphemism for missing corporate license */
 "[Org/LicenseMissing]" = "KeePassium kunde inte hitta enterprise-kontot för din organisation.";
-
-/* Notification next to the OTP code which was copied to clipboard */
-"[OTP/CopiedToClipboard/title]" = "Engångslösenord kopierat till urklipp";
 
 /* Name of an entry field */
 "[OTP/FieldName]" = "Engångslösenord";
@@ -1564,27 +1558,6 @@
 /* Marks the default pricing plan */
 "[Premium/Price Plan/popular]" = "Populär";
 
-/* Status: special premium for beta-testing environment is active */
-"[Premium/status] Beta testing" = "Betatestning";
-
-/* Status: current version of the app. For example: `Current version: 1.23`. Should be similar to the `Licensed version` string. [version: String] */
-"[Premium/status] Current version: %@" = "Nuvarande version: %@";
-
-/* Status: premium subscription has expired. For example: `Expired 1 day ago`. [timeFormatted: String, includes the time unit (day, hour, minute)] */
-"[Premium/status] Expired %@ ago. Please renew." = "Förföll %@ sen. Var vänlig förnya.";
-
-/* Status: licensed premium version of the app. For example: `Licensed version: 1.23`. [version: String] */
-"[Premium/status] Licensed version: %@" = "Licensierad version: %@";
-
-/* Status: scheduled renewal date of a premium subscription. For example: `Next renewal on 1 Jan 2050`. [expiryDateString: String] */
-"[Premium/status] Next renewal on %@" = "Nästa förnyelse %@";
-
-/* Status: validity period of once-and-forever premium */
-"[Premium/status] Valid forever" = "Giltig för alltid";
-
-/* Status when the user has a premium version */
-"[Premium/Status/title]" = "Premiumversion";
-
 /* Subscription conditions */
 "[Premium/Subscription/Legal/text]" = "Betalning kommer att debiteras ditt Apple-konto vid bekräftelse av köpet.\n\nPrenumerationen förnyas automatiskt om inte avbokning sker minst 24 timmar före utgången av den aktuella perioden. Kontot kommer debiteras för förnyelsen inom de sista 24-timmarna före den aktuella perioden tar slut.\n\nDu kan hantera och avsluta din prenumeration genom att gå till Kontoinställningar i App Store efter ditt köp.";
 
@@ -1635,9 +1608,6 @@
 
 /* Message shown after buying or subscribing. */
 "[Premium/Upgrade/Success/thankYou]" = "Tack för köpet!";
-
-/* Status: how long the app has been used during some time period. For example: `App being useful: 1hr/month, about 12hr/year`. [monthlyUsage: String, annualUsage: String — already include the time unit (hours, minutes)] */
-"[Premium/usage] App being useful: %@/month, that is around %@/year." = "Appen är användbar: %1$@/månad, det är cirka %2$@/år.";
 
 /* Description/call to action for the `Business Cloud Storage` premium feature. */
 "[PremiumFeature/BusinessClouds/description]" = "Anslut direkt till företagskonton för lagring, till exempel OneDrive for Business.";
@@ -1695,9 +1665,6 @@
 
 /* Error message when a long-running operation was cancelled due to the lack of free memory (RAM). */
 "[Progress/CancellationReason/lowMemory]" = "Inte tillräckligt med minne för att fortsätta.\nDetta kan hända med stora databaser eller för högt ställda databasinställningar (Argon2-parametrar för minnet).";
-
-/* Description of the Quick AutoFill feature. */
-"[QuickAutoFill/description]" = "Snabb Autofyll visar relevanta poster precis bredvid lösenordsfältet, utan att öppna KeePassium.";
 
 /* Name of a feature that shows relevant entries directly next to the login/password forms. */
 "[QuickAutoFill/title]" = "Snabb Autofyll";
@@ -1771,134 +1738,11 @@
 /* Name of an input field for entering the password again */
 "[Repeat Password/Field/title]" = "Repetera lösenord";
 
-/* Call to action (protect the app from unauthorized access) */
-"[Settings/AppLoc/Activate/callToAction]" = "Aktivera skydd för Appen";
-
-/* Description of `Activate app protection` call to action. */
-"[Settings/AppLock/Activate/description]" = "Skydda KeePassium från otillåtna användare.";
-
-/* Settings switch: whether AppLock is allowed to use Touch ID/Face ID. Example: 'Use Touch ID'. [biometryTypeName: String] */
-"[Settings/AppLock/Biometric/title] Use %@" = "Använd %@";
-
-/* Explanation for the `Lock on App Launch` setting */
-"[Settings/AppLock/LockOnLaunch/description]" = "Låser KeePassium efter att du tvingar att stänga appen eller starta om enheten.";
-
-/* Setting switch: whether to lock the app after it was terminated and relaunched. */
-"[Settings/AppLock/LockOnLaunch/title]" = "Lås vid programstart";
-
-/* Settings: subtitle of the `App Protection` section. biometryTypeName will be either 'Touch ID' or 'Face ID'. [biometryTypeName: String] */
-"[Settings/AppLock/subtitle] App Lock, %@, timeout" = "App Lock, %@, timeout";
-
-/* Settings: subtitle of the `App Protection` section when biometric auth is not available. */
-"[Settings/AppLock/subtitle] App Lock, passcode, timeout" = "App Lock, PIN-kod, timeout";
-
-/* Settings section: protection of the app from unauthorized access */
-"[Settings/AppLock/title]" = "Appskydd";
-
-/* A description/subtitle for Settings/AppLockTimeout options that trigger when the user has been idle for a while. For example: 'AppLock Timeout: 3 seconds (After last interaction) */
-"[Settings/AppLockTimeout/description] After last interaction" = "Efter senaste interaktionen";
-
-/* A description/subtitle for Settings/AppLock/Timeout options that trigger when the app is minimized. For example: 'AppLock Timeout: 3 seconds (After leaving the app) */
-"[Settings/AppLockTimeout/description] After leaving the app" = "Efter appen lämnats";
-
-/* An option in Settings. Will be shown as 'App Lock: Timeout: Immediately' */
-"[Settings/AppLockTimeout/fullTitle] Immediately" = "Omedelbart";
-
-/* An option in Settings. Will be shown as 'App Lock: Timeout: Never' */
-"[Settings/AppLockTimeout/fullTitle] Never" = "Aldrig";
-
-/* An option in Settings. Will be shown as 'App Lock: Timeout: Immediately' */
-"[Settings/AppLockTimeout/shortTitle] Immediately" = "Omedelbart";
-
-/* An option in Settings. Will be shown as 'App Lock: Timeout: Never' */
-"[Settings/AppLockTimeout/shortTitle] Never" = "Aldrig";
-
-/* Action that opens system settings or instructions */
-"[Settings/AutoFill/Activate/action]" = "Aktivera Autofyll";
-
-/* Description for the AutoFill setup instructions */
-"[Settings/AutoFill/Activate/description]" = "Innan första användningen måste du aktivera Autofyll i systeminställningar.";
-
-/* Title of an option: copy one-time password to clipboard when using AutoFill */
-"[Settings/AutoFill/CopyOTP/title]" = "Kopiera engångslösenord till urklipp";
-
-/* Title of a help article on how to activate AutoFill. */
-"[Settings/AutoFill/Setup Guide/title]" = "Kom igång med Autofyll";
-
 /* Title of AutoFill settings screen */
 "[Settings/AutoFill/title]" = "Autofyll lösenord";
 
-/* No comment provided by engineer. */
-"[Settings/AutoFill/UnavailableInIntune/description]" = "AutoFyll är inte tillgängligt i KeePassium för Intune.";
-
-/* Title of an option: automatically use the single best match found by AutoFill search */
-"[Settings/AutoFill/UsePerfectMatch/title]" = "Fyll i det matchande resultatet automatiskt";
-
-/* Option in settings: whether to open the last used database automatically on start. */
-"[Settings/AutoOpenPreviousDatabase/title]" = "Öppna den tidigare databasen automatiskt";
-
-/* Action to delete all backup files from the app. `ALL` is in capitals as a highlight. [backupFileCount: Int] */
-"[Settings/Backup] Delete ALL Backup Files (%d)" = "Radera ALLA backuper (%d)";
-
-/* Status message: there are no backup files to delete */
-"[Settings/Backup] No Backup Files Found" = "Inga backupfiler hittades";
-
-/* Confirmation dialog message to delete all backup files */
-"[Settings/Backup/Delete/title] Delete all backup files?" = "Radera alla backuper?";
-
-/* An option in Settings. Please keep it short. Will be shown as 'Keep Backup Files: Forever' */
-"[Settings/BackupKeepingDuration/shortTitle] Forever" = "För alltid";
-
-/* Text of the success message for `Clear Key File Associations` button */
-"[Settings/ClearKeyFileAssociations/Cleared/text] Associations between key files and databases have been removed." = "Associationer mellan nyckelfiler och databaser har tagits bort.";
-
-/* Title of the success message for `Clear Key File Associations` button */
-"[Settings/ClearKeyFileAssociations/Cleared/title] Cleared" = "Rensad";
-
-/* Text of the success message for `Clear Master Keys` button */
-"[Settings/ClearMasterKeys/Cleared/text] All master keys have been deleted." = "Alla huvudnycklar har raderats.";
-
-/* Title of the success message for `Clear Master Keys` button */
-"[Settings/ClearMasterKeys/Cleared/title] Cleared" = "Rensad";
-
-/* Description of the clipboard/pasteboard timeout. */
-"[Settings/ClipboardTimeout/description] When you copy some text from an entry, the app will automatically clear your clipboard (pasteboard) after this time." = "När du kopierar text från en post kommer appen automatiskt rensa ditt urklipp efter en stund.";
-
-/* An option in Settings. Will be shown as 'Clipboard Timeout: Never' */
-"[Settings/ClipboardTimeout/fullTitle] Never" = "Aldrig";
-
-/* An option in Settings. Will be shown as 'Clipboard Timeout: Never' */
-"[Settings/ClipboardTimeout/shortTitle] Never" = "Aldrig";
-
-/* Title of a settings section: backup of databases */
-"[Settings/DatabaseBackup/title]" = "Databasbackup";
-
-/* Description of the Database Lock Timeout */
-"[Settings/DatabaseLockTimeout/description] If you are not interacting with the app for some time, the database will be closed for your safety. To open it, you will need to enter its master password again." = "Om du inte interagerar med appen på ett tag kommer databasen stängas för din säkerhet. För att öppna behöver du ange huvudlösenordet igen.";
-
-/* A description/subtitle for the 'DatabaseLockTimeout: Immediately'. */
-"[Settings/DatabaseLockTimeout/description] When leaving the app" = "När appen lämnas";
-
-/* An option in Settings. Will be shown as 'Database Lock: Timeout: Immediately' */
-"[Settings/DatabaseLockTimeout/fullTitle] Immediately" = "Omedelbart";
-
-/* An option in Settings. Will be shown as 'Database Lock: Timeout: Never' */
-"[Settings/DatabaseLockTimeout/fullTitle] Never" = "Aldrig";
-
-/* An option in Settings. Will be shown as 'Database Lock: Timeout: Immediately' */
-"[Settings/DatabaseLockTimeout/shortTitle] Immediately" = "Omedelbart";
-
-/* An option in Settings. Will be shown as 'Database Lock: Timeout: Never' */
-"[Settings/DatabaseLockTimeout/shortTitle] Never" = "Aldrig";
-
-/* Title of a setting: the time after which databases will be locked. */
-"[Settings/DatabaseLockTimeout/title]" = "Databastimeout";
-
-/* Setting switch: whether to lock databases after device reboot. */
-"[Settings/DataProtection/LockOnReboot/title]" = "Lås för omstart av enhet";
-
-/* Subtitle for `Data Protection` section in settings */
-"[Settings/DataProtection/subtitle]" = "Huvudnycklar, nyckelfiler";
+/* Title of a yes/no setting: whether to include backup copies in the file list */
+"[Settings/DatabaseBackup/ShowBackupFiles/title]" = "Visa backupfiler";
 
 /* Settings section: protection of databases, their keys and data inside them */
 "[Settings/DataProtection/title]" = "Dataskydd";
@@ -1912,6 +1756,9 @@
 /* Title of a settings section: sort order of groups and entries in a list */
 "[Settings/GroupViewer] Sort Order" = "Sortering";
 
+/* Title of a yes/no setting */
+"[Settings/KeyFiles/Remember/title]" = "Kom ihåg nyckelfiler";
+
 /* Title of list view configuration screen */
 "[Settings/ListSettings/title]" = "Listinställningar";
 
@@ -1920,6 +1767,12 @@
 
 /* Notification when corporate user tries to change an app setting controlled by organization's IT department. */
 "[Settings/Managed/notification]" = "Den här inställningen hanteras av din organisation.";
+
+/* Setting: preserve (cache) calculated database keys */
+"[Settings/MasterKeys/CacheDerived/title]" = "Krypteringsnycklar härledda från cache";
+
+/* Title of a yes/no setting */
+"[Settings/MasterKeys/Remember/title]" = "Kom ihåg huvudnycklar";
 
 /* Confirmation dialog message */
 "[Settings/NetworkAccess/Confirmation/text]" = "Tillåt KeePassium att göra nätverskanslutningar till externa tjänster?";
@@ -1941,9 +1794,6 @@
 
 /* Action/button which resets some settings to their default state. */
 "[Settings/RestoreDefaults/action]" = "Återställ standardinställningar";
-
-/* Section title in settings */
-"[Settings/Search/title]" = "Sök";
 
 /* Title of the app settings screen */
 "[Settings/title]" = "Inställningar";
@@ -2020,27 +1870,15 @@
 /* Human-readable file location. Example: 'File Location: Remote server' */
 "[URLReference/Location/RemoteServer]" = "Fjärrserver";
 
-/* Selector choice: don't use YubiKey to encrypt/decrypt database */
-"[YubiKey] Don't use YubiKey" = "Utan YubiKey";
-
 /* Call for action: insert YubiKey 5Ci to the Lightning port */
 "[YubiKey] Insert the key" = "Sätt i nyckeln";
 
 /* Call for action: touch the sides of YubiKey 5Ci to continue */
 "[YubiKey] Touch the key" = "Tryck på nyckeln";
 
-/* Selector choice: use YubiKey to encrypt/decrypt database. For example: `Use YubiKey Slot 1`. [slotID: Int] */
-"[YubiKey] Use YubiKey Slot %d" = "Använd YubiKey Slot %d";
-
 /* Action/button to add database to the app */
 "Add Database" = "Lägg till databas";
 
 /* Warning message when the user tries to use a database as a key file */
 "KeePass database should not be used as key file. Please pick a different file." = "KeePass databaser ska inte användas som nyckelfiler. Var vänlig välj en annan fil.";
-
-/* Placeholder shown when there are no database files available */
-"No database files" = "Inga databasfiler";
-
-/* Settings switch: whether to include backup copies in the file list */
-"Show Backup Files" = "Visa backupfiler";
 

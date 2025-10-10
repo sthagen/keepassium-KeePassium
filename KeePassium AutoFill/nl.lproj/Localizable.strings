@@ -1,14 +1,35 @@
 /* Notification when user tries to set up too weak an app protection passcode. */
 "[AppLock/weakPasscodeWarning]" = "Deze toegangscode is makkelijk te raden. Probeer een sterkere in te voeren.";
 
+/* Action in AutoFill: choose the entry and remember it for future use on this website. */
+"[AutoFill/AcceptAndRemember/action]" = "Accepteer en onthoud";
+
+/* Title of a list */
+"[AutoFill/AllEntries/title]" = "Alle items";
+
+/* Title of AutoFill context when no context is available. Usage: `Context: Unknown` */
+"[AutoFill/Context/Empty/title]" = "Onbekend";
+
+/* Title of a list with search results */
+"[AutoFill/FoundEntries/title]" = "Beste overeenkomsten";
+
 /* Call for action to select an entry field for filling out. */
 "[AutoFill/InsertText/select]" = "Selecteer veld";
 
-/* An identifier of the app that called AutoFill. The term is intentionally similar to https://ru.wikipedia.org/wiki/Caller_ID. [callerID: String] */
-"[AutoFill/Search/callerID]" = "Gespreksidentiteit: %@";
+/* Section title for the recently used entry in AutoFill */
+"[AutoFill/RecentlyUsed/title]" = "Onlangs gebruikt";
 
-/* Status message, shows which app or webpage launched AutoFill. For example: `Context: google.com` */
-"[AutoFill/Search/context]" = "Context: %@";
+/* Not an action, but a button to activate the same-named setting */
+"[AutoFill/RememberContext/action]" = "Onthoud geselecteerde items";
+
+/* Call to action */
+"[AutoFill/RememberContext/callToAction]" = "Verbeter suggesties voor automatisch invullen";
+
+/* Description of the 'Remember Selected Entries` feature */
+"[AutoFill/RememberContext/description]" = "KeePassium onthoudt welk item je selecteert voor elke website en stelt het dan automatisch voor.";
+
+/* Title for referring to the app or webpage that launched AutoFill. For example: `Context: google.com` */
+"[AutoFill/Search/Context/title]" = "Context";
 
 /* No comment provided by engineer. */
 "[AutoFill/Setup/footer]" = "AutoFill kan niet automatisch toegang krijgen tot de bestanden die je al hebt in de KeePassium-app.\n\nWaarom? Achter de schermen behandelt het systeem AutoFill als een aparte app, onafhankelijk van het KeePassium-proces. Om veiligheidsredenen kan een app niet eenvoudig externe bestanden openen, tenzij je deze bestanden expliciet koppelt aan de app. Het systeem garandeert zo dat de app alleen toegang heeft tot de weinige bestanden die je hebt aangegeven.\n\nAls gevolg hiervan moeten zowel AutoFill als de KeePassium-app hun eigen machtigingen krijgen voor elk extern bestand. Gelukkig is dit een eenmalige procedure.";
@@ -25,8 +46,23 @@
 /* Must match Apple's translation, as found in iOS 17 Settings → Passwords → Password Options. If unsure, leave untranslated. */
 "[AutoFill/Setup/UncheckKeychain/usePasswordsAndPasskeysFrom]" = "Gebruik wachtwoorden en passkeys van:";
 
+/* Field title: name of the group that contains the entry */
+"[Database/Entry/Location/title]" = "Locatie";
+
+/* Title of a list with randomly generated usernames */
+"[Database/Entry/RandomUsernames/title]" = "Willekeurige gebruikersnamen";
+
+/* Action/button that shows a list of usernames to pick from */
+"[Database/Entry/SelectUsername/action]" = "Selecteer gebruikersnaam";
+
+/* Action: select item from a list/menu, with item name in quotes. For example: `Select "Sample Group"` */
+"[Database/Item/SelectNamed/action]" = "Selecteer \"%@\"";
+
 /* Action: create a passkey and add it to existing entry */
 "[Database/Passkey/AddToExisting/action]" = "Passkey toevoegen aan bestaand item";
+
+/* Call to action: select an existing entry to add a new passkey to */
+"[Database/Passkey/AddToExisting/callToAction]" = "Kies een item voor de nieuwe passkey";
 
 /* Confirmation message before replacing an existing passkey. */
 "[Database/Passkey/AddToExisting/confirm]" = "Dit item heeft al een passkey. Wil je deze vervangen?";
@@ -69,4 +105,7 @@
 
 /* Call to action, invites the user to enable the Quick AutoFill feature */
 "[QuickAutoFill/Activate/callToAction]" = "Activeer snel automatisch invullen";
+
+/* Placeholder text for empty search results */
+"[Search/EmptyResult/title]" = "Niets geschikts gevonden";
 

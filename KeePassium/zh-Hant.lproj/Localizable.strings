@@ -1,5 +1,29 @@
+/* Menu item that shows info about KeePassium app */
+"[About/altTitle]" = "關於 KeePassium";
+
+/* Section in settings: icon for the app */
+"[Appearance/AppIcon/title]" = "應用程式圖示";
+
+/* Section in settings: icons for database */
+"[Appearance/DatabaseIcons/title]" = "資料庫圖示";
+
+/* Section in settings: parameters related to entry viewer component */
+"[Appearance/EntryViewer/title]" = "項目檢視";
+
+/* Action: set text size to standard size */
+"[Appearance/TextSize/reset]" = "重置文字大小為預設值";
+
+/* Title of a setting option: font size */
+"[Appearance/TextSize/title]" = "文字大小";
+
+/* Group of settings for user interface appearance (text size, icons, etc) */
+"[Appearance/title]" = "界面外觀";
+
 /* Title of the app history (changelog) screen */
 "[AppHistory/title]" = "更新了什麼";
+
+/* Subtitle for `Contact Us`. Keep it short. */
+"[ContactUs/subtitle]" = "建議? 問題? 讓我們知道!";
 
 /* Hint shown when both password and key file are empty. */
 "[Database/Create] Please enter a password or choose a key file." = "請輸入一個密碼或者選擇一個金鑰檔案。";
@@ -34,6 +58,12 @@
 /* Predefined `Operating system` group in a new database */
 "[Database/Create/TemplateGroup/title] OS" = "作業系統";
 
+/* Placeholder text in an empty group */
+"[Database/Group/empty]" = "這個群組是空的";
+
+/* Subtitle for `Diagnostic Log`. Keep it short. */
+"[DiagLog/subtitle]" = "用於給作者排除故障";
+
 /* Confirmation message to replace an existing entry attachment with a new one. */
 "[Entry/Files/Add] Replace existing attachment?" = "替換現有的附件？";
 
@@ -52,6 +82,9 @@
 /* Title of entry viewer's tab with previous revisions of the entry */
 "[Entry/Tab/History/title]" = "歷史";
 
+/* Name of Enpass' JSON file format */
+"[Format/EnpassJSON]" = "Enpass (.json)";
+
 /* Action/button */
 "[Onboarding/AddExistingDatabase/action]" = "添加現有資料庫";
 
@@ -64,6 +97,273 @@
 /* Action/button */
 "[Onboarding/CreateNewDatabase/action]" = "新建資料庫";
 
+/* Status: special premium for beta-testing environment is active */
+"[Premium/Status/BetaTesting/title]" = "測試版本";
+
+/* Status: current version of the app. For example: `Current version: 1.23`. Should be similar to the `Licensed version` string. [version: String] */
+"[Premium/Status/currentVersion]" = "當前的版本：%@";
+
+/* Status: premium subscription has expired. For example: `Expired 1 day ago`. [timeFormatted: String, includes the time unit (day, hour, minute)] */
+"[Premium/Status/expiredAgo]" = "已經到期 %@ 天, 請續訂。";
+
+/* Status: licensed premium version of the app. For example: `Licensed version: 1.23`. [version: String] */
+"[Premium/Status/licensedVersion]" = "購買的版本：%@";
+
+/* Status: scheduled renewal date of a premium subscription. For example: `Next renewal on 1 Jan 2050`. [expiryDateString: String] */
+"[Premium/Status/nextRenewal]" = "下次續訂時間: %@";
+
+/* Status when the user has a premium version */
+"[Premium/Status/title]" = "進階版本";
+
+/* Status: validity period of once-and-forever premium */
+"[Premium/Status/ValidForever/title]" = "永遠有效";
+
+/* Status: how long the app has been used during some time period. For example: `App being useful: 1hr/month, about 12hr/year`. [monthlyUsage: String, annualUsage: String — already include the time unit (hours, minutes)] */
+"[Premium/usage] App being useful: %@/month, that is around %@/year." = "程式已使用: %1$@/月, 大約%2$@/年";
+
 /* Action/button to make password visible as plain-text */
 "[ProtectedTextField] Show Password" = "顯示密碼";
+
+/* Description of the Quick AutoFill feature. */
+"[QuickAutoFill/description]" = "快速自動填寫密碼可在密碼欄位旁顯示相關項目，無需開啟 KeePassium。";
+
+/* Placeholder text for empty search results */
+"[Search/EmptyResult/title]" = "沒有找到適合的東西";
+
+/* Title of a section in settings: parameters that protect access to data */
+"[Settings/AccessControl/title]" = "存取控制";
+
+/* Call to action (protect the app from unauthorized access) */
+"[Settings/AppLoc/Activate/callToAction]" = "啟用應用解鎖密碼";
+
+/* Description of `Activate app protection` call to action. */
+"[Settings/AppLock/Activate/description]" = "保護KeePassium免受未經授權的訪問。";
+
+/* Description of biometric unlock settings */
+"[Settings/AppLock/Biometric/description]" = "可以使用生物識別身份驗證作為應用解鎖密碼(但可能不這麼安全) 快速解鎖的替代方案。";
+
+/* Settings switch: whether App Protection is allowed to use Touch ID/Face ID. Example: 'Use Touch ID'. [biometryTypeName: String] */
+"[Settings/AppLock/Biometric/title] Use %@" = "使用 %@";
+
+/* Explanation for the `Lock on App Launch` setting */
+"[Settings/AppLock/LockOnLaunch/description]" = "在重新啟動設備與強制關閉應用程式之前，確保 KeePassium 已經鎖定。";
+
+/* Setting switch: whether to lock the app after it was terminated and relaunched. */
+"[Settings/AppLock/LockOnLaunch/title]" = "應用程式啟動鎖定";
+
+/* Description of the `Lock on Wrong Passcode` setting */
+"[Settings/AppLock/LockOnWrongPasscode/description]" = "如果您使用了錯誤的應用解鎖密碼, KeePassium 將會關閉所有的資料庫並從系統鑰匙圈中清除所有的主金鑰。";
+
+/* Settings: subtitle of the `App Protection` section. biometryTypeName will be either 'Touch ID' or 'Face ID'. [biometryTypeName: String] */
+"[Settings/AppLock/subtitle] App Lock, %@, timeout" = "應用鎖定,%@, 逾時";
+
+/* Settings: subtitle of the `App Protection` section when biometric auth is not available. */
+"[Settings/AppLock/subtitle] App Lock, passcode, timeout" = "應用鎖定, 應用解鎖密碼, 逾時";
+
+/* Description of the App Lock Timeout setting */
+"[Settings/AppLock/Timeout/description]" = "應用程式將在此時間後自動鎖定。";
+
+/* Title for App Lock Timeout setting */
+"[Settings/AppLock/Timeout/title]" = "逾時";
+
+/* Settings section: protection of the app from unauthorized access */
+"[Settings/AppLock/title]" = "應用保護";
+
+/* Settings section: what happens if user enters incorrect App Protection passcode. */
+"[Settings/AppLock/WrongPasscode/title]" = "錯誤的應用解鎖密碼";
+
+/* Description of those 'App Protection Timeout' options that trigger when the app is minimized. For example: 'Timeout: 3 seconds (After leaving the app) */
+"[Settings/AppLockTimeout/AfterLeavingApp/description]" = "離開程式後";
+
+/* Description of those 'App Protection Timeout' options that trigger when the user has been idle for a while. For example: 'Timeout: 3 seconds (After last interaction) */
+"[Settings/AppLockTimeout/description] After last interaction" = "沒操作應用程式";
+
+/* An option in Settings. Will be shown as 'App Lock: Timeout: Immediately' */
+"[Settings/AppLockTimeout/Immediately/title] " = "立刻";
+
+/* An option in Settings. Will be shown as 'App Lock: Timeout: Never' */
+"[Settings/AppLockTimeout/Never/title]" = "永不";
+
+/* Action that opens system settings or instructions */
+"[Settings/AutoFill/Activate/action]" = "啟用自動填寫密碼";
+
+/* Description for the AutoFill setup instructions */
+"[Settings/AutoFill/Activate/description]" = "首度使用前，你需要打開系統設定中的「自動填寫密碼」";
+
+/* Description of the 'Copy OTP to Clipboard' setting */
+"[Settings/AutoFill/CopyOTP/Description]" = "當自動填充寫入用戶名和密碼時，它還可以自動為您複製一次性密碼（OTP）。";
+
+/* Title of a yes/no setting: copy one-time password to clipboard when using AutoFill */
+"[Settings/AutoFill/CopyOTP/title]" = "複製 一次性密碼OTP 到剪貼板";
+
+/* Title of a help article on how to activate AutoFill. */
+"[Settings/AutoFill/Setup Guide/title]" = "自動填寫密碼設定教學";
+
+/* Description of the 'Fill-In Perfect Result Automatically' setting */
+"[Settings/AutoFill/UsePerfectMatch/description]" = "當自動填入只找到一個並且完整匹配的項目時 - 該項目將會被自動貼上。";
+
+/* Title of a yes/no setting: automatically use the single best match found by AutoFill search */
+"[Settings/AutoFill/UsePerfectMatch/title]" = "自動填入合適的結果";
+
+/* Option in settings: whether to open the last used database automatically on start. */
+"[Settings/AutoOpenPreviousDatabase/title]" = "自動開啟上次使用的資料庫";
+
+/* Title of a section in settings */
+"[Settings/AutoSearch/title]" = "自動搜尋";
+
+/* Action to clear/erase info about which database uses which key file */
+"[Settings/ClearKeyFileAssociations/action]" = "清除金鑰文件的關聯";
+
+/* Title of the success message for `Clear Key File Associations` button */
+"[Settings/ClearKeyFileAssociations/Cleared/title]" = "已清除";
+
+/* Title of the success message for `Clear Master Keys` button */
+"[Settings/ClearMasterKeys/Cleared/title]" = "已清除";
+
+/* Title of a setting: time after which clipboard will be cleared */
+"[Settings/Clipboard/Timeout/title]" = "剪貼板逾時";
+
+/* Section title in Settings */
+"[Settings/Clipboard/title]" = "剪貼板";
+
+/* Description of the 'Clipboard Timeout' setting. */
+"[Settings/ClipboardTimeout/description]" = "當您複製任何東西, KeePassium 會在稍後自動的為您清除剪貼板。";
+
+/* An option in Settings. Will be shown as 'Clipboard Timeout: Never' */
+"[Settings/ClipboardTimeout/Never/title]" = "永不";
+
+/* Description of the 'Make Backup Copies' setting */
+"[Settings/DatabaseBackup/Active/description]" = "在保存資料庫時, KeePassium 會自動創建一個副本, 以防萬一。";
+
+/* Title of a yes/no setting: whether to back up databases before saving them */
+"[Settings/DatabaseBackup/Active/title]" = "創建備份副本";
+
+/* Confirmation dialog message to delete all backup files */
+"[Settings/DatabaseBackup/DeleteAll/confirm]" = "刪除所有備份儅案?";
+
+/* Action to delete all backup files from the app. `ALL` is in capitals as a highlight. [backupFileCount: Int] */
+"[Settings/DatabaseBackup/DeleteAll/title]" = "刪除所有備份儅案(%d)";
+
+/* Description of the 'Exclude Backup Files from System Backup' setting */
+"[Settings/DatabaseBackup/ExcludeFromSystemBackup/description]" = "定義是否應從 iCloud / iTunes 備份中排除由 KeePassium 創建的備份資料庫。適用於所有現有和將來的備份檔案。";
+
+/* Title of a yes/no setting: whether app's internal backup copies should be excluded from global system backup */
+"[Settings/DatabaseBackup/ExcludeFromSystemBackup/title]" = "從系統備份中排除備份文件";
+
+/* Setting title: how long to keep backup copies. Example: 'Keep Backup Files: Forever' */
+"[Settings/DatabaseBackup/KeepingDuration/Forever/title]" = "永遠";
+
+/* Setting title: how long to keep backup copies. For example: `Keep Backup Files: 3 days` */
+"[Settings/DatabaseBackup/KeepingDuration/title]" = "保留備份檔案";
+
+/* Status message: there are no backup files to delete */
+"[Settings/DatabaseBackup/NoFiles/title]" = "沒有找到備份檔案";
+
+/* Description of the `Periodic Cleanup` settings */
+"[Settings/DatabaseBackup/PeriodicCleanup/description]" = "KeePassium 可以自動刪除舊的備份文件幫您釋放點手機檔案空間。";
+
+/* Settings section: automatic deletion of old backup files */
+"[Settings/DatabaseBackup/PeriodicCleanup/title]" = "定期清理";
+
+/* Description of the 'Show Backup Files' setting */
+"[Settings/DatabaseBackup/ShowBackupFiles/description]" = "備份副本將與原始文件一起顯示。";
+
+/* Section header, refers to Apple's backup services (https://support.apple.com/HT203977) */
+"[Settings/DatabaseBackup/SystemBackup/title]" = "iTunes 與 iCloud 備份";
+
+/* Title of a settings section: backup of databases */
+"[Settings/DatabaseBackup/title]" = "資料庫備份";
+
+/* Description of the `Database Timeout` setting */
+"[Settings/DatabaseLockTimeout/description]" = "如果您在一段時間內沒有與KeePassium程式交互, 資料庫將會自動關閉, 以確保您的安全。如果重新打開KeePassium程式您需要重新輸入主密碼。";
+
+/* Title of a setting: the time after which databases will be locked. */
+"[Settings/DatabaseLockTimeout/title]" = "資料庫逾時";
+
+/* A description/subtitle for the 'Database Timeout: Immediately'. */
+"[Settings/DatabaseTimeout/Immediately/description]" = "離開程式時";
+
+/* An option in Settings. Will be shown as 'Database Timeout: Immediately' */
+"[Settings/DatabaseTimeout/Immediately/title" = "立刻";
+
+/* An option in Settings. Will be shown as 'Database Timeout: Never' */
+"[Settings/DatabaseTimeout/Never/title]" = "永不";
+
+/* Section title: advanced/expert settings */
+"[Settings/DataProtection/Advanced/title]" = "進階設定";
+
+/* Title of a section in settings */
+"[Settings/DataProtection/AutomaticLock/title]" = "自動鎖定";
+
+/* Subtitle for `Data Protection` section in settings */
+"[Settings/DataProtection/subtitle]" = "主金鑰, 金鑰文件";
+
+/* Description of the 'Hide Passwords' setting. */
+"[Settings/HidePasswords/description]" = "隱藏密碼與其他受保護的字段在星號後面（推薦）。";
+
+/* Title of a yes/no setting */
+"[Settings/HidePasswords/title]" = "隱藏密碼";
+
+/* Description of the 'Remember Key Files' setting */
+"[Settings/KeyFiles/Remember/description]" = "記住並自動使用該資料庫上次使用的金鑰檔案。清除關聯不會對檔案本身做修改。";
+
+/* Title of a section in Settings */
+"[Settings/KeyFiles/title]" = "金鑰檔案";
+
+/* Description of the 'Cache Derived Encryption Keys' setting */
+"[Settings/MasterKeys/CacheDerived/description]" = "快取金鑰使 KeePassium 儘可能跳過金鑰衍生與 YubiKey 硬體掃描。";
+
+/* Action: clear/erase/delete stored master keys */
+"[Settings/MasterKeys/Clear/action]" = "清除主金鑰";
+
+/* Title of a yes/no setting. */
+"[Settings/MasterKeys/ClearOnTimeout/title]" = "逾時後清除主金鑰";
+
+/* Description of the 'Remember Master Keys' setting. */
+"[Settings/MasterKeys/Remember/description]" = "當解鎖資料庫時, 主金鑰將會安全的保存在系統鑰匙圈中。在下次登入KeePassium 將會自動使用該金鑰檔案, 所以您無須再輸入您完整的主密碼。";
+
+/* Title of a section in settings */
+"[Settings/OTP/title]" = "一次性密碼";
+
+/* Title of a section in settings */
+"[Settings/Premium/title]" = "進階版";
+
+/* Title of a section in Settings */
+"[Settings/ProtectedFields/title]" = "受保護的字段";
+
+/* Title of a section in settings */
+"[Settings/QuickUnlock/title]" = "快速解鎖";
+
+/* Title of a setting: whether search looks in field names */
+"[Settings/Search/InFieldNames/title]" = "搜索字段名稱";
+
+/* Title of a setting: whether search looks in values of protected fields */
+"[Settings/Search/InProtectValues/title]" = "搜尋受保護的值";
+
+/* Title of a setting: which fields to consider in search */
+"[Settings/Search/Scope/title]" = "搜尋範圍";
+
+/* Description of the 'Start with Search' setting. */
+"[Settings/Search/StartWithSearch/description]" = "打開資料庫時自動顯示搜尋欄位。";
+
+/* Title of a setting: whether to open search field immediately after opening a database */
+"[Settings/Search/StartWithSearch/title]" = "進入時自動開啟搜索欄位";
+
+/* Section title in settings */
+"[Settings/Search/title]" = "搜尋";
+
+/* Title of a section in settings: parameters that control what happens when the app is started. */
+"[Settings/Start/title]" = "啟動時";
+
+/* Title of a section in settings: technical support and diagnostics */
+"[Settings/Support/title]" = "支持";
+
+/* Description of the 'Universal Clipboard' setting. */
+"[Settings/UniversalClipboard/description]" = "使用「通用剪貼板」在 Apple 裝置之間拷貝與貼上內容，在外部設備的剪貼板將在兩分鐘後清除。";
+
+/* Apple's term: https://support.apple.com/102430 */
+"[Settings/UniversalClipboard/title]" = "通用剪貼板";
+
+/* Button which opens the What's New screen. */
+"[WhatsNew/Announcement/button]" = "更新了什麼";
 

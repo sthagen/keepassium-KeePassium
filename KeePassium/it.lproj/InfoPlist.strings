@@ -5,10 +5,10 @@
 "KeePass Database (kdbx)" = "Database KeePass (kdbx)";
 
 /* Privacy - NFC Scan Usage Description */
-"NFCReaderUsageDescription" = "KeePassium richiede l'accesso a NFC per comunicare con la YubiKey.";
+"NFCReaderUsageDescription" = "KeePassium richiede l'accesso al sensore NFC per comunicare con la YubiKey.";
 
 /* Privacy - Camera Usage Description */
-"NSCameraUsageDescription" = "KeePassium richiede l'accesso a Fotocamera per leggere i codici QR.";
+"NSCameraUsageDescription" = "KeePassium richiede l'accesso a Fotocamera per scansionare i codici QR.";
 
 /* Privacy - Face ID Usage Description */
 "NSFaceIDUsageDescription" = "Usa FaceID per sbloccare KeePassium";
@@ -16,6 +16,6 @@
 /* Privacy - Photo Library Additions Usage Description */
 "NSPhotoLibraryAddUsageDescription" = "KeePassium ha bisogno del permesso per esportare file in Foto.";
 
-/* (No Comment) */
-"NSPhotoLibraryUsageDescription" = "KeePassium richiede l'accesso a Foto per aggiungere icone personalizzate a gruppi e voci";
+/* Privacy - Photo Library Usage Description */
+"NSPhotoLibraryUsageDescription" = "Per configurare OTP, KeePassium necessita dell'accesso per selezionare immagini per le icone personalizzate e per eseguire la scansione di codici QR.";
 

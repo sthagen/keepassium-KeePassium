@@ -1,6 +1,3 @@
-/* An identifier of the app that called AutoFill. The term is intentionally similar to https://ru.wikipedia.org/wiki/Caller_ID. [callerID: String] */
-"[AutoFill/Search/callerID]" = "هوية الطلب: %@";
-
 /* No comment provided by engineer. */
 "[AutoFill/Setup/footer]" = "التعبئة التلقائية لا يمكنها الوصول تلقائياً إلى الملفات التي لديك بالفعل في تطبيق KeePassium الرئيسي.\n\nلماذا؟ وراء المشاهد، يتعامل النظام مع التعبئة التلقائية كتطبيق منفصل، مستقل عن عملية KeePassium الرئيسية. لأسباب أمنية، لا يمكن لأي تطبيق الوصول ببساطة إلى أي ملفات خارجية - ما لم تقم بربط هذه الملفات فعلياً بهذا التطبيق. وبالتالي يضمن النظام أن التطبيق يمكنه فقط الوصول إلى الملفات القليلة التي سُمح له بها.\n\nونتيجة لذلك، يجب إعطاء كل من تطبيق التعبئة التلقائية و KeePassium الاذونات الخاصة لكل ملف خارجي. لحسن الحظ، هذا إجراء لمرة واحدة فقط.";
 
@@ -15,4 +12,7 @@
 
 /* Call to action, invites the user to enable the Quick AutoFill feature */
 "[QuickAutoFill/Activate/callToAction]" = "تَفعيلُ التَّعبِئةِ التلقائيَّة السريعَة";
+
+/* Placeholder text for empty search results */
+"[Search/EmptyResult/title]" = "لا توجد نتائج مُناسبة";
 

@@ -1,6 +1,3 @@
-/* Menu item that shows info about KeePassium app */
-"[About/altTitle]" = "حَول KeePassium";
-
 /* Copyright notice */
 "[About/CopyrightAuthor]" = "©Andrei Popleteev";
 
@@ -9,18 +6,6 @@
 
 /* Call to action: perform accessibilty `activate` action to listen to text/content. */
 "[Accessibility/activateToListen]" = "تنشيط للاستماع.";
-
-/* Section in settings: icon for the app */
-"[Appearance/AppIcon/title]" = "أيقونة التطبيق";
-
-/* Section in settings: icons for database */
-"[Appearance/DatabaseIcons/title]" = "أيقونات قاعدة البيانات";
-
-/* Title of a setting option: font size */
-"[Appearance/TextSize/title]" = "حجم النص";
-
-/* Group of settings for user interface appearance (text size, icons, etc) */
-"[Appearance/title]" = "المظهر";
 
 /* Action/button to unlock the App Lock with passcode */
 "[AppLock] Unlock" = "فتح القفل";
@@ -100,9 +85,6 @@
 /* Notification: an item has been copied to clipboard */
 "[Clipboard/Copy/notification]" = "تم النسخ!";
 
-/* Subtitle for `Contact Us`. Keep it short. */
-"[ContactUs/subtitle]" = "اقتراحات؟ مشاكل؟ دعنا نعلم!";
-
 /* Error message about AES cipher. [errorCode: Int] */
 "[CryptoError] AES decryption error (code %d)" = "خطأ في فك تعمية AES (الرمز %d)";
 
@@ -136,6 +118,9 @@
 /* Action: add/import an image as a custom icon */
 "[Database/CustomIcon/add]" = "إضافة أيقونة مُخصصة";
 
+/* Action: delete all custom icons */
+"[Database/CustomIcon/deleteAll]" = "حذف الكل";
+
 /* Message to confirm deletion of a database file. (This deletes the file itself) */
 "[Database/Delete/Confirm/text] Delete database file?\n Make sure you have a backup." = "حذف ملف قاعدة البيانات؟\nتأكد من أن يكون لديك نسخة احتياطية.";
 
@@ -144,6 +129,9 @@
 
 /* Notification when user tries to copy data from KDBX to older KDB database. */
 "[Database/LesserTargetFormat/warning]" = "صيغة قاعدة البيانات هذه قديمة، قد تضيع بعض البيانات.";
+
+/* Placeholder shown when there are no database files available */
+"[Database/List/empty]" = "لا توجد ملفات قاعدة بيانات";
 
 /* Title of the database picker list */
 "[Database/List/title]" = "قواعد البيانات";
@@ -238,6 +226,9 @@
 /* Status message: saving a database */
 "[Database/Saving/Status] Saving..." = "جاري الحفظ...";
 
+/* File access parameter. Will be shown as 'Consider File Unreachable: Immediately' */
+"[Database/Settings/ConsiderFileUnreachable/Immediately]" = "فورًا";
+
 /* File settings parameter: time after which file will be considered unreachable. Example: `Consider File Unreachable: in 10 seconds`.) */
 "[Database/Settings/ConsiderFileUnreachable/title]" = "اعتبار الملف لا يمكن الوصول إليه";
 
@@ -289,14 +280,14 @@
 /* Title of a message shown when saving to a database that has already been modified elsewhere. */
 "[Database/SyncConflict/title]" = "تعارُض في المُزامَنَة";
 
-/* Error message related to key file. [errorDetails: String] */
-"[Database/Unlock] Key file error: %@" = "خطأ في ملف المفتاح: %@";
-
 /* Error message */
 "[Database/Unlock/Error] Failed to open key file" = "فشل فتح ملف المفتاح";
 
 /* Error message */
 "[Database/Unlock/Error] Password and key file are both empty." = "كلمة المرور وملف المفتاح كِلاهُما فارغان.";
+
+/* Action: load a local (on-device) copy of a remote database */
+"[Database/Unlock/UseFallback/action]" = "استخدام نُسخة محليَّة";
 
 /* Message shown when user enters an invalid database password */
 "[Database/Unlock/wrongPassword/question]" = "هل نسيت كلمة السر؟";
@@ -450,9 +441,6 @@
 
 /* Error message: user provided a wrong master key for decryption. */
 "[DatabaseError] Invalid password or key file" = "كلمة المرور غير صالحة أو ملف المفتاح غير صالح";
-
-/* Subtitle for `Diagnostic Log`. Keep it short. */
-"[DiagLog/subtitle]" = "اصلاح المشاكل للمستخدمين المتقدمين";
 
 /* Title of the diagnostic info screen */
 "[DiagLog/title]" = "سجل التشخيص";
@@ -874,9 +862,6 @@
 /* Title of a list with possible hardware key connections */
 "[HardwareKey/Picker/title]" = "حهاز مفاتيح";
 
-/* Master key/unlock option: use given slot of YubiKey */
-"[HardwareKey/YubiKey/Slot] YubiKey Slot #%d" = "منفذ YubiKey %d";
-
 /* Generic title of in-app help article */
 "[Help Viewer/title]" = "المساعدة";
 
@@ -919,11 +904,26 @@
 /* Error message about system keychain. */
 "[KeychainError/unexpectedFormat] Keychain error: unexpected data format" = "خطأ في سلسلة المفاتيح: صيغة بيانات غير متوقع";
 
+/* Action: add a key file into the app, by importing or creating one. `Key file` is a glossary term. */
+"[KeyFile/Add/action]" = "إضافة ملف مفتاح";
+
 /* Message to confirm deletion of a key file. */
 "[KeyFile/Delete/Confirm/text] Delete key file?\n Make sure you have a backup." = "حذف ملف المفتاح؟\n تأكد أن لديك نسخة احتياطية.";
 
+/* Error message related to key file. [errorDetails: String] */
+"[KeyFile/error]" = "خطأ في ملف المفتاح: %@";
+
 /* Name of an input field which shows selected key file */
 "[KeyFile/Field/title]" = "ملف المفتاح";
+
+/* Title of the list with key files. */
+"[KeyFile/List/title]" = "ملفات المفاتيح";
+
+/* Description of the 'No Key File' option. */
+"[KeyFile/None/description]" = "استخدام كلمة المرور فقط";
+
+/* Title: don't use key file */
+"[KeyFile/None/title]" = "لا يوجد ملف مفتاح";
 
 /* Message to confirm removal of a key file from the app. (This keeps the file, but removes its reference from the app.) */
 "[KeyFile/Remove/Confirm/text] Remove key file from the list?\n The file will remain intact and you can add it again later." = "إزالة ملف المفتاح من القائمة؟\n سيبقى الملف سليماً ويمكنك إضافته لاحقاً مرة أخرى.";
@@ -938,7 +938,7 @@
 "[Menu/FileInfo/title]" = "معلومات الملف";
 
 /* Menu title: app settings */
-"[Menu/Preferences/title]" = "تفضيلات…";
+"[Menu/Settings/title]" = "الإعدادات";
 
 /* Name of an entry field */
 "[OTP/FieldName]" = "رمز مُرور المرة الواحدة";
@@ -1141,27 +1141,6 @@
 /* Marks the default pricing plan */
 "[Premium/Price Plan/popular]" = "رائج";
 
-/* Status: special premium for beta-testing environment is active */
-"[Premium/status] Beta testing" = "اختبار إصدار البيتا";
-
-/* Status: current version of the app. For example: `Current version: 1.23`. Should be similar to the `Licensed version` string. [version: String] */
-"[Premium/status] Current version: %@" = "الإصدار الحالي: %@";
-
-/* Status: premium subscription has expired. For example: `Expired 1 day ago`. [timeFormatted: String, includes the time unit (day, hour, minute)] */
-"[Premium/status] Expired %@ ago. Please renew." = "انتهت صلاحيتها منذ %@ جدد من فضلك.";
-
-/* Status: licensed premium version of the app. For example: `Licensed version: 1.23`. [version: String] */
-"[Premium/status] Licensed version: %@" = "إصدار الرخصة: %@";
-
-/* Status: scheduled renewal date of a premium subscription. For example: `Next renewal on 1 Jan 2050`. [expiryDateString: String] */
-"[Premium/status] Next renewal on %@" = "التجديد التالي في %@";
-
-/* Status: validity period of once-and-forever premium */
-"[Premium/status] Valid forever" = "صالحة للأبد";
-
-/* Status when the user has a premium version */
-"[Premium/Status/title]" = "النُسخة المُمَيَزة";
-
 /* Subscription conditions */
 "[Premium/Subscription/Legal/text]" = "سوف يتم اقتطاع المبلغ من حساب Apple ID عند تأكيد الشراء. \n\nيتجدد الاشتراك تلقائيًا إلا إذا قمت بالإلغاء في غضون 24 ساعة على الأقل قبل انتهاء فترة الاشتراك الحالية. وسوف يتم خصم المبلغ من حسابك نظير التجديد في غضون فترة 24 ساعة قبل نهاية الفترة الحالية. \n\nيمكنك إدارة اشتراكاتك وإلغائها بالذهاب إلى إعدادات الحساب في متجر التطبيقات بعد الشراء.";
 
@@ -1213,9 +1192,6 @@
 /* Message shown after buying or subscribing. */
 "[Premium/Upgrade/Success/thankYou]" = "شكرا لك على الشراء!";
 
-/* Status: how long the app has been used during some time period. For example: `App being useful: 1hr/month, about 12hr/year`. [monthlyUsage: String, annualUsage: String — already include the time unit (hours, minutes)] */
-"[Premium/usage] App being useful: %@/month, that is around %@/year." = "التطبيق كان مفيد: %1$@ في الشهر، أي حوالي %2$@ في السنة.";
-
 /* A generic description of a premium feature */
 "[PremiumFeature/Generic/description]" = "قم بالترقية إلى المميز والاستمتاع بـ KeePassium في أفضل حالاتها.";
 
@@ -1252,9 +1228,6 @@
 /* Error message when a long-running operation was cancelled due to the lack of free memory (RAM). */
 "[Progress/CancellationReason/lowMemory]" = "الذاكِرة غير كافية للاِستمرار.\nيُمكِن حُدوث هذا مع قواعد البيانات الكبيرة أو إعدادات قاعدة بيانات عالية للغاية (مُعامل الذاكرة Argon2).";
 
-/* Description of the Quick AutoFill feature. */
-"[QuickAutoFill/description]" = "التعبئة التلقائية السريعة تظهر المُدخلات ذات الصلة بجانب حقل رمز المرور، دون فتح KeePassium.";
-
 /* Name of a feature that shows relevant entries directly next to the login/password forms. */
 "[QuickAutoFill/title]" = "ملء تلقائي سريع";
 
@@ -1264,128 +1237,11 @@
 /* Name of an input field for entering the password again */
 "[Repeat Password/Field/title]" = "أعد كلمة المرور";
 
-/* Call to action (protect the app from unauthorized access) */
-"[Settings/AppLoc/Activate/callToAction]" = "تمكين قفل التطبيق";
-
-/* Description of `Activate app protection` call to action. */
-"[Settings/AppLock/Activate/description]" = "حماية KeePassium من الوصول الغير مصرح به.";
-
-/* Settings switch: whether AppLock is allowed to use Touch ID/Face ID. Example: 'Use Touch ID'. [biometryTypeName: String] */
-"[Settings/AppLock/Biometric/title] Use %@" = "استخدام %@";
-
-/* Explanation for the `Lock on App Launch` setting */
-"[Settings/AppLock/LockOnLaunch/description]" = "يضمن قفل KeePassium بعد إغلاق التطبيق بالقوة أو إعادة تشغيل الجهاز.";
-
-/* Setting switch: whether to lock the app after it was terminated and relaunched. */
-"[Settings/AppLock/LockOnLaunch/title]" = "قفل عند تشغيل التطبيق";
-
-/* Settings: subtitle of the `App Protection` section. biometryTypeName will be either 'Touch ID' or 'Face ID'. [biometryTypeName: String] */
-"[Settings/AppLock/subtitle] App Lock, %@, timeout" = "قفل التطبيق، %@، مهلة الخروج";
-
-/* Settings: subtitle of the `App Protection` section when biometric auth is not available. */
-"[Settings/AppLock/subtitle] App Lock, passcode, timeout" = "قفل التطبيق، كلمة المرور، مهلة الخروج";
-
-/* Settings section: protection of the app from unauthorized access */
-"[Settings/AppLock/title]" = "حماية التطبيق";
-
-/* A description/subtitle for Settings/AppLockTimeout options that trigger when the user has been idle for a while. For example: 'AppLock Timeout: 3 seconds (After last interaction) */
-"[Settings/AppLockTimeout/description] After last interaction" = "بعد آخر تفاعل";
-
-/* A description/subtitle for Settings/AppLock/Timeout options that trigger when the app is minimized. For example: 'AppLock Timeout: 3 seconds (After leaving the app) */
-"[Settings/AppLockTimeout/description] After leaving the app" = "بعد مغادرة التطبيق";
-
-/* An option in Settings. Will be shown as 'App Lock: Timeout: Immediately' */
-"[Settings/AppLockTimeout/fullTitle] Immediately" = "فورًا";
-
-/* An option in Settings. Will be shown as 'App Lock: Timeout: Never' */
-"[Settings/AppLockTimeout/fullTitle] Never" = "ابدًا";
-
-/* An option in Settings. Will be shown as 'App Lock: Timeout: Immediately' */
-"[Settings/AppLockTimeout/shortTitle] Immediately" = "فورًا";
-
-/* An option in Settings. Will be shown as 'App Lock: Timeout: Never' */
-"[Settings/AppLockTimeout/shortTitle] Never" = "ابدًا";
-
-/* Action that opens system settings or instructions */
-"[Settings/AutoFill/Activate/action]" = "تنشيط التعبئة التلقائية";
-
-/* Description for the AutoFill setup instructions */
-"[Settings/AutoFill/Activate/description]" = "قبل الاستخدام الأول، تحتاج إلى تفعيل التعبئة التلقائية من إعدادات النظام.";
-
-/* Title of an option: copy one-time password to clipboard when using AutoFill */
-"[Settings/AutoFill/CopyOTP/title]" = "نسخ OTP إلى الحافظة";
-
-/* Title of a help article on how to activate AutoFill. */
-"[Settings/AutoFill/Setup Guide/title]" = "دليل إعداد الملء التلقائي";
-
 /* Title of AutoFill settings screen */
 "[Settings/AutoFill/title]" = "التعبئة التلقائية لكلمات المرور";
 
-/* Title of an option: automatically use the single best match found by AutoFill search */
-"[Settings/AutoFill/UsePerfectMatch/title]" = "املأ النتائج المتطابقة تلقائيًا";
-
-/* Option in settings: whether to open the last used database automatically on start. */
-"[Settings/AutoOpenPreviousDatabase/title]" = "الفتح التلقائي لقاعدة البيانات السابقة";
-
-/* Action to delete all backup files from the app. `ALL` is in capitals as a highlight. [backupFileCount: Int] */
-"[Settings/Backup] Delete ALL Backup Files (%d)" = "حذف جميع ملفات النسخ الاحتياطي (%d)";
-
-/* Status message: there are no backup files to delete */
-"[Settings/Backup] No Backup Files Found" = "لم يتم العثور على ملفات نسخ احتياطي";
-
-/* Confirmation dialog message to delete all backup files */
-"[Settings/Backup/Delete/title] Delete all backup files?" = "حذف جميع ملفات النَسخ الاحتياطي؟";
-
-/* An option in Settings. Please keep it short. Will be shown as 'Keep Backup Files: Forever' */
-"[Settings/BackupKeepingDuration/shortTitle] Forever" = "إلى الأبد";
-
-/* Text of the success message for `Clear Key File Associations` button */
-"[Settings/ClearKeyFileAssociations/Cleared/text] Associations between key files and databases have been removed." = "لقد أزيلت الرابطة بين ملفات المفاتيح وقواعد البيانات.";
-
-/* Title of the success message for `Clear Key File Associations` button */
-"[Settings/ClearKeyFileAssociations/Cleared/title] Cleared" = "تم المسح";
-
-/* Text of the success message for `Clear Master Keys` button */
-"[Settings/ClearMasterKeys/Cleared/text] All master keys have been deleted." = "تم حذف جميع المفاتيح الرئيسة.";
-
-/* Title of the success message for `Clear Master Keys` button */
-"[Settings/ClearMasterKeys/Cleared/title] Cleared" = "تم المسح";
-
-/* Description of the clipboard/pasteboard timeout. */
-"[Settings/ClipboardTimeout/description] When you copy some text from an entry, the app will automatically clear your clipboard (pasteboard) after this time." = "عند نسخ بعض النصوص من السجلات، سيحذف التطبيق تلقائياً الحافظة الخاصة بك بعد هذا الوقت.";
-
-/* An option in Settings. Will be shown as 'Clipboard Timeout: Never' */
-"[Settings/ClipboardTimeout/fullTitle] Never" = "ابدًا";
-
-/* An option in Settings. Will be shown as 'Clipboard Timeout: Never' */
-"[Settings/ClipboardTimeout/shortTitle] Never" = "ابدًا";
-
-/* Title of a settings section: backup of databases */
-"[Settings/DatabaseBackup/title]" = "النسخ الاحتياطي لقاعدة البيانات";
-
-/* Description of the Database Lock Timeout */
-"[Settings/DatabaseLockTimeout/description] If you are not interacting with the app for some time, the database will be closed for your safety. To open it, you will need to enter its master password again." = "إذا كنت لا تتفاعل مع التطبيق لبعض الوقت، فسيتم إغلاق قاعدة البيانات لسلامتك. لفتحها، سوف تحتاج إلى إدخال كلمة المرور الرئيسة مرة أخرى.";
-
-/* A description/subtitle for the 'DatabaseLockTimeout: Immediately'. */
-"[Settings/DatabaseLockTimeout/description] When leaving the app" = "عِندَ مُغادرة التطبيق";
-
-/* An option in Settings. Will be shown as 'Database Lock: Timeout: Immediately' */
-"[Settings/DatabaseLockTimeout/fullTitle] Immediately" = "فورًا";
-
-/* An option in Settings. Will be shown as 'Database Lock: Timeout: Never' */
-"[Settings/DatabaseLockTimeout/fullTitle] Never" = "ابدًا";
-
-/* An option in Settings. Will be shown as 'Database Lock: Timeout: Immediately' */
-"[Settings/DatabaseLockTimeout/shortTitle] Immediately" = "فورًا";
-
-/* An option in Settings. Will be shown as 'Database Lock: Timeout: Never' */
-"[Settings/DatabaseLockTimeout/shortTitle] Never" = "ابدًا";
-
-/* Title of a setting: the time after which databases will be locked. */
-"[Settings/DatabaseLockTimeout/title]" = "مُهلَة قاعدة البيانات";
-
-/* Subtitle for `Data Protection` section in settings */
-"[Settings/DataProtection/subtitle]" = "المفاتيح الرئيسة وملفات المفاتيح";
+/* Title of a yes/no setting: whether to include backup copies in the file list */
+"[Settings/DatabaseBackup/ShowBackupFiles/title]" = "إظهار ملفات النَسخ الاحتياطي";
 
 /* Settings section: protection of databases, their keys and data inside them */
 "[Settings/DataProtection/title]" = "حماية البيانات";
@@ -1399,14 +1255,20 @@
 /* Title of a settings section: sort order of groups and entries in a list */
 "[Settings/GroupViewer] Sort Order" = "طريقة الفرز";
 
+/* Title of a yes/no setting */
+"[Settings/KeyFiles/Remember/title]" = "تذكر ملفات المفاتيح";
+
 /* Title of list view configuration screen */
 "[Settings/ListSettings/title]" = "إعدادات القوائم";
 
+/* Setting: preserve (cache) calculated database keys */
+"[Settings/MasterKeys/CacheDerived/title]" = "مفاتيح التشفير المشتقة من ذاكرة التخزين المؤقت";
+
+/* Title of a yes/no setting */
+"[Settings/MasterKeys/Remember/title]" = "تذكر المفاتيح الرئيسة";
+
 /* Settings section: how/whether the app is allowed to use networks/Internet */
 "[Settings/NetworkAccess/title]" = "الوصول إلى الشبكة";
-
-/* Section title in settings */
-"[Settings/Search/title]" = "البحث";
 
 /* Title of the app settings screen */
 "[Settings/title]" = "الإعدادات";
@@ -1468,27 +1330,15 @@
 /* Human-readable file location: the file is on device, inside the app sandbox. Example: 'File Location: Local copy' */
 "[URLReference/Location] Local copy" = "النُسَخة المحلية";
 
-/* Selector choice: don't use YubiKey to encrypt/decrypt database */
-"[YubiKey] Don't use YubiKey" = "بدون YubiKey";
-
 /* Call for action: insert YubiKey 5Ci to the Lightning port */
 "[YubiKey] Insert the key" = "أدخل المفتاح";
 
 /* Call for action: touch the sides of YubiKey 5Ci to continue */
 "[YubiKey] Touch the key" = "المَس المفتاح";
 
-/* Selector choice: use YubiKey to encrypt/decrypt database. For example: `Use YubiKey Slot 1`. [slotID: Int] */
-"[YubiKey] Use YubiKey Slot %d" = "استخدم منفذ YubiKey %d";
-
 /* Action/button to add database to the app */
 "Add Database" = "إضافة قاعدة بيانات";
 
 /* Warning message when the user tries to use a database as a key file */
 "KeePass database should not be used as key file. Please pick a different file." = "لا ينبغي استخدام ملف قاعدة بيانات KeePass كملف مفتاح. الرجاء اختيار ملف مختلف.";
-
-/* Placeholder shown when there are no database files available */
-"No database files" = "لا توجد ملفات قاعدة بيانات";
-
-/* Settings switch: whether to include backup copies in the file list */
-"Show Backup Files" = "إظهار ملفات النَسخ الاحتياطي";
 

@@ -16,6 +16,3 @@
 /* Privacy - Photo Library Additions Usage Description */
 "NSPhotoLibraryAddUsageDescription" = "KeePassium 需要獲取匯出檔案到照片庫的權限。";
 
-/* (No Comment) */
-"NSPhotoLibraryUsageDescription" = "向群組與項目添加自定義圖示，KeePassium 需要取用您的照片圖庫權限。";
-

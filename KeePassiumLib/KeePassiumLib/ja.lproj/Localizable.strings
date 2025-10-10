@@ -1,6 +1,3 @@
-/* Menu item that shows info about KeePassium app */
-"[About/altTitle]" = "KeePassiumについて";
-
 /* Copyright notice */
 "[About/CopyrightAuthor]" = "©Andrei Popleteev";
 
@@ -10,6 +7,15 @@
 /* Call to action: perform accessibilty `activate` action to listen to text/content. */
 "[Accessibility/activateToListen]" = "有効にする。";
 
+/* Accessibility notification for entries with attached files. */
+"[Accessibility/containsAttachments]" = "添付ファイルが含まれています。";
+
+/* Accessibility notification for entries with a problematic passkey */
+"[Accessibility/containsIncompatiblePasskey]" = "このデバイスと互換性のないパスキーが含まれています。";
+
+/* Accessibility notification for entries with OTP codes. */
+"[Accessibility/containsOTP]" = "ワンタイムパスワードが含まれています。";
+
 /* Accessibility notification for entries with a passkey */
 "[Accessibility/containsPasskey]" = "パスキーが含まれています。";
 
@@ -18,24 +24,6 @@
 
 /* Confirmation message before resetting the app to just-installed state. */
 "[App/ResetEverything/title]" = "アプリをリセットしますか？";
-
-/* Section in settings: icon for the app */
-"[Appearance/AppIcon/title]" = "Appのアイコン";
-
-/* Section in settings: icons for database */
-"[Appearance/DatabaseIcons/title]" = "データベースのアイコン";
-
-/* Short name of the default/system font. For example: `Font: Default` */
-"[Appearance/DefaultFont/shortTitle]" = "デフォルト";
-
-/* Title of a setting option: font */
-"[Appearance/Font/title]" = "フォント";
-
-/* Title of a setting option: font size */
-"[Appearance/TextSize/title]" = "文字の大きさ";
-
-/* Group of settings for user interface appearance (text size, icons, etc) */
-"[Appearance/title]" = "表示";
 
 /* Action/button to unlock the App Lock with passcode */
 "[AppLock] Unlock" = "ロックを解除";
@@ -85,6 +73,24 @@
 /* Title of a message related to upgrading to the premium version */
 "[AutoFill/Premium/Upgrade/Manual/title] Premium Upgrade" = "プレミアム版へのアップグレード";
 
+/* Call to action / instruction on how to enable accessibility permission */
+"[AutoType/AccessibilityPrompt/callToAction]" = "「システム設定」→「プライバシーとセキュリティ」→「アクセシビリティ」を開き、KeePassiumを有効にしてください。";
+
+/* Message explaining why accessibility permission is needed */
+"[AutoType/AccessibilityPrompt/message]" = "キー入力を他のアプリに転送するにはKeePassiumにアクセス許可を与える必要があります。";
+
+/* Title of a dialog asking user to provide a security permission */
+"[AutoType/AccessibilityPrompt/title]" = "KeePassiumにアクセス許可を与える必要があります";
+
+/* Action: send key presses to 'type in' entry data into another app */
+"[AutoType/action]" = "自動タイプを実行";
+
+/* Button to open system settings (accessibility, permissions, etc) */
+"[AutoType/Action/OpenSettings]" = "設定を開く";
+
+/* Title for error when auto-type fails */
+"[AutoType/Error/Title]" = "自動タイプに失敗しました";
+
 /* Name of biometric authentication method. Trademarked, do not translate unless Apple traslated it to your language. */
 "[BiometricAuthType] Face ID" = "Face ID";
 
@@ -121,9 +127,6 @@
 /* Notification: an item has been copied to clipboard */
 "[Clipboard/Copy/notification]" = "コピーしました";
 
-/* Subtitle for `Contact Us`. Keep it short. */
-"[ContactUs/subtitle]" = "改善提案や問題点を報告";
-
 /* Error message about AES cipher. [errorCode: Int] */
 "[CryptoError] AES decryption error (code %d)" = "AES 復号エラー (コード %d)";
 
@@ -156,6 +159,12 @@
 
 /* Action: add/import an image as a custom icon */
 "[Database/CustomIcon/add]" = "カスタムアイコンを追加";
+
+/* Notification when some custom icons are about to be deleted [iconCount: Int] */
+"[Database/CustomIcon/All/count]" = "すべてのカスタムアイコン: %d";
+
+/* Action: delete all custom icons */
+"[Database/CustomIcon/deleteAll]" = "すべて削除";
 
 /* Action: delete unused icons */
 "[Database/CustomIcon/deleteUnused]" = "未使用のアイコンを削除";
@@ -246,6 +255,12 @@
 
 /* Notification when user tries to copy data from KDBX to older KDB database. */
 "[Database/LesserTargetFormat/warning]" = "これは古いデータベース形式です。一部のデータが失われる可能性があります。";
+
+/* Placeholder shown when there are no database files available */
+"[Database/List/empty]" = "データベースがありません";
+
+/* Call to action. 'Open' here is used as 'launch'. */
+"[Database/List/LocalMissing/callToAction]" = "アプリを開く";
 
 /* Recommendation for solving a problem with a list of files. */
 "[Database/List/LocalMissing/message]" = "ローカルファイルが表示されていない場合は、一度KeePassiumを起動してください。";
@@ -379,6 +394,9 @@
 /* Status message: saving a database */
 "[Database/Saving/Status] Saving..." = "保存中...";
 
+/* File access parameter. Will be shown as 'Consider File Unreachable: Immediately' */
+"[Database/Settings/ConsiderFileUnreachable/Immediately]" = "即時";
+
 /* File settings parameter: time after which file will be considered unreachable. Example: `Consider File Unreachable: in 10 seconds`.) */
 "[Database/Settings/ConsiderFileUnreachable/title]" = "アクセスを試行";
 
@@ -445,14 +463,14 @@
 /* Title of a message shown when saving to a database that has already been modified elsewhere. */
 "[Database/SyncConflict/title]" = "同期の競合";
 
-/* Error message related to key file. [errorDetails: String] */
-"[Database/Unlock] Key file error: %@" = "キーファイルのエラー: %@";
-
 /* Error message */
 "[Database/Unlock/Error] Failed to open key file" = "キーファイルを開けませんでした";
 
 /* Error message */
 "[Database/Unlock/Error] Password and key file are both empty." = "パスワードとキーファイルのいずれも指定されていません。";
+
+/* Action: load a local (on-device) copy of a remote database */
+"[Database/Unlock/UseFallback/action]" = "ローカルコピーを使用";
 
 /* Message shown when user enters an invalid database password */
 "[Database/Unlock/wrongPassword/question]" = "パスワードをお忘れですか？";
@@ -463,8 +481,17 @@
 /* Notification message */
 "[Database/UnsavedChanges/cannotModifyYet]" = "残念ながら、自動入力はまだ大型データベースを修正することができません。この問題の解決に向けて取り組んでいます。";
 
+/* Notification message */
+"[Database/UnsavedChanges/couldNotApply]" = "いくつかの保留中の変更を自動適用できませんでした。最近の変更が失われている可能性があります。";
+
 /* Call to action shown in AutoFill module. */
 "[Database/UnsavedChanges/OpenAppCallToAction]" = "変更を保存するには、メインのKeePassiumアプリを開いてください。";
+
+/* Notification message about a problem with unsaved/pending changes. */
+"[Database/UnsavedChanges/Problematic/info]" = "いくつかの保留中の変更は存在しないエントリーかグループを参照しています。KeePassiumはそれらの項目を別のグループに作成し、そこで変更を適用します。";
+
+/* Title of a group where problematic pending changes are saved. %@ is the date of recovery. */
+"[Database/UnsavedChanges/RecoveredEntriesGroup/name]" = "復元された変更 (%@)";
 
 /* Action/button to save accummulated modifications */
 "[Database/UnsavedChanges/saveAction]" = "変更を保存";
@@ -628,9 +655,6 @@
 /* Error message: user provided a wrong master key for decryption. */
 "[DatabaseError] Invalid password or key file" = "パスワードまたはキーファイルが無効です";
 
-/* Subtitle for `Diagnostic Log`. Keep it short. */
-"[DiagLog/subtitle]" = "障害対応のための情報";
-
 /* Title of the diagnostic info screen */
 "[DiagLog/title]" = "診断ログ";
 
@@ -670,11 +694,20 @@
 /* Default name of a newly created entry field */
 "[Entry/Edit/CreateField/defaultName] Field Name" = "項目名";
 
+/* Action/button to add a new field to the entry */
+"[Entry/Field/Add/action]" = "フィールドを追加";
+
+/* On/off state: whether to show full-size or compact menu */
+"[Entry/Field/CompactMenu/title]" = "コンパクト表示";
+
 /* Notification: a reference to an entry field has been copied to clipboard */
 "[Entry/Field/CopyReference/acknowledgement]" = "クリップボードにコピーしました";
 
 /* Action: copy a reference to the selected entry field to clipboard */
 "[Entry/Field/CopyReference/action]" = "項目の参照をコピー";
+
+/* Title for a generic user-defined entry field. */
+"[Entry/Field/Custom/title]" = "カスタムフィールド";
 
 /* Action: display text using large font */
 "[Entry/Field/LargeType/action]" = "大きな文字で表示";
@@ -703,11 +736,20 @@
 /* Title of a setting: whether the entry's field is protected (shown as asterisks). */
 "[Entry/Field/Protected/title]" = "保護されたフィールド";
 
+/* Action: display text using QR code */
+"[Entry/Field/QRCode/action]" = "QRコードとして表示";
+
 /* Name of an entry field */
 "[Entry/Field/tags] Tags" = "タグ";
 
+/* Title of an alternative URL, with a number [number: String] */
+"[Entry/Field/URL/Extra/title]" = "URL (%d)";
+
 /* Status message: loading file to be attached to an entry */
 "[Entry/Files/Add] Loading attachment file" = "添付ファイルを読み込み中";
+
+/* Title of a list with frequently used entry fields. */
+"[Entry/FrequentlyUsedFields/title]" = "よく使用するエントリー";
 
 /* Title of a field with entry creation date and time */
 "[Entry/History] Creation Date" = "作成日時";
@@ -949,6 +991,9 @@
 /* Placeholder for folders without files */
 "[General/FileList/Empty/title]" = "フォルダが空です";
 
+/* Info message for keyboard-assisted selection */
+"[General/MultiSelectionKeys/hint]" = "CmdキーまたはShiftキーを長押しすると、複数の項目を選択できます。";
+
 /* Action/button to cancel whatever is going on */
 "[Generic] Cancel" = "キャンセル";
 
@@ -990,6 +1035,9 @@
 
 /* Action/button shown below error messages. Tapping the button will start the fixing/repairing workflow described in the error message. */
 "[Generic] Fix this" = "修復する";
+
+/* Action/button to import an item to another app */
+"[Generic] Import" = "読み込む";
 
 /* Action/button to view more help/info about some topic */
 "[Generic] Learn more" = "詳細...";
@@ -1048,6 +1096,9 @@
 /* Action/button to select some items in a list. */
 "[Generic/Action/SelectItems]" = "選択";
 
+/* Number of entries found in an incoming file. For example: 'Found entries: 42' [itemCount: Int] */
+"[Generic/Count/ImportedEntries]" = "見つかったエントリー数: %d";
+
 /* Name of the Recently Deleted (Recycle Bin) directory, as shown in the Files app */
 "[Generic/Directory/Recently Deleted/name]" = "最近削除した項目";
 
@@ -1063,6 +1114,9 @@
 /* Title of a generic file export screen. */
 "[Generic/File/Export/title]" = "ファイルのエクスポート";
 
+/* Action to save data, when we ignore minor problems in the process. */
+"[Generic/File/ForceSave]" = "強制保存";
+
 /* Action/button to save data to a different file */
 "[Generic/File/Save as]" = "別名で保存...";
 
@@ -1074,6 +1128,9 @@
 
 /* Title of an error message about file import */
 "[Generic/File/title] Import Error" = "読み込みエラー";
+
+/* Action to proceed after a warning, basically 'I understand the risk' */
+"[Generic/GotIt/action]" = "了解";
 
 /* Title of a list with predefined quick-choice values (for example: 'Presets: 1 week, 1 months, 1 year') */
 "[Generic/Presets]" = "プリセット";
@@ -1192,14 +1249,20 @@
 /* Title of a list with possible hardware key connections */
 "[HardwareKey/Picker/title]" = "ハードウェアキー";
 
+/* Title of a slot of a hardware key. For example: `YubiKey Slot 1`. */
+"[HardwareKey/Slot/title]" = "%1$@スロット%2$d";
+
+/* Hardware key slot number. [slotNumber: Int] */
+"[HardwareKey/SlotN]" = "スロット%d";
+
+/* Title for hardware key slot selection menu. */
+"[HardwareKey/SlotTitle]" = "スロット";
+
 /* Information notice. 'Challenge-response' is a glossary term. */
 "[HardwareKey/USB/chalRespNotSupported]" = "このデバイスはUSB接続によるチャレンジ-レスポンスをサポートしていません。";
 
 /* Information notice */
 "[HardwareKey/USB/iPadAppOnMac]" = "macOS上で動作するiPadアプリのためUSBは利用できません。ネイティブのMacアプリを使用してください。";
-
-/* Master key/unlock option: use given slot of YubiKey */
-"[HardwareKey/YubiKey/Slot] YubiKey Slot #%d" = "YubiKey スロット %d";
 
 /* Generic title of in-app help article */
 "[Help Viewer/title]" = "ヘルプ";
@@ -1273,6 +1336,9 @@
 /* Error message about system keychain. */
 "[KeychainError/unexpectedFormat] Keychain error: unexpected data format" = "キーチェーンエラー: 予期しないデータ形式";
 
+/* Action: add a key file into the app, by importing or creating one. `Key file` is a glossary term. */
+"[KeyFile/Add/action]" = "キーファイルを追加";
+
 /* Action: create new key file. */
 "[KeyFile/Create/action]" = "キーファイルを作成";
 
@@ -1282,6 +1348,9 @@
 /* Message to confirm deletion of a key file. */
 "[KeyFile/Delete/Confirm/text] Delete key file?\n Make sure you have a backup." = "キーファイルを削除しますか？\n バックアップがあることを確認してください。";
 
+/* Error message related to key file. [errorDetails: String] */
+"[KeyFile/error]" = "キーファイルのエラー: %@";
+
 /* Name of an input field which shows selected key file */
 "[KeyFile/Field/title]" = "キーファイル";
 
@@ -1290,6 +1359,18 @@
 
 /* Description of the `Import Key File` action. */
 "[KeyFile/Import/actionDescription]" = "Appにファイルを追加";
+
+/* Placeholder shown when there are no key files available */
+"[KeyFile/List/empty]" = "キーファイルなし";
+
+/* Title of the list with key files. */
+"[KeyFile/List/title]" = "キーファイル";
+
+/* Description of the 'No Key File' option. */
+"[KeyFile/None/description]" = "パスワードのみを使用";
+
+/* Title: don't use key file */
+"[KeyFile/None/title]" = "キーファイルがありません";
 
 /* Message to confirm removal of a key file from the app. (This keeps the file, but removes its reference from the app.) */
 "[KeyFile/Remove/Confirm/text] Remove key file from the list?\n The file will remain intact and you can add it again later." = "キーファイルを一覧から削除しますか？ファイルの本体はそのまま残りますので、後で再度追加できます。";
@@ -1310,7 +1391,7 @@
 "[Menu/FileInfo/title]" = "ファイルの情報";
 
 /* Menu title: app settings */
-"[Menu/Preferences/title]" = "環境設定...";
+"[Menu/Settings/title]" = "設定";
 
 /* Title of a menu: sort order of files in a list */
 "[Menu/Sort] Sort Files By" = "ファイルの並べ替え";
@@ -1323,9 +1404,6 @@
 
 /* Error message, euphemism for missing corporate license */
 "[Org/LicenseMissing]" = "KeePassiumはあなたの組織の企業アカウントを見つけられませんでした。";
-
-/* Notification next to the OTP code which was copied to clipboard */
-"[OTP/CopiedToClipboard/title]" = "ワンタイムパスワードをクリップボードにコピーしました";
 
 /* Name of an entry field */
 "[OTP/FieldName]" = "ワンタイムパスワード";
@@ -1350,6 +1428,12 @@
 
 /* Button/action: proceed with QR code based OTP setup */
 "[OTP/Setup/ScanQRCode]" = "QRコードを読み取る";
+
+/* Action: pick an image (from files) to scan as QR code */
+"[OTP/Setup/ScanQRImageFile]" = "ファイルからQRをスキャン";
+
+/* Action: pick a photo (from gallery) to scan as QR code */
+"[OTP/Setup/ScanQRPhoto]" = "写真からQRをスキャン";
 
 /* Description of an OTP code; sentence case. */
 "[OTP/Title/sentenceCase]" = "ワンタイムパスワード";
@@ -1471,6 +1555,9 @@
 /* Title of a premium feature */
 "[Premium/Benefits/BusinessClouds/title]" = "企業ストレージと同期";
 
+/* Call to action / Title of a premium feature */
+"[Premium/Benefits/CreativeAutoFill/title]" = "迅速なアカウント作成";
+
 /* Explanation of the premium feature */
 "[Premium/Benefits/HardwareKeys/details]" = "YubiKeyなどのハードウェアの鍵を使って秘密を守ります。";
 
@@ -1564,27 +1651,6 @@
 /* Marks the default pricing plan */
 "[Premium/Price Plan/popular]" = "人気";
 
-/* Status: special premium for beta-testing environment is active */
-"[Premium/status] Beta testing" = "ベータテスト";
-
-/* Status: current version of the app. For example: `Current version: 1.23`. Should be similar to the `Licensed version` string. [version: String] */
-"[Premium/status] Current version: %@" = "現在のバージョン: %@";
-
-/* Status: premium subscription has expired. For example: `Expired 1 day ago`. [timeFormatted: String, includes the time unit (day, hour, minute)] */
-"[Premium/status] Expired %@ ago. Please renew." = "%@前に期限が切れています。更新をお願いします。";
-
-/* Status: licensed premium version of the app. For example: `Licensed version: 1.23`. [version: String] */
-"[Premium/status] Licensed version: %@" = "購入済みのバージョン: %@";
-
-/* Status: scheduled renewal date of a premium subscription. For example: `Next renewal on 1 Jan 2050`. [expiryDateString: String] */
-"[Premium/status] Next renewal on %@" = "次回の更新は%@";
-
-/* Status: validity period of once-and-forever premium */
-"[Premium/status] Valid forever" = "永久に有効";
-
-/* Status when the user has a premium version */
-"[Premium/Status/title]" = "プレミアム版";
-
 /* Subscription conditions */
 "[Premium/Subscription/Legal/text]" = "お支払いは、Apple IDのアカウントに対し購入確定時に請求いたします。\n\nサブスクリプション（期限付きの使用）は、期限が切れる24時間前までにキャンセルされなければ、自動的に更新されます。更新する場合の請求は、期限終了前の24時間以内に行われます。\n\nサブスクリプションの管理やキャンセルは、購入後にApp Storeのアカウント設定で可能です。";
 
@@ -1636,14 +1702,17 @@
 /* Message shown after buying or subscribing. */
 "[Premium/Upgrade/Success/thankYou]" = "ご購入ありがとうございます！";
 
-/* Status: how long the app has been used during some time period. For example: `App being useful: 1hr/month, about 12hr/year`. [monthlyUsage: String, annualUsage: String — already include the time unit (hours, minutes)] */
-"[Premium/usage] App being useful: %@/month, that is around %@/year." = "Appの使用実績: %1$@/月、約%2$@/年";
-
 /* Description/call to action for the `Business Cloud Storage` premium feature. */
 "[PremiumFeature/BusinessClouds/description]" = "OneDrive for Businessなどの企業ストレージに直接接続します。";
 
 /* Title of a premium feature: access to company's cloud accounts like 'OneDrive for Business' */
 "[PremiumFeature/BusinessClouds/title]" = "企業向けクラウドストレージ";
+
+/* Description/advertisement for the `Faster Sign-Ups` premium feature */
+"[PremiumFeature/CreativeAutoFill/description]" = "自動入力に新しいエントリーを作成し、主なフィールドに事前入力できます。";
+
+/* Title of a premium feature: easier registration of new accounts, directly in AutoFill dialog */
+"[PremiumFeature/CreativeAutoFill/title]" = "登録の高速化";
 
 /* A generic description of a premium feature */
 "[PremiumFeature/Generic/description]" = "プレミアム版にアップグレードすると、KeePassiumを最高の状態でお使いいただけます。";
@@ -1696,9 +1765,6 @@
 /* Error message when a long-running operation was cancelled due to the lack of free memory (RAM). */
 "[Progress/CancellationReason/lowMemory]" = "メモリが不足しています。\nこれは大きなデータベースやメモリを多く使う設定（Argon2のメモリ）で発生します。";
 
-/* Description of the Quick AutoFill feature. */
-"[QuickAutoFill/description]" = "クイック自動入力は、KeePassiumを開くことなく関連エントリをパスワード入力時に表示します。";
-
 /* Name of a feature that shows relevant entries directly next to the login/password forms. */
 "[QuickAutoFill/title]" = "クイック自動入力";
 
@@ -1716,6 +1782,12 @@
 
 /* Description of the `Direct connection` sync method. */
 "[RemoteConnection/Direct/description]" = "KeePassiumはオンラインストレージと直接通信します。これにより信頼性の高いファイル転送が保証されます。";
+
+/* Title of a list with online storage services like OneDrive, Dropbox, etc. */
+"[RemoteConnection/Direct/title]" = "オンラインサービス";
+
+/* Action: change properties of a remote network connection */
+"[RemoteConnection/Edit/action]" = "接続を編集…";
 
 /* Error message: user credentials rejected by the server */
 "[RemoteConnection/Error/AuthenticationFailed/title]" = "認証失敗";
@@ -1771,134 +1843,17 @@
 /* Name of an input field for entering the password again */
 "[Repeat Password/Field/title]" = "パスワードの確認";
 
-/* Call to action (protect the app from unauthorized access) */
-"[Settings/AppLoc/Activate/callToAction]" = "Appロックを使用";
+/* Description of the auto-download favicons feature */
+"[Settings/AutoDownloadFavicons/description]" = "エントリーを編集した後、ウェブサイトのアイコンを自動的にダウンロードします。";
 
-/* Description of `Activate app protection` call to action. */
-"[Settings/AppLock/Activate/description]" = "KeePassiumを不正なアクセスから保護します。";
-
-/* Settings switch: whether AppLock is allowed to use Touch ID/Face ID. Example: 'Use Touch ID'. [biometryTypeName: String] */
-"[Settings/AppLock/Biometric/title] Use %@" = "%@ を使用";
-
-/* Explanation for the `Lock on App Launch` setting */
-"[Settings/AppLock/LockOnLaunch/description]" = "Appを強制終了したりデバイスを再起動した時にKeePassiumがロックされるようにします。";
-
-/* Setting switch: whether to lock the app after it was terminated and relaunched. */
-"[Settings/AppLock/LockOnLaunch/title]" = "起動時にロック";
-
-/* Settings: subtitle of the `App Protection` section. biometryTypeName will be either 'Touch ID' or 'Face ID'. [biometryTypeName: String] */
-"[Settings/AppLock/subtitle] App Lock, %@, timeout" = "Appロック、%@、タイムアウト";
-
-/* Settings: subtitle of the `App Protection` section when biometric auth is not available. */
-"[Settings/AppLock/subtitle] App Lock, passcode, timeout" = "Appロック、パスコード、タイムアウト";
-
-/* Settings section: protection of the app from unauthorized access */
-"[Settings/AppLock/title]" = "Appの保護";
-
-/* A description/subtitle for Settings/AppLockTimeout options that trigger when the user has been idle for a while. For example: 'AppLock Timeout: 3 seconds (After last interaction) */
-"[Settings/AppLockTimeout/description] After last interaction" = "最後に操作した後";
-
-/* A description/subtitle for Settings/AppLock/Timeout options that trigger when the app is minimized. For example: 'AppLock Timeout: 3 seconds (After leaving the app) */
-"[Settings/AppLockTimeout/description] After leaving the app" = "Appを切り替えた後";
-
-/* An option in Settings. Will be shown as 'App Lock: Timeout: Immediately' */
-"[Settings/AppLockTimeout/fullTitle] Immediately" = "即時";
-
-/* An option in Settings. Will be shown as 'App Lock: Timeout: Never' */
-"[Settings/AppLockTimeout/fullTitle] Never" = "なし";
-
-/* An option in Settings. Will be shown as 'App Lock: Timeout: Immediately' */
-"[Settings/AppLockTimeout/shortTitle] Immediately" = "即時";
-
-/* An option in Settings. Will be shown as 'App Lock: Timeout: Never' */
-"[Settings/AppLockTimeout/shortTitle] Never" = "なし";
-
-/* Action that opens system settings or instructions */
-"[Settings/AutoFill/Activate/action]" = "自動入力をオン";
-
-/* Description for the AutoFill setup instructions */
-"[Settings/AutoFill/Activate/description]" = "利用するにあたり、まず自動入力をオンにする必要があります。";
-
-/* Title of an option: copy one-time password to clipboard when using AutoFill */
-"[Settings/AutoFill/CopyOTP/title]" = "OTPをクリップボードにコピー";
-
-/* Title of a help article on how to activate AutoFill. */
-"[Settings/AutoFill/Setup Guide/title]" = "自動入力設定ガイド";
+/* Settings option: automatically download website icons/favicons */
+"[Settings/AutoDownloadFavicons/title]" = "Faviconを自動ダウンロード";
 
 /* Title of AutoFill settings screen */
 "[Settings/AutoFill/title]" = "パスワードの自動入力";
 
-/* No comment provided by engineer. */
-"[Settings/AutoFill/UnavailableInIntune/description]" = "自動入力はKeePassium for Intuneでは使用できません。";
-
-/* Title of an option: automatically use the single best match found by AutoFill search */
-"[Settings/AutoFill/UsePerfectMatch/title]" = "完全一致時に自動で入力";
-
-/* Option in settings: whether to open the last used database automatically on start. */
-"[Settings/AutoOpenPreviousDatabase/title]" = "前回使ったデータベースを開く";
-
-/* Action to delete all backup files from the app. `ALL` is in capitals as a highlight. [backupFileCount: Int] */
-"[Settings/Backup] Delete ALL Backup Files (%d)" = "すべてのバックアップを削除 (%d)";
-
-/* Status message: there are no backup files to delete */
-"[Settings/Backup] No Backup Files Found" = "バックアップが見つかりません";
-
-/* Confirmation dialog message to delete all backup files */
-"[Settings/Backup/Delete/title] Delete all backup files?" = "すべてのバックアップを削除しますか？";
-
-/* An option in Settings. Please keep it short. Will be shown as 'Keep Backup Files: Forever' */
-"[Settings/BackupKeepingDuration/shortTitle] Forever" = "無期限";
-
-/* Text of the success message for `Clear Key File Associations` button */
-"[Settings/ClearKeyFileAssociations/Cleared/text] Associations between key files and databases have been removed." = "キーファイルとデータベースの関連付けが削除されました。";
-
-/* Title of the success message for `Clear Key File Associations` button */
-"[Settings/ClearKeyFileAssociations/Cleared/title] Cleared" = "消去完了";
-
-/* Text of the success message for `Clear Master Keys` button */
-"[Settings/ClearMasterKeys/Cleared/text] All master keys have been deleted." = "すべてのマスターキーが削除されました。";
-
-/* Title of the success message for `Clear Master Keys` button */
-"[Settings/ClearMasterKeys/Cleared/title] Cleared" = "消去完了";
-
-/* Description of the clipboard/pasteboard timeout. */
-"[Settings/ClipboardTimeout/description] When you copy some text from an entry, the app will automatically clear your clipboard (pasteboard) after this time." = "コピーした後、クリップボード (コピー内容) を指定時間後に自動的に消去します。";
-
-/* An option in Settings. Will be shown as 'Clipboard Timeout: Never' */
-"[Settings/ClipboardTimeout/fullTitle] Never" = "なし";
-
-/* An option in Settings. Will be shown as 'Clipboard Timeout: Never' */
-"[Settings/ClipboardTimeout/shortTitle] Never" = "なし";
-
-/* Title of a settings section: backup of databases */
-"[Settings/DatabaseBackup/title]" = "データベースのバックアップ";
-
-/* Description of the Database Lock Timeout */
-"[Settings/DatabaseLockTimeout/description] If you are not interacting with the app for some time, the database will be closed for your safety. To open it, you will need to enter its master password again." = "Appがしばらく使われていない場合、安全のためにデータベースを閉じます。再開するにはマスターパスワードを再度入力してください。";
-
-/* A description/subtitle for the 'DatabaseLockTimeout: Immediately'. */
-"[Settings/DatabaseLockTimeout/description] When leaving the app" = "Appを切り替える時";
-
-/* An option in Settings. Will be shown as 'Database Lock: Timeout: Immediately' */
-"[Settings/DatabaseLockTimeout/fullTitle] Immediately" = "即時";
-
-/* An option in Settings. Will be shown as 'Database Lock: Timeout: Never' */
-"[Settings/DatabaseLockTimeout/fullTitle] Never" = "なし";
-
-/* An option in Settings. Will be shown as 'Database Lock: Timeout: Immediately' */
-"[Settings/DatabaseLockTimeout/shortTitle] Immediately" = "即時";
-
-/* An option in Settings. Will be shown as 'Database Lock: Timeout: Never' */
-"[Settings/DatabaseLockTimeout/shortTitle] Never" = "なし";
-
-/* Title of a setting: the time after which databases will be locked. */
-"[Settings/DatabaseLockTimeout/title]" = "データベースのタイムアウト";
-
-/* Setting switch: whether to lock databases after device reboot. */
-"[Settings/DataProtection/LockOnReboot/title]" = "端末の再起動時にロック";
-
-/* Subtitle for `Data Protection` section in settings */
-"[Settings/DataProtection/subtitle]" = "マスターキー、キーファイル";
+/* Title of a yes/no setting: whether to include backup copies in the file list */
+"[Settings/DatabaseBackup/ShowBackupFiles/title]" = "バックアップを表示";
 
 /* Settings section: protection of databases, their keys and data inside them */
 "[Settings/DataProtection/title]" = "データの保護";
@@ -1912,6 +1867,9 @@
 /* Title of a settings section: sort order of groups and entries in a list */
 "[Settings/GroupViewer] Sort Order" = "表示順序";
 
+/* Title of a yes/no setting */
+"[Settings/KeyFiles/Remember/title]" = "キーファイルを記憶する";
+
 /* Title of list view configuration screen */
 "[Settings/ListSettings/title]" = "リストの設定";
 
@@ -1920,6 +1878,12 @@
 
 /* Notification when corporate user tries to change an app setting controlled by organization's IT department. */
 "[Settings/Managed/notification]" = "この設定は組織によって管理されています。";
+
+/* Setting: preserve (cache) calculated database keys */
+"[Settings/MasterKeys/CacheDerived/title]" = "派生した暗号鍵をキャッシュ";
+
+/* Title of a yes/no setting */
+"[Settings/MasterKeys/Remember/title]" = "マスターキーを保存する";
 
 /* Confirmation dialog message */
 "[Settings/NetworkAccess/Confirmation/text]" = "KeePassium に外部サービスへのネットワーク接続を許可しますか？";
@@ -1942,11 +1906,32 @@
 /* Action/button which resets some settings to their default state. */
 "[Settings/RestoreDefaults/action]" = "デフォルトに戻す";
 
-/* Section title in settings */
-"[Settings/Search/title]" = "検索";
+/* Call to action (explains why a setting is disabled) */
+"[Settings/ShakeGestureAction/LockApp/disabledTitle]" = "先にアプリ保護を有効にしてください";
+
+/* An option in Settings. Will be shown as 'When Shaken: Lock App' */
+"[Settings/ShakeGestureAction/LockApp/shortTitle]" = "アプリをロック";
+
+/* An option in Settings. Will be shown as 'When Shaken: Lock All Databases' */
+"[Settings/ShakeGestureAction/LockDatabases/shortTitle]" = "すべてのデータベースをロック";
+
+/* An option in Settings. Will be shown as 'When Shaken: Do Nothing' */
+"[Settings/ShakeGestureAction/Nothing/shortTitle]" = "何もしない";
+
+/* An option in Settings. Will be shown as 'When Shaken: Quit App' */
+"[Settings/ShakeGestureAction/QuitApp/shortTitle]" = "アプリを終了";
 
 /* Title of the app settings screen */
 "[Settings/title]" = "設定";
+
+/* Title of a settings value. For example: `Remember Master Keys: No` */
+"[Settings/Value/No/title]" = "いいえ";
+
+/* Title of a settings value, when it is not customized and we default to app's global settings. For example: `Remember Master Keys: Use App Settings (No)` */
+"[Settings/Value/UseAppSettings/title]" = "アプリの設定を使用 (%@)";
+
+/* Title of a settings value. For example: `Remember Master Keys: Yes` */
+"[Settings/Value/Yes/title]" = "はい";
 
 /* List sorting option (for file names). Example: 'Sort by: Name' */
 "[SortBy/FileName]" = "名前";
@@ -1956,6 +1941,9 @@
 
 /* List sorting option, when items are manually ordered by the user. Example: 'Sort order: Custom' */
 "[SortOrder/Custom]" = "カスタム";
+
+/* Subtitle for a storage service: the app will have access only to its own dedicated folder. */
+"[StorageService/DedicatedAppFolder/title]" = "アプリフォルダのみ";
 
 /* Name of a cloud storage service */
 "[StorageService/DropboxBusiness/title]" = "Dropbox Business";
@@ -2020,8 +2008,8 @@
 /* Human-readable file location. Example: 'File Location: Remote server' */
 "[URLReference/Location/RemoteServer]" = "リモートサーバー";
 
-/* Selector choice: don't use YubiKey to encrypt/decrypt database */
-"[YubiKey] Don't use YubiKey" = "YubiKeyなし";
+/* Error shown when user selects a file path instead of folder path in WebDAV. */
+"[WebDAV/Export/NeedsFolder]" = "フォルダへのパスを選択してください";
 
 /* Call for action: insert YubiKey 5Ci to the Lightning port */
 "[YubiKey] Insert the key" = "キーを挿入してください";
@@ -2029,18 +2017,9 @@
 /* Call for action: touch the sides of YubiKey 5Ci to continue */
 "[YubiKey] Touch the key" = "キーにタッチしてください";
 
-/* Selector choice: use YubiKey to encrypt/decrypt database. For example: `Use YubiKey Slot 1`. [slotID: Int] */
-"[YubiKey] Use YubiKey Slot %d" = "YubiKey スロット %d を使用";
-
 /* Action/button to add database to the app */
 "Add Database" = "データベースを追加";
 
 /* Warning message when the user tries to use a database as a key file */
 "KeePass database should not be used as key file. Please pick a different file." = "KeePassのデータベースをキーファイルとして使用しないでください。別のファイルを選択してください。";
-
-/* Placeholder shown when there are no database files available */
-"No database files" = "データベースがありません";
-
-/* Settings switch: whether to include backup copies in the file list */
-"Show Backup Files" = "バックアップを表示";
 

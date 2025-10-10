@@ -1,14 +1,35 @@
 /* Notification when user tries to set up too weak an app protection passcode. */
 "[AppLock/weakPasscodeWarning]" = "Цей код доступу легко вгадати. Спробуйте ввести складніший.";
 
+/* Action in AutoFill: choose the entry and remember it for future use on this website. */
+"[AutoFill/AcceptAndRemember/action]" = "Прийняти й запам’ятати";
+
+/* Title of a list */
+"[AutoFill/AllEntries/title]" = "Всі записи";
+
+/* Title of AutoFill context when no context is available. Usage: `Context: Unknown` */
+"[AutoFill/Context/Empty/title]" = "Невідомо";
+
+/* Title of a list with search results */
+"[AutoFill/FoundEntries/title]" = "Найкращі збіги";
+
 /* Call for action to select an entry field for filling out. */
 "[AutoFill/InsertText/select]" = "Виберіть поле";
 
-/* An identifier of the app that called AutoFill. The term is intentionally similar to https://ru.wikipedia.org/wiki/Caller_ID. [callerID: String] */
-"[AutoFill/Search/callerID]" = "Caller ID: %@";
+/* Section title for the recently used entry in AutoFill */
+"[AutoFill/RecentlyUsed/title]" = "Нещодавно використані";
 
-/* Status message, shows which app or webpage launched AutoFill. For example: `Context: google.com` */
-"[AutoFill/Search/context]" = "Контекст: %@";
+/* Not an action, but a button to activate the same-named setting */
+"[AutoFill/RememberContext/action]" = "Запам’ятати вибрані записи";
+
+/* Call to action */
+"[AutoFill/RememberContext/callToAction]" = "Покращити пропозиції автозаповнення";
+
+/* Description of the 'Remember Selected Entries` feature */
+"[AutoFill/RememberContext/description]" = "KeePassium запам’ятає, який запис ви вибрали для кожного вебсайту й запропонує його автоматично.";
+
+/* Title for referring to the app or webpage that launched AutoFill. For example: `Context: google.com` */
+"[AutoFill/Search/Context/title]" = "Контекст";
 
 /* No comment provided by engineer. */
 "[AutoFill/Setup/footer]" = "Автозаповнення не може автоматично відкривати файли, котрі вже додані в основну програму.\n\nЧому? З точки зору системи, Автозаповнення - це окремий додаток, незалежне від основного. З метою безпеки, додаток не може просто так відкривати файли в інших додатках, якщо тільки користувач сам не зв'яже ці файли з даним додатком. Таким чином, система гарантує, що додатки можуть працювати тільки з кількома спеціально обраними файлами.\n\nВ результаті і Автозаповнення, і основний додаток повинні отримати \"окремі запрошення\" для роботи з кожним зовнішнім файлом. На щастя, ця процедура потрібна тільки один раз.";
@@ -25,8 +46,23 @@
 /* Must match Apple's translation, as found in iOS 17 Settings → Passwords → Password Options. If unsure, leave untranslated. */
 "[AutoFill/Setup/UncheckKeychain/usePasswordsAndPasskeysFrom]" = "Використовувати паролі та ключі допуску від:";
 
+/* Field title: name of the group that contains the entry */
+"[Database/Entry/Location/title]" = "Розташування";
+
+/* Title of a list with randomly generated usernames */
+"[Database/Entry/RandomUsernames/title]" = "Випадкові імена користувачів";
+
+/* Action/button that shows a list of usernames to pick from */
+"[Database/Entry/SelectUsername/action]" = "Вибрати ім’я користувача";
+
+/* Action: select item from a list/menu, with item name in quotes. For example: `Select "Sample Group"` */
+"[Database/Item/SelectNamed/action]" = "Вибрати \"%@\"";
+
 /* Action: create a passkey and add it to existing entry */
 "[Database/Passkey/AddToExisting/action]" = "Додати ключ допуску до наявного запису";
+
+/* Call to action: select an existing entry to add a new passkey to */
+"[Database/Passkey/AddToExisting/callToAction]" = "Виберіть запис для нового ключа допуску";
 
 /* Confirmation message before replacing an existing passkey. */
 "[Database/Passkey/AddToExisting/confirm]" = "Цей запис уже має ключ допуску. Замінити його?";
@@ -69,4 +105,7 @@
 
 /* Call to action, invites the user to enable the Quick AutoFill feature */
 "[QuickAutoFill/Activate/callToAction]" = "Увімкніть швидке автозаповнення";
+
+/* Placeholder text for empty search results */
+"[Search/EmptyResult/title]" = "Нічого не знайдено";
 

@@ -1,0 +1,3 @@
+/* Class = "UILabel"; text = "It seems that AutoFill did not close correctly the last time. \n\nThis can happen with large databases or memory-demanding database settings (Argon2).\n\nPlease contact us if you need help with this."; ObjectID = "kmV-si-Nrg"; */
+"kmV-si-Nrg.text" = "Parece que o Preenchimento Automático não foi devidamente fechado da última vez que foi activado.\n\nIsto pode ser devido a bases de dados maiores ou com definições mais exigentes de memória (Argon2).\n\nPor favor, entre em contacto connosco, se precisar de ajuda.";
+

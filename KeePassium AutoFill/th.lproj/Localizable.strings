@@ -1,6 +1,3 @@
-/* An identifier of the app that called AutoFill. The term is intentionally similar to https://ru.wikipedia.org/wiki/Caller_ID. [callerID: String] */
-"[AutoFill/Search/callerID]" = "Caller ID: %@";
-
 /* No comment provided by engineer. */
 "[AutoFill/Setup/footer]" = "การป้อนรหัสผ่านอัตโนมัติไม่สามารถเข้าถึงไฟล์ที่คุณมีอยู่แล้วในแอป KeePassium\n\nทำไมหรือ? เพราะระบบข้างหลังจะแยกการป้อนรหัสผ่านอัตโนมัติเป็นคนละแอปกัน ซึ่งจะมีความอิสระจากกระบวนการของ KeePassium เนื่องจากเหตุผลด้านความปลอดภัย แอปไม่สามารถเข้าถึงไฟล์ภายนอกได้ – เว้นว่าคุณจะลิงค์ไฟล์ให้แอปใช้ได้โดยตรง ดังนั้นสามารถยืนยันได้ว่า ระบบจะอนุญาตให้แอปเข้าถึงเฉพาะไฟล์ที่คุณอนุญาตไว้เท่านั้น\n\nจึงสรุปได้ว่า ทั้งการป้อนรหัสผ่านอัตโนมัติ และตัวแอป KeePassium จำเป็นต้องให้สิทธิ์ในการเข้าถึงไฟล์ภายนอกแต่ละไฟล์ได้ โชคดีที่มันเป็นขั้นตอนที่ทำแค่ครั้งเดียวเท่านั้น";
 
@@ -15,4 +12,7 @@
 
 /* Call to action, invites the user to enable the Quick AutoFill feature */
 "[QuickAutoFill/Activate/callToAction]" = "เปิดใช้ป้อนรหัสอัตโนมัติ";
+
+/* Placeholder text for empty search results */
+"[Search/EmptyResult/title]" = "ไม่พบสิ่งที่ต้องการ";
 

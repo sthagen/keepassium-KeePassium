@@ -1,6 +1,3 @@
-/* Menu item that shows info about KeePassium app */
-"[About/altTitle]" = "关于 KeePassium";
-
 /* Copyright notice */
 "[About/CopyrightAuthor]" = "©Andrei Popleteev";
 
@@ -10,6 +7,15 @@
 /* Call to action: perform accessibilty `activate` action to listen to text/content. */
 "[Accessibility/activateToListen]" = "激活辅助功能以收听内容。";
 
+/* Accessibility notification for entries with attached files. */
+"[Accessibility/containsAttachments]" = "包含附件。";
+
+/* Accessibility notification for entries with a problematic passkey */
+"[Accessibility/containsIncompatiblePasskey]" = "包含与此设备不兼容的通行密钥。";
+
+/* Accessibility notification for entries with OTP codes. */
+"[Accessibility/containsOTP]" = "包含一次性密码。";
+
 /* Accessibility notification for entries with a passkey */
 "[Accessibility/containsPasskey]" = "包含一个通行密钥。";
 
@@ -18,24 +24,6 @@
 
 /* Confirmation message before resetting the app to just-installed state. */
 "[App/ResetEverything/title]" = "是否重置应用？";
-
-/* Section in settings: icon for the app */
-"[Appearance/AppIcon/title]" = "应用图标";
-
-/* Section in settings: icons for database */
-"[Appearance/DatabaseIcons/title]" = "数据库图标";
-
-/* Short name of the default/system font. For example: `Font: Default` */
-"[Appearance/DefaultFont/shortTitle]" = "默认";
-
-/* Title of a setting option: font */
-"[Appearance/Font/title]" = "字体";
-
-/* Title of a setting option: font size */
-"[Appearance/TextSize/title]" = "文本大小";
-
-/* Group of settings for user interface appearance (text size, icons, etc) */
-"[Appearance/title]" = "界面外观";
 
 /* Action/button to unlock the App Lock with passcode */
 "[AppLock] Unlock" = "解锁";
@@ -85,6 +73,24 @@
 /* Title of a message related to upgrading to the premium version */
 "[AutoFill/Premium/Upgrade/Manual/title] Premium Upgrade" = "升级高级版";
 
+/* Call to action / instruction on how to enable accessibility permission */
+"[AutoType/AccessibilityPrompt/callToAction]" = "打开“系统设置 → 隐私与安全 → 辅助功能”，并在那里启用 KeePassium。";
+
+/* Message explaining why accessibility permission is needed */
+"[AutoType/AccessibilityPrompt/message]" = "KeePassium 需要您的许可才能向其他应用发送密钥。";
+
+/* Title of a dialog asking user to provide a security permission */
+"[AutoType/AccessibilityPrompt/title]" = "KeePassium 需要您的许可";
+
+/* Action: send key presses to 'type in' entry data into another app */
+"[AutoType/action]" = "执行自动输入";
+
+/* Button to open system settings (accessibility, permissions, etc) */
+"[AutoType/Action/OpenSettings]" = "打开设置";
+
+/* Title for error when auto-type fails */
+"[AutoType/Error/Title]" = "自动输入失败";
+
 /* Name of biometric authentication method. Trademarked, do not translate unless Apple traslated it to your language. */
 "[BiometricAuthType] Face ID" = "Face ID";
 
@@ -121,9 +127,6 @@
 /* Notification: an item has been copied to clipboard */
 "[Clipboard/Copy/notification]" = "已复制";
 
-/* Subtitle for `Contact Us`. Keep it short. */
-"[ContactUs/subtitle]" = "建议? 问题? 让我们知道!";
-
 /* Error message about AES cipher. [errorCode: Int] */
 "[CryptoError] AES decryption error (code %d)" = "AES 解密错误 (代码 %d)";
 
@@ -156,6 +159,12 @@
 
 /* Action: add/import an image as a custom icon */
 "[Database/CustomIcon/add]" = "添加自定义图标";
+
+/* Notification when some custom icons are about to be deleted [iconCount: Int] */
+"[Database/CustomIcon/All/count]" = "所有自定义图标：%d";
+
+/* Action: delete all custom icons */
+"[Database/CustomIcon/deleteAll]" = "全部删除";
 
 /* Action: delete unused icons */
 "[Database/CustomIcon/deleteUnused]" = "删除未使用的图标";
@@ -246,6 +255,12 @@
 
 /* Notification when user tries to copy data from KDBX to older KDB database. */
 "[Database/LesserTargetFormat/warning]" = "这是旧版的数据库格式，有些数据可能会丢失。";
+
+/* Placeholder shown when there are no database files available */
+"[Database/List/empty]" = "没有数据库文件";
+
+/* Call to action. 'Open' here is used as 'launch'. */
+"[Database/List/LocalMissing/callToAction]" = "打开应用";
 
 /* Recommendation for solving a problem with a list of files. */
 "[Database/List/LocalMissing/message]" = "如果未列出某些本地文件，请先启动 KeePassium 主应用。";
@@ -379,6 +394,9 @@
 /* Status message: saving a database */
 "[Database/Saving/Status] Saving..." = "正在保存...";
 
+/* File access parameter. Will be shown as 'Consider File Unreachable: Immediately' */
+"[Database/Settings/ConsiderFileUnreachable/Immediately]" = "立刻";
+
 /* File settings parameter: time after which file will be considered unreachable. Example: `Consider File Unreachable: in 10 seconds`.) */
 "[Database/Settings/ConsiderFileUnreachable/title]" = "无法访问文件";
 
@@ -445,14 +463,14 @@
 /* Title of a message shown when saving to a database that has already been modified elsewhere. */
 "[Database/SyncConflict/title]" = "同步出现冲突";
 
-/* Error message related to key file. [errorDetails: String] */
-"[Database/Unlock] Key file error: %@" = "密钥文件异常: %@";
-
 /* Error message */
 "[Database/Unlock/Error] Failed to open key file" = "无法打开密钥文件";
 
 /* Error message */
 "[Database/Unlock/Error] Password and key file are both empty." = "密码和密钥都是空的。";
+
+/* Action: load a local (on-device) copy of a remote database */
+"[Database/Unlock/UseFallback/action]" = "使用本地副本";
 
 /* Message shown when user enters an invalid database password */
 "[Database/Unlock/wrongPassword/question]" = "忘记密码？";
@@ -463,8 +481,17 @@
 /* Notification message */
 "[Database/UnsavedChanges/cannotModifyYet]" = "不幸的是，自动填充还不能修改大型数据库。我们正在努力解决此问题。";
 
+/* Notification message */
+"[Database/UnsavedChanges/couldNotApply]" = "一些待处理的更改无法自动应用；最近的修改可能已丢失。";
+
 /* Call to action shown in AutoFill module. */
 "[Database/UnsavedChanges/OpenAppCallToAction]" = "若要保存更改，请打开 KeePassium 主程序。";
+
+/* Notification message about a problem with unsaved/pending changes. */
+"[Database/UnsavedChanges/Problematic/info]" = "一些待处理的更改涉及缺失的条目或群组。KeePassium 会在一个单独的群组中创建这些缺失的项目，并在那里应用更改。";
+
+/* Title of a group where problematic pending changes are saved. %@ is the date of recovery. */
+"[Database/UnsavedChanges/RecoveredEntriesGroup/name]" = "恢复的更改 (%@)";
 
 /* Action/button to save accummulated modifications */
 "[Database/UnsavedChanges/saveAction]" = "保存更改";
@@ -628,9 +655,6 @@
 /* Error message: user provided a wrong master key for decryption. */
 "[DatabaseError] Invalid password or key file" = "错误的密码或者密钥文件";
 
-/* Subtitle for `Diagnostic Log`. Keep it short. */
-"[DiagLog/subtitle]" = "用于给作者排除故障";
-
 /* Title of the diagnostic info screen */
 "[DiagLog/title]" = "诊断日志";
 
@@ -670,11 +694,20 @@
 /* Default name of a newly created entry field */
 "[Entry/Edit/CreateField/defaultName] Field Name" = "域名";
 
+/* Action/button to add a new field to the entry */
+"[Entry/Field/Add/action]" = "添加字段";
+
+/* On/off state: whether to show full-size or compact menu */
+"[Entry/Field/CompactMenu/title]" = "紧凑视图";
+
 /* Notification: a reference to an entry field has been copied to clipboard */
 "[Entry/Field/CopyReference/acknowledgement]" = "字段参考已复制到剪贴板";
 
 /* Action: copy a reference to the selected entry field to clipboard */
 "[Entry/Field/CopyReference/action]" = "复制字段引用";
+
+/* Title for a generic user-defined entry field. */
+"[Entry/Field/Custom/title]" = "自定义字段";
 
 /* Action: display text using large font */
 "[Entry/Field/LargeType/action]" = "以大号字体显示";
@@ -703,11 +736,20 @@
 /* Title of a setting: whether the entry's field is protected (shown as asterisks). */
 "[Entry/Field/Protected/title]" = "受保护字段";
 
+/* Action: display text using QR code */
+"[Entry/Field/QRCode/action]" = "显示为二维码";
+
 /* Name of an entry field */
 "[Entry/Field/tags] Tags" = "标签";
 
+/* Title of an alternative URL, with a number [number: String] */
+"[Entry/Field/URL/Extra/title]" = "URL (%d)";
+
 /* Status message: loading file to be attached to an entry */
 "[Entry/Files/Add] Loading attachment file" = "加载附件";
+
+/* Title of a list with frequently used entry fields. */
+"[Entry/FrequentlyUsedFields/title]" = "常用";
 
 /* Title of a field with entry creation date and time */
 "[Entry/History] Creation Date" = "建立时间";
@@ -949,6 +991,9 @@
 /* Placeholder for folders without files */
 "[General/FileList/Empty/title]" = "文件夹为空";
 
+/* Info message for keyboard-assisted selection */
+"[General/MultiSelectionKeys/hint]" = "长按 Cmd 或 Shift 键选择多个项目。";
+
 /* Action/button to cancel whatever is going on */
 "[Generic] Cancel" = "取消";
 
@@ -990,6 +1035,9 @@
 
 /* Action/button shown below error messages. Tapping the button will start the fixing/repairing workflow described in the error message. */
 "[Generic] Fix this" = "修复错误";
+
+/* Action/button to import an item to another app */
+"[Generic] Import" = "导入";
 
 /* Action/button to view more help/info about some topic */
 "[Generic] Learn more" = "了解更多";
@@ -1048,6 +1096,9 @@
 /* Action/button to select some items in a list. */
 "[Generic/Action/SelectItems]" = "选择";
 
+/* Number of entries found in an incoming file. For example: 'Found entries: 42' [itemCount: Int] */
+"[Generic/Count/ImportedEntries]" = "找到的条目数：%d";
+
 /* Name of the Recently Deleted (Recycle Bin) directory, as shown in the Files app */
 "[Generic/Directory/Recently Deleted/name]" = "最近删除";
 
@@ -1063,6 +1114,9 @@
 /* Title of a generic file export screen. */
 "[Generic/File/Export/title]" = "导出文件";
 
+/* Action to save data, when we ignore minor problems in the process. */
+"[Generic/File/ForceSave]" = "强制保存";
+
 /* Action/button to save data to a different file */
 "[Generic/File/Save as]" = "另存为…";
 
@@ -1074,6 +1128,9 @@
 
 /* Title of an error message about file import */
 "[Generic/File/title] Import Error" = "汇入错误";
+
+/* Action to proceed after a warning, basically 'I understand the risk' */
+"[Generic/GotIt/action]" = "已了解";
 
 /* Title of a list with predefined quick-choice values (for example: 'Presets: 1 week, 1 months, 1 year') */
 "[Generic/Presets]" = "预设值";
@@ -1192,14 +1249,20 @@
 /* Title of a list with possible hardware key connections */
 "[HardwareKey/Picker/title]" = "硬件密钥";
 
+/* Title of a slot of a hardware key. For example: `YubiKey Slot 1`. */
+"[HardwareKey/Slot/title]" = "%1$@ 栏位 %2$d";
+
+/* Hardware key slot number. [slotNumber: Int] */
+"[HardwareKey/SlotN]" = "栏位 %d";
+
+/* Title for hardware key slot selection menu. */
+"[HardwareKey/SlotTitle]" = "栏位";
+
 /* Information notice. 'Challenge-response' is a glossary term. */
 "[HardwareKey/USB/chalRespNotSupported]" = "此设备不支持通过 USB 连接的质询—响应认证。";
 
 /* Information notice */
 "[HardwareKey/USB/iPadAppOnMac]" = "USB 不可用，因为这是在 macOS 上运行的 iPad 应用。请使用原生的 Mac 应用程序。";
-
-/* Master key/unlock option: use given slot of YubiKey */
-"[HardwareKey/YubiKey/Slot] YubiKey Slot #%d" = "YubiKey Slot %d";
 
 /* Generic title of in-app help article */
 "[Help Viewer/title]" = "帮助";
@@ -1273,6 +1336,9 @@
 /* Error message about system keychain. */
 "[KeychainError/unexpectedFormat] Keychain error: unexpected data format" = "钥匙圈错误: 意外的数据格式";
 
+/* Action: add a key file into the app, by importing or creating one. `Key file` is a glossary term. */
+"[KeyFile/Add/action]" = "添加密钥文件";
+
 /* Action: create new key file. */
 "[KeyFile/Create/action]" = "创建密钥文件";
 
@@ -1282,6 +1348,9 @@
 /* Message to confirm deletion of a key file. */
 "[KeyFile/Delete/Confirm/text] Delete key file?\n Make sure you have a backup." = "删除密钥文件?\n 请确保您有备份文件!";
 
+/* Error message related to key file. [errorDetails: String] */
+"[KeyFile/error]" = "密钥文件异常: %@";
+
 /* Name of an input field which shows selected key file */
 "[KeyFile/Field/title]" = "密钥文件";
 
@@ -1290,6 +1359,18 @@
 
 /* Description of the `Import Key File` action. */
 "[KeyFile/Import/actionDescription]" = "将文件添加到应用程序";
+
+/* Placeholder shown when there are no key files available */
+"[KeyFile/List/empty]" = "没有密钥文件";
+
+/* Title of the list with key files. */
+"[KeyFile/List/title]" = "密钥文件";
+
+/* Description of the 'No Key File' option. */
+"[KeyFile/None/description]" = "仅使用密码";
+
+/* Title: don't use key file */
+"[KeyFile/None/title]" = "没有密钥文件";
 
 /* Message to confirm removal of a key file from the app. (This keeps the file, but removes its reference from the app.) */
 "[KeyFile/Remove/Confirm/text] Remove key file from the list?\n The file will remain intact and you can add it again later." = "从列表中删除密钥文件？\n 该文件将保持完整，您可以稍后重新添加。";
@@ -1310,7 +1391,7 @@
 "[Menu/FileInfo/title]" = "文件信息";
 
 /* Menu title: app settings */
-"[Menu/Preferences/title]" = "偏好设置…";
+"[Menu/Settings/title]" = "设置";
 
 /* Title of a menu: sort order of files in a list */
 "[Menu/Sort] Sort Files By" = "文件排序通过";
@@ -1323,9 +1404,6 @@
 
 /* Error message, euphemism for missing corporate license */
 "[Org/LicenseMissing]" = "KeePassium无法找到您组织的企业账户。";
-
-/* Notification next to the OTP code which was copied to clipboard */
-"[OTP/CopiedToClipboard/title]" = "一次性密码已复制到剪贴板";
 
 /* Name of an entry field */
 "[OTP/FieldName]" = "一次性密码";
@@ -1350,6 +1428,12 @@
 
 /* Button/action: proceed with QR code based OTP setup */
 "[OTP/Setup/ScanQRCode]" = "扫描二维码";
+
+/* Action: pick an image (from files) to scan as QR code */
+"[OTP/Setup/ScanQRImageFile]" = "从文件扫描二维码";
+
+/* Action: pick a photo (from gallery) to scan as QR code */
+"[OTP/Setup/ScanQRPhoto]" = "从照片扫描二维码";
 
 /* Description of an OTP code; sentence case. */
 "[OTP/Title/sentenceCase]" = "一次性密码";
@@ -1471,6 +1555,9 @@
 /* Title of a premium feature */
 "[Premium/Benefits/BusinessClouds/title]" = "与企业存储同步";
 
+/* Call to action / Title of a premium feature */
+"[Premium/Benefits/CreativeAutoFill/title]" = "创建账户速度更快";
+
 /* Explanation of the premium feature */
 "[Premium/Benefits/HardwareKeys/details]" = "使用硬件密钥保护您的资料，比如 YubiKey 等。";
 
@@ -1564,27 +1651,6 @@
 /* Marks the default pricing plan */
 "[Premium/Price Plan/popular]" = "人气";
 
-/* Status: special premium for beta-testing environment is active */
-"[Premium/status] Beta testing" = "测试版本";
-
-/* Status: current version of the app. For example: `Current version: 1.23`. Should be similar to the `Licensed version` string. [version: String] */
-"[Premium/status] Current version: %@" = "当前版本： %@";
-
-/* Status: premium subscription has expired. For example: `Expired 1 day ago`. [timeFormatted: String, includes the time unit (day, hour, minute)] */
-"[Premium/status] Expired %@ ago. Please renew." = "已经到期 %@ 天, 请续订。";
-
-/* Status: licensed premium version of the app. For example: `Licensed version: 1.23`. [version: String] */
-"[Premium/status] Licensed version: %@" = "许可版本: %@";
-
-/* Status: scheduled renewal date of a premium subscription. For example: `Next renewal on 1 Jan 2050`. [expiryDateString: String] */
-"[Premium/status] Next renewal on %@" = "下次续订时间: %@";
-
-/* Status: validity period of once-and-forever premium */
-"[Premium/status] Valid forever" = "永远有效";
-
-/* Status when the user has a premium version */
-"[Premium/Status/title]" = "高级版本";
-
 /* Subscription conditions */
 "[Premium/Subscription/Legal/text]" = "在确认购买时，将会从您的Apple ID账户中收取付款。 \n\n除非在到期前至少24小时取消，否则订阅会自动续订。您的账户将在到期前24小时内收取续订费用。 \n\n您可以在购买后转到App Store上的账户设置来管理和取消订阅。";
 
@@ -1636,14 +1702,17 @@
 /* Message shown after buying or subscribing. */
 "[Premium/Upgrade/Success/thankYou]" = "感谢您的购买";
 
-/* Status: how long the app has been used during some time period. For example: `App being useful: 1hr/month, about 12hr/year`. [monthlyUsage: String, annualUsage: String — already include the time unit (hours, minutes)] */
-"[Premium/usage] App being useful: %@/month, that is around %@/year." = "程序已使用: %1$@/月, 大约%2$@/年";
-
 /* Description/call to action for the `Business Cloud Storage` premium feature. */
 "[PremiumFeature/BusinessClouds/description]" = "直接连接到企业存储账户，如 OneDrive for Business。";
 
 /* Title of a premium feature: access to company's cloud accounts like 'OneDrive for Business' */
 "[PremiumFeature/BusinessClouds/title]" = "企业云存储";
+
+/* Description/advertisement for the `Faster Sign-Ups` premium feature */
+"[PremiumFeature/CreativeAutoFill/description]" = "在自动填充中创建新条目，并预填主要字段。";
+
+/* Title of a premium feature: easier registration of new accounts, directly in AutoFill dialog */
+"[PremiumFeature/CreativeAutoFill/title]" = "注册速度更快";
 
 /* A generic description of a premium feature */
 "[PremiumFeature/Generic/description]" = "升级到高级版并享受最好的KeePassium。";
@@ -1696,9 +1765,6 @@
 /* Error message when a long-running operation was cancelled due to the lack of free memory (RAM). */
 "[Progress/CancellationReason/lowMemory]" = "没有足够的内存供继续程序继续。\n较大的数据库或过于消耗内存的数据库设置(Argon2内存参数) 可能会发生这种情况。";
 
-/* Description of the Quick AutoFill feature. */
-"[QuickAutoFill/description]" = "快速自动填充会在密码字段旁显示相关条目，无需打开 KeePassium。";
-
 /* Name of a feature that shows relevant entries directly next to the login/password forms. */
 "[QuickAutoFill/title]" = "快速自动填充";
 
@@ -1716,6 +1782,12 @@
 
 /* Description of the `Direct connection` sync method. */
 "[RemoteConnection/Direct/description]" = "KeePassium 将直接与您的在线存储进行通信。这可以确保可靠的文件传输。";
+
+/* Title of a list with online storage services like OneDrive, Dropbox, etc. */
+"[RemoteConnection/Direct/title]" = "在线服务";
+
+/* Action: change properties of a remote network connection */
+"[RemoteConnection/Edit/action]" = "编辑连接…";
 
 /* Error message: user credentials rejected by the server */
 "[RemoteConnection/Error/AuthenticationFailed/title]" = "身份验证失败";
@@ -1771,134 +1843,17 @@
 /* Name of an input field for entering the password again */
 "[Repeat Password/Field/title]" = "重复密码";
 
-/* Call to action (protect the app from unauthorized access) */
-"[Settings/AppLoc/Activate/callToAction]" = "启用应用解锁密码";
+/* Description of the auto-download favicons feature */
+"[Settings/AutoDownloadFavicons/description]" = "编辑条目后自动下载网站图标。";
 
-/* Description of `Activate app protection` call to action. */
-"[Settings/AppLock/Activate/description]" = "保护KeePassium免受未经授权的访问。";
-
-/* Settings switch: whether AppLock is allowed to use Touch ID/Face ID. Example: 'Use Touch ID'. [biometryTypeName: String] */
-"[Settings/AppLock/Biometric/title] Use %@" = "使用 %@";
-
-/* Explanation for the `Lock on App Launch` setting */
-"[Settings/AppLock/LockOnLaunch/description]" = "确保KeePassium在强制关闭应用程序或重新启动设备后被锁定。";
-
-/* Setting switch: whether to lock the app after it was terminated and relaunched. */
-"[Settings/AppLock/LockOnLaunch/title]" = "应用程序启动时锁定";
-
-/* Settings: subtitle of the `App Protection` section. biometryTypeName will be either 'Touch ID' or 'Face ID'. [biometryTypeName: String] */
-"[Settings/AppLock/subtitle] App Lock, %@, timeout" = "应用锁定,%@, 超时";
-
-/* Settings: subtitle of the `App Protection` section when biometric auth is not available. */
-"[Settings/AppLock/subtitle] App Lock, passcode, timeout" = "应用锁定, 应用解锁密码, 超时";
-
-/* Settings section: protection of the app from unauthorized access */
-"[Settings/AppLock/title]" = "应用保护";
-
-/* A description/subtitle for Settings/AppLockTimeout options that trigger when the user has been idle for a while. For example: 'AppLock Timeout: 3 seconds (After last interaction) */
-"[Settings/AppLockTimeout/description] After last interaction" = "没操作应用程序";
-
-/* A description/subtitle for Settings/AppLock/Timeout options that trigger when the app is minimized. For example: 'AppLock Timeout: 3 seconds (After leaving the app) */
-"[Settings/AppLockTimeout/description] After leaving the app" = "离开程序后";
-
-/* An option in Settings. Will be shown as 'App Lock: Timeout: Immediately' */
-"[Settings/AppLockTimeout/fullTitle] Immediately" = "立刻";
-
-/* An option in Settings. Will be shown as 'App Lock: Timeout: Never' */
-"[Settings/AppLockTimeout/fullTitle] Never" = "永不";
-
-/* An option in Settings. Will be shown as 'App Lock: Timeout: Immediately' */
-"[Settings/AppLockTimeout/shortTitle] Immediately" = "立刻";
-
-/* An option in Settings. Will be shown as 'App Lock: Timeout: Never' */
-"[Settings/AppLockTimeout/shortTitle] Never" = "永不";
-
-/* Action that opens system settings or instructions */
-"[Settings/AutoFill/Activate/action]" = "激活自动填充";
-
-/* Description for the AutoFill setup instructions */
-"[Settings/AutoFill/Activate/description]" = "在首次使用之前，您需要在系统设置中激活自动填充。";
-
-/* Title of an option: copy one-time password to clipboard when using AutoFill */
-"[Settings/AutoFill/CopyOTP/title]" = "复制 一次性密码OTP 到剪贴板";
-
-/* Title of a help article on how to activate AutoFill. */
-"[Settings/AutoFill/Setup Guide/title]" = "自动填充设置指南";
+/* Settings option: automatically download website icons/favicons */
+"[Settings/AutoDownloadFavicons/title]" = "自动下载网站图标";
 
 /* Title of AutoFill settings screen */
 "[Settings/AutoFill/title]" = "自动填写密码";
 
-/* No comment provided by engineer. */
-"[Settings/AutoFill/UnavailableInIntune/description]" = "自动填充无法用于 KeePassium Intune 版";
-
-/* Title of an option: automatically use the single best match found by AutoFill search */
-"[Settings/AutoFill/UsePerfectMatch/title]" = "自动填充合适的内容";
-
-/* Option in settings: whether to open the last used database automatically on start. */
-"[Settings/AutoOpenPreviousDatabase/title]" = "自动打开之前的数据库";
-
-/* Action to delete all backup files from the app. `ALL` is in capitals as a highlight. [backupFileCount: Int] */
-"[Settings/Backup] Delete ALL Backup Files (%d)" = "删除所有备份文件(%d)";
-
-/* Status message: there are no backup files to delete */
-"[Settings/Backup] No Backup Files Found" = "没有找到备份文件";
-
-/* Confirmation dialog message to delete all backup files */
-"[Settings/Backup/Delete/title] Delete all backup files?" = "删除所有备份文件?";
-
-/* An option in Settings. Please keep it short. Will be shown as 'Keep Backup Files: Forever' */
-"[Settings/BackupKeepingDuration/shortTitle] Forever" = "永远";
-
-/* Text of the success message for `Clear Key File Associations` button */
-"[Settings/ClearKeyFileAssociations/Cleared/text] Associations between key files and databases have been removed." = "密钥文件与数据库之间的关联已被删除。";
-
-/* Title of the success message for `Clear Key File Associations` button */
-"[Settings/ClearKeyFileAssociations/Cleared/title] Cleared" = "已清除";
-
-/* Text of the success message for `Clear Master Keys` button */
-"[Settings/ClearMasterKeys/Cleared/text] All master keys have been deleted." = "所有主密钥已删除。";
-
-/* Title of the success message for `Clear Master Keys` button */
-"[Settings/ClearMasterKeys/Cleared/title] Cleared" = "已清除";
-
-/* Description of the clipboard/pasteboard timeout. */
-"[Settings/ClipboardTimeout/description] When you copy some text from an entry, the app will automatically clear your clipboard (pasteboard) after this time." = "如果您从条目中复制了文本, 会在稍后自动地清理您的剪贴板。";
-
-/* An option in Settings. Will be shown as 'Clipboard Timeout: Never' */
-"[Settings/ClipboardTimeout/fullTitle] Never" = "永不";
-
-/* An option in Settings. Will be shown as 'Clipboard Timeout: Never' */
-"[Settings/ClipboardTimeout/shortTitle] Never" = "永不";
-
-/* Title of a settings section: backup of databases */
-"[Settings/DatabaseBackup/title]" = "数据库备份";
-
-/* Description of the Database Lock Timeout */
-"[Settings/DatabaseLockTimeout/description] If you are not interacting with the app for some time, the database will be closed for your safety. To open it, you will need to enter its master password again." = "如果您在一段时间内没有与KeePassium程序交互, 数据库将会自动关闭, 以确保您的安全。如果重新打开KeePassium程序您需要重新输入主密码。";
-
-/* A description/subtitle for the 'DatabaseLockTimeout: Immediately'. */
-"[Settings/DatabaseLockTimeout/description] When leaving the app" = "离开程序时";
-
-/* An option in Settings. Will be shown as 'Database Lock: Timeout: Immediately' */
-"[Settings/DatabaseLockTimeout/fullTitle] Immediately" = "立刻";
-
-/* An option in Settings. Will be shown as 'Database Lock: Timeout: Never' */
-"[Settings/DatabaseLockTimeout/fullTitle] Never" = "永不";
-
-/* An option in Settings. Will be shown as 'Database Lock: Timeout: Immediately' */
-"[Settings/DatabaseLockTimeout/shortTitle] Immediately" = "立刻";
-
-/* An option in Settings. Will be shown as 'Database Lock: Timeout: Never' */
-"[Settings/DatabaseLockTimeout/shortTitle] Never" = "永不";
-
-/* Title of a setting: the time after which databases will be locked. */
-"[Settings/DatabaseLockTimeout/title]" = "数据库自动锁定";
-
-/* Setting switch: whether to lock databases after device reboot. */
-"[Settings/DataProtection/LockOnReboot/title]" = "设备重启时锁定";
-
-/* Subtitle for `Data Protection` section in settings */
-"[Settings/DataProtection/subtitle]" = "主密钥, 密钥文件";
+/* Title of a yes/no setting: whether to include backup copies in the file list */
+"[Settings/DatabaseBackup/ShowBackupFiles/title]" = "显示备份文件";
 
 /* Settings section: protection of databases, their keys and data inside them */
 "[Settings/DataProtection/title]" = "数据保护";
@@ -1912,6 +1867,9 @@
 /* Title of a settings section: sort order of groups and entries in a list */
 "[Settings/GroupViewer] Sort Order" = "排序顺序";
 
+/* Title of a yes/no setting */
+"[Settings/KeyFiles/Remember/title]" = "记住密钥文件";
+
 /* Title of list view configuration screen */
 "[Settings/ListSettings/title]" = "列表设置";
 
@@ -1920,6 +1878,12 @@
 
 /* Notification when corporate user tries to change an app setting controlled by organization's IT department. */
 "[Settings/Managed/notification]" = "此设置由您的组织管理。";
+
+/* Setting: preserve (cache) calculated database keys */
+"[Settings/MasterKeys/CacheDerived/title]" = "缓存衍生加密密钥";
+
+/* Title of a yes/no setting */
+"[Settings/MasterKeys/Remember/title]" = "记住主密钥";
 
 /* Confirmation dialog message */
 "[Settings/NetworkAccess/Confirmation/text]" = "是否允许 KeePassium 与外部服务建立网络连接？";
@@ -1942,11 +1906,32 @@
 /* Action/button which resets some settings to their default state. */
 "[Settings/RestoreDefaults/action]" = "恢复默认";
 
-/* Section title in settings */
-"[Settings/Search/title]" = "搜索​​​​";
+/* Call to action (explains why a setting is disabled) */
+"[Settings/ShakeGestureAction/LockApp/disabledTitle]" = "先激活应用保护";
+
+/* An option in Settings. Will be shown as 'When Shaken: Lock App' */
+"[Settings/ShakeGestureAction/LockApp/shortTitle]" = "锁定应用";
+
+/* An option in Settings. Will be shown as 'When Shaken: Lock All Databases' */
+"[Settings/ShakeGestureAction/LockDatabases/shortTitle]" = "锁定所有数据库";
+
+/* An option in Settings. Will be shown as 'When Shaken: Do Nothing' */
+"[Settings/ShakeGestureAction/Nothing/shortTitle]" = "无操作";
+
+/* An option in Settings. Will be shown as 'When Shaken: Quit App' */
+"[Settings/ShakeGestureAction/QuitApp/shortTitle]" = "退出应用";
 
 /* Title of the app settings screen */
 "[Settings/title]" = "设置";
+
+/* Title of a settings value. For example: `Remember Master Keys: No` */
+"[Settings/Value/No/title]" = "否";
+
+/* Title of a settings value, when it is not customized and we default to app's global settings. For example: `Remember Master Keys: Use App Settings (No)` */
+"[Settings/Value/UseAppSettings/title]" = "使用应用设置 (%@)";
+
+/* Title of a settings value. For example: `Remember Master Keys: Yes` */
+"[Settings/Value/Yes/title]" = "是";
 
 /* List sorting option (for file names). Example: 'Sort by: Name' */
 "[SortBy/FileName]" = "名称";
@@ -1956,6 +1941,9 @@
 
 /* List sorting option, when items are manually ordered by the user. Example: 'Sort order: Custom' */
 "[SortOrder/Custom]" = "自定义";
+
+/* Subtitle for a storage service: the app will have access only to its own dedicated folder. */
+"[StorageService/DedicatedAppFolder/title]" = "仅限应用文件夹";
 
 /* Name of a cloud storage service */
 "[StorageService/DropboxBusiness/title]" = "Dropbox Business";
@@ -2020,8 +2008,8 @@
 /* Human-readable file location. Example: 'File Location: Remote server' */
 "[URLReference/Location/RemoteServer]" = "远程服务器";
 
-/* Selector choice: don't use YubiKey to encrypt/decrypt database */
-"[YubiKey] Don't use YubiKey" = "不使用YubiKey";
+/* Error shown when user selects a file path instead of folder path in WebDAV. */
+"[WebDAV/Export/NeedsFolder]" = "请选择文件夹路径";
 
 /* Call for action: insert YubiKey 5Ci to the Lightning port */
 "[YubiKey] Insert the key" = "导入密钥";
@@ -2029,18 +2017,9 @@
 /* Call for action: touch the sides of YubiKey 5Ci to continue */
 "[YubiKey] Touch the key" = "触摸密钥";
 
-/* Selector choice: use YubiKey to encrypt/decrypt database. For example: `Use YubiKey Slot 1`. [slotID: Int] */
-"[YubiKey] Use YubiKey Slot %d" = "使用 YubiKey Slot %d";
-
 /* Action/button to add database to the app */
 "Add Database" = "添加数据库";
 
 /* Warning message when the user tries to use a database as a key file */
 "KeePass database should not be used as key file. Please pick a different file." = "KeePass数据库文件不应该当作密钥文件使用。 请选择其他文件。";
-
-/* Placeholder shown when there are no database files available */
-"No database files" = "没有数据库文件";
-
-/* Settings switch: whether to include backup copies in the file list */
-"Show Backup Files" = "显示备份文件";
 

@@ -1,14 +1,14 @@
 /* Notification when user tries to set up too weak an app protection passcode. */
 "[AppLock/weakPasscodeWarning]" = "Det är lätt att gissa den här lösenkoden. Ange en starkare lösenkod.";
 
+/* Title of a list */
+"[AutoFill/AllEntries/title]" = "Alla poster";
+
 /* Call for action to select an entry field for filling out. */
 "[AutoFill/InsertText/select]" = "Välj fält";
 
-/* An identifier of the app that called AutoFill. The term is intentionally similar to https://ru.wikipedia.org/wiki/Caller_ID. [callerID: String] */
-"[AutoFill/Search/callerID]" = "Anrops-ID: %@";
-
-/* Status message, shows which app or webpage launched AutoFill. For example: `Context: google.com` */
-"[AutoFill/Search/context]" = "Context: %@";
+/* Title for referring to the app or webpage that launched AutoFill. For example: `Context: google.com` */
+"[AutoFill/Search/Context/title]" = "Context";
 
 /* No comment provided by engineer. */
 "[AutoFill/Setup/footer]" = "Autofyll kan inte komma åt filerna du redan lagt till i KeePassium-appen automatiskt.\n\nVarför? Bakom kulisserna hanterar systemet Auotfyll som en separat app, som är oberoende från huvudprocessen. Av säkerhetsskäl kan inte en app komma åt externa filer – om du inte uttryckligen ger appen tillstånd till detta. På så sätt garanterar systemet att appen endast kan komma åt filer du ger tillåtelse till.\n\nDetta leder till att både Autofyll och huvudappen för KeePassium behöver ges tillstånd för varje extern fil som ska användas. Som tur är behöver detta bara göras en gång.";
@@ -69,4 +69,7 @@
 
 /* Call to action, invites the user to enable the Quick AutoFill feature */
 "[QuickAutoFill/Activate/callToAction]" = "Aktivera Snabb Autofyll";
+
+/* Placeholder text for empty search results */
+"[Search/EmptyResult/title]" = "Inget matchande resultat";
 

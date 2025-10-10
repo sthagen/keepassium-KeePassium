@@ -16,6 +16,6 @@
 /* Privacy - Photo Library Additions Usage Description */
 "NSPhotoLibraryAddUsageDescription" = "KeePassium heeft toestemming nodig om bestanden te exporteren naar je galerij.";
 
-/* (No Comment) */
-"NSPhotoLibraryUsageDescription" = "KeePassium heeft toegang nodig tot de galerij om aangepaste pictogrammen toe te voegen aan groepen en items";
+/* Privacy - Photo Library Usage Description */
+"NSPhotoLibraryUsageDescription" = "KeePassium heeft toegang nodig tot geselecteerde afbeeldingen voor aangepaste pictogrammen en om QR-codes te scannen voor het instellen van OTP's.";
 

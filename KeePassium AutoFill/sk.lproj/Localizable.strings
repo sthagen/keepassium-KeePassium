@@ -1,14 +1,14 @@
 /* Notification when user tries to set up too weak an app protection passcode. */
 "[AppLock/weakPasscodeWarning]" = "Tento kód aplikácie sa dá ľahko uhádnuť. Skúste zadať silnejší kód.";
 
+/* Title of a list */
+"[AutoFill/AllEntries/title]" = "Všetky záznamy";
+
 /* Call for action to select an entry field for filling out. */
 "[AutoFill/InsertText/select]" = "Vyberte pole";
 
-/* An identifier of the app that called AutoFill. The term is intentionally similar to https://ru.wikipedia.org/wiki/Caller_ID. [callerID: String] */
-"[AutoFill/Search/callerID]" = "Caller ID: %@";
-
-/* Status message, shows which app or webpage launched AutoFill. For example: `Context: google.com` */
-"[AutoFill/Search/context]" = "Kontext: %@";
+/* Title for referring to the app or webpage that launched AutoFill. For example: `Context: google.com` */
+"[AutoFill/Search/Context/title]" = "Kontext";
 
 /* No comment provided by engineer. */
 "[AutoFill/Setup/footer]" = "Služba automatického vyplňovania hesiel nemá prístup k databázovým súborom, ktoré ste pridali v hlavnej aplikácii KeePassium.\n\nPrečo? Operačný systém považuje službu automatického vyplňovania za samostatnú aplikáciu, ktorá je nezávislá na hlavnom procese Keepassium. Z bezpečnostných dôvodov môžu aplikácie pristupovať len k tým súborom, ku ktorým im dáte povolenia.\n\nZ tohoto dôvodu je nutné dať súhlas k prístupu samotne aplikácii KeePassium ako aj službe automatického vyplňovania. Toto je však potrebné vykonať iba raz.";

@@ -1,14 +1,35 @@
 /* Notification when user tries to set up too weak an app protection passcode. */
 "[AppLock/weakPasscodeWarning]" = "Dieser Passcode ist leicht zu erraten. Versuchen Sie es mit einem komplexeren.";
 
+/* Action in AutoFill: choose the entry and remember it for future use on this website. */
+"[AutoFill/AcceptAndRemember/action]" = "Akzeptieren und merken";
+
+/* Title of a list */
+"[AutoFill/AllEntries/title]" = "Alle Einträge";
+
+/* Title of AutoFill context when no context is available. Usage: `Context: Unknown` */
+"[AutoFill/Context/Empty/title]" = "Unbekannt";
+
+/* Title of a list with search results */
+"[AutoFill/FoundEntries/title]" = "Beste Treffer";
+
 /* Call for action to select an entry field for filling out. */
 "[AutoFill/InsertText/select]" = "Feld auswählen";
 
-/* An identifier of the app that called AutoFill. The term is intentionally similar to https://ru.wikipedia.org/wiki/Caller_ID. [callerID: String] */
-"[AutoFill/Search/callerID]" = "Anrufer-ID: %@";
+/* Section title for the recently used entry in AutoFill */
+"[AutoFill/RecentlyUsed/title]" = "Zuletzt verwendet";
 
-/* Status message, shows which app or webpage launched AutoFill. For example: `Context: google.com` */
-"[AutoFill/Search/context]" = "Kontext: %@";
+/* Not an action, but a button to activate the same-named setting */
+"[AutoFill/RememberContext/action]" = "Ausgewählte Einträge merken";
+
+/* Call to action */
+"[AutoFill/RememberContext/callToAction]" = "Vorschläge für Automatisch ausfüllen verbessern";
+
+/* Description of the 'Remember Selected Entries` feature */
+"[AutoFill/RememberContext/description]" = "KeePassium merkt sich, welchen Eintrag Sie für jede Website auswählen, und schlägt ihn dann automatisch vor.";
+
+/* Title for referring to the app or webpage that launched AutoFill. For example: `Context: google.com` */
+"[AutoFill/Search/Context/title]" = "Kontext";
 
 /* No comment provided by engineer. */
 "[AutoFill/Setup/footer]" = "Die AutoFill-Funktion kann nicht automatisch auf die Dateien zugreifen, die Sie bereits in der eigentlichen KeePassium-App haben.\n\nWarum? Hinter den Kulissen behandelt das System AutoFill als separate App, unabhängig vom Hauptprozess von KeePassium. Aus Sicherheitsgründen kann eine App keine externen Dateien abrufen – es sei denn, Sie verknüpfen diese Dateien ausdrücklich mit dieser App. Das System garantiert also, dass die App nur auf die Dateien zugreifen kann, für die Sie die Erlaubnis gegeben haben.\n\nInfolgedessen müssen AutoFill und die KeePassium-App ihre eigenen Berechtigungen für jede externe Datei erhalten. Zum Glück muss das nur einmal gemacht werden.";
@@ -25,8 +46,23 @@
 /* Must match Apple's translation, as found in iOS 17 Settings → Passwords → Password Options. If unsure, leave untranslated. */
 "[AutoFill/Setup/UncheckKeychain/usePasswordsAndPasskeysFrom]" = "Passwörter und Passkeys verwenden von:";
 
+/* Field title: name of the group that contains the entry */
+"[Database/Entry/Location/title]" = "Ort";
+
+/* Title of a list with randomly generated usernames */
+"[Database/Entry/RandomUsernames/title]" = "Zufällige Benutzernamen";
+
+/* Action/button that shows a list of usernames to pick from */
+"[Database/Entry/SelectUsername/action]" = "Benutzername auswählen";
+
+/* Action: select item from a list/menu, with item name in quotes. For example: `Select "Sample Group"` */
+"[Database/Item/SelectNamed/action]" = "\"%@\" auswählen";
+
 /* Action: create a passkey and add it to existing entry */
 "[Database/Passkey/AddToExisting/action]" = "Passkey zu bestehendem Eintrag hinzufügen";
+
+/* Call to action: select an existing entry to add a new passkey to */
+"[Database/Passkey/AddToExisting/callToAction]" = "Wählen Sie einen Eintrag für den neuen Passkey";
 
 /* Confirmation message before replacing an existing passkey. */
 "[Database/Passkey/AddToExisting/confirm]" = "Dieser Eintrag hat bereits einen Passkey. Ersetzen?";
@@ -69,4 +105,7 @@
 
 /* Call to action, invites the user to enable the Quick AutoFill feature */
 "[QuickAutoFill/Activate/callToAction]" = "Schnelles autom. Ausfüllen aktivieren";
+
+/* Placeholder text for empty search results */
+"[Search/EmptyResult/title]" = "Nichts passendes gefunden";
 

@@ -16,6 +16,6 @@
 /* Privacy - Photo Library Additions Usage Description */
 "NSPhotoLibraryAddUsageDescription" = "KeePassium requiere permisos para exportar archivos a su galería de fotos.";
 
-/* (No Comment) */
-"NSPhotoLibraryUsageDescription" = "KeePassium necesita acceder a su galería de fotos para añadir iconos personalizados a grupos y entradas";
+/* Privacy - Photo Library Usage Description */
+"NSPhotoLibraryUsageDescription" = "KeePassium necesita acceso con el fin de seleccionar imágenes para iconos personalizados y escanear códigos QR para la configuración de OTP.";
 

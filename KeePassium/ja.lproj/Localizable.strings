@@ -1,8 +1,41 @@
+/* Menu item that shows info about KeePassium app */
+"[About/altTitle]" = "KeePassiumについて";
+
+/* Section in settings: icon for the app */
+"[Appearance/AppIcon/title]" = "Appのアイコン";
+
+/* Section in settings: icons for database */
+"[Appearance/DatabaseIcons/title]" = "データベースのアイコン";
+
+/* Short name of the default/system font. For example: `Font: Default` */
+"[Appearance/DefaultFont/shortTitle]" = "デフォルト";
+
+/* Title of a setting: whether the Entry Viewer should open on the same tab/page when switching between entries, or switch to the first tab instead. */
+"[Appearance/EntryViewer/OpenLastUsedTab/title]" = "最後に使用したタブを開く";
+
+/* Section in settings: parameters related to entry viewer component */
+"[Appearance/EntryViewer/title]" = "エントリーの表示";
+
+/* Title of a setting option: font */
+"[Appearance/Font/title]" = "フォント";
+
+/* Action: set text size to standard size */
+"[Appearance/TextSize/reset]" = "文字の大きさをデフォルトに戻す";
+
+/* Title of a setting option: font size */
+"[Appearance/TextSize/title]" = "文字の大きさ";
+
+/* Group of settings for user interface appearance (text size, icons, etc) */
+"[Appearance/title]" = "表示";
+
 /* Title of the app history (changelog) screen */
 "[AppHistory/title]" = "バージョン履歴";
 
 /* Notification when user tries to set up too weak an app protection passcode. */
 "[AppLock/weakPasscodeWarning]" = "このパスコードは簡単に推測できます。より強力なパスコードを入力してみてください。";
+
+/* Subtitle for `Contact Us`. Keep it short. */
+"[ContactUs/subtitle]" = "改善提案や問題点を報告";
 
 /* Item in the credits list */
 "[Credits/Item/aexml]" = "AEXML by Marko Tadić";
@@ -63,6 +96,9 @@
 
 /* Item in the credits list */
 "[Credits/Item/twoFish]" = "Twofish implementation by Niels Ferguson";
+
+/* Item in the credits list */
+"[Credits/Item/whatsNewKit]" = "WhatsNewKit by Sven Tiigi";
 
 /* Item in the credits list */
 "[Credits/Item/wordlists]" = "Passphrase wordlists by EFF";
@@ -148,6 +184,9 @@
 /* Description of favicon downloader feature. 'Doing this' refers to downloading favicons. */
 "[Database/DownloadFavicons/warning]" = "公開または監視されているネットワーク上でこれを行うと、アカウントをお持ちのウェブサイトの一覧が公開される可能性があります。";
 
+/* Placeholder text in an empty group */
+"[Database/Group/empty]" = "このグループは空です";
+
 /* Warning that one key derivation function (KDF) should be preferred to another. Example: 'AES-KDF is considered weak. Use Argon2id instead.' */
 "[Database/KDF/consideredWeak]" = "%1$@は脆弱であると考えられます。代わりに%2$@を使用してください。";
 
@@ -156,6 +195,9 @@
 
 /* Call to action when encryption settings are too weak. */
 "[Database/KDF/tooWeak]" = "設定を強化してデータを最適に保護します。";
+
+/* Subtitle for `Diagnostic Log`. Keep it short. */
+"[DiagLog/subtitle]" = "障害対応のための情報";
 
 /* Confirmation message to replace an existing entry attachment with a new one. */
 "[Entry/Files/Add] Replace existing attachment?" = "添付ファイルを置き換えますか？";
@@ -177,6 +219,27 @@
 
 /* Title of entry viewer's tab with advanced/secondary properties */
 "[Entry/Tab/More/title]" = "詳細";
+
+/* Name of Apple Passwords' CSV file format */
+"[Format/ApplePasswordsCSV]" = "Appleパスワード (.csv)";
+
+/* Name of Enpass' JSON file format */
+"[Format/EnpassJSON]" = "Enpass (.json)";
+
+/* Error message when CSV parsing fails [lineNumber: Int] */
+"[Import/CSV/Error/InvalidFormat]" = "%d行目のCSV形式が無効です。";
+
+/* Error message when CSV parsing fails [lineNumber: Int, colNumber: Int] */
+"[Import/CSV/Error/InvalidFormat/withColumn]" = "%1$d行目の%2$d列目のCSV形式が無効です。";
+
+/* Error message when Enpass import fails due to corrupted attachment data [attachmentName: String, itemName: String] */
+"[Import/Enpass/Error/CorruptedAttachment]" = "項目 '%2$@' の添付ファイル '%1$@' のデータが破損しています。";
+
+/* Error shown when trying to import from an empty file */
+"[Import/Error/EmptyFile]" = "入力ファイルが空です。";
+
+/* Error message when JSON parsing fails */
+"[Import/JSON/ParsingError]" = "JSONファイルの解析に失敗しました。";
 
 /* Action/button */
 "[Onboarding/AddExistingDatabase/action]" = "既存のデータベースを追加";
@@ -289,14 +352,344 @@
 /* Password quality description. For example: `Very good (234 bits of entropy)`. [level: String, formattedBitCount: String] */
 "[PasswordQuality/LevelWithEntropy/description]" = "%1$@ (%2$@ のエントロピー)";
 
+/* Status: special premium for beta-testing environment is active */
+"[Premium/Status/BetaTesting/title]" = "ベータテスト";
+
+/* Status: current version of the app. For example: `Current version: 1.23`. Should be similar to the `Licensed version` string. [version: String] */
+"[Premium/Status/currentVersion]" = "現在のバージョン: %@";
+
+/* Status: premium subscription has expired. For example: `Expired 1 day ago`. [timeFormatted: String, includes the time unit (day, hour, minute)] */
+"[Premium/Status/expiredAgo]" = "%@前に期限が切れています。更新をお願いします。";
+
+/* Status: licensed premium version of the app. For example: `Licensed version: 1.23`. [version: String] */
+"[Premium/Status/licensedVersion]" = "購入済みのバージョン: %@";
+
+/* Status: scheduled renewal date of a premium subscription. For example: `Next renewal on 1 Jan 2050`. [expiryDateString: String] */
+"[Premium/Status/nextRenewal]" = "次回の更新は%@";
+
+/* Status when the user has a premium version */
+"[Premium/Status/title]" = "プレミアム版";
+
+/* Status: validity period of once-and-forever premium */
+"[Premium/Status/ValidForever/title]" = "永久に有効";
+
+/* Status: how long the app has been used during some time period. For example: `App being useful: 1hr/month, about 12hr/year`. [monthlyUsage: String, annualUsage: String — already include the time unit (hours, minutes)] */
+"[Premium/usage] App being useful: %@/month, that is around %@/year." = "Appの使用実績: %1$@/月、約%2$@/年";
+
 /* Action/button to make password visible as plain-text */
 "[ProtectedTextField] Show Password" = "パスワードを表示";
+
+/* Explanation why the app needs camera access permission. */
+"[QRCodeScanner/CameraPermission/description]" = "QRコードをスキャンするにはKeePassiumにカメラへのアクセス許可を与える必要があります。";
+
+/* Error message when the app cannot use the camera. */
+"[QRCodeScanner/Error/CameraBusy]" = "カメラはすでに使用中です。";
+
+/* Error message */
+"[QRCodeScanner/Error/ImageCorrupted]" = "選択した画像が破損しています。";
+
+/* Error message with a suggested action. */
+"[QRCodeScanner/Error/Internal]" = "QRコードリーダーで内部エラーが発生しました。詳細は診断ログを確認してください。";
+
+/* Notification message */
+"[QRCodeScanner/Error/NoQRCodeFound]" = "その画像にはQRコードがないようです。";
+
+/* Error message when camera/gallery/etc is either missing or forbidden. */
+"[QRCodeScanner/Error/SourceNoAvailable]" = "画像ソースは使用できません。";
+
+/* Call to action/instruction for QR code scanner. */
+"[QRCodeScanner/Info/callToAction]" = "カメラをQRコードに向けてください。";
+
+/* Description of the Quick AutoFill feature. */
+"[QuickAutoFill/description]" = "クイック自動入力は、KeePassiumを開くことなく関連エントリをパスワード入力時に表示します。";
+
+/* Placeholder text for empty search results */
+"[Search/EmptyResult/title]" = "該当するものはありません";
 
 /* Title of the confirmation dialog for `Delete` action for several items */
 "[Selection/Delete/confirmation]" = "選択範囲を削除";
 
 /* Title of the confirmation dialog for `Exclude from audit` action for several items */
 "[Selection/ExcludeFromAudit/confirmation]" = "選択範囲を監査から除外しますか？";
+
+/* Title of a section in settings: parameters that protect access to data */
+"[Settings/AccessControl/title]" = "アクセス管理";
+
+/* Call to action (protect the app from unauthorized access) */
+"[Settings/AppLoc/Activate/callToAction]" = "Appロックを使用";
+
+/* Description of `Activate app protection` call to action. */
+"[Settings/AppLock/Activate/description]" = "KeePassiumを不正なアクセスから保護します。";
+
+/* Description of biometric unlock settings */
+"[Settings/AppLock/Biometric/description]" = "Appロックでパスコードの代わりに動作の速い（が安全性は劣る）生体認証を使用します。";
+
+/* Settings switch: whether App Protection is allowed to use Touch ID/Face ID. Example: 'Use Touch ID'. [biometryTypeName: String] */
+"[Settings/AppLock/Biometric/title] Use %@" = "%@ を使用";
+
+/* Explanation for the `Lock on App Launch` setting */
+"[Settings/AppLock/LockOnLaunch/description]" = "Appを強制終了したりデバイスを再起動した時にKeePassiumがロックされるようにします。";
+
+/* Setting switch: whether to lock the app after it was terminated and relaunched. */
+"[Settings/AppLock/LockOnLaunch/title]" = "起動時にロック";
+
+/* Explanation for the `Lock on macOS Screen Lock` setting */
+"[Settings/AppLock/LockOnScreenLock/description]" = "MacをロックしたときにKeePassiumがロックされるようにします。";
+
+/* Title of a yes/no setting: whether to lock app when computer screen is locked (see https://support.apple.com/en-gb/guide/mac-help/mchl8e8b6a34/mac) */
+"[Settings/AppLock/LockOnScreenLock/title]" = "macOSを画面ロックしたときにロック";
+
+/* Description of the `Lock on Wrong Passcode` setting */
+"[Settings/AppLock/LockOnWrongPasscode/description]" = "Appをロックするパスコードを間違えると、KeePassiumはすべてのデータベースを閉じ、すべてのマスターキーをキーチェーンから消去します。";
+
+/* Title in the settings: whether to lock databases when user enters a wrong app protection passcode. */
+"[Settings/AppLock/LockOnWrongPasscode/title]" = "パスコードを間違ったときにロック";
+
+/* Description of the `Passcode Attempts Until App Reset` setting */
+"[Settings/AppLock/PasscodeAttemptsUntilAppReset/description]" = "アプリをリセットすると、保存されているキー、設定、データベースのバックアップ、読み込まれたファイル、および外部ファイルへのリンクがすべて削除されます。ただし、自動入力からアプリのリセットが実行された場合は、技術的な制限によりインポートされたファイルが残る場合があります。";
+
+/* An option in Settings. Will be shown as 'Passcode Attempts Until App Reset: Do not reset' */
+"[Settings/AppLock/PasscodeAttemptsUntilAppReset/Never/title]" = "リセットしない";
+
+/* Title in the settings: number of failed passcode attempts that will reset the app into 'just installed' state. */
+"[Settings/AppLock/PasscodeAttemptsUntilAppReset/title]" = "アプリのリセットまでの試行回数";
+
+/* Settings: subtitle of the `App Protection` section. biometryTypeName will be either 'Touch ID' or 'Face ID'. [biometryTypeName: String] */
+"[Settings/AppLock/subtitle] App Lock, %@, timeout" = "Appロック、%@、タイムアウト";
+
+/* Settings: subtitle of the `App Protection` section when biometric auth is not available. */
+"[Settings/AppLock/subtitle] App Lock, passcode, timeout" = "Appロック、パスコード、タイムアウト";
+
+/* Description of the App Lock Timeout setting */
+"[Settings/AppLock/Timeout/description]" = "指定時間後に自動的にAppをロックします。";
+
+/* Title for App Lock Timeout setting */
+"[Settings/AppLock/Timeout/title]" = "タイムアウト";
+
+/* Settings section: protection of the app from unauthorized access */
+"[Settings/AppLock/title]" = "Appの保護";
+
+/* Settings section: what happens if user enters incorrect App Protection passcode. */
+"[Settings/AppLock/WrongPasscode/title]" = "パスコードを間違ったとき";
+
+/* Description of those 'App Protection Timeout' options that trigger when the app is minimized. For example: 'Timeout: 3 seconds (After leaving the app) */
+"[Settings/AppLockTimeout/AfterLeavingApp/description]" = "Appを切り替えた後";
+
+/* Description of those 'App Protection Timeout' options that trigger when the user has been idle for a while. For example: 'Timeout: 3 seconds (After last interaction) */
+"[Settings/AppLockTimeout/description] After last interaction" = "最後に操作した後";
+
+/* An option in Settings. Will be shown as 'App Lock: Timeout: Immediately' */
+"[Settings/AppLockTimeout/Immediately/title] " = "即時";
+
+/* An option in Settings. Will be shown as 'App Lock: Timeout: Never' */
+"[Settings/AppLockTimeout/Never/title]" = "なし";
+
+/* Action that opens system settings or instructions */
+"[Settings/AutoFill/Activate/action]" = "自動入力をオン";
+
+/* Description for the AutoFill setup instructions */
+"[Settings/AutoFill/Activate/description]" = "利用するにあたり、まず自動入力をオンにする必要があります。";
+
+/* Description of the 'Copy OTP to Clipboard' setting */
+"[Settings/AutoFill/CopyOTP/Description]" = "ユーザー名とパスワードを自動入力する際、ワンタイムパスワード (OTP) もコピーします。";
+
+/* Title of a yes/no setting: copy one-time password to clipboard when using AutoFill */
+"[Settings/AutoFill/CopyOTP/title]" = "OTPをクリップボードにコピー";
+
+/* Description of the 'Remember Selected Entries' setting. */
+"[Settings/AutoFill/RememberContext/description]" = "KeePassiumは各ウェブサイトで選択したエントリーを記憶し、自動的に提案します。";
+
+/* Title of a yes/no setting: remember which entry was used for AutoFill on which website. */
+"[Settings/AutoFill/RememberContext/title]" = "選択したエントリーを記憶する";
+
+/* Title of a help article on how to activate AutoFill. */
+"[Settings/AutoFill/Setup Guide/title]" = "自動入力設定ガイド";
+
+/* No comment provided by engineer. */
+"[Settings/AutoFill/UnavailableInIntune/description]" = "自動入力はKeePassium for Intuneでは使用できません。";
+
+/* Description of the 'Fill-In Perfect Result Automatically' setting */
+"[Settings/AutoFill/UsePerfectMatch/description]" = "完全に一致するエントリーが１つだけの場合、そのエントリーを自動的に入力します。";
+
+/* Title of a yes/no setting: automatically use the single best match found by AutoFill search */
+"[Settings/AutoFill/UsePerfectMatch/title]" = "完全一致時に自動で入力";
+
+/* Option in settings: whether to open the last used database automatically on start. */
+"[Settings/AutoOpenPreviousDatabase/title]" = "前回使ったデータベースを開く";
+
+/* Title of a section in settings */
+"[Settings/AutoSearch/title]" = "自動検索";
+
+/* Action to clear/erase info about which database uses which key file */
+"[Settings/ClearKeyFileAssociations/action]" = "キーファイルの関連付けを削除";
+
+/* Title of the success message for `Clear Key File Associations` button */
+"[Settings/ClearKeyFileAssociations/Cleared/title]" = "消去完了";
+
+/* Title of the success message for `Clear Master Keys` button */
+"[Settings/ClearMasterKeys/Cleared/title]" = "消去完了";
+
+/* Title of a setting: time after which clipboard will be cleared */
+"[Settings/Clipboard/Timeout/title]" = "クリップボードのタイムアウト";
+
+/* Section title in Settings */
+"[Settings/Clipboard/title]" = "クリップボード";
+
+/* Description of the 'Clipboard Timeout' setting. */
+"[Settings/ClipboardTimeout/description]" = "コピーの後、クリップボード (コピー内容) を指定時間後に自動的に消去します。";
+
+/* An option in Settings. Will be shown as 'Clipboard Timeout: Never' */
+"[Settings/ClipboardTimeout/Never/title]" = "なし";
+
+/* Description of the 'Make Backup Copies' setting */
+"[Settings/DatabaseBackup/Active/description]" = "データベースを保存する前に、コピーを自動的に作成して万一に備えます。";
+
+/* Title of a yes/no setting: whether to back up databases before saving them */
+"[Settings/DatabaseBackup/Active/title]" = "バックアップを作成";
+
+/* Confirmation dialog message to delete all backup files */
+"[Settings/DatabaseBackup/DeleteAll/confirm]" = "すべてのバックアップを削除しますか？";
+
+/* Action to delete all backup files from the app. `ALL` is in capitals as a highlight. [backupFileCount: Int] */
+"[Settings/DatabaseBackup/DeleteAll/title]" = "すべてのバックアップを削除 (%d)";
+
+/* Description of the 'Exclude Backup Files from System Backup' setting */
+"[Settings/DatabaseBackup/ExcludeFromSystemBackup/description]" = "KeePassiumのデータベースをiCloud/iTunesバックアップの対象から除外します。現在および今後のすべてのバックアップに適用されます。";
+
+/* Title of a yes/no setting: whether app's internal backup copies should be excluded from global system backup */
+"[Settings/DatabaseBackup/ExcludeFromSystemBackup/title]" = "システムバックアップから除外";
+
+/* Setting title: how long to keep backup copies. Example: 'Keep Backup Files: Forever' */
+"[Settings/DatabaseBackup/KeepingDuration/Forever/title]" = "無期限";
+
+/* Setting title: how long to keep backup copies. For example: `Keep Backup Files: 3 days` */
+"[Settings/DatabaseBackup/KeepingDuration/title]" = "バックアップを保持";
+
+/* Status message: there are no backup files to delete */
+"[Settings/DatabaseBackup/NoFiles/title]" = "バックアップが見つかりません";
+
+/* Description of the `Periodic Cleanup` settings */
+"[Settings/DatabaseBackup/PeriodicCleanup/description]" = "古いバックアップを自動的に削除して空き容量を増やします。";
+
+/* Settings section: automatic deletion of old backup files */
+"[Settings/DatabaseBackup/PeriodicCleanup/title]" = "定期的なクリーンアップ";
+
+/* Description of the 'Show Backup Files' setting */
+"[Settings/DatabaseBackup/ShowBackupFiles/description]" = "バックアップを元のファイルと一緒に表示します。";
+
+/* Section header, refers to Apple's backup services (https://support.apple.com/HT203977) */
+"[Settings/DatabaseBackup/SystemBackup/title]" = "iTunes / iCloudバックアップ";
+
+/* Title of a settings section: backup of databases */
+"[Settings/DatabaseBackup/title]" = "データベースのバックアップ";
+
+/* Description of the `Database Timeout` setting */
+"[Settings/DatabaseLockTimeout/description]" = "Appがしばらく使われていない場合、安全のためにデータベースを閉じます。再開するにはマスターパスワードを再度入力してください。";
+
+/* Title of a setting: the time after which databases will be locked. */
+"[Settings/DatabaseLockTimeout/title]" = "データベースのタイムアウト";
+
+/* A description/subtitle for the 'Database Timeout: Immediately'. */
+"[Settings/DatabaseTimeout/Immediately/description]" = "Appを切り替える時";
+
+/* An option in Settings. Will be shown as 'Database Timeout: Immediately' */
+"[Settings/DatabaseTimeout/Immediately/title" = "即時";
+
+/* An option in Settings. Will be shown as 'Database Timeout: Never' */
+"[Settings/DatabaseTimeout/Never/title]" = "なし";
+
+/* Section title: advanced/expert settings */
+"[Settings/DataProtection/Advanced/title]" = "高度な設定";
+
+/* Title of a section in settings */
+"[Settings/DataProtection/AutomaticLock/title]" = "自動ロック";
+
+/* Setting switch: whether to lock databases after device reboot. */
+"[Settings/DataProtection/LockOnReboot/title]" = "端末の再起動時にロック";
+
+/* Title of a yes/no setting: whether to lock databases when computer screen is locked (see https://support.apple.com/en-gb/guide/mac-help/mchl8e8b6a34/mac) */
+"[Settings/DataProtection/LockOnScreenLock/title]" = "macOSを画面ロックしたときにロック";
+
+/* Subtitle for `Data Protection` section in settings */
+"[Settings/DataProtection/subtitle]" = "マスターキー、キーファイル";
+
+/* Description of the 'Hide Passwords' setting. */
+"[Settings/HidePasswords/description]" = "パスワードなどの保護されたフィールドをアスタリスクで隠します。 (推奨)";
+
+/* Title of a yes/no setting */
+"[Settings/HidePasswords/title]" = "パスワードを隠す";
+
+/* Description of the 'Remember Key Files' setting */
+"[Settings/KeyFiles/Remember/description]" = "最後に使用したキーファイルをデータベースごとに覚えておいて、自動的に選択します。関連付けをクリアしてもファイルには影響ありません。";
+
+/* Title of a section in Settings */
+"[Settings/KeyFiles/title]" = "キーファイル";
+
+/* Description of the 'Cache Derived Encryption Keys' setting */
+"[Settings/MasterKeys/CacheDerived/description]" = "キーをキャッシュすると、KeePassiumは鍵の派生やYubiKeyスキャンを省略できるようになります。";
+
+/* Action: clear/erase/delete stored master keys */
+"[Settings/MasterKeys/Clear/action]" = "マスターキーをクリア";
+
+/* Title of a yes/no setting. */
+"[Settings/MasterKeys/ClearOnTimeout/title]" = "タイムアウト時にマスターキーを消去";
+
+/* Description of the 'Remember Master Keys' setting. */
+"[Settings/MasterKeys/Remember/description]" = "データベースのロックを解除すると、そのマスターキーはデバイス内の安全なキーチェーンに保存できます。 次回はそのキーが使われるため、マスターパスワードを再び入力する必要はありません。";
+
+/* Title of a section in settings */
+"[Settings/OTP/title]" = "ワンタイムパスワード";
+
+/* Title of a section in settings */
+"[Settings/Premium/title]" = "プレミアム";
+
+/* Title of a section in Settings */
+"[Settings/ProtectedFields/title]" = "保護されたフィールド";
+
+/* Title of a section in settings */
+"[Settings/QuickUnlock/title]" = "クイック解錠";
+
+/* Title of a setting: whether search looks in field names */
+"[Settings/Search/InFieldNames/title]" = "フィールド名を検索";
+
+/* Title of a setting: whether search looks in passwords */
+"[Settings/Search/InPasswords/title]" = "パスワードで検索";
+
+/* Title of a setting: whether search looks in values of protected fields */
+"[Settings/Search/InProtectValues/title]" = "保護されたデータを検索";
+
+/* Title of a setting: which fields to consider in search */
+"[Settings/Search/Scope/title]" = "検索範囲";
+
+/* Description of the 'Start with Search' setting. */
+"[Settings/Search/StartWithSearch/description]" = "データベースを開いた後、自動的に検索欄を表示します。";
+
+/* Title of a setting: whether to open search field immediately after opening a database */
+"[Settings/Search/StartWithSearch/title]" = "起動時に検索";
+
+/* Section title in settings */
+"[Settings/Search/title]" = "検索";
+
+/* Description of the 'Ask for Confirmation' setting. */
+"[Settings/ShakeGestureAction/Confirm/description]" = "アプリがロック中の場合は確認なしで動作します。";
+
+/* Title for a setting: whether the app should show an 'Are you sure?' before continuing */
+"[Settings/ShakeGestureAction/Confirm/title]" = "確認を求める";
+
+/* Title for a setting: what the app should do when the user shakes the device */
+"[Settings/ShakeGestureAction/title]" = "デバイスを振ったとき";
+
+/* Title of a section in settings: parameters that control what happens when the app is started. */
+"[Settings/Start/title]" = "起動時";
+
+/* Title of a section in settings: technical support and diagnostics */
+"[Settings/Support/title]" = "お問い合わせ";
+
+/* Description of the 'Universal Clipboard' setting. */
+"[Settings/UniversalClipboard/description]" = "ユニバーサルクリップボードなら、お使いのAppleデバイス間でコピー＆ペーストできます。外部デバイスではクリップボードは2分後に消去されます。";
+
+/* Apple's term: https://support.apple.com/102430 */
+"[Settings/UniversalClipboard/title]" = "ユニバーサルクリップボード";
 
 /* Action/button to create a new item tag */
 "[Tags/Create/action]" = "タグを作成";
@@ -330,4 +723,46 @@
 
 /* Title: the number of times a tag is encountered in the database. */
 "[Tags/UsageCount/title]" = "使用回数";
+
+/* Call to action in What's New announcement */
+"[WhatsNew/Announcement/body]" = "KeePassiumの新機能と改善点をご覧ください。";
+
+/* Button which opens the What's New screen. */
+"[WhatsNew/Announcement/button]" = "バージョン履歴";
+
+/* Description of a feature highlight, a call to action. */
+"[WhatsNew/Feature/AppScopedConnections/description]" = "アプリフォルダ限定のアクセス許可を使用してクラウドデータを保護します。";
+
+/* Title of a feature highlight, a noun phrase. */
+"[WhatsNew/Feature/AppScopedConnections/title]" = "安全性の高いクラウドアクセス";
+
+/* Description of a feature highlight, a call to action. */
+"[WhatsNew/Feature/AutoFillWithMemory/description]" = "KeePassiumは各ウェブサイトで選択したエントリーを記憶します。";
+
+/* Title of a feature highlight, a noun phrase. */
+"[WhatsNew/Feature/AutoFillWithMemory/title]" = "洗練された自動入力";
+
+/* Description of a feature highlight, a call to action. */
+"[WhatsNew/Feature/AutoType/description]" = "キー入力のエミュレーションを使用して任意のアプリやウェブブラウザに素早くサインインできます。";
+
+/* Title of a feature highlight, a noun phrase. */
+"[WhatsNew/Feature/AutoType/title]" = "パスワードの自動タイプ";
+
+/* Description of a feature highlight, a call to action. */
+"[WhatsNew/Feature/CreativeAutoFill/description]" = "自動入力に新しいエントリーを作成し、主なフィールドに自動的に事前入力できます。";
+
+/* Title of a feature highlight, a noun phrase. */
+"[WhatsNew/Feature/CreativeAutoFill/title]" = "登録の高速化";
+
+/* Description of a feature highlight, a call to action. `Browse alphabetically` refers to a phonebook-like index with letters. */
+"[WhatsNew/Feature/MoreInteractions/description]" = "ドラッグアンドドロップで複数の項目を選択し、アルファベット順に参照できます。";
+
+/* Title of a feature highlight, a noun phrase. */
+"[WhatsNew/Feature/MoreInteractions/title]" = "操作方法の拡充";
+
+/* Title of the detailed history of app changes over time. */
+"[WhatsNew/FullChangelog/title]" = "詳細な変更履歴";
+
+/* Full title for release highlights */
+"[WhatsNew/fullTitle]" = "KeePassiumの新着情報";
 

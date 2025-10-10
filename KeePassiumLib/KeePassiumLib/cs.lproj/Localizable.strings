@@ -1,6 +1,3 @@
-/* Menu item that shows info about KeePassium app */
-"[About/altTitle]" = "O aplikaci";
-
 /* Copyright notice */
 "[About/CopyrightAuthor]" = "©Andrei Popleteev";
 
@@ -10,6 +7,15 @@
 /* Call to action: perform accessibilty `activate` action to listen to text/content. */
 "[Accessibility/activateToListen]" = "Aktivujte pro poslech.";
 
+/* Accessibility notification for entries with attached files. */
+"[Accessibility/containsAttachments]" = "Obsahuje přílohy.";
+
+/* Accessibility notification for entries with a problematic passkey */
+"[Accessibility/containsIncompatiblePasskey]" = "Obsahuje přístupový klíč nekompatibilní s tímto zařízením.";
+
+/* Accessibility notification for entries with OTP codes. */
+"[Accessibility/containsOTP]" = "Obsahuje jednorázové heslo.";
+
 /* Accessibility notification for entries with a passkey */
 "[Accessibility/containsPasskey]" = "Obsahuje přístupový klíč.";
 
@@ -18,24 +24,6 @@
 
 /* Confirmation message before resetting the app to just-installed state. */
 "[App/ResetEverything/title]" = "Obnovit aplikaci?";
-
-/* Section in settings: icon for the app */
-"[Appearance/AppIcon/title]" = "Ikona aplikace";
-
-/* Section in settings: icons for database */
-"[Appearance/DatabaseIcons/title]" = "Ikony databáze";
-
-/* Short name of the default/system font. For example: `Font: Default` */
-"[Appearance/DefaultFont/shortTitle]" = "Výchozí";
-
-/* Title of a setting option: font */
-"[Appearance/Font/title]" = "Písmo";
-
-/* Title of a setting option: font size */
-"[Appearance/TextSize/title]" = "Velikost písma";
-
-/* Group of settings for user interface appearance (text size, icons, etc) */
-"[Appearance/title]" = "Vzhled";
 
 /* Action/button to unlock the App Lock with passcode */
 "[AppLock] Unlock" = "Odemknout";
@@ -85,6 +73,24 @@
 /* Title of a message related to upgrading to the premium version */
 "[AutoFill/Premium/Upgrade/Manual/title] Premium Upgrade" = "Přejít na Premium";
 
+/* Call to action / instruction on how to enable accessibility permission */
+"[AutoType/AccessibilityPrompt/callToAction]" = "Otevřete systémová nastavení → Soukromí a zabezpečení → Přístupnost a povolte tam KeePassium.";
+
+/* Message explaining why accessibility permission is needed */
+"[AutoType/AccessibilityPrompt/message]" = "KeePassium potřebuje vaše povolení k odesílání stisknutých kláves do jiných aplikací.";
+
+/* Title of a dialog asking user to provide a security permission */
+"[AutoType/AccessibilityPrompt/title]" = "KeePassium potřebuje vaše oprávnění";
+
+/* Action: send key presses to 'type in' entry data into another app */
+"[AutoType/action]" = "Provést automatické vyplňování";
+
+/* Button to open system settings (accessibility, permissions, etc) */
+"[AutoType/Action/OpenSettings]" = "Otevřít Nastavení";
+
+/* Title for error when auto-type fails */
+"[AutoType/Error/Title]" = "Automatické vyplňování selhalo";
+
 /* Name of biometric authentication method. Trademarked, do not translate unless Apple traslated it to your language. */
 "[BiometricAuthType] Face ID" = "Face ID";
 
@@ -121,9 +127,6 @@
 /* Notification: an item has been copied to clipboard */
 "[Clipboard/Copy/notification]" = "Zkopírováno";
 
-/* Subtitle for `Contact Us`. Keep it short. */
-"[ContactUs/subtitle]" = "Návrhy? Problémy? Dejte nám vědět!";
-
 /* Error message about AES cipher. [errorCode: Int] */
 "[CryptoError] AES decryption error (code %d)" = "Chyba AES dešifrování (kód %d)";
 
@@ -156,6 +159,12 @@
 
 /* Action: add/import an image as a custom icon */
 "[Database/CustomIcon/add]" = "Přidat vlastní ikonu";
+
+/* Notification when some custom icons are about to be deleted [iconCount: Int] */
+"[Database/CustomIcon/All/count]" = "Všechny vlastní ikony: %d";
+
+/* Action: delete all custom icons */
+"[Database/CustomIcon/deleteAll]" = "Vymazat vše";
 
 /* Action: delete unused icons */
 "[Database/CustomIcon/deleteUnused]" = "Odstranit nepoužívané ikony";
@@ -246,6 +255,12 @@
 
 /* Notification when user tries to copy data from KDBX to older KDB database. */
 "[Database/LesserTargetFormat/warning]" = "Formát této databáze je zastaralý, některá data mohou být ztracena.";
+
+/* Placeholder shown when there are no database files available */
+"[Database/List/empty]" = "Žádný databázový soubor";
+
+/* Call to action. 'Open' here is used as 'launch'. */
+"[Database/List/LocalMissing/callToAction]" = "Otevřete aplikaci";
 
 /* Recommendation for solving a problem with a list of files. */
 "[Database/List/LocalMissing/message]" = "Pokud některé lokální soubory nejsou uvedeny, nejprve spusťte hlavní aplikaci KeePassium.";
@@ -379,6 +394,9 @@
 /* Status message: saving a database */
 "[Database/Saving/Status] Saving..." = "Ukládání...";
 
+/* File access parameter. Will be shown as 'Consider File Unreachable: Immediately' */
+"[Database/Settings/ConsiderFileUnreachable/Immediately]" = "Ihned";
+
 /* File settings parameter: time after which file will be considered unreachable. Example: `Consider File Unreachable: in 10 seconds`.) */
 "[Database/Settings/ConsiderFileUnreachable/title]" = "Považovat soubor za nedostupný";
 
@@ -445,14 +463,14 @@
 /* Title of a message shown when saving to a database that has already been modified elsewhere. */
 "[Database/SyncConflict/title]" = "Konflikt v synchronizaci";
 
-/* Error message related to key file. [errorDetails: String] */
-"[Database/Unlock] Key file error: %@" = "Chyba souboru s klíčem: %@";
-
 /* Error message */
 "[Database/Unlock/Error] Failed to open key file" = "Otevření klíčového souboru se nezdařilo";
 
 /* Error message */
 "[Database/Unlock/Error] Password and key file are both empty." = "Heslo a klíčový soubor jsou prázdné.";
+
+/* Action: load a local (on-device) copy of a remote database */
+"[Database/Unlock/UseFallback/action]" = "Použít lokální kopii";
 
 /* Message shown when user enters an invalid database password */
 "[Database/Unlock/wrongPassword/question]" = "Zapomněli jste heslo?";
@@ -463,8 +481,17 @@
 /* Notification message */
 "[Database/UnsavedChanges/cannotModifyYet]" = "Automatické vyplňování bohužel zatím neumí upravovat velké databáze. Na vyřešení tohoto problému pracujeme.";
 
+/* Notification message */
+"[Database/UnsavedChanges/couldNotApply]" = "Některé čekající změny nebylo možné použít automaticky. Je možné, že některé nedávné úpravy chybí.";
+
 /* Call to action shown in AutoFill module. */
 "[Database/UnsavedChanges/OpenAppCallToAction]" = "Pokud chcete uložit změny, otevřete hlavní aplikaci KeePassium.";
+
+/* Notification message about a problem with unsaved/pending changes. */
+"[Database/UnsavedChanges/Problematic/info]" = "Některé čekající změny se týkají chybějících záznamů nebo skupin. KeePassium vytvoří tyto položky v samostatné skupině a změny použije tam.";
+
+/* Title of a group where problematic pending changes are saved. %@ is the date of recovery. */
+"[Database/UnsavedChanges/RecoveredEntriesGroup/name]" = "Obnovené změny (%@)";
 
 /* Action/button to save accummulated modifications */
 "[Database/UnsavedChanges/saveAction]" = "Uložit změny";
@@ -628,9 +655,6 @@
 /* Error message: user provided a wrong master key for decryption. */
 "[DatabaseError] Invalid password or key file" = "Chybné heslo nebo klíčový soubor";
 
-/* Subtitle for `Diagnostic Log`. Keep it short. */
-"[DiagLog/subtitle]" = "Pro řešení problémů";
-
 /* Title of the diagnostic info screen */
 "[DiagLog/title]" = "Diagnostické zprávy";
 
@@ -670,11 +694,20 @@
 /* Default name of a newly created entry field */
 "[Entry/Edit/CreateField/defaultName] Field Name" = "Název pole";
 
+/* Action/button to add a new field to the entry */
+"[Entry/Field/Add/action]" = "Přidat pole";
+
+/* On/off state: whether to show full-size or compact menu */
+"[Entry/Field/CompactMenu/title]" = "Kompaktní zobrazení";
+
 /* Notification: a reference to an entry field has been copied to clipboard */
 "[Entry/Field/CopyReference/acknowledgement]" = "Odkaz na pole zkopírován do schránky";
 
 /* Action: copy a reference to the selected entry field to clipboard */
 "[Entry/Field/CopyReference/action]" = "Kopírovat odkaz na pole";
+
+/* Title for a generic user-defined entry field. */
+"[Entry/Field/Custom/title]" = "Vlastní pole";
 
 /* Action: display text using large font */
 "[Entry/Field/LargeType/action]" = "Zobrazit velkými písmeny";
@@ -703,11 +736,20 @@
 /* Title of a setting: whether the entry's field is protected (shown as asterisks). */
 "[Entry/Field/Protected/title]" = "Chráněné pole";
 
+/* Action: display text using QR code */
+"[Entry/Field/QRCode/action]" = "Zobrazit jako QR kód";
+
 /* Name of an entry field */
 "[Entry/Field/tags] Tags" = "Štítky";
 
+/* Title of an alternative URL, with a number [number: String] */
+"[Entry/Field/URL/Extra/title]" = "URL (%d)";
+
 /* Status message: loading file to be attached to an entry */
 "[Entry/Files/Add] Loading attachment file" = "Nahrávám přílohu";
+
+/* Title of a list with frequently used entry fields. */
+"[Entry/FrequentlyUsedFields/title]" = "Často používané";
 
 /* Title of a field with entry creation date and time */
 "[Entry/History] Creation Date" = "Datum vytvoření";
@@ -949,6 +991,9 @@
 /* Placeholder for folders without files */
 "[General/FileList/Empty/title]" = "Složka je prázdná";
 
+/* Info message for keyboard-assisted selection */
+"[General/MultiSelectionKeys/hint]" = "Pro výběr více položek podržte stisknutou klávesu Cmd nebo Shift.";
+
 /* Action/button to cancel whatever is going on */
 "[Generic] Cancel" = "Zrušit";
 
@@ -990,6 +1035,9 @@
 
 /* Action/button shown below error messages. Tapping the button will start the fixing/repairing workflow described in the error message. */
 "[Generic] Fix this" = "Opravit";
+
+/* Action/button to import an item to another app */
+"[Generic] Import" = "Importovat";
 
 /* Action/button to view more help/info about some topic */
 "[Generic] Learn more" = "Více informací…";
@@ -1048,6 +1096,9 @@
 /* Action/button to select some items in a list. */
 "[Generic/Action/SelectItems]" = "Vybrat";
 
+/* Number of entries found in an incoming file. For example: 'Found entries: 42' [itemCount: Int] */
+"[Generic/Count/ImportedEntries]" = "Nalezené záznamy: %d";
+
 /* Name of the Recently Deleted (Recycle Bin) directory, as shown in the Files app */
 "[Generic/Directory/Recently Deleted/name]" = "Nedávno smazané";
 
@@ -1063,6 +1114,9 @@
 /* Title of a generic file export screen. */
 "[Generic/File/Export/title]" = "Export souboru";
 
+/* Action to save data, when we ignore minor problems in the process. */
+"[Generic/File/ForceSave]" = "Vynutit uložení";
+
 /* Action/button to save data to a different file */
 "[Generic/File/Save as]" = "Uložit jako…";
 
@@ -1074,6 +1128,9 @@
 
 /* Title of an error message about file import */
 "[Generic/File/title] Import Error" = "Import selhal";
+
+/* Action to proceed after a warning, basically 'I understand the risk' */
+"[Generic/GotIt/action]" = "Rozumím";
 
 /* Title of a list with predefined quick-choice values (for example: 'Presets: 1 week, 1 months, 1 year') */
 "[Generic/Presets]" = "Předvolené";
@@ -1192,14 +1249,20 @@
 /* Title of a list with possible hardware key connections */
 "[HardwareKey/Picker/title]" = "Hardwarové klíče";
 
+/* Title of a slot of a hardware key. For example: `YubiKey Slot 1`. */
+"[HardwareKey/Slot/title]" = "%1$@ Slot %2$d";
+
+/* Hardware key slot number. [slotNumber: Int] */
+"[HardwareKey/SlotN]" = "Slot %d";
+
+/* Title for hardware key slot selection menu. */
+"[HardwareKey/SlotTitle]" = "Slot";
+
 /* Information notice. 'Challenge-response' is a glossary term. */
 "[HardwareKey/USB/chalRespNotSupported]" = "Toto zařízení nepodporuje reakci na výzvu přes USB připojení.";
 
 /* Information notice */
 "[HardwareKey/USB/iPadAppOnMac]" = "USB není dostupné, protože se jedná o aplikaci pro iPad, která běží na macOS. Místo toho použijte nativní aplikaci Mac.";
-
-/* Master key/unlock option: use given slot of YubiKey */
-"[HardwareKey/YubiKey/Slot] YubiKey Slot #%d" = "YubiKey slot %d";
 
 /* Generic title of in-app help article */
 "[Help Viewer/title]" = "Nápověda";
@@ -1273,6 +1336,9 @@
 /* Error message about system keychain. */
 "[KeychainError/unexpectedFormat] Keychain error: unexpected data format" = "Chyba klíčenky: neočekávaný formát dat";
 
+/* Action: add a key file into the app, by importing or creating one. `Key file` is a glossary term. */
+"[KeyFile/Add/action]" = "Přidat soubor s klíčem";
+
 /* Action: create new key file. */
 "[KeyFile/Create/action]" = "Vytvořit soubor s klíčem";
 
@@ -1282,6 +1348,9 @@
 /* Message to confirm deletion of a key file. */
 "[KeyFile/Delete/Confirm/text] Delete key file?\n Make sure you have a backup." = "Opravdu chcete odstranit soubor s klíčem?\nUjistěte se, že jej máte zálohovaný.";
 
+/* Error message related to key file. [errorDetails: String] */
+"[KeyFile/error]" = "Chyba souboru s klíčem: %@";
+
 /* Name of an input field which shows selected key file */
 "[KeyFile/Field/title]" = "Soubor s klíčem";
 
@@ -1290,6 +1359,18 @@
 
 /* Description of the `Import Key File` action. */
 "[KeyFile/Import/actionDescription]" = "Přidat soubor do aplikace";
+
+/* Placeholder shown when there are no key files available */
+"[KeyFile/List/empty]" = "Žádné soubory s klíčem";
+
+/* Title of the list with key files. */
+"[KeyFile/List/title]" = "Soubory s klíčem";
+
+/* Description of the 'No Key File' option. */
+"[KeyFile/None/description]" = "Použít pouze heslo";
+
+/* Title: don't use key file */
+"[KeyFile/None/title]" = "Žádný soubor s klíčem";
 
 /* Message to confirm removal of a key file from the app. (This keeps the file, but removes its reference from the app.) */
 "[KeyFile/Remove/Confirm/text] Remove key file from the list?\n The file will remain intact and you can add it again later." = "Odebrat soubor s klíčem ze seznamu?\nSoubor zůstane neporušený a později jej budete moci znovu přidat.";
@@ -1310,7 +1391,7 @@
 "[Menu/FileInfo/title]" = "Informace o souboru";
 
 /* Menu title: app settings */
-"[Menu/Preferences/title]" = "Předvolby…";
+"[Menu/Settings/title]" = "Nastavení…";
 
 /* Title of a menu: sort order of files in a list */
 "[Menu/Sort] Sort Files By" = "Seřadit soubory podle";
@@ -1323,9 +1404,6 @@
 
 /* Error message, euphemism for missing corporate license */
 "[Org/LicenseMissing]" = "KeePassium nemohlo najít podnikový účet vaší organizace.";
-
-/* Notification next to the OTP code which was copied to clipboard */
-"[OTP/CopiedToClipboard/title]" = "Jednorázové heslo zkopírováno do schránky";
 
 /* Name of an entry field */
 "[OTP/FieldName]" = "Jednorázové heslo";
@@ -1350,6 +1428,12 @@
 
 /* Button/action: proceed with QR code based OTP setup */
 "[OTP/Setup/ScanQRCode]" = "Načíst QR kód";
+
+/* Action: pick an image (from files) to scan as QR code */
+"[OTP/Setup/ScanQRImageFile]" = "Skenovat QR ze souboru";
+
+/* Action: pick a photo (from gallery) to scan as QR code */
+"[OTP/Setup/ScanQRPhoto]" = "Skenovat QR z Fotky";
 
 /* Description of an OTP code; sentence case. */
 "[OTP/Title/sentenceCase]" = "Jednorázové heslo";
@@ -1471,6 +1555,9 @@
 /* Title of a premium feature */
 "[Premium/Benefits/BusinessClouds/title]" = "Synchronizovat s firemním úložištěm";
 
+/* Call to action / Title of a premium feature */
+"[Premium/Benefits/CreativeAutoFill/title]" = "Vytvářejte účty rychleji";
+
 /* Explanation of the premium feature */
 "[Premium/Benefits/HardwareKeys/details]" = "Chraňte svá hesla pomocí hardwarového klíče, jako je YubiKey.";
 
@@ -1564,27 +1651,6 @@
 /* Marks the default pricing plan */
 "[Premium/Price Plan/popular]" = "Oblíbené";
 
-/* Status: special premium for beta-testing environment is active */
-"[Premium/status] Beta testing" = "Beta testování";
-
-/* Status: current version of the app. For example: `Current version: 1.23`. Should be similar to the `Licensed version` string. [version: String] */
-"[Premium/status] Current version: %@" = "Současná verze: %@";
-
-/* Status: premium subscription has expired. For example: `Expired 1 day ago`. [timeFormatted: String, includes the time unit (day, hour, minute)] */
-"[Premium/status] Expired %@ ago. Please renew." = "Platnost vypršela před %@. Prosím obnovte.";
-
-/* Status: licensed premium version of the app. For example: `Licensed version: 1.23`. [version: String] */
-"[Premium/status] Licensed version: %@" = "Licencovaná verze: %@";
-
-/* Status: scheduled renewal date of a premium subscription. For example: `Next renewal on 1 Jan 2050`. [expiryDateString: String] */
-"[Premium/status] Next renewal on %@" = "Další obnovení dne %@";
-
-/* Status: validity period of once-and-forever premium */
-"[Premium/status] Valid forever" = "Platný navždy";
-
-/* Status when the user has a premium version */
-"[Premium/Status/title]" = "Prémiová verze";
-
 /* Subscription conditions */
 "[Premium/Subscription/Legal/text]" = "Platba bude účtována na váš Apple účet při potvrzení koupě.\n\nPředplatné se automaticky obnoví, pokud nebude zrušeno nejméně 24 hodin před koncem aktuálního období. Platba za obnovení předplatného bude stržena až 24 hodin před vypršením aktuálního období.\n\nSvé předplatné můžete spravovat v nastavení účtu v App Store.";
 
@@ -1636,14 +1702,17 @@
 /* Message shown after buying or subscribing. */
 "[Premium/Upgrade/Success/thankYou]" = "Děkujeme vám za nákup!";
 
-/* Status: how long the app has been used during some time period. For example: `App being useful: 1hr/month, about 12hr/year`. [monthlyUsage: String, annualUsage: String — already include the time unit (hours, minutes)] */
-"[Premium/usage] App being useful: %@/month, that is around %@/year." = "Aplikace používána %1$@/měsíc, což je %2$@/ročně.";
-
 /* Description/call to action for the `Business Cloud Storage` premium feature. */
 "[PremiumFeature/BusinessClouds/description]" = "Připojujte se přímo k účtům podnikových úložišť, jako je například OneDrive pro firmy.";
 
 /* Title of a premium feature: access to company's cloud accounts like 'OneDrive for Business' */
 "[PremiumFeature/BusinessClouds/title]" = "Firemní cloudové úložiště";
+
+/* Description/advertisement for the `Faster Sign-Ups` premium feature */
+"[PremiumFeature/CreativeAutoFill/description]" = "Vytvářejte nové záznamy v Automatickém vyplňování s předem vyplněnými hlavními poli.";
+
+/* Title of a premium feature: easier registration of new accounts, directly in AutoFill dialog */
+"[PremiumFeature/CreativeAutoFill/title]" = "Rychlejší registrace";
 
 /* A generic description of a premium feature */
 "[PremiumFeature/Generic/description]" = "Upgradujte na Premium a užijte si KeePassium se všemi funkcemi.";
@@ -1696,9 +1765,6 @@
 /* Error message when a long-running operation was cancelled due to the lack of free memory (RAM). */
 "[Progress/CancellationReason/lowMemory]" = "Nedostatek paměti pro pokračování.\nTo se může stát s velkými databázemi nebo s příliš ambiciózním nastavením databáze (Argon2).";
 
-/* Description of the Quick AutoFill feature. */
-"[QuickAutoFill/description]" = "Automatické Vyplňování zobrazí relevantní položky vedle pole s heslem bez otevření KeePassium.";
-
 /* Name of a feature that shows relevant entries directly next to the login/password forms. */
 "[QuickAutoFill/title]" = "Automatické Vyplňování";
 
@@ -1716,6 +1782,12 @@
 
 /* Description of the `Direct connection` sync method. */
 "[RemoteConnection/Direct/description]" = "KeePassium bude komunikovat přímo s vaším online úložištěm. Tím je zajištěn spolehlivý přenos souborů.";
+
+/* Title of a list with online storage services like OneDrive, Dropbox, etc. */
+"[RemoteConnection/Direct/title]" = "Online služby";
+
+/* Action: change properties of a remote network connection */
+"[RemoteConnection/Edit/action]" = "Upravit připojení…";
 
 /* Error message: user credentials rejected by the server */
 "[RemoteConnection/Error/AuthenticationFailed/title]" = "Ověření selhalo";
@@ -1771,134 +1843,17 @@
 /* Name of an input field for entering the password again */
 "[Repeat Password/Field/title]" = "Zopakujte heslo";
 
-/* Call to action (protect the app from unauthorized access) */
-"[Settings/AppLoc/Activate/callToAction]" = "Zapnout zámek";
+/* Description of the auto-download favicons feature */
+"[Settings/AutoDownloadFavicons/description]" = "Po úpravě záznamu automaticky stáhnout ikonu webové stránky.";
 
-/* Description of `Activate app protection` call to action. */
-"[Settings/AppLock/Activate/description]" = "Chraňte KeePassium před neoprávněným přístupem.";
-
-/* Settings switch: whether AppLock is allowed to use Touch ID/Face ID. Example: 'Use Touch ID'. [biometryTypeName: String] */
-"[Settings/AppLock/Biometric/title] Use %@" = "Používat %@";
-
-/* Explanation for the `Lock on App Launch` setting */
-"[Settings/AppLock/LockOnLaunch/description]" = "Zajišťuje uzamčení KeePassia po vynuceném zavření aplikace nebo restartování zařízení.";
-
-/* Setting switch: whether to lock the app after it was terminated and relaunched. */
-"[Settings/AppLock/LockOnLaunch/title]" = "Zamknout při spuštění aplikace";
-
-/* Settings: subtitle of the `App Protection` section. biometryTypeName will be either 'Touch ID' or 'Face ID'. [biometryTypeName: String] */
-"[Settings/AppLock/subtitle] App Lock, %@, timeout" = "Zámek, %@, časový limit";
-
-/* Settings: subtitle of the `App Protection` section when biometric auth is not available. */
-"[Settings/AppLock/subtitle] App Lock, passcode, timeout" = "Zámek, kód aplikace, časový limit";
-
-/* Settings section: protection of the app from unauthorized access */
-"[Settings/AppLock/title]" = "Ochrana aplikace";
-
-/* A description/subtitle for Settings/AppLockTimeout options that trigger when the user has been idle for a while. For example: 'AppLock Timeout: 3 seconds (After last interaction) */
-"[Settings/AppLockTimeout/description] After last interaction" = "Po poslední interakci";
-
-/* A description/subtitle for Settings/AppLock/Timeout options that trigger when the app is minimized. For example: 'AppLock Timeout: 3 seconds (After leaving the app) */
-"[Settings/AppLockTimeout/description] After leaving the app" = "Po odchodu z této aplikace";
-
-/* An option in Settings. Will be shown as 'App Lock: Timeout: Immediately' */
-"[Settings/AppLockTimeout/fullTitle] Immediately" = "Ihned";
-
-/* An option in Settings. Will be shown as 'App Lock: Timeout: Never' */
-"[Settings/AppLockTimeout/fullTitle] Never" = "Nikdy";
-
-/* An option in Settings. Will be shown as 'App Lock: Timeout: Immediately' */
-"[Settings/AppLockTimeout/shortTitle] Immediately" = "Ihned";
-
-/* An option in Settings. Will be shown as 'App Lock: Timeout: Never' */
-"[Settings/AppLockTimeout/shortTitle] Never" = "Nikdy";
-
-/* Action that opens system settings or instructions */
-"[Settings/AutoFill/Activate/action]" = "Aktivovat Automatické Vyplňování";
-
-/* Description for the AutoFill setup instructions */
-"[Settings/AutoFill/Activate/description]" = "Před prvním použitím je třeba aktivovat Automatické vyplňování v nastavení systému.";
-
-/* Title of an option: copy one-time password to clipboard when using AutoFill */
-"[Settings/AutoFill/CopyOTP/title]" = "Kopírovat jednorázové hesla";
-
-/* Title of a help article on how to activate AutoFill. */
-"[Settings/AutoFill/Setup Guide/title]" = "Nastavení Automatického Vyplňování";
+/* Settings option: automatically download website icons/favicons */
+"[Settings/AutoDownloadFavicons/title]" = "Automaticky stáhovat favicony";
 
 /* Title of AutoFill settings screen */
 "[Settings/AutoFill/title]" = "Vyplňování hesel";
 
-/* No comment provided by engineer. */
-"[Settings/AutoFill/UnavailableInIntune/description]" = "Automatické vyplňování není v KeePassium pro Intune k dispozici.";
-
-/* Title of an option: automatically use the single best match found by AutoFill search */
-"[Settings/AutoFill/UsePerfectMatch/title]" = "Vyplnit přesné výsledky automaticky";
-
-/* Option in settings: whether to open the last used database automatically on start. */
-"[Settings/AutoOpenPreviousDatabase/title]" = "Automaticky načíst minule otevřenou databázi";
-
-/* Action to delete all backup files from the app. `ALL` is in capitals as a highlight. [backupFileCount: Int] */
-"[Settings/Backup] Delete ALL Backup Files (%d)" = "Odstranit VŠECHNY zálohy (%d)";
-
-/* Status message: there are no backup files to delete */
-"[Settings/Backup] No Backup Files Found" = "Nenalezeny žádné zálohy";
-
-/* Confirmation dialog message to delete all backup files */
-"[Settings/Backup/Delete/title] Delete all backup files?" = "Odstranit všechny zálohy?";
-
-/* An option in Settings. Please keep it short. Will be shown as 'Keep Backup Files: Forever' */
-"[Settings/BackupKeepingDuration/shortTitle] Forever" = "Navždy";
-
-/* Text of the success message for `Clear Key File Associations` button */
-"[Settings/ClearKeyFileAssociations/Cleared/text] Associations between key files and databases have been removed." = "Asociace databází se soubory s klíčem byly smazány.";
-
-/* Title of the success message for `Clear Key File Associations` button */
-"[Settings/ClearKeyFileAssociations/Cleared/title] Cleared" = "Vymazáno";
-
-/* Text of the success message for `Clear Master Keys` button */
-"[Settings/ClearMasterKeys/Cleared/text] All master keys have been deleted." = "Všechny hlavní klíče byly smazány.";
-
-/* Title of the success message for `Clear Master Keys` button */
-"[Settings/ClearMasterKeys/Cleared/title] Cleared" = "Vymazáno";
-
-/* Description of the clipboard/pasteboard timeout. */
-"[Settings/ClipboardTimeout/description] When you copy some text from an entry, the app will automatically clear your clipboard (pasteboard) after this time." = "Jakmile zkopírujete nějaké údaje z databáze, aplikace automaticky vymaže obsah schránky po vybrané době.";
-
-/* An option in Settings. Will be shown as 'Clipboard Timeout: Never' */
-"[Settings/ClipboardTimeout/fullTitle] Never" = "Nikdy";
-
-/* An option in Settings. Will be shown as 'Clipboard Timeout: Never' */
-"[Settings/ClipboardTimeout/shortTitle] Never" = "Nikdy";
-
-/* Title of a settings section: backup of databases */
-"[Settings/DatabaseBackup/title]" = "Záloha databáze";
-
-/* Description of the Database Lock Timeout */
-"[Settings/DatabaseLockTimeout/description] If you are not interacting with the app for some time, the database will be closed for your safety. To open it, you will need to enter its master password again." = "Jakmile po vybranou dobu aplikaci nepoužijete, dojde pro vaší bezpečnost k uzavření databáze. Pro její opětovné otevření bude nutné zadat hlavní heslo.";
-
-/* A description/subtitle for the 'DatabaseLockTimeout: Immediately'. */
-"[Settings/DatabaseLockTimeout/description] When leaving the app" = "Když opustíte aplikaci";
-
-/* An option in Settings. Will be shown as 'Database Lock: Timeout: Immediately' */
-"[Settings/DatabaseLockTimeout/fullTitle] Immediately" = "Ihned";
-
-/* An option in Settings. Will be shown as 'Database Lock: Timeout: Never' */
-"[Settings/DatabaseLockTimeout/fullTitle] Never" = "Nikdy";
-
-/* An option in Settings. Will be shown as 'Database Lock: Timeout: Immediately' */
-"[Settings/DatabaseLockTimeout/shortTitle] Immediately" = "Ihned";
-
-/* An option in Settings. Will be shown as 'Database Lock: Timeout: Never' */
-"[Settings/DatabaseLockTimeout/shortTitle] Never" = "Nikdy";
-
-/* Title of a setting: the time after which databases will be locked. */
-"[Settings/DatabaseLockTimeout/title]" = "Časový limit databáze";
-
-/* Setting switch: whether to lock databases after device reboot. */
-"[Settings/DataProtection/LockOnReboot/title]" = "Zamknout při restartu zařízení";
-
-/* Subtitle for `Data Protection` section in settings */
-"[Settings/DataProtection/subtitle]" = "Hlavní klíče, soubory s klíčem";
+/* Title of a yes/no setting: whether to include backup copies in the file list */
+"[Settings/DatabaseBackup/ShowBackupFiles/title]" = "Zobrazovat zálohy";
 
 /* Settings section: protection of databases, their keys and data inside them */
 "[Settings/DataProtection/title]" = "Ochrana dat";
@@ -1912,6 +1867,9 @@
 /* Title of a settings section: sort order of groups and entries in a list */
 "[Settings/GroupViewer] Sort Order" = "Řadit podle";
 
+/* Title of a yes/no setting */
+"[Settings/KeyFiles/Remember/title]" = "Pamatovat soubory s klíčem";
+
 /* Title of list view configuration screen */
 "[Settings/ListSettings/title]" = "Nastavení";
 
@@ -1920,6 +1878,12 @@
 
 /* Notification when corporate user tries to change an app setting controlled by organization's IT department. */
 "[Settings/Managed/notification]" = "Tato nastavení je spravováno vaší organizací.";
+
+/* Setting: preserve (cache) calculated database keys */
+"[Settings/MasterKeys/CacheDerived/title]" = "Šifrovací klíče odvozené od mezipaměti";
+
+/* Title of a yes/no setting */
+"[Settings/MasterKeys/Remember/title]" = "Ukládat hlavní klíče";
 
 /* Confirmation dialog message */
 "[Settings/NetworkAccess/Confirmation/text]" = "Povolit KeePassium vytvářet síťová připojení k externím službám?";
@@ -1942,11 +1906,32 @@
 /* Action/button which resets some settings to their default state. */
 "[Settings/RestoreDefaults/action]" = "Obnovit výchozí";
 
-/* Section title in settings */
-"[Settings/Search/title]" = "Vyhledávání";
+/* Call to action (explains why a setting is disabled) */
+"[Settings/ShakeGestureAction/LockApp/disabledTitle]" = "Nejprve aktivujte ochranu aplikace";
+
+/* An option in Settings. Will be shown as 'When Shaken: Lock App' */
+"[Settings/ShakeGestureAction/LockApp/shortTitle]" = "Uzamknout aplikaci";
+
+/* An option in Settings. Will be shown as 'When Shaken: Lock All Databases' */
+"[Settings/ShakeGestureAction/LockDatabases/shortTitle]" = "Zamknout všechny databáze";
+
+/* An option in Settings. Will be shown as 'When Shaken: Do Nothing' */
+"[Settings/ShakeGestureAction/Nothing/shortTitle]" = "Nedělat nic";
+
+/* An option in Settings. Will be shown as 'When Shaken: Quit App' */
+"[Settings/ShakeGestureAction/QuitApp/shortTitle]" = "Ukončit aplikaci";
 
 /* Title of the app settings screen */
 "[Settings/title]" = "Nastavení";
+
+/* Title of a settings value. For example: `Remember Master Keys: No` */
+"[Settings/Value/No/title]" = "Ne";
+
+/* Title of a settings value, when it is not customized and we default to app's global settings. For example: `Remember Master Keys: Use App Settings (No)` */
+"[Settings/Value/UseAppSettings/title]" = "Použít nastavení aplikace (%@)";
+
+/* Title of a settings value. For example: `Remember Master Keys: Yes` */
+"[Settings/Value/Yes/title]" = "Ano";
 
 /* List sorting option (for file names). Example: 'Sort by: Name' */
 "[SortBy/FileName]" = "Název";
@@ -1956,6 +1941,9 @@
 
 /* List sorting option, when items are manually ordered by the user. Example: 'Sort order: Custom' */
 "[SortOrder/Custom]" = "Vlastní";
+
+/* Subtitle for a storage service: the app will have access only to its own dedicated folder. */
+"[StorageService/DedicatedAppFolder/title]" = "Pouze složka aplikace";
 
 /* Name of a cloud storage service */
 "[StorageService/DropboxBusiness/title]" = "Dropbox Business";
@@ -2020,8 +2008,8 @@
 /* Human-readable file location. Example: 'File Location: Remote server' */
 "[URLReference/Location/RemoteServer]" = "Vzdálený server";
 
-/* Selector choice: don't use YubiKey to encrypt/decrypt database */
-"[YubiKey] Don't use YubiKey" = "Bez YubiKey";
+/* Error shown when user selects a file path instead of folder path in WebDAV. */
+"[WebDAV/Export/NeedsFolder]" = "Vyberte cestu ke složce";
 
 /* Call for action: insert YubiKey 5Ci to the Lightning port */
 "[YubiKey] Insert the key" = "Vložte klíč";
@@ -2029,18 +2017,9 @@
 /* Call for action: touch the sides of YubiKey 5Ci to continue */
 "[YubiKey] Touch the key" = "Dotkněte se klíče";
 
-/* Selector choice: use YubiKey to encrypt/decrypt database. For example: `Use YubiKey Slot 1`. [slotID: Int] */
-"[YubiKey] Use YubiKey Slot %d" = "Použít YubiKey slot %d";
-
 /* Action/button to add database to the app */
 "Add Database" = "Přidat databázi";
 
 /* Warning message when the user tries to use a database as a key file */
 "KeePass database should not be used as key file. Please pick a different file." = "KeePass databáze by neměla být použita jako soubor s klíčem. Prosím, vyberte jiný soubor.";
-
-/* Placeholder shown when there are no database files available */
-"No database files" = "Žádný databázový soubor";
-
-/* Settings switch: whether to include backup copies in the file list */
-"Show Backup Files" = "Zobrazovat zálohy";
 

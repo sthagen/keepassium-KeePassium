@@ -1,8 +1,38 @@
+/* Menu item that shows info about KeePassium app */
+"[About/altTitle]" = "Om KeePassium";
+
+/* Section in settings: icon for the app */
+"[Appearance/AppIcon/title]" = "App-ikon";
+
+/* Section in settings: icons for database */
+"[Appearance/DatabaseIcons/title]" = "Databasikoner";
+
+/* Short name of the default/system font. For example: `Font: Default` */
+"[Appearance/DefaultFont/shortTitle]" = "Förvalt";
+
+/* Section in settings: parameters related to entry viewer component */
+"[Appearance/EntryViewer/title]" = "Visningsprogram för post";
+
+/* Title of a setting option: font */
+"[Appearance/Font/title]" = "Typsnitt";
+
+/* Action: set text size to standard size */
+"[Appearance/TextSize/reset]" = "Återställ till standard-textstorlek";
+
+/* Title of a setting option: font size */
+"[Appearance/TextSize/title]" = "Textstorlek";
+
+/* Group of settings for user interface appearance (text size, icons, etc) */
+"[Appearance/title]" = "Utseende";
+
 /* Title of the app history (changelog) screen */
 "[AppHistory/title]" = "Nyheter";
 
 /* Notification when user tries to set up too weak an app protection passcode. */
 "[AppLock/weakPasscodeWarning]" = "Det är lätt att gissa den här lösenkoden. Ange en starkare lösenkod.";
+
+/* Subtitle for `Contact Us`. Keep it short. */
+"[ContactUs/subtitle]" = "Förslag? Problem? Hör av dig!";
 
 /* Item in the credits list */
 "[Credits/Item/aexml]" = "AEXML av Marko Tadić";
@@ -148,6 +178,9 @@
 /* Description of favicon downloader feature. 'Doing this' refers to downloading favicons. */
 "[Database/DownloadFavicons/warning]" = "Om du gör det på ett offentligt eller övervakat nätverk kan listan med webbplatser där du har ett konto exponeras.";
 
+/* Placeholder text in an empty group */
+"[Database/Group/empty]" = "Denna grupp är tom";
+
 /* Warning that one key derivation function (KDF) should be preferred to another. Example: 'AES-KDF is considered weak. Use Argon2id instead.' */
 "[Database/KDF/consideredWeak]" = "%1$@ är svagt. Använd %2$@ istället.";
 
@@ -156,6 +189,9 @@
 
 /* Call to action when encryption settings are too weak. */
 "[Database/KDF/tooWeak]" = "Öka inställningarna för optimalt dataskydd.";
+
+/* Subtitle for `Diagnostic Log`. Keep it short. */
+"[DiagLog/subtitle]" = "För felsökning av experter";
 
 /* Confirmation message to replace an existing entry attachment with a new one. */
 "[Entry/Files/Add] Replace existing attachment?" = "Ersätt existerande bilaga?";
@@ -177,6 +213,9 @@
 
 /* Title of entry viewer's tab with advanced/secondary properties */
 "[Entry/Tab/More/title]" = "Mer";
+
+/* Name of Enpass' JSON file format */
+"[Format/EnpassJSON]" = "Enpass (.json)";
 
 /* Action/button */
 "[Onboarding/AddExistingDatabase/action]" = "Lägg till existerande databas";
@@ -289,14 +328,287 @@
 /* Password quality description. For example: `Very good (234 bits of entropy)`. [level: String, formattedBitCount: String] */
 "[PasswordQuality/LevelWithEntropy/description]" = "%1$@ (%2$@ av entropi)";
 
+/* Status: special premium for beta-testing environment is active */
+"[Premium/Status/BetaTesting/title]" = "Betatestning";
+
+/* Status: current version of the app. For example: `Current version: 1.23`. Should be similar to the `Licensed version` string. [version: String] */
+"[Premium/Status/currentVersion]" = "Nuvarande version: %@";
+
+/* Status: premium subscription has expired. For example: `Expired 1 day ago`. [timeFormatted: String, includes the time unit (day, hour, minute)] */
+"[Premium/Status/expiredAgo]" = "Förföll %@ sen. Var vänlig förnya.";
+
+/* Status: licensed premium version of the app. For example: `Licensed version: 1.23`. [version: String] */
+"[Premium/Status/licensedVersion]" = "Licensierad version: %@";
+
+/* Status: scheduled renewal date of a premium subscription. For example: `Next renewal on 1 Jan 2050`. [expiryDateString: String] */
+"[Premium/Status/nextRenewal]" = "Nästa förnyelse %@";
+
+/* Status when the user has a premium version */
+"[Premium/Status/title]" = "Premiumversion";
+
+/* Status: validity period of once-and-forever premium */
+"[Premium/Status/ValidForever/title]" = "Giltig för alltid";
+
+/* Status: how long the app has been used during some time period. For example: `App being useful: 1hr/month, about 12hr/year`. [monthlyUsage: String, annualUsage: String — already include the time unit (hours, minutes)] */
+"[Premium/usage] App being useful: %@/month, that is around %@/year." = "Appen är användbar: %1$@/månad, det är cirka %2$@/år.";
+
 /* Action/button to make password visible as plain-text */
 "[ProtectedTextField] Show Password" = "Visa lösenord";
+
+/* Description of the Quick AutoFill feature. */
+"[QuickAutoFill/description]" = "Snabb Autofyll visar relevanta poster precis bredvid lösenordsfältet, utan att öppna KeePassium.";
+
+/* Placeholder text for empty search results */
+"[Search/EmptyResult/title]" = "Inget matchande resultat";
 
 /* Title of the confirmation dialog for `Delete` action for several items */
 "[Selection/Delete/confirmation]" = "Radera markering?";
 
 /* Title of the confirmation dialog for `Exclude from audit` action for several items */
 "[Selection/ExcludeFromAudit/confirmation]" = "Exkludera markering från lösenordsgranskning?";
+
+/* Title of a section in settings: parameters that protect access to data */
+"[Settings/AccessControl/title]" = "Behörighet";
+
+/* Call to action (protect the app from unauthorized access) */
+"[Settings/AppLoc/Activate/callToAction]" = "Aktivera skydd för Appen";
+
+/* Description of `Activate app protection` call to action. */
+"[Settings/AppLock/Activate/description]" = "Skydda KeePassium från otillåtna användare.";
+
+/* Description of biometric unlock settings */
+"[Settings/AppLock/Biometric/description]" = "Tillåt biometrisk autentisering som ett snabbt (men mindre säkert) alternativ till AppLock PIN-kod.";
+
+/* Settings switch: whether App Protection is allowed to use Touch ID/Face ID. Example: 'Use Touch ID'. [biometryTypeName: String] */
+"[Settings/AppLock/Biometric/title] Use %@" = "Använd %@";
+
+/* Explanation for the `Lock on App Launch` setting */
+"[Settings/AppLock/LockOnLaunch/description]" = "Låser KeePassium efter att du tvingar att stänga appen eller starta om enheten.";
+
+/* Setting switch: whether to lock the app after it was terminated and relaunched. */
+"[Settings/AppLock/LockOnLaunch/title]" = "Lås vid programstart";
+
+/* Description of the `Lock on Wrong Passcode` setting */
+"[Settings/AppLock/LockOnWrongPasscode/description]" = "Om du anger fel PIN-Kod för AppLock kommer KeePassium stänga alla databaser och rensa alla huvudnycklar från nyckelkedjan.";
+
+/* Settings: subtitle of the `App Protection` section. biometryTypeName will be either 'Touch ID' or 'Face ID'. [biometryTypeName: String] */
+"[Settings/AppLock/subtitle] App Lock, %@, timeout" = "App Lock, %@, timeout";
+
+/* Settings: subtitle of the `App Protection` section when biometric auth is not available. */
+"[Settings/AppLock/subtitle] App Lock, passcode, timeout" = "App Lock, PIN-kod, timeout";
+
+/* Description of the App Lock Timeout setting */
+"[Settings/AppLock/Timeout/description]" = "Appen kommer automatiskt låsas efter denna tidsperiod.";
+
+/* Title for App Lock Timeout setting */
+"[Settings/AppLock/Timeout/title]" = "Timeout";
+
+/* Settings section: protection of the app from unauthorized access */
+"[Settings/AppLock/title]" = "Appskydd";
+
+/* Settings section: what happens if user enters incorrect App Protection passcode. */
+"[Settings/AppLock/WrongPasscode/title]" = "Fel pinkod";
+
+/* Description of those 'App Protection Timeout' options that trigger when the app is minimized. For example: 'Timeout: 3 seconds (After leaving the app) */
+"[Settings/AppLockTimeout/AfterLeavingApp/description]" = "Efter appen lämnats";
+
+/* Description of those 'App Protection Timeout' options that trigger when the user has been idle for a while. For example: 'Timeout: 3 seconds (After last interaction) */
+"[Settings/AppLockTimeout/description] After last interaction" = "Efter senaste interaktionen";
+
+/* An option in Settings. Will be shown as 'App Lock: Timeout: Immediately' */
+"[Settings/AppLockTimeout/Immediately/title] " = "Omedelbart";
+
+/* An option in Settings. Will be shown as 'App Lock: Timeout: Never' */
+"[Settings/AppLockTimeout/Never/title]" = "Aldrig";
+
+/* Action that opens system settings or instructions */
+"[Settings/AutoFill/Activate/action]" = "Aktivera Autofyll";
+
+/* Description for the AutoFill setup instructions */
+"[Settings/AutoFill/Activate/description]" = "Innan första användningen måste du aktivera Autofyll i systeminställningar.";
+
+/* Description of the 'Copy OTP to Clipboard' setting */
+"[Settings/AutoFill/CopyOTP/Description]" = "När Autofyll fyller i ditt användarnamn och lösenord kan det samtidigt kopiera engångslösenord (OTP) till urklipp åt dig.";
+
+/* Title of a yes/no setting: copy one-time password to clipboard when using AutoFill */
+"[Settings/AutoFill/CopyOTP/title]" = "Kopiera engångslösenord till urklipp";
+
+/* Title of a help article on how to activate AutoFill. */
+"[Settings/AutoFill/Setup Guide/title]" = "Kom igång med Autofyll";
+
+/* No comment provided by engineer. */
+"[Settings/AutoFill/UnavailableInIntune/description]" = "AutoFyll är inte tillgängligt i KeePassium för Intune.";
+
+/* Description of the 'Fill-In Perfect Result Automatically' setting */
+"[Settings/AutoFill/UsePerfectMatch/description]" = "När Autofyll endast hittar en post som matchar perfekt, kommer det anges automatiskt.";
+
+/* Title of a yes/no setting: automatically use the single best match found by AutoFill search */
+"[Settings/AutoFill/UsePerfectMatch/title]" = "Fyll i det matchande resultatet automatiskt";
+
+/* Option in settings: whether to open the last used database automatically on start. */
+"[Settings/AutoOpenPreviousDatabase/title]" = "Öppna den tidigare databasen automatiskt";
+
+/* Title of a section in settings */
+"[Settings/AutoSearch/title]" = "Automatisk sökning";
+
+/* Action to clear/erase info about which database uses which key file */
+"[Settings/ClearKeyFileAssociations/action]" = "Rensa kopplade nyckelfiler";
+
+/* Title of the success message for `Clear Key File Associations` button */
+"[Settings/ClearKeyFileAssociations/Cleared/title]" = "Rensad";
+
+/* Title of the success message for `Clear Master Keys` button */
+"[Settings/ClearMasterKeys/Cleared/title]" = "Rensad";
+
+/* Title of a setting: time after which clipboard will be cleared */
+"[Settings/Clipboard/Timeout/title]" = "Timeout för urklipp";
+
+/* Section title in Settings */
+"[Settings/Clipboard/title]" = "Urklipp";
+
+/* Description of the 'Clipboard Timeout' setting. */
+"[Settings/ClipboardTimeout/description]" = "När du kopierar någonting kommer KeePassium automatiskt rensa ditt urklipp efter en stund.";
+
+/* An option in Settings. Will be shown as 'Clipboard Timeout: Never' */
+"[Settings/ClipboardTimeout/Never/title]" = "Aldrig";
+
+/* Description of the 'Make Backup Copies' setting */
+"[Settings/DatabaseBackup/Active/description]" = "Innan en databas sparas kommer KeePassium automatiskt spara en extra kopia, för säkerhets skull.";
+
+/* Title of a yes/no setting: whether to back up databases before saving them */
+"[Settings/DatabaseBackup/Active/title]" = "Skapa backupkopior";
+
+/* Confirmation dialog message to delete all backup files */
+"[Settings/DatabaseBackup/DeleteAll/confirm]" = "Radera alla backuper?";
+
+/* Action to delete all backup files from the app. `ALL` is in capitals as a highlight. [backupFileCount: Int] */
+"[Settings/DatabaseBackup/DeleteAll/title]" = "Radera ALLA backuper (%d)";
+
+/* Description of the 'Exclude Backup Files from System Backup' setting */
+"[Settings/DatabaseBackup/ExcludeFromSystemBackup/description]" = "Definierar om säkerhetskopierade databaser som skapats av KeePassium ska uteslutas från iCloud/iTunes-säkerhetskopior. Gäller alla befintliga och framtida säkerhetskopieringsfiler.";
+
+/* Title of a yes/no setting: whether app's internal backup copies should be excluded from global system backup */
+"[Settings/DatabaseBackup/ExcludeFromSystemBackup/title]" = "Exkludera säkerhetskopieringsfiler från säkerhetskopiering av systemet";
+
+/* Setting title: how long to keep backup copies. Example: 'Keep Backup Files: Forever' */
+"[Settings/DatabaseBackup/KeepingDuration/Forever/title]" = "För alltid";
+
+/* Setting title: how long to keep backup copies. For example: `Keep Backup Files: 3 days` */
+"[Settings/DatabaseBackup/KeepingDuration/title]" = "Spara backupkopior";
+
+/* Status message: there are no backup files to delete */
+"[Settings/DatabaseBackup/NoFiles/title]" = "Inga backupfiler hittades";
+
+/* Description of the `Periodic Cleanup` settings */
+"[Settings/DatabaseBackup/PeriodicCleanup/description]" = "KeePassium kan automatiskt radera gamla backupfiler för att frigöra lagringsutrymme.";
+
+/* Settings section: automatic deletion of old backup files */
+"[Settings/DatabaseBackup/PeriodicCleanup/title]" = "Periodisk upprensning";
+
+/* Description of the 'Show Backup Files' setting */
+"[Settings/DatabaseBackup/ShowBackupFiles/description]" = "Backupkopior kommer visas sida vid sida med originalfilerna.";
+
+/* Section header, refers to Apple's backup services (https://support.apple.com/HT203977) */
+"[Settings/DatabaseBackup/SystemBackup/title]" = "Säkerhetskopiering av iTunes och iCloud";
+
+/* Title of a settings section: backup of databases */
+"[Settings/DatabaseBackup/title]" = "Databasbackup";
+
+/* Description of the `Database Timeout` setting */
+"[Settings/DatabaseLockTimeout/description]" = "Om du inte interagerar med appen på ett tag kommer databasen stängas för din säkerhet. För att öppna behöver du ange huvudlösenordet igen.";
+
+/* Title of a setting: the time after which databases will be locked. */
+"[Settings/DatabaseLockTimeout/title]" = "Databastimeout";
+
+/* A description/subtitle for the 'Database Timeout: Immediately'. */
+"[Settings/DatabaseTimeout/Immediately/description]" = "När appen lämnas";
+
+/* An option in Settings. Will be shown as 'Database Timeout: Immediately' */
+"[Settings/DatabaseTimeout/Immediately/title" = "Omedelbart";
+
+/* An option in Settings. Will be shown as 'Database Timeout: Never' */
+"[Settings/DatabaseTimeout/Never/title]" = "Aldrig";
+
+/* Section title: advanced/expert settings */
+"[Settings/DataProtection/Advanced/title]" = "Avancerat";
+
+/* Title of a section in settings */
+"[Settings/DataProtection/AutomaticLock/title]" = "Automatiskt lås";
+
+/* Setting switch: whether to lock databases after device reboot. */
+"[Settings/DataProtection/LockOnReboot/title]" = "Lås för omstart av enhet";
+
+/* Subtitle for `Data Protection` section in settings */
+"[Settings/DataProtection/subtitle]" = "Huvudnycklar, nyckelfiler";
+
+/* Description of the 'Hide Passwords' setting. */
+"[Settings/HidePasswords/description]" = "Dölj lösenord och andra skyddade fält med asterisker (rekommenderas).";
+
+/* Title of a yes/no setting */
+"[Settings/HidePasswords/title]" = "Dölj lösenord";
+
+/* Description of the 'Remember Key Files' setting */
+"[Settings/KeyFiles/Remember/description]" = "Kom ihåg och välj automatiskt den senaste använda nyckelfilen för varje databas. Att rensa kopplingen mellan nyckelfil och databas gör inte att filerna tas bort.";
+
+/* Title of a section in Settings */
+"[Settings/KeyFiles/title]" = "Nyckelfiler";
+
+/* Description of the 'Cache Derived Encryption Keys' setting */
+"[Settings/MasterKeys/CacheDerived/description]" = "Cachelagrade nycklar tillåter KeePassium att hoppa över nyckelhärledning och YubiKey-skanningar när det är möjligt.";
+
+/* Action: clear/erase/delete stored master keys */
+"[Settings/MasterKeys/Clear/action]" = "Rensa huvudnycklar";
+
+/* Title of a yes/no setting. */
+"[Settings/MasterKeys/ClearOnTimeout/title]" = "Rensa huvudnyckel vid timeout";
+
+/* Description of the 'Remember Master Keys' setting. */
+"[Settings/MasterKeys/Remember/description]" = "När du låser upp en databas kan dess huvudnyckel sparas i enhetens säkra nyckelkedja. Nästa gång kommer KeePassium använda nyckeln så du inte behöver skriva in hela huvudlösenordet igen.";
+
+/* Title of a section in settings */
+"[Settings/OTP/title]" = "Engångslösenord";
+
+/* Title of a section in settings */
+"[Settings/Premium/title]" = "Premium";
+
+/* Title of a section in Settings */
+"[Settings/ProtectedFields/title]" = "Skyddade fält";
+
+/* Title of a section in settings */
+"[Settings/QuickUnlock/title]" = "Snabbupplåsning";
+
+/* Title of a setting: whether search looks in field names */
+"[Settings/Search/InFieldNames/title]" = "Sök i fältnamn";
+
+/* Title of a setting: whether search looks in passwords */
+"[Settings/Search/InPasswords/title]" = "Sök i lösenord";
+
+/* Title of a setting: whether search looks in values of protected fields */
+"[Settings/Search/InProtectValues/title]" = "Sök i skyddade värden";
+
+/* Title of a setting: which fields to consider in search */
+"[Settings/Search/Scope/title]" = "Sökomfång";
+
+/* Description of the 'Start with Search' setting. */
+"[Settings/Search/StartWithSearch/description]" = "Visa sökfältet automatiskt efter en databas har öppnats.";
+
+/* Title of a setting: whether to open search field immediately after opening a database */
+"[Settings/Search/StartWithSearch/title]" = "Börja med sök";
+
+/* Section title in settings */
+"[Settings/Search/title]" = "Sök";
+
+/* Title of a section in settings: parameters that control what happens when the app is started. */
+"[Settings/Start/title]" = "Start";
+
+/* Title of a section in settings: technical support and diagnostics */
+"[Settings/Support/title]" = "Support";
+
+/* Description of the 'Universal Clipboard' setting. */
+"[Settings/UniversalClipboard/description]" = "Använd Universal Clipboard för att kopiera och klistra mellan dina Apple-enheter. På mobila enheter rensas innehållet automatiskt efter två minuter.";
+
+/* Apple's term: https://support.apple.com/102430 */
+"[Settings/UniversalClipboard/title]" = "Universal Clipboard";
 
 /* Action/button to create a new item tag */
 "[Tags/Create/action]" = "Skapa tagg";
@@ -330,4 +642,7 @@
 
 /* Title: the number of times a tag is encountered in the database. */
 "[Tags/UsageCount/title]" = "Antal användningar";
+
+/* Button which opens the What's New screen. */
+"[WhatsNew/Announcement/button]" = "Nyheter";
 

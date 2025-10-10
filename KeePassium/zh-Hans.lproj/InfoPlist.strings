@@ -16,6 +16,6 @@
 /* Privacy - Photo Library Additions Usage Description */
 "NSPhotoLibraryAddUsageDescription" = "KeePassium 需要获取汇出文件到照片库的权限。";
 
-/* (No Comment) */
-"NSPhotoLibraryUsageDescription" = "KeePassium 需要访问照片库以添加自定义图标到群组和条目";
+/* Privacy - Photo Library Usage Description */
+"NSPhotoLibraryUsageDescription" = "KeePassium 需要访问权限来选择图像作为自定义图标，以及扫描二维码以设置 OTP。";
 

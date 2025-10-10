@@ -16,6 +16,3 @@
 /* Privacy - Photo Library Additions Usage Description */
 "NSPhotoLibraryAddUsageDescription" = "Dosyaları dışa aktarmak için KeePassium'un Fotoğraf Kütüphanesine erişmeye ihtiyacı vardır.";
 
-/* (No Comment) */
-"NSPhotoLibraryUsageDescription" = "Girdi ve gruplara özel simge ayarlayabilmeniz için KeePassium Fotoğraf kütüphanesine erişmeye ihtiyaç duyar";
-

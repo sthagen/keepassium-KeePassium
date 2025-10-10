@@ -1,6 +1,3 @@
-/* Menu item that shows info about KeePassium app */
-"[About/altTitle]" = "เกี่ยวกับ KeePassium";
-
 /* Copyright notice */
 "[About/CopyrightAuthor]" = "©Andrei Popleteev";
 
@@ -9,24 +6,6 @@
 
 /* Call to action: perform accessibilty `activate` action to listen to text/content. */
 "[Accessibility/activateToListen]" = "เปิดใช้งานฟังข้อความ";
-
-/* Section in settings: icon for the app */
-"[Appearance/AppIcon/title]" = "ไอคอนของแอป";
-
-/* Section in settings: icons for database */
-"[Appearance/DatabaseIcons/title]" = "ไอคอนของฐานข้อมูล";
-
-/* Short name of the default/system font. For example: `Font: Default` */
-"[Appearance/DefaultFont/shortTitle]" = "ค่าเริ่มต้น";
-
-/* Title of a setting option: font */
-"[Appearance/Font/title]" = "ฟอนต์";
-
-/* Title of a setting option: font size */
-"[Appearance/TextSize/title]" = "ขนาดข้อความ";
-
-/* Group of settings for user interface appearance (text size, icons, etc) */
-"[Appearance/title]" = "ภาพลักษณ์";
 
 /* Action/button to unlock the App Lock with passcode */
 "[AppLock] Unlock" = "ปลดล็อก";
@@ -109,9 +88,6 @@
 /* Notification: an item has been copied to clipboard */
 "[Clipboard/Copy/notification]" = "คัดลอกแล้ว";
 
-/* Subtitle for `Contact Us`. Keep it short. */
-"[ContactUs/subtitle]" = "คำแนะนำ? ปัญหา? บอกให้เรารู้เลย!";
-
 /* Error message about AES cipher. [errorCode: Int] */
 "[CryptoError] AES decryption error (code %d)" = "AES decryption error (code %d)";
 
@@ -144,6 +120,9 @@
 
 /* Action: add/import an image as a custom icon */
 "[Database/CustomIcon/add]" = "เพิ่มไอคอนที่กำหนดเอง";
+
+/* Action: delete all custom icons */
+"[Database/CustomIcon/deleteAll]" = "ลบทั้งหมด";
 
 /* Action: download icon of a website */
 "[Database/CustomIcon/DownloadFavicon/action]" = "ดาวน์โหลดไอคอน";
@@ -180,6 +159,9 @@
 
 /* Notification when user tries to copy data from KDBX to older KDB database. */
 "[Database/LesserTargetFormat/warning]" = "ฟอร์แมทของฐานข้อมูลนี้เก่าเกินไป ข้อมูลบางอย่างอาจหาย";
+
+/* Placeholder shown when there are no database files available */
+"[Database/List/empty]" = "ไม่มีไฟล์ฐานข้อมูล";
 
 /* Title of the database picker list */
 "[Database/List/title]" = "ฐานข้อมูล";
@@ -283,6 +265,9 @@
 /* Status message: saving a database */
 "[Database/Saving/Status] Saving..." = "กำลังบันทึก...";
 
+/* File access parameter. Will be shown as 'Consider File Unreachable: Immediately' */
+"[Database/Settings/ConsiderFileUnreachable/Immediately]" = "ทันที";
+
 /* File settings parameter: time after which file will be considered unreachable. Example: `Consider File Unreachable: in 10 seconds`.) */
 "[Database/Settings/ConsiderFileUnreachable/title]" = "วิธีการพิจารณาว่าเข้าถึงไฟล์ไม่ได้";
 
@@ -337,14 +322,14 @@
 /* Title of a message shown when saving to a database that has already been modified elsewhere. */
 "[Database/SyncConflict/title]" = "การซิงค์ชนกัน";
 
-/* Error message related to key file. [errorDetails: String] */
-"[Database/Unlock] Key file error: %@" = "ไฟล์กุญแจเกิดข้อผิดพลาด: %@";
-
 /* Error message */
 "[Database/Unlock/Error] Failed to open key file" = "ไม่สามารถเปิดไฟล์กุญแจได้";
 
 /* Error message */
 "[Database/Unlock/Error] Password and key file are both empty." = "รหัสผ่านและไฟล์กุญแจว่างเปล่า";
+
+/* Action: load a local (on-device) copy of a remote database */
+"[Database/Unlock/UseFallback/action]" = "ใช้สำเนาของในเครื่อง";
 
 /* Message shown when user enters an invalid database password */
 "[Database/Unlock/wrongPassword/question]" = "ลืมรหัสผ่านของคุณใช่หรือไม่";
@@ -498,9 +483,6 @@
 
 /* Error message: user provided a wrong master key for decryption. */
 "[DatabaseError] Invalid password or key file" = "รหัสผ่านหรือไฟล์กุญแจไม่ถูกต้อง";
-
-/* Subtitle for `Diagnostic Log`. Keep it short. */
-"[DiagLog/subtitle]" = "สำหรับการแก้ไขปัญหาโดยผู้เชี่ยวชาญ";
 
 /* Title of the diagnostic info screen */
 "[DiagLog/title]" = "บันทึกการวินิจฉัย";
@@ -946,9 +928,6 @@
 /* Title of a list with possible hardware key connections */
 "[HardwareKey/Picker/title]" = "ฮาร์ดแวร์คีย์";
 
-/* Master key/unlock option: use given slot of YubiKey */
-"[HardwareKey/YubiKey/Slot] YubiKey Slot #%d" = "YubiKey ช่องที่ %d";
-
 /* Generic title of in-app help article */
 "[Help Viewer/title]" = "ช่วยเหลือ";
 
@@ -994,11 +973,26 @@
 /* Error message about system keychain. */
 "[KeychainError/unexpectedFormat] Keychain error: unexpected data format" = "พวงกุญแจเกิดข้อผิดพลาด: ไม่ทราบฟอร์แมทของข้อมูล";
 
+/* Action: add a key file into the app, by importing or creating one. `Key file` is a glossary term. */
+"[KeyFile/Add/action]" = "เพิ่มไฟล์กุญแจ";
+
 /* Message to confirm deletion of a key file. */
 "[KeyFile/Delete/Confirm/text] Delete key file?\n Make sure you have a backup." = "ลบไฟล์กุญแจหรือไม่?\n ตรวจสอบให้ดีว่าคุณกู้ไว้เรียบร้อยแล้ว";
 
+/* Error message related to key file. [errorDetails: String] */
+"[KeyFile/error]" = "ไฟล์กุญแจเกิดข้อผิดพลาด: %@";
+
 /* Name of an input field which shows selected key file */
 "[KeyFile/Field/title]" = "ไฟล์กุญแจ";
+
+/* Title of the list with key files. */
+"[KeyFile/List/title]" = "ไฟล์กุญแจ";
+
+/* Description of the 'No Key File' option. */
+"[KeyFile/None/description]" = "ใช้รหัสผ่านเท่านั้น";
+
+/* Title: don't use key file */
+"[KeyFile/None/title]" = "ไม่มีไฟล์กุญแจ";
 
 /* Message to confirm removal of a key file from the app. (This keeps the file, but removes its reference from the app.) */
 "[KeyFile/Remove/Confirm/text] Remove key file from the list?\n The file will remain intact and you can add it again later." = "ลบไฟล์กุญแจออกจากรายการหรือไม่?\n ไฟล์จะยังคงเดิมและคุณยังสามารถเพิ่มไฟล์ใหม่ได้ในภายหลัง";
@@ -1013,10 +1007,7 @@
 "[Menu/FileInfo/title]" = "รายละเอียดไฟล์";
 
 /* Menu title: app settings */
-"[Menu/Preferences/title]" = "ตั้งค่าการทำงาน…";
-
-/* Notification next to the OTP code which was copied to clipboard */
-"[OTP/CopiedToClipboard/title]" = "คัดลอกรหัสผ่านครั้งเดียวไปยังคลิปบอร์ดแล้ว";
+"[Menu/Settings/title]" = "การตั้งค่า";
 
 /* Name of an entry field */
 "[OTP/FieldName]" = "รหัสผ่านแบบใช้ครั้งเดียว";
@@ -1228,27 +1219,6 @@
 /* Marks the default pricing plan */
 "[Premium/Price Plan/popular]" = "ยอดนิยม";
 
-/* Status: special premium for beta-testing environment is active */
-"[Premium/status] Beta testing" = "ตัวเบตาทดสอบ";
-
-/* Status: current version of the app. For example: `Current version: 1.23`. Should be similar to the `Licensed version` string. [version: String] */
-"[Premium/status] Current version: %@" = "รุ่นปัจจุบัน: %@";
-
-/* Status: premium subscription has expired. For example: `Expired 1 day ago`. [timeFormatted: String, includes the time unit (day, hour, minute)] */
-"[Premium/status] Expired %@ ago. Please renew." = "หมดอายุเมื่อ %@ ที่แล้ว โปรดต่ออายุใหม่";
-
-/* Status: licensed premium version of the app. For example: `Licensed version: 1.23`. [version: String] */
-"[Premium/status] Licensed version: %@" = "รุ่นใบอนุญาต: %@";
-
-/* Status: scheduled renewal date of a premium subscription. For example: `Next renewal on 1 Jan 2050`. [expiryDateString: String] */
-"[Premium/status] Next renewal on %@" = "ต่ออายุครั้งต่อไปในวันที่ %@";
-
-/* Status: validity period of once-and-forever premium */
-"[Premium/status] Valid forever" = "ใช้ได้ตลอดไป";
-
-/* Status when the user has a premium version */
-"[Premium/Status/title]" = "แบบพรีเมี่ยม";
-
 /* Subscription conditions */
 "[Premium/Subscription/Legal/text]" = "การชำระเงินจะถูกเรียกเก็บไปยังบัญชี Apple ID ของคุณเมื่อยืนยันการซื้อเรียบร้อยแล้ว\n\nการสมัครรับจะต่ออายุให้อัตโนมัติหากไม่มีคำสั่งยกเลิกอย่างน้อย 24 ชั่วโมงก่อนที่จะหมดรอบใช้งานปัจจุบัน บัญชีของคุณจะถูกเรียกเก็บเงินเพื่อต่ออายุภายใน 24 ชั่วโมงก่อนสิ้นสุดรอบใช้งานปัจจุบัน\n\nคุณสามารถจัดการและยกเลิกการสมัครรับโดยเข้าไปที่ตั้งค่าบัญชีของคุณใน App Store หลังจากซื้อเรียบร้อยแล้ว";
 
@@ -1300,9 +1270,6 @@
 /* Message shown after buying or subscribing. */
 "[Premium/Upgrade/Success/thankYou]" = "ขอบคุณสำหรับการสั่งซื้อ!";
 
-/* Status: how long the app has been used during some time period. For example: `App being useful: 1hr/month, about 12hr/year`. [monthlyUsage: String, annualUsage: String — already include the time unit (hours, minutes)] */
-"[Premium/usage] App being useful: %@/month, that is around %@/year." = "ใช้แอปไป: %1$@/เดือน, หรือประมาณ %2$@/ปี";
-
 /* Description/call to action for the `Business Cloud Storage` premium feature. */
 "[PremiumFeature/BusinessClouds/description]" = "เชื่อมต่อโดยตรงกับบัญชีที่จัดเก็บขององค์กร เช่น OneDrive for Business";
 
@@ -1348,9 +1315,6 @@
 /* Error message when a long-running operation was cancelled due to the lack of free memory (RAM). */
 "[Progress/CancellationReason/lowMemory]" = "หน่วยความจำไม่พอที่จะไปต่อได้\nสิ่งนี้สามารถเกิดขึ้นได้ถ้าฐานข้อมูลมีขนาดใหญ่เกินไปหรือการตั้งค่าฐานข้อมูลที่ยุ่งยาก (Argon2 memory parameter)";
 
-/* Description of the Quick AutoFill feature. */
-"[QuickAutoFill/description]" = "ป้อนรหัสทันทีจะแสดงรายการที่มีความสัมพันธ์กับช่องใส่รหัส โดยไม่จำเป็นต้องเปิด KeePassium";
-
 /* Name of a feature that shows relevant entries directly next to the login/password forms. */
 "[QuickAutoFill/title]" = "ป้อนรหัสอัตโนมัติทันที";
 
@@ -1390,128 +1354,11 @@
 /* Name of an input field for entering the password again */
 "[Repeat Password/Field/title]" = "ยืนยันรหัสผ่าน";
 
-/* Call to action (protect the app from unauthorized access) */
-"[Settings/AppLoc/Activate/callToAction]" = "เปิดใช้งานแอปล็อก";
-
-/* Description of `Activate app protection` call to action. */
-"[Settings/AppLock/Activate/description]" = "ปกป้อง KeePassium จากการเข้าถึงที่ไม่ได้รับอนุญาต.";
-
-/* Settings switch: whether AppLock is allowed to use Touch ID/Face ID. Example: 'Use Touch ID'. [biometryTypeName: String] */
-"[Settings/AppLock/Biometric/title] Use %@" = "ใช้ %@";
-
-/* Explanation for the `Lock on App Launch` setting */
-"[Settings/AppLock/LockOnLaunch/description]" = "เพื่อให้แน่ใจว่า KeePassium ล็อกอยู่หลังจากคุณบังคับปิดแอปหรือรีสตาร์ทเครื่อง";
-
-/* Setting switch: whether to lock the app after it was terminated and relaunched. */
-"[Settings/AppLock/LockOnLaunch/title]" = "ล็อกแอปขณะเข้าแอป";
-
-/* Settings: subtitle of the `App Protection` section. biometryTypeName will be either 'Touch ID' or 'Face ID'. [biometryTypeName: String] */
-"[Settings/AppLock/subtitle] App Lock, %@, timeout" = "ล็อกแอป, %@, หมดเวลาใช้งาน";
-
-/* Settings: subtitle of the `App Protection` section when biometric auth is not available. */
-"[Settings/AppLock/subtitle] App Lock, passcode, timeout" = "ล็อกแอป, รหัสผ่าน, หมดเวลาใช้งาน";
-
-/* Settings section: protection of the app from unauthorized access */
-"[Settings/AppLock/title]" = "การป้องกันแอป";
-
-/* A description/subtitle for Settings/AppLockTimeout options that trigger when the user has been idle for a while. For example: 'AppLock Timeout: 3 seconds (After last interaction) */
-"[Settings/AppLockTimeout/description] After last interaction" = "หลังจากใช้งานครั้งสุดท้าย";
-
-/* A description/subtitle for Settings/AppLock/Timeout options that trigger when the app is minimized. For example: 'AppLock Timeout: 3 seconds (After leaving the app) */
-"[Settings/AppLockTimeout/description] After leaving the app" = "หลังจากออกแอป";
-
-/* An option in Settings. Will be shown as 'App Lock: Timeout: Immediately' */
-"[Settings/AppLockTimeout/fullTitle] Immediately" = "ทันที";
-
-/* An option in Settings. Will be shown as 'App Lock: Timeout: Never' */
-"[Settings/AppLockTimeout/fullTitle] Never" = "ตลอดไป";
-
-/* An option in Settings. Will be shown as 'App Lock: Timeout: Immediately' */
-"[Settings/AppLockTimeout/shortTitle] Immediately" = "ทันที";
-
-/* An option in Settings. Will be shown as 'App Lock: Timeout: Never' */
-"[Settings/AppLockTimeout/shortTitle] Never" = "ตลอดไป";
-
-/* Action that opens system settings or instructions */
-"[Settings/AutoFill/Activate/action]" = "เปิดใช้ป้อนรหัสอัตโนมัติ";
-
-/* Description for the AutoFill setup instructions */
-"[Settings/AutoFill/Activate/description]" = "ก่อนเข้าใช้ คุณต้องเข้าไปเปิดใช้งานป้อนอัตโนมัติในการตั้งค่า";
-
-/* Title of an option: copy one-time password to clipboard when using AutoFill */
-"[Settings/AutoFill/CopyOTP/title]" = "คัดลอกรหัส OTP ไปยังคลิปบอร์ด";
-
-/* Title of a help article on how to activate AutoFill. */
-"[Settings/AutoFill/Setup Guide/title]" = "วิธีตั้งค่าการป้อนอัตโนมัติ";
-
 /* Title of AutoFill settings screen */
 "[Settings/AutoFill/title]" = "การป้อนรหัสผ่านอัตโนมัติ";
 
-/* Title of an option: automatically use the single best match found by AutoFill search */
-"[Settings/AutoFill/UsePerfectMatch/title]" = "ป้อนอัตโนมัติเมื่อพบช่องที่มีความสมบูรณ์";
-
-/* Option in settings: whether to open the last used database automatically on start. */
-"[Settings/AutoOpenPreviousDatabase/title]" = "ตั้งให้เปิดฐานข้อมูลที่ผ่านมาอัตโนมัติ";
-
-/* Action to delete all backup files from the app. `ALL` is in capitals as a highlight. [backupFileCount: Int] */
-"[Settings/Backup] Delete ALL Backup Files (%d)" = "ลบไฟล์สำรองทั้งหมด (%d)";
-
-/* Status message: there are no backup files to delete */
-"[Settings/Backup] No Backup Files Found" = "ไม่พบไฟล์สำรองข้อมูล";
-
-/* Confirmation dialog message to delete all backup files */
-"[Settings/Backup/Delete/title] Delete all backup files?" = "ลบไฟล์ที่สำรองไว้ทั้งหมดหรือไม่?";
-
-/* An option in Settings. Please keep it short. Will be shown as 'Keep Backup Files: Forever' */
-"[Settings/BackupKeepingDuration/shortTitle] Forever" = "ตลอดไป";
-
-/* Text of the success message for `Clear Key File Associations` button */
-"[Settings/ClearKeyFileAssociations/Cleared/text] Associations between key files and databases have been removed." = "การเชื่อมระหว่างไฟล์กุญแจและฐานข้อมูล ได้ถูกลบออกแล้ว";
-
-/* Title of the success message for `Clear Key File Associations` button */
-"[Settings/ClearKeyFileAssociations/Cleared/title] Cleared" = "ล้างเรียบร้อย";
-
-/* Text of the success message for `Clear Master Keys` button */
-"[Settings/ClearMasterKeys/Cleared/text] All master keys have been deleted." = "ลบรหัสผ่านหลักทั้งหมดเรียบร้อยแล้ว";
-
-/* Title of the success message for `Clear Master Keys` button */
-"[Settings/ClearMasterKeys/Cleared/title] Cleared" = "ล้างเรียบร้อย";
-
-/* Description of the clipboard/pasteboard timeout. */
-"[Settings/ClipboardTimeout/description] When you copy some text from an entry, the app will automatically clear your clipboard (pasteboard) after this time." = "เมื่อคุณคัดลอกข้อความจากรายการ แอปจะล้างคลิปบอร์ดให้อัตโนมัติหลังจากคัดลอกไปชั่วครู่";
-
-/* An option in Settings. Will be shown as 'Clipboard Timeout: Never' */
-"[Settings/ClipboardTimeout/fullTitle] Never" = "ตลอดไป";
-
-/* An option in Settings. Will be shown as 'Clipboard Timeout: Never' */
-"[Settings/ClipboardTimeout/shortTitle] Never" = "ตลอดไป";
-
-/* Title of a settings section: backup of databases */
-"[Settings/DatabaseBackup/title]" = "สำรองฐานข้อมูล";
-
-/* Description of the Database Lock Timeout */
-"[Settings/DatabaseLockTimeout/description] If you are not interacting with the app for some time, the database will be closed for your safety. To open it, you will need to enter its master password again." = "หากคุณไม่ได้ใช้งานแอปสักพัก ฐานข้อมูลจะถูกปิดเพื่อความปลอดภัย หากต้องการเปิดมันขึ้นมาใหม่ คุณจะต้องใส่รหัสผ่านหลักอีกครั้ง";
-
-/* A description/subtitle for the 'DatabaseLockTimeout: Immediately'. */
-"[Settings/DatabaseLockTimeout/description] When leaving the app" = "ขณะออกจากแอป";
-
-/* An option in Settings. Will be shown as 'Database Lock: Timeout: Immediately' */
-"[Settings/DatabaseLockTimeout/fullTitle] Immediately" = "ทันที";
-
-/* An option in Settings. Will be shown as 'Database Lock: Timeout: Never' */
-"[Settings/DatabaseLockTimeout/fullTitle] Never" = "ตลอดไป";
-
-/* An option in Settings. Will be shown as 'Database Lock: Timeout: Immediately' */
-"[Settings/DatabaseLockTimeout/shortTitle] Immediately" = "ทันที";
-
-/* An option in Settings. Will be shown as 'Database Lock: Timeout: Never' */
-"[Settings/DatabaseLockTimeout/shortTitle] Never" = "ตลอดไป";
-
-/* Title of a setting: the time after which databases will be locked. */
-"[Settings/DatabaseLockTimeout/title]" = "หมดเวลาใช้งานฐานข้อมูล";
-
-/* Subtitle for `Data Protection` section in settings */
-"[Settings/DataProtection/subtitle]" = "กุญแจหลัก, ไฟล์กุญแจ";
+/* Title of a yes/no setting: whether to include backup copies in the file list */
+"[Settings/DatabaseBackup/ShowBackupFiles/title]" = "แสดงไฟล์สำรองข้อมูล";
 
 /* Settings section: protection of databases, their keys and data inside them */
 "[Settings/DataProtection/title]" = "ปกป้องข้อมูล";
@@ -1525,8 +1372,17 @@
 /* Title of a settings section: sort order of groups and entries in a list */
 "[Settings/GroupViewer] Sort Order" = "จัดเรียงลำดับ";
 
+/* Title of a yes/no setting */
+"[Settings/KeyFiles/Remember/title]" = "จำไฟล์กุญแจ";
+
 /* Title of list view configuration screen */
 "[Settings/ListSettings/title]" = "การตั้งค่ารายการ";
+
+/* Setting: preserve (cache) calculated database keys */
+"[Settings/MasterKeys/CacheDerived/title]" = "คีย์เข้ารหัสที่บันทึกไว้";
+
+/* Title of a yes/no setting */
+"[Settings/MasterKeys/Remember/title]" = "จำรหัสผ่านหลัก";
 
 /* Confirmation dialog message */
 "[Settings/NetworkAccess/Confirmation/text]" = "ต้องการอนุญาตให้ KeePassium เชื่อมต่อกับบริการภายนอกหรือไม่";
@@ -1545,9 +1401,6 @@
 
 /* Setting option: the app is permitted to use online features */
 "[Settings/NetworkAccessMode/Online/title]" = "อนุญาตให้เข้าถึงเครือข่าย";
-
-/* Section title in settings */
-"[Settings/Search/title]" = "ค้นหา";
 
 /* Title of the app settings screen */
 "[Settings/title]" = "การตั้งค่า";
@@ -1615,27 +1468,15 @@
 /* Human-readable file location. Example: 'File Location: Remote server' */
 "[URLReference/Location/RemoteServer]" = "เซิร์ฟเวอร์";
 
-/* Selector choice: don't use YubiKey to encrypt/decrypt database */
-"[YubiKey] Don't use YubiKey" = "ไม่ใช้ YubiKey";
-
 /* Call for action: insert YubiKey 5Ci to the Lightning port */
 "[YubiKey] Insert the key" = "เสียบกุญแจ";
 
 /* Call for action: touch the sides of YubiKey 5Ci to continue */
 "[YubiKey] Touch the key" = "แตะกุญแจ";
 
-/* Selector choice: use YubiKey to encrypt/decrypt database. For example: `Use YubiKey Slot 1`. [slotID: Int] */
-"[YubiKey] Use YubiKey Slot %d" = "ใช้ YubiKey ช่องที่ %d";
-
 /* Action/button to add database to the app */
 "Add Database" = "เพิ่มฐานข้อมูล";
 
 /* Warning message when the user tries to use a database as a key file */
 "KeePass database should not be used as key file. Please pick a different file." = "ฐานข้อมูล KeePass ไม่ควรใช้เป็นไฟล์กุญแจ โปรดเลือกไฟล์ใหม่";
-
-/* Placeholder shown when there are no database files available */
-"No database files" = "ไม่มีไฟล์ฐานข้อมูล";
-
-/* Settings switch: whether to include backup copies in the file list */
-"Show Backup Files" = "แสดงไฟล์สำรองข้อมูล";
 
