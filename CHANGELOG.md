@@ -1,5 +1,55 @@
 #CHANGELOG
 
+## [2.4.166] - 2025-10-10
+
+### Feat
+
+- Create new entries in AutoFill (closes #87) [thanks, everyone]
+- Direct cloud connections now possible with reduced, app-folder permissions (OneDrive, Dropbox, Google Drive) (closes #285) [thanks, everyone]
+- AutoFill can auto-improve by adding website URL to the entry you selected (optional)
+- Added multi-selection, drag-and-drop reordering and moving of database items (#400) [thanks, everyone]
+- Added multi-selection and drag-and-drop import of databases and key files
+- Added Portuguese (Portugal) translation [thanks, abcdefghijklmnopqrstuvwxyz1]
+- Added What's New highlights
+
+### Improved
+
+- When sorted alphabetically, database viewer will show a side index for quick scrolling (closes #432) [thanks, everyone]
+- AutoFill will separately show the recently used entry [thanks, Wolfgang]
+- Added "Connect to Server" option for key files [thanks, u/tibutha]
+- While loading a remote database, progress screen now includes a "Use Local Copy" button (closes #399) [Thanks, @jasperweiss and O.S.S.]
+- Added possibility to edit remote connections [thanks, everyone]
+- AutoFill: Added support for RS256 passkeys added by other apps
+- macOS: Add Cmd+Shift+U to open entry URL (#462) [thanks, Craig]
+- Keyboard navigation and selection in group viewer (closes #281, #440) [thanks, everyone]
+- Updated all translations
+
+### Changed
+
+- AutoFill: Instead of full encyption and sync, now it quickly stores changes locally and applies them later on
+- Search switched from depth-first to breadth-first strategy [thanks, everyone]
+- Updated from AppDelegate to UIScene lifecycle
+- Updated to modern split-view API
+- Updated to YubiKit with iPhone 17 / iPad 11 / iPad Mini 7
+- Refactored the DB Viewer, Entry Finder and a few smaller dialogs to streamline future development
+- Converted Xcode groups to folders
+- Org: Added app-scoped file provider IDs for AppConfig
+- Org: Updated to Intune SDK 20.8.0 and MSAL 2.4.1
+
+### Fixed
+
+- Support compatibility with passkeys created by other apps, using explicit BE/BS flag fields (#444) [thanks, droidmonkey and J-Jamet]
+- AutoFill could get stuck in Face ID loop, especially on iOS 26 (#442) [thanks, everyone]
+- AutoFill could show non-searchable items [thanks, Stuart]
+- Fixed cross-device QR-based passkey registration (fixes #408) [thanks, btereso-sa]
+- Fixed passkey registration failing on Google, Amazon and some other services (#423) [thanks, everyone]
+- Fixed passkey registration in Google Chrome [thanks, everyone]
+- AutoFill could not edit databases stored in On My iPhone (#406)
+- AutoFill could not modify YubiKey-protected databases
+- Opened database could overstay its timeout is specific conditions [thanks, Ray]
+- Crash when OTP secret size does not match the algorithm
+
+
 ## [2.4.165] - 2025-07-13
 
 ### Added
