@@ -28,13 +28,13 @@ extension GroupViewerVC {
         case announcements
         case groups(footer: String?)
         case entries(footer: String?)
-        case foundCluster(header: String?, footer: String?)
+        case foundCluster(uuid: UUID, header: String?, footer: String?)
 
         public var headerTitle: String? {
             switch self {
             case .announcements, .groups, .entries:
                 return nil
-            case let .foundCluster(header, _):
+            case let .foundCluster(_, header, _):
                 return header
             }
         }
@@ -45,13 +45,14 @@ extension GroupViewerVC {
             case let .groups(footer),
                  let .entries(footer):
                 return footer
-            case let .foundCluster(_, footer):
+            case let .foundCluster(_, _, footer):
                 return footer
             }
         }
     }
 
     struct FoundCluster {
+        var uuid: UUID
         var groupName: String?
         var items: [Item]
     }
@@ -90,6 +91,7 @@ extension GroupViewerVC {
         var clusters = [FoundCluster]()
         for searchResult in sortedSearchResults {
             let cluster = FoundCluster(
+                uuid: searchResult.group.runtimeUUID,
                 groupName: searchResult.group.name,
                 items: searchResult.scoredItems.compactMap {
                     if let group = $0.item as? Group {
@@ -194,9 +196,13 @@ extension GroupViewerVC {
         let lastIndex = foundClusters.count - 1
         foundClusters.enumerated().forEach { index, cluster in
             if index < lastIndex {
-                snapshot.appendSection(.foundCluster(header: cluster.groupName, footer: nil))
+                snapshot.appendSection(.foundCluster(
+                    uuid: cluster.uuid, header: cluster.groupName, footer: nil
+                ))
             } else {
-                snapshot.appendSection(.foundCluster(header: cluster.groupName, footer: itemCountText))
+                snapshot.appendSection(.foundCluster(
+                    uuid: cluster.uuid, header: cluster.groupName, footer: itemCountText
+                ))
             }
             assert(!cluster.items.isEmpty, "Unexpectedly found an empty cluster")
             snapshot.appendItems(cluster.items)

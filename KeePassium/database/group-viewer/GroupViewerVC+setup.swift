@@ -60,7 +60,7 @@ extension GroupViewerVC {
                 config.footerMode = footer != nil ? .supplementary : .none
                 config.leadingSwipeActionsConfigurationProvider = leadingActionsProvider
                 config.trailingSwipeActionsConfigurationProvider = trailingActionsProvider
-            case let .foundCluster(header, footer):
+            case let .foundCluster(_, header, footer):
                 config.headerMode = header != nil ? .supplementary : .none
                 config.footerMode = footer != nil ? .supplementary : .none
                 config.leadingSwipeActionsConfigurationProvider = leadingActionsProvider
