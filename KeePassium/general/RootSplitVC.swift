@@ -13,6 +13,8 @@ class RootSplitVC: UISplitViewController {
         didSet { fatalError("Can't touch this, used internally") }
     }
 
+    public var isExpanded: Bool { !isCollapsed }
+
     private let placeholderRouter: NavigationRouter
 
     private weak var secondaryRouter: NavigationRouter?
@@ -25,7 +27,7 @@ class RootSplitVC: UISplitViewController {
         super.delegate = self
         preferredSplitBehavior = .tile
         preferredDisplayMode = .oneBesideSecondary
-        displayModeButtonVisibility = ProcessInfo.isRunningOnMac ? .automatic : .never
+        displayModeButtonVisibility = .automatic
         setViewController(placeholderVC.navigationController, for: .secondary)
 
         maximumPrimaryColumnWidth = 700

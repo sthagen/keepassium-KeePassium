@@ -117,6 +117,9 @@ final class DatabaseViewerCoordinator: BaseCoordinator {
 
         _pushInitialGroupViewers(replacingTopVC: _splitViewController.isCollapsed)
         _showEntry(nil)
+        if _splitViewController.isExpanded {
+            _splitViewController.show(.primary)
+        }
 
         Settings.current.startupDatabase = _databaseFile.originalReference
 
