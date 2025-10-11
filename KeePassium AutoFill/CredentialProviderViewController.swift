@@ -20,12 +20,25 @@ class CredentialProviderViewController: ASCredentialProviderViewController {
         autoFillCoordinator = AutoFillCoordinator(rootController: self, context: extensionContext)
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        cacheKeyboard()
+    }
+
     override func viewDidDisappear(_ animated: Bool) {
         log.trace("viewDidDisappear")
         super.viewDidDisappear(animated)
         autoFillCoordinator?.cleanup()
     }
 
+    @available(iOS 14, *)
+    private func cacheKeyboard() {
+        let textField = UITextField()
+        self.view.addSubview(textField)
+        textField.becomeFirstResponder()
+        textField.resignFirstResponder()
+        textField.removeFromSuperview()
+    }
 }
 
 extension CredentialProviderViewController {
