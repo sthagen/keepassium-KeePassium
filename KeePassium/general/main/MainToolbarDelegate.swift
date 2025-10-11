@@ -1,0 +1,195 @@
+//  KeePassium Password Manager
+//  Copyright © 2018-2025 KeePassium Labs <info@keepassium.com>
+//
+//  This program is free software: you can redistribute it and/or modify it
+//  under the terms of the GNU General Public License version 3 as published
+//  by the Free Software Foundation: https://www.gnu.org/licenses/).
+//  For commercial licensing, please contact us.
+
+#if targetEnvironment(macCatalyst)
+import AppKit
+#endif
+import Foundation
+import KeePassiumLib
+import UIKit
+
+final class MainToolbarDelegate: NSObject {
+    private weak var mainCoordinator: MainCoordinator?
+
+    init(mainCoordinator: MainCoordinator) {
+        self.mainCoordinator = mainCoordinator
+        super.init()
+
+        #if targetEnvironment(macCatalyst)
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(reload),
+            name: .reloadToolbar,
+            object: nil
+        )
+        #endif
+    }
+
+    deinit {
+        #if targetEnvironment(macCatalyst)
+        NotificationCenter.default.removeObserver(self, name: .reloadToolbar, object: self)
+        #endif
+    }
+}
+
+#if targetEnvironment(macCatalyst)
+extension MainToolbarDelegate: NSToolbarDelegate {
+    private var allItems: [NSToolbarItem.Identifier] {
+        return [
+            .openDatabase,
+            .lockDatabase,
+            .space,
+            .newEntry,
+            .newGroup,
+            .newSmartGroup,
+            .space,
+            .autoType,
+            .space,
+            .randomGenerator,
+            .settings
+        ]
+    }
+
+    @objc
+    private func reload() {
+        let windowScenes = UIApplication.shared.connectedScenes.compactMap({ $0 as? UIWindowScene })
+        windowScenes.forEach {
+            guard let toolbar = $0.titlebar?.toolbar else { return }
+            while !toolbar.items.isEmpty {
+                toolbar.removeItem(at: 0)
+            }
+        }
+
+        guard mainCoordinator?.isAppLockVisible == false,
+              let titlebar = UIApplication.shared.currentActiveScene?.titlebar
+        else {
+            return
+        }
+
+        for item in allItems.reversed() {
+            titlebar.toolbar?.insertItem(withItemIdentifier: item, at: 0)
+        }
+    }
+
+    func toolbarDefaultItemIdentifiers(_ toolbar: NSToolbar) -> [NSToolbarItem.Identifier] {
+        return allItems
+    }
+
+    func toolbarAllowedItemIdentifiers(_ toolbar: NSToolbar) -> [NSToolbarItem.Identifier] {
+        return allItems
+    }
+
+    func toolbar(
+        _ toolbar: NSToolbar,
+        itemForItemIdentifier itemIdentifier: NSToolbarItem.Identifier,
+        willBeInsertedIntoToolbar flag: Bool
+    ) -> NSToolbarItem? {
+        guard mainCoordinator?.isAppLockVisible == false else {
+            return nil
+        }
+
+        switch itemIdentifier {
+        case .openDatabase:
+            return createToolbarItem(
+                itemIdentifier: itemIdentifier,
+                label: LString.actionOpenDatabase,
+                symbol: .folder,
+                selector: #selector(MainCoordinator.kpmOpenDatabase)
+            )
+        case .lockDatabase:
+            return createToolbarItem(
+                itemIdentifier: itemIdentifier,
+                label: LString.actionLockDatabase,
+                symbol: .lock,
+                selector: #selector(DatabaseViewerCoordinator.ActionsManager.kpmLockDatabase)
+            )
+        case .newEntry:
+            return createToolbarItem(
+                itemIdentifier: itemIdentifier,
+                label: LString.titleNewEntry,
+                symbol: .docBadgePlus,
+                selector: #selector(DatabaseViewerCoordinator.ActionsManager.kpmCreateEntry)
+            )
+        case .newGroup:
+            return createToolbarItem(
+                itemIdentifier: itemIdentifier,
+                label: LString.titleNewGroup,
+                symbol: .folderBadgePlus,
+                selector: #selector(DatabaseViewerCoordinator.ActionsManager.kpmCreateGroup)
+            )
+        case .newSmartGroup:
+            return createToolbarItem(
+                itemIdentifier: itemIdentifier,
+                label: LString.titleNewSmartGroup,
+                symbol: .folderGridBadgePlus,
+                selector: #selector(DatabaseViewerCoordinator.ActionsManager.kpmCreateSmartGroup)
+            )
+        case .autoType:
+            return createToolbarItem(
+                itemIdentifier: itemIdentifier,
+                label: LString.actionAutoType,
+                symbol: .keyboard,
+                selector: #selector(DatabaseViewerCoordinator.ActionsManager.kpmPerformAutoType)
+            )
+        case .randomGenerator:
+            return createToolbarItem(
+                itemIdentifier: itemIdentifier,
+                label: LString.PasswordGenerator.titleRandomGenerator,
+                symbol: .dieFace3,
+                selector: #selector(MainCoordinator.kpmShowRandomGenerator)
+            )
+        case .settings:
+            return createToolbarItem(
+                itemIdentifier: itemIdentifier,
+                label: LString.titleSettings,
+                symbol: .gear,
+                selector: #selector(MainCoordinator.kpmShowSettingsScreen)
+            )
+        default:
+            return nil
+        }
+    }
+
+    private func createToolbarItem(
+        itemIdentifier: NSToolbarItem.Identifier,
+        label: String,
+        symbol: SymbolName,
+        selector: Selector?
+    ) -> NSToolbarItem {
+        let icon = UIImage.symbol(symbol)?.applyingSymbolConfiguration(.init(weight: .medium))
+        let button = UIBarButtonItem(image: icon)
+        let toolbarItem = NSToolbarItem(itemIdentifier: itemIdentifier, barButtonItem: button)
+        toolbarItem.label = label
+        toolbarItem.toolTip = label
+
+        guard let selector,
+              let target = mainCoordinator?.target(forAction: selector, withSender: self),
+              let targetResponder = target as? UIResponder,
+              targetResponder.canPerformAction(selector, withSender: self)
+        else {
+            toolbarItem.action = nil
+            toolbarItem.target = nil
+            return toolbarItem
+        }
+        toolbarItem.action = selector
+        toolbarItem.target = targetResponder
+        return toolbarItem
+    }
+}
+
+extension NSToolbarItem.Identifier {
+    static let openDatabase = NSToolbarItem.Identifier("com.keepassium.toolbar.openDatabase")
+    static let lockDatabase = NSToolbarItem.Identifier("com.keepassium.toolbar.lockDatabase")
+    static let newEntry = NSToolbarItem.Identifier("com.keepassium.toolbar.newEntry")
+    static let newGroup = NSToolbarItem.Identifier("com.keepassium.toolbar.newGroup")
+    static let newSmartGroup = NSToolbarItem.Identifier("com.keepassium.toolbar.newSmartGroup")
+    static let autoType = NSToolbarItem.Identifier("com.keepassium.toolbar.autoType")
+    static let randomGenerator = NSToolbarItem.Identifier("com.keepassium.toolbar.randomGenerator")
+    static let settings = NSToolbarItem.Identifier("com.keepassium.toolbar.settings")
+}
+#endif

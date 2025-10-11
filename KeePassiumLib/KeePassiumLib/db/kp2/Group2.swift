@@ -103,9 +103,10 @@ public class Group2: Group {
         return parent2.resolvingIsAutoTypeEnabled()
     }
 
-    override public func createEntry(creationDate: Date = Date(), detached: Bool = false) -> Entry {
+    override public func createEntry(creationDate: Date = Date(), detached: Bool = false, uuid: UUID? = nil) -> Entry {
         let newEntry = Entry2(database: database, creationDate: creationDate)
-        newEntry.uuid = UUID()
+        newEntry.uuid = uuid ?? UUID()
+
         newEntry.isDeleted = self.isDeleted
 
         if iconID != Group.defaultIconID && iconID != Group.defaultOpenIconID {
@@ -117,15 +118,6 @@ public class Group2: Group {
             self.add(entry: newEntry)
         }
         return newEntry
-    }
-
-    public func createPasskeyEntry(with passkey: Passkey) -> Entry2 {
-        let entry = createEntry() as! Entry2
-        entry.setField(name: EntryField.title, value: passkey.relyingParty)
-        entry.setField(name: EntryField.userName, value: passkey.username)
-        entry.setField(name: EntryField.url, value: "https://" + passkey.relyingParty)
-        passkey.apply(to: entry)
-        return entry
     }
 
     override public func createGroup(detached: Bool = false) -> Group {

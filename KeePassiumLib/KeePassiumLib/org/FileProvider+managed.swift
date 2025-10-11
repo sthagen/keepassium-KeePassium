@@ -9,13 +9,23 @@
 public extension FileProvider {
     var isAllowed: Bool {
         switch self {
-        case .keepassiumOneDrivePersonal, .keepassiumOneDriveBusiness:
+        case .keepassiumDropboxPersonal,
+             .keepassiumDropboxPersonalAppFolder,
+             .keepassiumDropboxBusiness,
+             .keepassiumDropboxBusinessAppFolder:
+            if ManagedAppConfig.shared.isAllowed(.keepassiumDropboxLegacy) {
+                return true
+            }
+        case .keepassiumOneDrivePersonal,
+             .keepassiumOneDrivePersonalAppFolder,
+             .keepassiumOneDriveBusiness,
+             .keepassiumOneDriveBusinessAppFolder:
             if ManagedAppConfig.shared.isAllowed(.keepassiumOneDriveLegacy) {
                 return true
             }
-            return ManagedAppConfig.shared.isAllowed(self)
         default:
-            return ManagedAppConfig.shared.isAllowed(self)
+            break
         }
+        return ManagedAppConfig.shared.isAllowed(self)
     }
 }

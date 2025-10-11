@@ -11,10 +11,12 @@ import Foundation
 extension LString {
     public static let autoFillSettingsTitle = NSLocalizedString(
         "[Settings/AutoFill/title]",
+        bundle: Bundle.framework,
         value: "AutoFill Passwords",
         comment: "Title of AutoFill settings screen")
     public static let quickAutoFillTitle = NSLocalizedString(
         "[QuickAutoFill/title]",
+        bundle: Bundle.framework,
         value: "Quick AutoFill",
         comment: "Name of a feature that shows relevant entries directly next to the login/password forms.")
 }

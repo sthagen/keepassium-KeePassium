@@ -94,6 +94,11 @@ struct PricingPlanBenefit {
         title: LString.premiumBenefitLinkedDatabasesTitle,
         description: LString.premiumBenefitLinkedDatabasesDescription
     )
+    static let creativeAutoFill = PricingPlanBenefit(
+        symbolName: .premiumBenefitCreativeAutoFill,
+        title: LString.premiumBenefitCreativeAutoFillTitle,
+        description: LString.premiumBenefitCreativeAutoFillDescription
+    )
 }
 
 class PricingPlanFactory {
@@ -120,7 +125,8 @@ class PricingPlanFactory {
              .version99,
              .version120,
              .version139,
-             .version154:
+             .version154,
+             .version166:
             return PricingPlanVersionPurchase(product)
         case .donationSmall,
              .donationMedium,
@@ -178,11 +184,12 @@ class FreePricingPlan: PricingPlan {
             PricingPlanCondition(kind: .allPremiumFeatures, isIncluded: false),
         ]
         self.benefits = [
-            PricingPlanBenefit.quickAutoFill,
             PricingPlanBenefit.multipleDatabases,
             PricingPlanBenefit.hardwareKeyChallengeResponse,
-            PricingPlanBenefit.passwordAudit,
             PricingPlanBenefit.businessClouds,
+            PricingPlanBenefit.creativeAutoFill,
+            PricingPlanBenefit.quickAutoFill,
+            PricingPlanBenefit.passwordAudit,
             PricingPlanBenefit.linkedDatabases,
         ]
         self.smallPrint = nil
@@ -237,11 +244,12 @@ class PricingPlanPremiumMonthly: RealPricingPlan {
             PricingPlanCondition(kind: .familySharing, isIncluded: true, infoURL: URL.AppHelp.familySharing),
         ]
         self.benefits = [
-            PricingPlanBenefit.quickAutoFill,
             PricingPlanBenefit.multipleDatabases,
             PricingPlanBenefit.hardwareKeyChallengeResponse,
-            PricingPlanBenefit.passwordAudit,
             PricingPlanBenefit.businessClouds,
+            PricingPlanBenefit.creativeAutoFill,
+            PricingPlanBenefit.quickAutoFill,
+            PricingPlanBenefit.passwordAudit,
             PricingPlanBenefit.linkedDatabases,
         ]
         self.smallPrint = LString.subscriptionConditions
@@ -266,11 +274,12 @@ class PricingPlanPremiumYearly: RealPricingPlan {
             PricingPlanCondition(kind: .familySharing, isIncluded: true, infoURL: URL.AppHelp.familySharing),
         ]
         self.benefits = [
-            PricingPlanBenefit.quickAutoFill,
             PricingPlanBenefit.multipleDatabases,
             PricingPlanBenefit.hardwareKeyChallengeResponse,
-            PricingPlanBenefit.passwordAudit,
             PricingPlanBenefit.businessClouds,
+            PricingPlanBenefit.creativeAutoFill,
+            PricingPlanBenefit.quickAutoFill,
+            PricingPlanBenefit.passwordAudit,
             PricingPlanBenefit.linkedDatabases,
         ]
         self.smallPrint = LString.subscriptionConditions
@@ -293,11 +302,12 @@ class PricingPlanVersionPurchase: RealPricingPlan {
             PricingPlanCondition(kind: .familySharing, isIncluded: false, infoURL: URL.AppHelp.familySharing),
         ]
         self.benefits = [
-            PricingPlanBenefit.quickAutoFill,
             PricingPlanBenefit.multipleDatabases,
             PricingPlanBenefit.hardwareKeyChallengeResponse,
-            PricingPlanBenefit.passwordAudit,
             PricingPlanBenefit.businessClouds,
+            PricingPlanBenefit.creativeAutoFill,
+            PricingPlanBenefit.quickAutoFill,
+            PricingPlanBenefit.passwordAudit,
             PricingPlanBenefit.linkedDatabases,
         ]
         self.smallPrint = nil
@@ -319,11 +329,12 @@ class PricingPlanPremiumForever: RealPricingPlan {
             PricingPlanCondition(kind: .familySharing, isIncluded: false, infoURL: URL.AppHelp.familySharing),
         ]
         self.benefits = [
-            PricingPlanBenefit.quickAutoFill,
             PricingPlanBenefit.multipleDatabases,
             PricingPlanBenefit.hardwareKeyChallengeResponse,
-            PricingPlanBenefit.passwordAudit,
             PricingPlanBenefit.businessClouds,
+            PricingPlanBenefit.creativeAutoFill,
+            PricingPlanBenefit.quickAutoFill,
+            PricingPlanBenefit.passwordAudit,
             PricingPlanBenefit.linkedDatabases,
         ]
         self.smallPrint = nil

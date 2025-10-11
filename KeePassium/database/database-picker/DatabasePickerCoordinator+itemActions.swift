@@ -58,13 +58,32 @@ extension DatabasePickerCoordinator {
         }
 
         func getAccessories(for fileItem: FilePickerItem.FileInfo) -> [UICellAccessory]? {
+            var result = [UICellAccessory]()
+
+            if let dbRef = fileItem.source,
+               DatabaseTransactionManager.hasPendingTransaction(for: dbRef)
+            {
+                let unsavedChangesImage = UIImageView(image: .symbol(
+                    .unsavedChanges,
+                    tint: .warningMessage,
+                    accessibilityLabel: LString.titleUnsavedChanges
+                ))
+                unsavedChangesImage.preferredSymbolConfiguration = .init(textStyle: .body, scale: .large)
+                let pendingChangesAccessory = UICellAccessory.customView(configuration:
+                    .init(customView: unsavedChangesImage, placement: .trailing())
+                )
+                result.append(pendingChangesAccessory)
+            }
+
             let fileMenuAccessory = UICellAccessory.customView(configuration: .init(
                 customView: makeFileMenuButton(for: fileItem),
-                placement: .trailing(displayed: .always),
+                placement: .trailing(displayed: .whenNotEditing),
                 tintColor: .actionTint,
                 maintainsFixedSize: false)
             )
-            return [fileMenuAccessory]
+            result.append(fileMenuAccessory)
+            result.append(.multiselect(displayed: .whenEditing))
+            return result
         }
 
         func getContextMenu(for item: FilePickerItem.FileInfo, at popoverAnchor: PopoverAnchor) -> UIMenu? {
@@ -107,6 +126,18 @@ extension DatabasePickerCoordinator {
                 }
             )
             menuItems.append(fileInfoAction)
+
+            if fileRef.location == .remote {
+                let editConnectionAction = UIAction(
+                    title: LString.actionEditConnection,
+                    image: .symbol(.network),
+                    handler: { [weak coordinator] action in
+                        let popoverAnchor = action.presentationSourceItem?.asPopoverAnchor ?? popoverAnchor
+                        coordinator?.didPressEditConnection(for: fileRef, at: popoverAnchor)
+                    }
+                )
+                menuItems.append(editConnectionAction)
+            }
 
             if ProcessInfo.isRunningOnMac {
                 let revealInFinderAction = UIAction(
@@ -154,6 +185,10 @@ extension DatabasePickerCoordinator {
         showFileInfo(fileRef, fileType: .database, allowExport: true, at: popoverAnchor, in: _filePickerVC)
     }
 
+    private func didPressEditConnection(for fileRef: URLReference, at popoverAnchor: PopoverAnchor?) {
+        editRemoteConnection(fileRef, at: popoverAnchor, in: _filePickerVC)
+    }
+
     private func didPressRevealInFinder(_ fileRef: URLReference, at popoverAnchor: PopoverAnchor?) {
         revealInFinder(fileRef)
     }
@@ -186,6 +221,16 @@ extension DatabasePickerCoordinator {
         in viewController: UIViewController
     ) {
         FileExportHelper.showFileExportSheet(fileRef, at: popoverAnchor, parent: viewController)
+    }
+
+    func editRemoteConnection(
+        _ fileRef: URLReference,
+        at popoverAnchor: PopoverAnchor?,
+        in viewController: UIViewController
+    ) {
+        assert(fileRef.location == .remote, "Edit connection is only available for remote files")
+        _databaseBeingEdited = fileRef
+        startRemoteDatabasePicker(mode: .edit(fileRef), presenter: viewController)
     }
 
     func eliminateDatabase(

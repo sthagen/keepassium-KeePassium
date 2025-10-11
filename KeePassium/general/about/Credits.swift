@@ -162,6 +162,11 @@ extension Credits {
                 url: URL(string: "https://github.com/scalessec/Toast-Swift")
             ),
             Credits(
+                title: LString.creditsWhatsNewKit,
+                license: .mit,
+                url: URL(string: "https://github.com/SvenTiigi/WhatsNewKit")
+            ),
+            Credits(
                 title: LString.creditsZxcvbn,
                 license: .mit,
                 url: URL(string: "https://github.com/dropbox/zxcvbn-ios")
@@ -360,6 +365,12 @@ extension LString {
         "[Credits/Item/toastSwift]",
         bundle: Bundle.main,
         value: "Toast-Swift by Charles Scalesse",
+        comment: "Item in the credits list"
+    )
+    public static let creditsWhatsNewKit = NSLocalizedString(
+        "[Credits/Item/whatsNewKit]",
+        bundle: Bundle.main,
+        value: "WhatsNewKit by Sven Tiigi",
         comment: "Item in the credits list"
     )
     public static let creditsZxcvbn = NSLocalizedString(

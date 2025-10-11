@@ -13,6 +13,9 @@ public let SHA512_SIZE = Int(CC_SHA512_DIGEST_LENGTH)
 public let SHA1_SIZE = Int(CC_SHA1_DIGEST_LENGTH)
 
 public final class CryptoManager {
+    private static var warnedAboutHMACSHA1KeySize = false
+    private static var warnedAboutHMACSHA256KeySize = false
+    private static var warnedAboutHMACSHA512KeySize = false
 
     public static func sha256(of buffer: [UInt8]) -> [UInt8] {
         var hash = [UInt8](repeating: 0, count: SHA256_SIZE)
@@ -57,20 +60,30 @@ public final class CryptoManager {
     }
 
     public static func hmacSHA1(data: ByteArray, key: ByteArray) -> ByteArray {
+        if key.count != CC_SHA1_BLOCK_BYTES && !warnedAboutHMACSHA1KeySize {
+            Diag.warning("Unexpected key length: \(key.count) bytes, will likely fail. Duplicate warnings suppressed until relaunch.")
+            warnedAboutHMACSHA1KeySize = true
+        }
         let out = ByteArray(count: Int(CC_SHA1_DIGEST_LENGTH))
         hmacSHA(algorithm: CCHmacAlgorithm(kCCHmacAlgSHA1), data: data, key: key, out: out)
         return out
     }
 
     public static func hmacSHA256(data: ByteArray, key: ByteArray) -> ByteArray {
-        assert(key.count == CC_SHA256_BLOCK_BYTES)
+        if key.count != CC_SHA256_BLOCK_BYTES && !warnedAboutHMACSHA256KeySize {
+            Diag.warning("Unexpected key length: \(key.count) bytes, will likely fail. Duplicate warnings suppressed until relaunch.")
+            warnedAboutHMACSHA256KeySize = true
+        }
         let out = ByteArray(count: Int(CC_SHA256_DIGEST_LENGTH))
         hmacSHA(algorithm: CCHmacAlgorithm(kCCHmacAlgSHA256), data: data, key: key, out: out)
         return out
     }
 
     public static func hmacSHA512(data: ByteArray, key: ByteArray) -> ByteArray {
-        assert(key.count == CC_SHA512_BLOCK_BYTES)
+        if key.count != CC_SHA512_BLOCK_BYTES && !warnedAboutHMACSHA512KeySize {
+            Diag.warning("Unexpected key length: \(key.count) bytes, will likely fail. Duplicate warnings suppressed until relaunch.")
+            warnedAboutHMACSHA512KeySize = true
+        }
         let out = ByteArray(count: Int(CC_SHA512_DIGEST_LENGTH))
         hmacSHA(algorithm: CCHmacAlgorithm(kCCHmacAlgSHA512), data: data, key: key, out: out)
         return out

@@ -17,13 +17,22 @@ final class MSALOneDriveAuthProvider: OneDriveAuthProvider {
     private let msalApplication: MSALPublicClientApplication?
     private let msalInitializationError: RemoteError?
 
-    private let config = OneDriveAuthConfig(
-        redirectURI: redirectURI,
-        scopes: [
-            "user.read",
-            "files.readwrite.all",
-        ]
-    )
+    private static func getConfig(scope: OAuthScope) -> OneDriveAuthConfig {
+        let scopes: [String]
+        switch scope {
+        case .fullAccess:
+            scopes = [
+                "user.read",
+                "files.readwrite.all",
+            ]
+        case .appFolder:
+            scopes = [
+                "user.read",
+                "files.readwrite.appfolder",
+            ]
+        }
+        return OneDriveAuthConfig(redirectURI: redirectURI, scopes: scopes)
+    }
 
     init() {
         do {
@@ -34,9 +43,10 @@ final class MSALOneDriveAuthProvider: OneDriveAuthProvider {
                 authority = try MSALAADAuthority(url: authorityURL)
             }
 
+            let authConfig = Self.getConfig(scope: .appFolder)
             let msalConfiguration = MSALPublicClientApplicationConfig(
-                clientId: config.clientID,
-                redirectUri: config.redirectURI,
+                clientId: authConfig.clientID,
+                redirectUri: authConfig.redirectURI,
                 authority: authority
             )
             msalConfiguration.clientApplicationCapabilities = ["ProtApp"] 
@@ -54,8 +64,9 @@ final class MSALOneDriveAuthProvider: OneDriveAuthProvider {
     }
 
     func acquireToken(
-        presenter: UIViewController,
+        scope: OAuthScope,
         timeout: Timeout,
+        presenter: UIViewController,
         completionQueue: OperationQueue,
         completion: @escaping CompletionHandler
     ) {
@@ -66,8 +77,9 @@ final class MSALOneDriveAuthProvider: OneDriveAuthProvider {
         }
 
         let webviewParameters = MSALWebviewParameters(authPresentationViewController: presenter)
+        let authConfig = Self.getConfig(scope: scope)
         let interactiveParameters = MSALInteractiveTokenParameters(
-            scopes: self.config.scopes,
+            scopes: authConfig.scopes,
             webviewParameters: webviewParameters
         )
         msalApplication.acquireToken(with: interactiveParameters) { [weak self] result, error in
@@ -100,7 +112,8 @@ final class MSALOneDriveAuthProvider: OneDriveAuthProvider {
         guard let account = try? msalApplication.account(forIdentifier: accountIdentifier) else {
             return
         }
-        let silentParameters = MSALSilentTokenParameters(scopes: config.scopes, account: account)
+        let authConfig = Self.getConfig(scope: token.scope)
+        let silentParameters = MSALSilentTokenParameters(scopes: authConfig.scopes, account: account)
         msalApplication.acquireTokenSilent(with: silentParameters) { [weak self] result, error in
             self?.handleMSALResponse(
                 result,

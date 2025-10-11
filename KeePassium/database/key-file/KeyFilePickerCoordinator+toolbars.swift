@@ -12,42 +12,73 @@ extension KeyFilePickerCoordinator {
     class ToolbarDecorator: FilePickerToolbarDecorator {
         weak var coordinator: KeyFilePickerCoordinator?
 
-        func getToolbarItems() -> [UIBarButtonItem]? {
+        func getLeftBarButtonItems(mode: FilePickerToolbarMode) -> [UIBarButtonItem]? {
             return nil
         }
 
-        func getLeadingItemGroups() -> [UIBarButtonItemGroup]? {
+        func getRightBarButtonItems(mode: FilePickerToolbarMode) -> [UIBarButtonItem]? {
             guard let coordinator else { assertionFailure(); return nil }
-            let cancelItem = UIBarButtonItem(
-                systemItem: .cancel,
-                primaryAction: UIAction { [weak coordinator] action in
-                    coordinator?.didPressCancel()
-                },
-            )
-            let itemGroup = UIBarButtonItemGroup(barButtonItems: [cancelItem], representativeItem: nil)
-            return [itemGroup]
-        }
-
-        func getTrailingItemGroups() -> [UIBarButtonItemGroup]? {
-            guard let coordinator else { assertionFailure(); return nil }
-            var barItems = [UIBarButtonItem]()
-            if ProcessInfo.isRunningOnMac {
-                let refreshAction = UIBarButtonItem(
-                    systemItem: .refresh,
-                    primaryAction: UIAction { [weak coordinator] action in
-                        coordinator?.refresh()
+            switch mode {
+            case let .normal(hasSelectableFiles):
+                var barItems = [UIBarButtonItem]()
+                let selectItemsAction = UIBarButtonItem(
+                    title: LString.actionSelect,
+                    primaryAction: UIAction { [weak coordinator] _ in
+                        coordinator?._startSelecting()
                     }
                 )
-                barItems.append(refreshAction)
+                selectItemsAction.isEnabled = hasSelectableFiles
+                let addKeyFileBarButton = UIBarButtonItem(
+                    title: LString.actionAddKeyFile,
+                    image: .symbol(.plus),
+                    primaryAction: nil,
+                    menu: coordinator._makeAddKeyFileMenu()
+                )
+
+                barItems.append(addKeyFileBarButton)
+                barItems.append(selectItemsAction)
+                return barItems
+            case .bulkEdit:
+                let doneBulkEditingButton = UIBarButtonItem(systemItem: .done, primaryAction: UIAction {
+                    [weak coordinator] _ in
+                    coordinator?._didPressDoneBulkEditing()
+                })
+                return [doneBulkEditingButton]
             }
-            let addKeyFileBarButton = UIBarButtonItem(
-                title: LString.actionAddKeyFile,
-                image: .symbol(.plus),
-                primaryAction: nil,
-                menu: coordinator._makeAddKeyFileMenu()
-            )
-            barItems.append(addKeyFileBarButton)
-            return [UIBarButtonItemGroup(barButtonItems: barItems, representativeItem: nil)]
+        }
+
+        func getToolbarItems(mode: FilePickerToolbarMode) -> [UIBarButtonItem]? {
+            switch mode {
+            case .normal:
+                if ProcessInfo.isRunningOnMac {
+                    let refreshAction = UIBarButtonItem(
+                        systemItem: .refresh,
+                        primaryAction: UIAction { [weak coordinator] action in
+                            coordinator?.refresh()
+                        }
+                    )
+                    return [
+                        .flexibleSpace(),
+                        refreshAction,
+                        .flexibleSpace(),
+                    ]
+                } else {
+                    return nil
+                }
+            case .bulkEdit(let selectedFiles):
+                let bulkDeleteButton = UIBarButtonItem(
+                    systemItem: .trash,
+                    primaryAction: UIAction { [weak coordinator] action in
+                        coordinator?._confirmAndBulkDeleteFiles(
+                            selectedFiles,
+                            at: action.presentationSourceItem?.asPopoverAnchor
+                        )
+                    }
+                )
+                bulkDeleteButton.title = LString.actionDelete
+                bulkDeleteButton.isEnabled = selectedFiles.count > 0
+                return [.flexibleSpace(), bulkDeleteButton]
+            }
         }
     }
 
@@ -78,9 +109,18 @@ extension KeyFilePickerCoordinator {
                 self?.didPressUseKeyFile(at: popoverAnchor)
             }
         )
+        let connectToServerAction = UIAction(
+            title: LString.actionConnectToServer,
+            image: .symbol(.network),
+            handler: { [weak self] action in
+                let popoverAnchor = action.presentationSourceItem?.asPopoverAnchor
+                self?.didPressConnectToServer(at: popoverAnchor)
+            }
+        )
         return UIMenu(children: [
             importKeyFileAction,
             useKeyFileAction,
+            UIMenu(inlineChildren: [connectToServerAction]),
             UIMenu(inlineChildren: [createKeyFileAction])
         ])
     }
@@ -101,5 +141,9 @@ extension KeyFilePickerCoordinator {
 
     private func didPressCreateKeyFile(at popoverAnchor: PopoverAnchor?) {
         startCreatingKeyFile(presenter: _filePickerVC)
+    }
+
+    private func didPressConnectToServer(at popoverAnchor: PopoverAnchor?) {
+        startRemoteKeyFilePicker(presenter: _filePickerVC)
     }
 }

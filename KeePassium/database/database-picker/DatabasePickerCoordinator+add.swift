@@ -46,7 +46,7 @@ extension DatabasePickerCoordinator {
         guard needsPremiumToAddDatabase() && !bypassPaywall else {
             presenter.ensuringNetworkAccessPermitted { [weak self, weak presenter] in
                 guard let self, let presenter else { return }
-                startRemoteDatabasePicker(presenter: presenter)
+                startRemoteDatabasePicker(mode: .pick(.file), presenter: presenter)
             }
             return
         }
@@ -54,19 +54,19 @@ extension DatabasePickerCoordinator {
         performPremiumActionOrOfferUpgrade(for: .canUseMultipleDatabases, in: presenter) {
             [weak self, weak presenter] in
             guard let self, let presenter else { return }
-            startRemoteDatabasePicker(presenter: presenter)
+            startRemoteDatabasePicker(mode: .pick(.file), presenter: presenter)
         }
     }
 
-    public func startRemoteDatabasePicker(_ oldRef: URLReference? = nil, presenter: UIViewController) {
-        presenter.ensuringNetworkAccessPermitted { [weak self, weak presenter, weak oldRef] in
+    public func startRemoteDatabasePicker(mode: RemoteConnectionSetupMode, presenter: UIViewController) {
+        presenter.ensuringNetworkAccessPermitted { [weak self, weak presenter] in
             guard let self, let presenter else { return }
-            startRemoteDatabasePickerNetworkConfirmed(oldRef, presenter: presenter)
+            startRemoteDatabasePickerNetworkConfirmed(mode: mode, presenter: presenter)
         }
     }
 
     private func startRemoteDatabasePickerNetworkConfirmed(
-        _ oldRef: URLReference?,
+        mode: RemoteConnectionSetupMode,
         presenter: UIViewController
     ) {
         guard Settings.current.isNetworkAccessAllowed else {
@@ -77,14 +77,16 @@ extension DatabasePickerCoordinator {
 
         let modalRouter = NavigationRouter.createModal(style: .formSheet)
         let remoteFilePickerCoordinator = RemoteFilePickerCoordinator(
-            oldRef: oldRef,
+            mode: mode,
             router: modalRouter
         )
         remoteFilePickerCoordinator.delegate = self
         remoteFilePickerCoordinator.start()
 
         presenter.present(modalRouter, animated: true, completion: nil)
-        addChildCoordinator(remoteFilePickerCoordinator, onDismiss: nil)
+        addChildCoordinator(remoteFilePickerCoordinator, onDismiss: { [weak self] _ in
+            self?._databaseBeingEdited = nil
+        })
     }
 }
 
@@ -95,7 +97,13 @@ extension DatabasePickerCoordinator: RemoteFilePickerCoordinatorDelegate {
         in coordinator: RemoteFilePickerCoordinator
     ) {
         CredentialManager.shared.store(credential: credential, for: url)
-        addDatabaseURL(url)
+
+        if let databaseBeingEdited = _databaseBeingEdited {
+            replaceDatabaseURL(oldFileRef: databaseBeingEdited, newURL: url)
+            _databaseBeingEdited = nil
+        } else {
+            addDatabaseURL(url)
+        }
     }
 
     func didSelectSystemFilePicker(in coordinator: RemoteFilePickerCoordinator) {
@@ -104,8 +112,33 @@ extension DatabasePickerCoordinator: RemoteFilePickerCoordinatorDelegate {
 }
 
 extension DatabasePickerCoordinator {
+    func _didDropFile(_ fileURL: URL, to viewController: FilePickerVC) {
+        Diag.debug("Processing dropped database file")
+
+        guard needsPremiumToAddDatabase() else {
+            processDroppedDatabase(fileURL, presenter: viewController)
+            return
+        }
+
+        performPremiumActionOrOfferUpgrade(for: .canUseMultipleDatabases, in: viewController) {
+            [weak self] in
+            guard let self else { return }
+            processDroppedDatabase(fileURL, presenter: viewController)
+        }
+    }
+
+    private func processDroppedDatabase(_ fileURL: URL, presenter: UIViewController) {
+        warnIfNotADatabase(fileURL, presenter: presenter) { [weak self] url in
+            self?.addDatabaseURL(url)
+        }
+    }
+}
+
+extension DatabasePickerCoordinator {
     public func needsPremiumToAddDatabase() -> Bool {
-        let validDatabases = enumerateDatabases(excludeBackup: true, excludeNeedingReinstatement: true)
+        let validDatabases = _fileReferences
+            .filter { !$0.needsReinstatement }
+            .filter { $0.location != .internalBackup }
         if validDatabases.count == 0 {
             return false
         }
@@ -129,7 +162,28 @@ extension DatabasePickerCoordinator {
         }
     }
 
-    private func warnIfNotADatabase(
+    private func replaceDatabaseURL(oldFileRef: URLReference, newURL: URL) {
+        let success = FileKeeper.shared.removeExternalReference(oldFileRef, fileType: .database)
+        if !success {
+            Diag.error("Failed to remove old database reference")
+        }
+
+        FileKeeper.shared.addFile(url: newURL, fileType: .database, mode: .openInPlace) {
+            [weak self] result in
+            guard let self else { return }
+            switch result {
+            case .success(let fileRef):
+                refresh()
+                selectDatabase(fileRef, animated: true)
+                delegate?.didSelectDatabase(fileRef, cause: .app, in: self)
+            case .failure(let fileKeeperError):
+                Diag.error("Failed to add replacement database [message: \(fileKeeperError.localizedDescription)]")
+                refresh()
+            }
+        }
+    }
+
+    internal func warnIfNotADatabase(
         _ url: URL,
         presenter: UIViewController,
         onConfirm confirmationHandler: @escaping (URL) -> Void

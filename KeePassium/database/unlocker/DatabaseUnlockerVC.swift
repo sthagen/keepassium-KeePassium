@@ -26,6 +26,10 @@ protocol DatabaseUnlockerDelegate: AnyObject {
     func didPressShowDiagnostics(
         at popoverAnchor: PopoverAnchor,
         in viewController: DatabaseUnlockerVC)
+
+    func didPressCancelAction(
+        _ action: ProgressOverlay.CancelAction,
+        in viewController: DatabaseUnlockerVC)
 }
 
 final class DatabaseUnlockerVC: UIViewController, Refreshable {
@@ -139,6 +143,8 @@ final class DatabaseUnlockerVC: UIViewController, Refreshable {
                 guard let self else { return }
                 URLOpener(self).open(url: helpURL)
             }
+        } else {
+            errorMessageView.action = nil
         }
         errorMessageView.show(animated: true)
         UIAccessibility.post(notification: .screenChanged, argument: errorMessageView)
@@ -352,9 +358,14 @@ extension DatabaseUnlockerVC: ProgressViewHost {
         return progressOverlay != nil
     }
     public func showProgressView(title: String, allowCancelling: Bool, animated: Bool) {
+        showProgressView(title: title, allowCancelling: allowCancelling, allowFallback: false, animated: animated)
+    }
+
+    public func showProgressView(title: String, allowCancelling: Bool, allowFallback: Bool, animated: Bool) {
         if progressOverlay != nil {
             progressOverlay?.title = title
             progressOverlay?.isCancellable = allowCancelling
+            progressOverlay?.hasFallback = allowFallback
             return
         }
         progressOverlay = ProgressOverlay.addTo(
@@ -362,9 +373,10 @@ extension DatabaseUnlockerVC: ProgressViewHost {
             title: title,
             animated: animated)
         progressOverlay?.isCancellable = allowCancelling
-        progressOverlay?.unresponsiveCancelHandler = { [weak self] in
+        progressOverlay?.hasFallback = allowFallback
+        progressOverlay?.cancelActionHandler = { [weak self] action in
             guard let self else { return }
-            delegate?.didPressShowDiagnostics(at: self.view.asPopoverAnchor, in: self)
+            delegate?.didPressCancelAction(action, in: self)
         }
 
         navigationItem.setHidesBackButton(true, animated: animated)

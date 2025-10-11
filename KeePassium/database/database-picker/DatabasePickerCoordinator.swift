@@ -7,6 +7,7 @@
 //  For commercial licensing, please contact us.
 
 import KeePassiumLib
+import UniformTypeIdentifiers
 
 protocol DatabasePickerCoordinatorDelegate: AnyObject {
     func didPressShowDiagnostics(at popoverAnchor: PopoverAnchor?, in viewController: UIViewController)
@@ -19,7 +20,7 @@ protocol DatabasePickerCoordinatorDelegate: AnyObject {
 
     func didSelectDatabase(
         _ fileRef: URLReference?,
-        cause: FileActivationCause?,
+        cause: ItemActivationCause?,
         in coordinator: DatabasePickerCoordinator
     )
 }
@@ -30,9 +31,6 @@ extension DatabasePickerCoordinatorDelegate {
         in coordinator: DatabasePickerCoordinator
     ) -> Bool {
         return true
-    }
-    func didPressShowDiagnostics(at popoverAnchor: PopoverAnchor?, in viewController: UIViewController) {
-        assertionFailure("Called a method not implemented by delegate")
     }
     func didPressShowAppSettings(at popoverAnchor: PopoverAnchor?, in viewController: UIViewController) {
         assertionFailure("Called a method not implemented by delegate")
@@ -47,6 +45,9 @@ class DatabasePickerCoordinator: FilePickerCoordinator {
     let mode: DatabasePickerMode
 
     internal var _selectedDatabase: URLReference?
+    internal var _hasPendingTransactions = false
+    internal var _databaseBeingEdited: URLReference?
+    override var _allowedDropUTIs: [UTType] { FileType.databaseUTIs }
 
     init(router: NavigationRouter, mode: DatabasePickerMode) {
         self.mode = mode
@@ -57,6 +58,7 @@ class DatabasePickerCoordinator: FilePickerCoordinator {
             fileType: .database,
             itemDecorator: itemDecorator,
             toolbarDecorator: toolbarDecorator,
+            dismissButtonStyle: nil,
             appearance: .plain
         )
         title = LString.titleDatabases
@@ -64,80 +66,40 @@ class DatabasePickerCoordinator: FilePickerCoordinator {
         toolbarDecorator.coordinator = self
     }
 
-    internal func enumerateDatabases(
-        sorted: Bool = false,
-        excludeBackup: Bool = false,
-        excludeWithErrors: Bool = false,
-        excludeNeedingReinstatement: Bool = false
-    ) -> [URLReference] {
-        var result = FileKeeper.shared.getAllReferences(fileType: .database, includeBackup: !excludeBackup)
-        if excludeWithErrors {
-            result = result.filter { !$0.hasError }
-        }
-        if excludeNeedingReinstatement {
-            result = result.filter { !$0.needsReinstatement }
-        }
-        if sorted {
-            let sortOrder = Settings.current.filesSortOrder
-            result = result.sorted(by: { sortOrder.compare($0, $1) })
-        }
-        return result
-    }
-
     public func isKnownDatabase(_ databaseRef: URLReference) -> Bool {
-        let knownDatabases = enumerateDatabases(
-            excludeBackup: false,
-            excludeWithErrors: false,
-            excludeNeedingReinstatement: false
-        )
+        let knownDatabases = _fileReferences
         return knownDatabases.contains(databaseRef)
     }
 
     public func canBeOpenedAutomatically(databaseRef: URLReference) -> Bool {
-        let validDatabases = enumerateDatabases(
-            excludeBackup: !Settings.current.isBackupFilesVisible,
-            excludeWithErrors: true,
-            excludeNeedingReinstatement: true
-        )
+        let validDatabases = _fileReferences.filter {
+            !$0.hasError && !$0.needsReinstatement
+        }
         return validDatabases.contains(databaseRef)
     }
 
     public func getListedDatabaseCount() -> Int {
-        let listedDatabases = enumerateDatabases(
-            excludeBackup: !Settings.current.isBackupFilesVisible,
-            excludeWithErrors: false,
-            excludeNeedingReinstatement: false
-        )
-        return listedDatabases.count
+        return _fileReferences.count
     }
 
     public func getFirstListedDatabase() -> URLReference? {
-        let shownDBs = enumerateDatabases(sorted: true, excludeBackup: !Settings.current.isBackupFilesVisible)
-        return shownDBs.first
+        return _fileReferences.first
     }
 
-    private func getAnnouncements() -> [AnnouncementItem] {
-        var announcements: [AnnouncementItem] = []
-        if mode == .autoFill,
-           FileKeeper.shared.areSandboxFilesLikelyMissing()
-        {
-            let sandboxUnreachableAnnouncement = AnnouncementItem(
-                title: nil,
-                body: LString.messageLocalFilesMissing,
-                actionTitle: LString.callToActionOpenTheMainApp,
-                image: .symbol(.questionmarkFolder),
-                onDidPressAction: { announcementView in
-                    URLOpener(announcementView).open(url: AppGroup.launchMainAppURL)
-                }
-            )
-            announcements.append(sandboxUnreachableAnnouncement)
+    override func _updateAnnouncements() {
+        self.announcements = _makeAnnouncements()
+    }
+
+    override func _didUpdateFileReferences() {
+        super._didUpdateFileReferences()
+        let hadTransactions = _hasPendingTransactions
+        _hasPendingTransactions = _fileReferences.contains(where: {
+            DatabaseTransactionManager.hasPendingTransaction(for: $0)
+        })
+
+        if _hasPendingTransactions != hadTransactions {
+            _updateAnnouncements()
         }
-        return announcements
-    }
-
-    override func refresh() {
-        announcements = getAnnouncements()
-        super.refresh()
     }
 
     override var _contentUnavailableConfiguration: UIContentUnavailableConfiguration? {
@@ -150,7 +112,7 @@ class DatabasePickerCoordinator: FilePickerCoordinator {
 
     override func didSelectFile(
         _ fileRef: URLReference?,
-        cause: FileActivationCause?,
+        cause: ItemActivationCause?,
         in viewController: FilePickerVC
     ) {
         guard let fileRef else {
@@ -158,6 +120,7 @@ class DatabasePickerCoordinator: FilePickerCoordinator {
             assertionFailure("DB Picker does not have no-selection option")
             return
         }
+
         if let cause {
             _paywallDatabaseSelection(fileRef, animated: true, in: viewController) { [weak self] fileRef in
                 guard let self else { return }
@@ -168,5 +131,9 @@ class DatabasePickerCoordinator: FilePickerCoordinator {
             selectDatabase(fileRef, animated: true)
             delegate?.didSelectDatabase(fileRef, cause: nil, in: self)
         }
+    }
+
+    override func didDropFile(_ fileURL: URL, to viewController: FilePickerVC) {
+        _didDropFile(fileURL, to: viewController)
     }
 }

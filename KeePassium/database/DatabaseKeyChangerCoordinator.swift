@@ -140,7 +140,7 @@ extension DatabaseKeyChangerCoordinator: DatabaseKeyChangerDelegate {
 extension DatabaseKeyChangerCoordinator: KeyFilePickerCoordinatorDelegate {
     func didSelectKeyFile(
         _ fileRef: URLReference?,
-        cause: FileActivationCause?,
+        cause: ItemActivationCause?,
         in coordinator: KeyFilePickerCoordinator
     ) {
         assert(cause != nil, "Unexpected in single-panel mode")

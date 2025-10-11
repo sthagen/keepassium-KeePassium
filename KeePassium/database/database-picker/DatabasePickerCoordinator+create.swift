@@ -38,7 +38,9 @@ extension DatabasePickerCoordinator: DatabaseCreatorCoordinatorDelegate {
         in databaseCreatorCoordinator: DatabaseCreatorCoordinator,
         database urlRef: URLReference
     ) {
+        refresh()
         selectDatabase(urlRef, animated: true)
+        delegate?.didSelectDatabase(urlRef, cause: .app, in: self)
     }
 }
 #endif

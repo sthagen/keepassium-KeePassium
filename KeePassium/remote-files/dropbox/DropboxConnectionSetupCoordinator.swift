@@ -29,35 +29,49 @@ final class DropboxConnectionSetupCoordinator: RemoteDataSourceSetupCoordinator<
     weak var delegate: DropboxConnectionSetupCoordinatorDelegate?
 
     init(
-        router: NavigationRouter,
+        mode: RemoteConnectionSetupMode,
+        scope: OAuthScope,
         stateIndicator: BusyStateIndicating,
-        oldRef: URLReference?,
-        selectionMode: RemoteItemSelectionMode = .file
+        router: NavigationRouter,
     ) {
+        var scope = scope
+        switch mode {
+        case .pick: break
+        case .edit(let oldRef), .reauth(let oldRef):
+            if oldRef.url?.isDropboxAppFolderScopedURL == true {
+                scope = .appFolder
+            }
+        }
         super.init(
-            mode: selectionMode,
             manager: DropboxManager.shared,
-            oldRef: oldRef,
+            mode: mode,
+            scope: scope,
             stateIndicator: stateIndicator,
             router: router)
     }
 
     override func onAccountInfoAcquired(_ accountInfo: DropboxAccountInfo) {
         self._accountInfo = accountInfo
-        if let _oldRef,
-           let url = _oldRef.url,
-           _oldRef.fileProvider == .keepassiumDropbox
-        {
-            trySelectFile(url, onFailure: { [weak self] in
-                guard let self else { return }
-                self._oldRef = nil
-                self.onAccountInfoAcquired(accountInfo)
-            })
+        let currentFileProvider = accountInfo.type.getMatchingFileProvider(scope: _scope)
+        switch _mode {
+        case .edit, .pick:
+            break
+        case .reauth(let oldRef):
+            if let url = oldRef.url,
+               oldRef.fileProvider == currentFileProvider
+            {
+                trySelectFile(url, onFailure: { [weak self] in
+                    guard let self else { return }
+                    self._mode = .edit(oldRef)
+                    self.onAccountInfoAcquired(accountInfo)
+                })
+                return
+            }
         }
         maybeSuggestPremium(isCorporateStorage: accountInfo.type.isCorporate) { [weak self] in
             guard let self else { return }
             self.showFolder(
-                folder: DropboxItem.root(info: accountInfo),
+                folder: DropboxItem.root(info: accountInfo, scope: _scope),
                 stateIndicator: _stateIndicator
             )
         }

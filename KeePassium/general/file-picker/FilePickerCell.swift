@@ -10,12 +10,7 @@ import KeePassiumLib
 
 class FilePickerCell: SelectableCollectionViewListCell {
 
-    static let reuseIdentifier = "FilePickerCell"
-
-    let activityIndicator = UIActivityIndicatorView(style: .medium)
-    private var isSpinnerVisible = false
-    private weak var decorator: FilePickerItemDecorator?
-    private var fixedAccessories = [UICellAccessory]()
+    private let activityIndicator = UIActivityIndicatorView(style: .medium)
 
     func configure(with item: FilePickerItem.FileInfo, accessories: [UICellAccessory]?) {
         var config = UIListContentConfiguration.cell()
@@ -32,20 +27,14 @@ class FilePickerCell: SelectableCollectionViewListCell {
         }
         config.image = .symbol(item.iconSymbol)
         self.contentConfiguration = config
-        isSpinnerVisible = item.isBusy
 
-        self.fixedAccessories = accessories ?? []
-        updateAccessories()
-    }
-
-    private func updateAccessories() {
-        var newAccessories = fixedAccessories
-        if isSpinnerVisible {
+        var newAccessories = accessories ?? []
+        if item.isBusy {
             activityIndicator.startAnimating()
-            let activityAccessory = UICellAccessory.customView(configuration: .init(
-                customView: activityIndicator,
-                placement: .trailing()))
-            newAccessories.insert(activityAccessory, at: 0)
+            let spinnerAccessory = UICellAccessory.customView(
+                configuration: .init(customView: activityIndicator, placement: .trailing())
+            )
+            newAccessories.insert(spinnerAccessory, at: 0)
         }
         UIView.performWithoutAnimation {
             self.accessories = newAccessories

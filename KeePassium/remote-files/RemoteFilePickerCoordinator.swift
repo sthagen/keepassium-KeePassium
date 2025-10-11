@@ -22,12 +22,12 @@ protocol RemoteFilePickerCoordinatorDelegate: AnyObject {
 final class RemoteFilePickerCoordinator: BaseCoordinator {
     weak var delegate: RemoteFilePickerCoordinatorDelegate?
 
+    private let mode: RemoteConnectionSetupMode
     private let connectionTypePicker: ConnectionTypePickerVC
-    private var oldRef: URLReference?
 
-    init(oldRef: URLReference?, router: NavigationRouter) {
-        self.oldRef = oldRef
-        connectionTypePicker = ConnectionTypePickerVC.make()
+    init(mode: RemoteConnectionSetupMode, router: NavigationRouter) {
+        self.mode = mode
+        self.connectionTypePicker = ConnectionTypePickerVC()
         super.init(router: router)
         connectionTypePicker.delegate = self
         connectionTypePicker.showsOtherLocations = true
@@ -37,19 +37,11 @@ final class RemoteFilePickerCoordinator: BaseCoordinator {
         super.start()
 
         let connectionType: RemoteConnectionType?
-        switch oldRef?.fileProvider {
-        case .some(.keepassiumWebDAV):
-            connectionType = .webdav
-        case .some(.keepassiumDropbox):
-            connectionType = .dropbox
-        case .some(.keepassiumGoogleDrive):
-            connectionType = .googleDrive
-        case .some(.keepassiumOneDrivePersonal):
-            connectionType = .oneDrivePersonal
-        case .some(.keepassiumOneDriveBusiness):
-            connectionType = .oneDriveForBusiness
-        default:
+        switch mode {
+        case .pick:
             connectionType = nil
+        case .edit(let oldRef), .reauth(let oldRef):
+            connectionType = getConnectionType(by: oldRef.fileProvider)
         }
 
         let animated = (connectionType == nil)
@@ -65,17 +57,39 @@ final class RemoteFilePickerCoordinator: BaseCoordinator {
         super.refresh()
         connectionTypePicker.refresh()
     }
+
+    private func getConnectionType(by fileProvider: FileProvider?) -> RemoteConnectionType? {
+        switch fileProvider {
+        case .keepassiumWebDAV:
+            return .webdav
+        case .keepassiumDropboxPersonal:
+            return .dropboxPersonal(scope: .fullAccess)
+        case .keepassiumDropboxPersonalAppFolder:
+            return .dropboxPersonal(scope: .appFolder)
+        case .keepassiumDropboxBusiness:
+            return .dropboxBusiness(scope: .fullAccess)
+        case .keepassiumDropboxBusinessAppFolder:
+            return .dropboxBusiness(scope: .appFolder)
+        case .keepassiumGoogleDrive:
+            return .googleDrive(scope: .fullAccess)
+        case .keepassiumGoogleDriveAppFolder:
+            return .googleDrive(scope: .appFolder)
+        case .keepassiumOneDrivePersonal:
+            return .oneDrivePersonal(scope: .fullAccess)
+        case .keepassiumOneDrivePersonalAppFolder:
+            return .oneDrivePersonal(scope: .appFolder)
+        case .keepassiumOneDriveBusiness:
+            return .oneDriveForBusiness(scope: .fullAccess)
+        case .keepassiumOneDriveBusinessAppFolder:
+            return .oneDriveForBusiness(scope: .appFolder)
+        default:
+            return nil
+        }
+    }
 }
 
 extension RemoteFilePickerCoordinator: ConnectionTypePickerDelegate {
-    func isConnectionTypeEnabled(
-        _ connectionType: RemoteConnectionType,
-        in viewController: ConnectionTypePickerVC
-    ) -> Bool {
-        return true
-    }
-
-    func willSelect(
+    func shouldSelect(
         connectionType: RemoteConnectionType,
         in viewController: ConnectionTypePickerVC
     ) -> Bool {
@@ -90,12 +104,12 @@ extension RemoteFilePickerCoordinator: ConnectionTypePickerDelegate {
         switch connectionType {
         case .webdav:
             startWebDAVSetup(stateIndicator: viewController)
-        case .oneDrivePersonal, .oneDriveForBusiness:
-            startOneDriveSetup(stateIndicator: viewController)
-        case .dropbox, .dropboxBusiness:
-            startDropboxSetup(stateIndicator: viewController)
-        case .googleDrive, .googleWorkspace:
-            startGoogleDriveSetup(stateIndicator: viewController)
+        case .oneDrivePersonal(let scope), .oneDriveForBusiness(let scope):
+            startOneDriveSetup(scope: scope, stateIndicator: viewController)
+        case .dropboxPersonal(let scope), .dropboxBusiness(let scope):
+            startDropboxSetup(scope: scope, stateIndicator: viewController)
+        case .googleDrive(let scope), .googleWorkspace(let scope):
+            startGoogleDriveSetup(scope: scope, stateIndicator: viewController)
         }
     }
 
@@ -108,7 +122,10 @@ extension RemoteFilePickerCoordinator: ConnectionTypePickerDelegate {
 
 extension RemoteFilePickerCoordinator: WebDAVConnectionSetupCoordinatorDelegate {
     private func startWebDAVSetup(stateIndicator: BusyStateIndicating) {
-        let setupCoordinator = WebDAVConnectionSetupCoordinator(router: _router)
+        let setupCoordinator = WebDAVConnectionSetupCoordinator(
+            mode: mode,
+            router: _router,
+        )
         setupCoordinator.delegate = self
         setupCoordinator.start()
         addChildCoordinator(setupCoordinator, onDismiss: nil)
@@ -134,11 +151,12 @@ extension RemoteFilePickerCoordinator: WebDAVConnectionSetupCoordinatorDelegate 
 }
 
 extension RemoteFilePickerCoordinator: GoogleDriveConnectionSetupCoordinatorDelegate {
-    private func startGoogleDriveSetup(stateIndicator: BusyStateIndicating) {
+    private func startGoogleDriveSetup(scope: OAuthScope, stateIndicator: BusyStateIndicating) {
         let setupCoordinator = GoogleDriveConnectionSetupCoordinator(
-            router: _router,
+            mode: mode,
+            scope: scope,
             stateIndicator: stateIndicator,
-            oldRef: oldRef
+            router: _router,
         )
         setupCoordinator.delegate = self
         setupCoordinator.start()
@@ -167,11 +185,12 @@ extension RemoteFilePickerCoordinator: GoogleDriveConnectionSetupCoordinatorDele
 }
 
 extension RemoteFilePickerCoordinator: DropboxConnectionSetupCoordinatorDelegate {
-    private func startDropboxSetup(stateIndicator: BusyStateIndicating) {
+    private func startDropboxSetup(scope: OAuthScope, stateIndicator: BusyStateIndicating) {
         let setupCoordinator = DropboxConnectionSetupCoordinator(
-            router: _router,
+            mode: mode,
+            scope: scope,
             stateIndicator: stateIndicator,
-            oldRef: oldRef
+            router: _router,
         )
         setupCoordinator.delegate = self
         setupCoordinator.start()
@@ -200,10 +219,11 @@ extension RemoteFilePickerCoordinator: DropboxConnectionSetupCoordinatorDelegate
 }
 
 extension RemoteFilePickerCoordinator: OneDriveConnectionSetupCoordinatorDelegate {
-    private func startOneDriveSetup(stateIndicator: BusyStateIndicating) {
+    private func startOneDriveSetup(scope: OAuthScope, stateIndicator: BusyStateIndicating) {
         let setupCoordinator = OneDriveConnectionSetupCoordinator(
+            mode: mode,
+            scope: scope,
             stateIndicator: stateIndicator,
-            oldRef: oldRef,
             router: _router
         )
         setupCoordinator.delegate = self

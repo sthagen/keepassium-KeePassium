@@ -29,10 +29,16 @@ public enum SymbolName: String, Equatable {
     public static let actionRestore = Self.clockArrowCirclepath
     public static let appPasscode = Self.entryLeverKeypad
     public static let autoFill = Self.return
+    public static let databaseBackup = Self.clockArrowCirclepath
     public static let fieldReference = Self.arrowRightCircle
     public static let largeType = Self.characterMagnify
-    public static let passwordAudit = Self.networkBadgeShield
     public static let managedParameter = Self.person2BadgeGearshape
+    public static let oneTimePassword = Self.clock
+    public static let passkey = Self.personBadgeKey
+    public static let passkeyBroken = Self.keySlash
+    public static let passwordAudit = Self.networkBadgeShield
+    public static let smartGroup = Self.magnifyingGlassCircle
+    public static let unsavedChanges = Self.externalDriveTriangleBadgeExclamationMark
 
     public static let premiumBenefitMultiDB = Self.shieldBadgePlus
     public static let premiumBenefitDBTimeout = Self.clockBadgeCheckmark
@@ -42,6 +48,7 @@ public enum SymbolName: String, Equatable {
     public static let premiumBenefitBusinessClouds = Self.briefcase
     public static let premiumBenefitPasswordAudit = Self.networkBadgeShield
     public static let premiumBenefitLinkedDatabases = Self.squareOnSquare
+    public static let premiumBenefitCreativeAutoFill = Self.personBadgePlus
     public static let premiumBenefitSupport = Self.questionmarkBubble
     public static let premiumBenefitShiny = Self.faceSmiling
 
@@ -54,13 +61,11 @@ public enum SymbolName: String, Equatable {
     case onboardingOpticID = "onboarding-opticid"
     case onboardingAutoFill = "onboarding-autofill"
 
-    case antCircle = "ant.circle"
     case arrowLeftAndRight = "arrow.left.and.right"
     case arrowRightCircle = "arrow.right.circle"
     case arrowshapeTurnUpForward = "arrowshape.turn.up.forward"
     case arrowshapeTurnUpForwardCircle = "arrowshape.turn.up.forward.circle"
     case arrowUpArrowDown = "arrow.up.arrow.down"
-    case arrowUpCircleFill = "arrow.up.circle.fill"
     case asterisk = "asterisk"
     case at = "at"
     case atom = "atom"
@@ -71,6 +76,8 @@ public enum SymbolName: String, Equatable {
     case briefcase = "briefcase"
     case camera = "camera"
     case characterMagnify = "character.magnify"
+    case chartLineUptrendXyaxis = "chart.line.uptrend.xyaxis"
+    case checklistChecked = "checklist.checked"
     case checkmark = "checkmark"
     case checkmarkCircle = "checkmark.circle"
     case checkmarkSeal = "checkmark.seal"
@@ -92,6 +99,7 @@ public enum SymbolName: String, Equatable {
     case exclamationMarkOctagonFill = "exclamationmark.octagon.fill"
     case exclamationMarkTriangle = "exclamationmark.triangle" 
     case exclamationMarkTriangleFill = "exclamationmark.triangle.fill"
+    case externalDriveTriangleBadgeExclamationMark = "externaldrive.trianglebadge.exclamationmark"
     case eye = "eye"
     case eyeFill = "eye.fill"
     case faceID = "faceid"
@@ -103,22 +111,25 @@ public enum SymbolName: String, Equatable {
     case gearshape = "gearshape"
     case gearshape2 = "gearshape.2"
     case globe = "globe"
+    case hammer = "hammer"
+    case handPointUpLeftAndText = "hand.point.up.left.and.text"
     case heart = "heart"
     case iCloud = "icloud"
     case iCloudSlash = "icloud.slash"
     case infoCircle = "info.circle"
-    case infoCircleFill = "info.circle.fill"
     case iPad = "ipad"
     case iPadHomeButton = "ipad.homebutton"
     case iPhone = "iphone"
     case iPhoneHomeButton = "iphone.homebutton"
     case key = "key.diagonal"
+    case keySlash = "key.slash"
     case keyHorizontal = "key.horizontal"
     case keyboard = "keyboard"
     case listBullet = "list.bullet"
     case lock = "lock"
     case lockShield = "lock.shield"
     case magnifyingGlass = "magnifyingglass"
+    case magnifyingGlassCircle = "magnifyingglass.circle"
     case minus = "minus"
     case network = "network"
     case networkBadgeShield = "network.badge.shield"
@@ -128,13 +139,16 @@ public enum SymbolName: String, Equatable {
     case paintbrush = "paintbrush"
     case paperclip = "paperclip"
     case paperclipBadgeEllipsis = "paperclip.badge.ellipsis"
+    case personBadgeKey = "person.badge.key"
     case pencil = "pencil"
     case person = "person"
+    case personBadgePlus = "person.badge.plus"
     case person2BadgeGearshape = "person.2.badge.gearshape"
     case person3 = "person.3"
+    case personCropCircleBadgeCheckmark = "person.crop.circle.badge.checkmark"
     case photo = "photo"
     case plus = "plus"
-    case plusCircleFill = "plus.circle.fill"
+    case plusCircle = "plus.circle"
     case plusSquareOnSquare = "plus.square.on.square"
     case printer = "printer"
     case qrcode = "qrcode"
@@ -143,7 +157,9 @@ public enum SymbolName: String, Equatable {
     case rectangleStack = "rectangle.stack"
     case rectangleCompressVertical = "rectangle.compress.vertical"
     case `return` = "return"
+    case screwdriver = "screwdriver"
     case shieldBadgePlus = "shield.badge.plus"
+    case shippingBox = "shippingbox"
     case sliderVertical3 = "slider.vertical.3"
     case starFill = "star.fill"
     case squareAndPencil = "square.and.pencil"
@@ -158,6 +174,7 @@ public enum SymbolName: String, Equatable {
     case wandAndStars = "wand.and.stars"
     case waveformPathEcg = "waveform.path.ecg"
     case wifiSlash = "wifi.slash"
+    case wrenchAndScrewdriver = "wrench.and.screwdriver"
     case xmark = "xmark"
     case xmarkICloud = "xmark.icloud"
 
@@ -217,6 +234,8 @@ extension UIImage {
     convenience init(asset: ImageAsset) {
         self.init(named: asset.rawValue)! 
     }
+
+    public static let kpIconMaxSize = CGSize(width: 29, height: 29)
 
     static func kpIcon(forEntry entry: Entry, iconSet: DatabaseIconSet? = nil) -> UIImage? {
         if let entry2 = entry as? Entry2,

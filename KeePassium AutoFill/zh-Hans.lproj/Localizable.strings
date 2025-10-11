@@ -1,14 +1,35 @@
 /* Notification when user tries to set up too weak an app protection passcode. */
 "[AppLock/weakPasscodeWarning]" = "此解锁密码很容易被猜到。请尝试输入一个更强的解锁密码。";
 
+/* Action in AutoFill: choose the entry and remember it for future use on this website. */
+"[AutoFill/AcceptAndRemember/action]" = "接受并记住";
+
+/* Title of a list */
+"[AutoFill/AllEntries/title]" = "所有条目";
+
+/* Title of AutoFill context when no context is available. Usage: `Context: Unknown` */
+"[AutoFill/Context/Empty/title]" = "未知";
+
+/* Title of a list with search results */
+"[AutoFill/FoundEntries/title]" = "最佳匹配";
+
 /* Call for action to select an entry field for filling out. */
 "[AutoFill/InsertText/select]" = "选择字段";
 
-/* An identifier of the app that called AutoFill. The term is intentionally similar to https://ru.wikipedia.org/wiki/Caller_ID. [callerID: String] */
-"[AutoFill/Search/callerID]" = "呼叫ID: %@";
+/* Section title for the recently used entry in AutoFill */
+"[AutoFill/RecentlyUsed/title]" = "最近使用";
 
-/* Status message, shows which app or webpage launched AutoFill. For example: `Context: google.com` */
-"[AutoFill/Search/context]" = "上下文: %@";
+/* Not an action, but a button to activate the same-named setting */
+"[AutoFill/RememberContext/action]" = "记住所选条目";
+
+/* Call to action */
+"[AutoFill/RememberContext/callToAction]" = "改进自动填充建议";
+
+/* Description of the 'Remember Selected Entries` feature */
+"[AutoFill/RememberContext/description]" = "KeePassium 会记住您为每个网站选择的条目，然后自动建议该条目。";
+
+/* Title for referring to the app or webpage that launched AutoFill. For example: `Context: google.com` */
+"[AutoFill/Search/Context/title]" = "上下文";
 
 /* No comment provided by engineer. */
 "[AutoFill/Setup/footer]" = "自动填充功能无法自动访问主KeePassium应用程序中已有的数据库。\n\n为什么？ 在系统后台，系统将自动填充视为一个独立的应用程序，独立于主要的KeePassium处理程序。 出于安全原因，应用程序无法简单地访问任何外部文件 - 除非您明确将这些文件添加到该应用程序。系统安全特性保证应用程序只能访问您允许的少数文件。\n\n因此，需要为自动填充和KeePassium应用程序赋予所需的数据库文件以及密钥文件权限。 幸运的是，这只要设置一次。";
@@ -25,8 +46,23 @@
 /* Must match Apple's translation, as found in iOS 17 Settings → Passwords → Password Options. If unsure, leave untranslated. */
 "[AutoFill/Setup/UncheckKeychain/usePasswordsAndPasskeysFrom]" = "使用来自下列提供者的密码和通行密钥";
 
+/* Field title: name of the group that contains the entry */
+"[Database/Entry/Location/title]" = "位置";
+
+/* Title of a list with randomly generated usernames */
+"[Database/Entry/RandomUsernames/title]" = "随机用户名";
+
+/* Action/button that shows a list of usernames to pick from */
+"[Database/Entry/SelectUsername/action]" = "选择用户名";
+
+/* Action: select item from a list/menu, with item name in quotes. For example: `Select "Sample Group"` */
+"[Database/Item/SelectNamed/action]" = "选择“%@”";
+
 /* Action: create a passkey and add it to existing entry */
 "[Database/Passkey/AddToExisting/action]" = "添加通行密钥到现有条目";
+
+/* Call to action: select an existing entry to add a new passkey to */
+"[Database/Passkey/AddToExisting/callToAction]" = "为新的通行密钥选择一个条目";
 
 /* Confirmation message before replacing an existing passkey. */
 "[Database/Passkey/AddToExisting/confirm]" = "此条目已经有一个通行密钥。是否要替换？";
@@ -69,4 +105,7 @@
 
 /* Call to action, invites the user to enable the Quick AutoFill feature */
 "[QuickAutoFill/Activate/callToAction]" = "激活快速自动填充";
+
+/* Placeholder text for empty search results */
+"[Search/EmptyResult/title]" = "没有找到适合的东西";
 

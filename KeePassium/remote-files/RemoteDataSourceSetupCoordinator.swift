@@ -16,27 +16,27 @@ class RemoteDataSourceSetupCoordinator<Manager: RemoteDataSourceManager>:
     RemoteFolderViewerDelegate
 {
     let _manager: Manager
-    let _stateIndicator: BusyStateIndicating
-    let selectionMode: RemoteItemSelectionMode
+    var _mode: RemoteConnectionSetupMode
+    let _scope: OAuthScope
     var _token: OAuthToken?
     var _accountInfo: Manager.AccountInfo?
-    internal var _oldRef: URLReference?
+    let _stateIndicator: BusyStateIndicating
 
     override var _presenterForModals: UIViewController {
         _router.navigationController
     }
 
     init(
-        mode: RemoteItemSelectionMode,
         manager: Manager,
-        oldRef: URLReference?,
+        mode: RemoteConnectionSetupMode,
+        scope: OAuthScope,
         stateIndicator: BusyStateIndicating,
         router: NavigationRouter
     ) {
-        self.selectionMode = mode
+        self._mode = mode
         self._manager = manager
+        self._scope = scope
         self._stateIndicator = stateIndicator
-        self._oldRef = oldRef
         super.init(router: router)
     }
 
@@ -85,7 +85,15 @@ class RemoteDataSourceSetupCoordinator<Manager: RemoteDataSourceManager>:
         vc.items = items
         vc.folderName = title
         vc.delegate = self
-        vc.selectionMode = selectionMode
+        switch _mode {
+        case .pick(let targetKind):
+            vc.targetKind = targetKind
+        case .edit:
+            vc.targetKind = .file
+        case .reauth:
+            assertionFailure("Tried to show a folder in reauth mode, why?")
+            vc.targetKind = .file
+        }
         if _initialViewController == nil {
             _pushInitialViewController(vc, animated: true)
         } else {
@@ -101,8 +109,12 @@ class RemoteDataSourceSetupCoordinator<Manager: RemoteDataSourceManager>:
         _stateIndicator.indicateState(isBusy: true)
         let presenter = _router.navigationController
         let timeout = Timeout(duration: FileDataProvider.defaultTimeoutDuration)
-        _manager.authenticate(presenter: presenter, timeout: timeout, completionQueue: .main) {
-            [weak self] result in
+        _manager.authenticate(
+            scope: _scope,
+            timeout: timeout,
+            presenter: presenter,
+            completionQueue: .main
+        ) { [weak self] result in
             guard let self else { return }
             _stateIndicator.indicateState(isBusy: false)
             switch result {

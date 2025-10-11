@@ -44,7 +44,11 @@ extension Coordinator {
             "Coordinator already has a dismiss handler; avoid setting it directly")
         coordinator._dismissHandler = { [weak self, onDismiss] child in
             onDismiss?(child)
-            self?.removeChildCoordinator(child)
+            if let self,
+               childCoordinators.contains(where: { $0 === child })
+            {
+                removeChildCoordinator(child)
+            }
         }
         assert(
             !childCoordinators.contains(where: { $0 === coordinator }),

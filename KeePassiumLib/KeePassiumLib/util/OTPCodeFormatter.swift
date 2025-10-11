@@ -6,8 +6,6 @@
 //  by the Free Software Foundation: https://www.gnu.org/licenses/).
 //  For commercial licensing, please contact the author.
 
-import Foundation
-
 final public class OTPCodeFormatter {
 
     public static func decorate(otpCode: String) -> String {
@@ -21,5 +19,13 @@ final public class OTPCodeFormatter {
             break
         }
         return result
+    }
+
+    public static func decorateAttributed(otpCode: String, font: UIFont? = nil) -> AttributedString {
+        var attributedString = AttributedString(decorate(otpCode: otpCode))
+        if let font {
+            attributedString.font = font
+        }
+        return attributedString
     }
 }

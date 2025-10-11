@@ -1,23 +1,8 @@
-/* Menu item that shows info about KeePassium app */
-"[About/altTitle]" = "KeePassium 소개";
-
 /* Copyright notice */
 "[About/CopyrightAuthor]" = "© Andrei Popleteev";
 
 /* Suggestion/hint for available user action */
 "[Accessibility] Double tap to copy to clipboard" = "두 번 탭하여 클립보드에 복사";
-
-/* Section in settings: icon for the app */
-"[Appearance/AppIcon/title]" = "앱 아이콘";
-
-/* Section in settings: icons for database */
-"[Appearance/DatabaseIcons/title]" = "데이터베이스 아이콘";
-
-/* Title of a setting option: font size */
-"[Appearance/TextSize/title]" = "글자 크기";
-
-/* Group of settings for user interface appearance (text size, icons, etc) */
-"[Appearance/title]" = "모양";
 
 /* Action/button to unlock the App Lock with passcode */
 "[AppLock] Unlock" = "잠금 해제";
@@ -97,9 +82,6 @@
 /* Notification: an item has been copied to clipboard */
 "[Clipboard/Copy/notification]" = "복사됨";
 
-/* Subtitle for `Contact Us`. Keep it short. */
-"[ContactUs/subtitle]" = "문제가 있거나 제안하고 싶은게 있나요? 개발자에게 알려주세요!";
-
 /* Error message about AES cipher. [errorCode: Int] */
 "[CryptoError] AES decryption error (code %d)" = "AES 복호화 오류 (코드 %d)";
 
@@ -132,6 +114,9 @@
 
 /* Action: add/import an image as a custom icon */
 "[Database/CustomIcon/add]" = "사용자 지정 아이콘 추가";
+
+/* Action: delete all custom icons */
+"[Database/CustomIcon/deleteAll]" = "모두 삭제";
 
 /* Message to confirm deletion of a database file. (This deletes the file itself) */
 "[Database/Delete/Confirm/text] Delete database file?\n Make sure you have a backup." = "데이터베이스 파일을 삭제하시겠습니까?\n 백업을 생성해뒀는지 확인해주세요.";
@@ -258,9 +243,6 @@
 
 /* Title of a message shown when saving to a database that has already been modified elsewhere. */
 "[Database/SyncConflict/title]" = "동기화 충돌";
-
-/* Error message related to key file. [errorDetails: String] */
-"[Database/Unlock] Key file error: %@" = "키 파일 오류: %@";
 
 /* Error message */
 "[Database/Unlock/Error] Failed to open key file" = "키 파일을 열 수 없습니다";
@@ -420,9 +402,6 @@
 
 /* Error message: user provided a wrong master key for decryption. */
 "[DatabaseError] Invalid password or key file" = "잘못된 비밀번호 또는 키 파일입니다";
-
-/* Subtitle for `Diagnostic Log`. Keep it short. */
-"[DiagLog/subtitle]" = "전문가용 문제 해결";
 
 /* Title of the diagnostic info screen */
 "[DiagLog/title]" = "진단 로그";
@@ -841,9 +820,6 @@
 /* Title of a list with possible hardware key connections */
 "[HardwareKey/Picker/title]" = "하드웨어 키";
 
-/* Master key/unlock option: use given slot of YubiKey */
-"[HardwareKey/YubiKey/Slot] YubiKey Slot #%d" = "YubiKey 슬롯 %d";
-
 /* Generic title of in-app help article */
 "[Help Viewer/title]" = "도움말";
 
@@ -877,11 +853,26 @@
 /* Error message about system keychain. */
 "[KeychainError/unexpectedFormat] Keychain error: unexpected data format" = "키체인 오류: 예상되지 않은 데이터 포맷";
 
+/* Action: add a key file into the app, by importing or creating one. `Key file` is a glossary term. */
+"[KeyFile/Add/action]" = "키 파일 추가";
+
 /* Message to confirm deletion of a key file. */
 "[KeyFile/Delete/Confirm/text] Delete key file?\n Make sure you have a backup." = "키 파일을 삭제하시겠습니까?\n 백업을 생성해뒀는지 확인해주세요.";
 
+/* Error message related to key file. [errorDetails: String] */
+"[KeyFile/error]" = "키 파일 오류: %@";
+
 /* Name of an input field which shows selected key file */
 "[KeyFile/Field/title]" = "키 파일";
+
+/* Title of the list with key files. */
+"[KeyFile/List/title]" = "키 파일";
+
+/* Description of the 'No Key File' option. */
+"[KeyFile/None/description]" = "패스워드만 사용";
+
+/* Title: don't use key file */
+"[KeyFile/None/title]" = "키 파일 없음";
 
 /* Message to confirm removal of a key file from the app. (This keeps the file, but removes its reference from the app.) */
 "[KeyFile/Remove/Confirm/text] Remove key file from the list?\n The file will remain intact and you can add it again later." = "키 파일을 목록에서 제거하시겠습니까?\n 원본 파일은 삭제되지 않으며, 나중에 목록에 다시 추가할 수 있습니다.";
@@ -896,7 +887,7 @@
 "[Menu/FileInfo/title]" = "파일 정보";
 
 /* Menu title: app settings */
-"[Menu/Preferences/title]" = "설정…";
+"[Menu/Settings/title]" = "설정";
 
 /* Suggestion/hint on how to fix an accompanying error. */
 "[Org/ContactYourAdmin]" = "IT 관리자에게 문의하세요.";
@@ -994,27 +985,6 @@
 /* Marks the default pricing plan */
 "[Premium/Price Plan/popular]" = "인기";
 
-/* Status: special premium for beta-testing environment is active */
-"[Premium/status] Beta testing" = "베타 테스트";
-
-/* Status: current version of the app. For example: `Current version: 1.23`. Should be similar to the `Licensed version` string. [version: String] */
-"[Premium/status] Current version: %@" = "현재 버전: %@";
-
-/* Status: premium subscription has expired. For example: `Expired 1 day ago`. [timeFormatted: String, includes the time unit (day, hour, minute)] */
-"[Premium/status] Expired %@ ago. Please renew." = "%@ 전에 만료되었습니다. 갱신해 주시기 바랍니다.";
-
-/* Status: licensed premium version of the app. For example: `Licensed version: 1.23`. [version: String] */
-"[Premium/status] Licensed version: %@" = "라이선스 적용 버전: %@";
-
-/* Status: scheduled renewal date of a premium subscription. For example: `Next renewal on 1 Jan 2050`. [expiryDateString: String] */
-"[Premium/status] Next renewal on %@" = "%@에 갱신 예정";
-
-/* Status: validity period of once-and-forever premium */
-"[Premium/status] Valid forever" = "평생 유효";
-
-/* Status when the user has a premium version */
-"[Premium/Status/title]" = "프리미엄 버전";
-
 /* Subscription conditions */
 "[Premium/Subscription/Legal/text]" = "구매가 확인되면 사용자의 Apple ID 계정을 통해 지불됩니다.\n\n구독은 현재 구독 기간이 종료되기 최소 24시간 전에 취소하지 않는 한 자동으로 갱신됩니다. 자동 갱신 시 현재 구독 기간이 종료되기 24시간 전 이내에 지불이 발생합니다.\n\n구독 구매 후, App Store의 계정 설정에서 구독을 관리하고 취소할 수 있습니다.";
 
@@ -1066,9 +1036,6 @@
 /* Message shown after buying or subscribing. */
 "[Premium/Upgrade/Success/thankYou]" = "구매해주셔서 감사합니다!";
 
-/* Status: how long the app has been used during some time period. For example: `App being useful: 1hr/month, about 12hr/year`. [monthlyUsage: String, annualUsage: String — already include the time unit (hours, minutes)] */
-"[Premium/usage] App being useful: %@/month, that is around %@/year." = "앱 사용 기간: %1$@/월 (%2$@/년)";
-
 /* A generic description of a premium feature */
 "[PremiumFeature/Generic/description]" = "프리미엄 버전으로 업그레이드하고 KeePassium의 모든 기능을 사용해 보세요.";
 
@@ -1105,119 +1072,11 @@
 /* Name of an input field for entering the password again */
 "[Repeat Password/Field/title]" = "패스워드 재입력";
 
-/* Call to action (protect the app from unauthorized access) */
-"[Settings/AppLoc/Activate/callToAction]" = "앱 잠금 활성화";
-
-/* Description of `Activate app protection` call to action. */
-"[Settings/AppLock/Activate/description]" = "허가되지 않은 접근으로부터 KeePassium을 보호합니다.";
-
-/* Settings switch: whether AppLock is allowed to use Touch ID/Face ID. Example: 'Use Touch ID'. [biometryTypeName: String] */
-"[Settings/AppLock/Biometric/title] Use %@" = "%@ 사용";
-
-/* Explanation for the `Lock on App Launch` setting */
-"[Settings/AppLock/LockOnLaunch/description]" = "KeePassium이 강제 종료되거나 기기를 재시동할 때 앱 잠금을 확실시하고 싶으시다면 이 설정을 활성화하세요.";
-
-/* Setting switch: whether to lock the app after it was terminated and relaunched. */
-"[Settings/AppLock/LockOnLaunch/title]" = "앱 실행 시 잠금";
-
-/* Settings: subtitle of the `App Protection` section. biometryTypeName will be either 'Touch ID' or 'Face ID'. [biometryTypeName: String] */
-"[Settings/AppLock/subtitle] App Lock, %@, timeout" = "앱 잠금, %@, 시간 제한";
-
-/* Settings: subtitle of the `App Protection` section when biometric auth is not available. */
-"[Settings/AppLock/subtitle] App Lock, passcode, timeout" = "앱 잠금, 비밀번호, 시간 제한";
-
-/* Settings section: protection of the app from unauthorized access */
-"[Settings/AppLock/title]" = "앱 보호";
-
-/* A description/subtitle for Settings/AppLockTimeout options that trigger when the user has been idle for a while. For example: 'AppLock Timeout: 3 seconds (After last interaction) */
-"[Settings/AppLockTimeout/description] After last interaction" = "마지막 상호작용 후";
-
-/* A description/subtitle for Settings/AppLock/Timeout options that trigger when the app is minimized. For example: 'AppLock Timeout: 3 seconds (After leaving the app) */
-"[Settings/AppLockTimeout/description] After leaving the app" = "앱을 벗어난 후";
-
-/* An option in Settings. Will be shown as 'App Lock: Timeout: Immediately' */
-"[Settings/AppLockTimeout/fullTitle] Immediately" = "즉시";
-
-/* An option in Settings. Will be shown as 'App Lock: Timeout: Never' */
-"[Settings/AppLockTimeout/fullTitle] Never" = "잠그지 않음";
-
-/* An option in Settings. Will be shown as 'App Lock: Timeout: Immediately' */
-"[Settings/AppLockTimeout/shortTitle] Immediately" = "즉시";
-
-/* An option in Settings. Will be shown as 'App Lock: Timeout: Never' */
-"[Settings/AppLockTimeout/shortTitle] Never" = "잠그지 않음";
-
-/* Title of an option: copy one-time password to clipboard when using AutoFill */
-"[Settings/AutoFill/CopyOTP/title]" = "클립보드에 OTP 복사";
-
 /* Title of AutoFill settings screen */
 "[Settings/AutoFill/title]" = "자동 완성 패스워드";
 
-/* Title of an option: automatically use the single best match found by AutoFill search */
-"[Settings/AutoFill/UsePerfectMatch/title]" = "완벽히 일치하는 항목으로 자동 채우기";
-
-/* Option in settings: whether to open the last used database automatically on start. */
-"[Settings/AutoOpenPreviousDatabase/title]" = "이전 데이터베이스를 자동으로 열기";
-
-/* Action to delete all backup files from the app. `ALL` is in capitals as a highlight. [backupFileCount: Int] */
-"[Settings/Backup] Delete ALL Backup Files (%d)" = "모든 백업 파일 삭제 (%d개)";
-
-/* Status message: there are no backup files to delete */
-"[Settings/Backup] No Backup Files Found" = "백업 파일 없음";
-
-/* Confirmation dialog message to delete all backup files */
-"[Settings/Backup/Delete/title] Delete all backup files?" = "모든 백업 파일을 삭제하시겠습니까?";
-
-/* An option in Settings. Please keep it short. Will be shown as 'Keep Backup Files: Forever' */
-"[Settings/BackupKeepingDuration/shortTitle] Forever" = "영구 저장";
-
-/* Text of the success message for `Clear Key File Associations` button */
-"[Settings/ClearKeyFileAssociations/Cleared/text] Associations between key files and databases have been removed." = "데이터베이스와 키 파일 간 연결이 초기화되었습니다.";
-
-/* Title of the success message for `Clear Key File Associations` button */
-"[Settings/ClearKeyFileAssociations/Cleared/title] Cleared" = "초기화됨";
-
-/* Text of the success message for `Clear Master Keys` button */
-"[Settings/ClearMasterKeys/Cleared/text] All master keys have been deleted." = "모든 마스터 키가 삭제되었습니다.";
-
-/* Title of the success message for `Clear Master Keys` button */
-"[Settings/ClearMasterKeys/Cleared/title] Cleared" = "초기화됨";
-
-/* Description of the clipboard/pasteboard timeout. */
-"[Settings/ClipboardTimeout/description] When you copy some text from an entry, the app will automatically clear your clipboard (pasteboard) after this time." = "항목에서 일부 텍스트를 복사한 경우, 지정한 시간 이후에 클립보드를 자동으로 비웁니다.";
-
-/* An option in Settings. Will be shown as 'Clipboard Timeout: Never' */
-"[Settings/ClipboardTimeout/fullTitle] Never" = "잠그지 않음";
-
-/* An option in Settings. Will be shown as 'Clipboard Timeout: Never' */
-"[Settings/ClipboardTimeout/shortTitle] Never" = "잠그지 않음";
-
-/* Title of a settings section: backup of databases */
-"[Settings/DatabaseBackup/title]" = "데이터베이스 백업";
-
-/* Description of the Database Lock Timeout */
-"[Settings/DatabaseLockTimeout/description] If you are not interacting with the app for some time, the database will be closed for your safety. To open it, you will need to enter its master password again." = "일정 시간동안 앱과 상호작용하지 않는 경우, 보안을 위해 데이터베이스를 자동으로 닫습니다. 데이터베이스를 열려면 마스터 패스워드를 다시 입력해야 합니다.";
-
-/* A description/subtitle for the 'DatabaseLockTimeout: Immediately'. */
-"[Settings/DatabaseLockTimeout/description] When leaving the app" = "앱을 벗어나는 즉시";
-
-/* An option in Settings. Will be shown as 'Database Lock: Timeout: Immediately' */
-"[Settings/DatabaseLockTimeout/fullTitle] Immediately" = "즉시";
-
-/* An option in Settings. Will be shown as 'Database Lock: Timeout: Never' */
-"[Settings/DatabaseLockTimeout/fullTitle] Never" = "잠그지 않음";
-
-/* An option in Settings. Will be shown as 'Database Lock: Timeout: Immediately' */
-"[Settings/DatabaseLockTimeout/shortTitle] Immediately" = "즉시";
-
-/* An option in Settings. Will be shown as 'Database Lock: Timeout: Never' */
-"[Settings/DatabaseLockTimeout/shortTitle] Never" = "잠그지 않음";
-
-/* Title of a setting: the time after which databases will be locked. */
-"[Settings/DatabaseLockTimeout/title]" = "데이터베이스 시간 제한";
-
-/* Subtitle for `Data Protection` section in settings */
-"[Settings/DataProtection/subtitle]" = "마스터 키, 키 파일";
+/* Title of a yes/no setting: whether to include backup copies in the file list */
+"[Settings/DatabaseBackup/ShowBackupFiles/title]" = "백업 파일 표시";
 
 /* Settings section: protection of databases, their keys and data inside them */
 "[Settings/DataProtection/title]" = "데이터 보호";
@@ -1231,11 +1090,17 @@
 /* Title of a settings section: sort order of groups and entries in a list */
 "[Settings/GroupViewer] Sort Order" = "정렬 순서";
 
+/* Title of a yes/no setting */
+"[Settings/KeyFiles/Remember/title]" = "키 파일 기억하기";
+
 /* Title of list view configuration screen */
 "[Settings/ListSettings/title]" = "목록 설정";
 
-/* Section title in settings */
-"[Settings/Search/title]" = "검색";
+/* Setting: preserve (cache) calculated database keys */
+"[Settings/MasterKeys/CacheDerived/title]" = "파생된 암호화 키 캐싱";
+
+/* Title of a yes/no setting */
+"[Settings/MasterKeys/Remember/title]" = "마스터 키 기억하기";
 
 /* Title of the app settings screen */
 "[Settings/title]" = "설정";
@@ -1285,27 +1150,15 @@
 /* Human-readable file location: the file is on device, inside the app sandbox. Example: 'File Location: Local copy' */
 "[URLReference/Location] Local copy" = "로컬 복사본";
 
-/* Selector choice: don't use YubiKey to encrypt/decrypt database */
-"[YubiKey] Don't use YubiKey" = "YubiKey를 사용하지 않음";
-
 /* Call for action: insert YubiKey 5Ci to the Lightning port */
 "[YubiKey] Insert the key" = "키 삽입";
 
 /* Call for action: touch the sides of YubiKey 5Ci to continue */
 "[YubiKey] Touch the key" = "키 터치";
 
-/* Selector choice: use YubiKey to encrypt/decrypt database. For example: `Use YubiKey Slot 1`. [slotID: Int] */
-"[YubiKey] Use YubiKey Slot %d" = "YubiKey 슬롯 %d";
-
 /* Action/button to add database to the app */
 "Add Database" = "데이터베이스 추가";
 
 /* Warning message when the user tries to use a database as a key file */
 "KeePass database should not be used as key file. Please pick a different file." = "KeePass 데이터베이스 파일은 키 파일로 사용될 수 없습니다. 다른 파일을 선택해주세요.";
-
-/* Placeholder shown when there are no database files available */
-"No database files" = "데이터베이스 파일 없음";
-
-/* Settings switch: whether to include backup copies in the file list */
-"Show Backup Files" = "백업 파일 표시";
 

@@ -6,31 +6,28 @@
 //  by the Free Software Foundation: https://www.gnu.org/licenses/).
 //  For commercial licensing, please contact the author.
 
-import UIKit
+import KeePassiumLib
 
 struct AnnouncementItem: Hashable {
     var title: String?
     var body: String?
-    var actionTitle: String?
     var image: UIImage?
-    var onDidPressAction: ((AnnouncementView) -> Void)?
+    var action: UIAction?
     var onDidPressClose: ((AnnouncementView) -> Void)?
 
     func hash(into hasher: inout Hasher) {
         hasher.combine(title)
         hasher.combine(body)
-        hasher.combine(actionTitle)
         hasher.combine(image)
-        hasher.combine(onDidPressAction.debugDescription)
+        hasher.combine(action)
         hasher.combine(onDidPressClose.debugDescription)
     }
 
     static func == (lhs: Self, rhs: Self) -> Bool {
         return lhs.title == rhs.title
             && lhs.body == rhs.body
-            && lhs.actionTitle == rhs.actionTitle
             && lhs.image == rhs.image
-            && lhs.onDidPressAction.debugDescription == rhs.onDidPressAction.debugDescription
+            && lhs.action == rhs.action
             && lhs.onDidPressClose.debugDescription == rhs.onDidPressClose.debugDescription
     }
 }
@@ -38,58 +35,19 @@ struct AnnouncementItem: Hashable {
 final class AnnouncementView: UIView {
     typealias ActionHandler = (AnnouncementView) -> Void
 
-    var onDidPressActionButton: ActionHandler? {
-        didSet {
-            setupSubviews()
-        }
-    }
-
-    var onDidPressClose: ActionHandler? {
-        didSet {
-            setupSubviews()
-        }
-    }
-
-    var title: String? {
-        get { titleLabel.text }
-        set {
-            titleLabel.text = newValue
-            setupSubviews()
-        }
-    }
-    var body: String? {
-        get { bodyLabel.text }
-        set {
-            bodyLabel.text = newValue
-            setupSubviews()
-        }
-    }
-    var image: UIImage? {
-        get { imageView.image }
-        set {
-            imageView.image = newValue
-            setupSubviews()
-        }
-    }
-
-    var actionTitle: String? {
-        get { actionButton.currentTitle }
-        set {
-            actionButton.setTitle(newValue, for: .normal)
-            setupSubviews()
-        }
-    }
+    private var onDidPressClose: ActionHandler?
+    private var action: UIAction?
 
     private lazy var imageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(systemName: "info.circle")
-        imageView.preferredSymbolConfiguration = UIImage.SymbolConfiguration(textStyle: .body, scale: .large)
+        imageView.image = .symbol(.infoCircle)
+        imageView.preferredSymbolConfiguration = UIImage.SymbolConfiguration(pointSize: 24, weight: .regular)
         imageView.tintColor = .label
         imageView.contentMode = .center
         imageView.clipsToBounds = false
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.setContentHuggingPriority(.defaultHigh, for: .horizontal)
-        imageView.widthAnchor.constraint(greaterThanOrEqualToConstant: 36).activate()
+        imageView.widthAnchor.constraint(greaterThanOrEqualToConstant: 38).activate()
         imageView.heightAnchor.constraint(greaterThanOrEqualToConstant: 29).activate()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
@@ -108,9 +66,9 @@ final class AnnouncementView: UIView {
 
     private lazy var bodyLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.preferredFont(forTextStyle: .callout)
+        label.font = UIFont.preferredFont(forTextStyle: .subheadline)
         label.adjustsFontForContentSizeCategory = true
-        label.textColor = .label
+        label.textColor = .secondaryLabel
         label.numberOfLines = 0
         label.lineBreakMode = .byWordWrapping
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -118,37 +76,46 @@ final class AnnouncementView: UIView {
     }()
 
     private lazy var closeButton: UIButton = {
-        let button = UIButton(type: .close, primaryAction: UIAction {[weak self] _ in
+        var config = UIButton.Configuration.borderless()
+        config.image = .symbol(.xmark, tint: .secondaryLabel)?
+            .applyingSymbolConfiguration(.init(textStyle: .headline, scale: .medium))
+        config.imagePadding = .zero
+        let button = UIButton(configuration: config, primaryAction: UIAction { [weak self] _ in
             guard let self else { return }
             self.onDidPressClose?(self)
         })
+        button.accessibilityLabel = LString.actionDismiss
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.widthAnchor.constraint(equalToConstant: 25).activate()
-        button.heightAnchor.constraint(equalToConstant: 25).activate()
+        button.setContentHuggingPriority(.required, for: .horizontal)
+        button.setContentHuggingPriority(.required, for: .vertical)
+        button.setContentCompressionResistancePriority(.required, for: .horizontal)
+        button.setContentCompressionResistancePriority(.required, for: .vertical)
         return button
     }()
 
+    private lazy var actionButtonSeparator: UIView = {
+        let view = UIView()
+        view.backgroundColor = .separator
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+
     private lazy var actionButton: UIButton = {
-        let button = UIButton(primaryAction: UIAction {[weak self] _ in
-            guard let self else { return }
-            self.onDidPressActionButton?(self)
-        })
-        button.contentHorizontalAlignment = UIControl.ContentHorizontalAlignment.leading
-        button.titleLabel?.font = UIFont.preferredFont(forTextStyle: .callout)
-        button.setTitleColor(.actionTint, for: .normal)
-        button.titleLabel?.numberOfLines = 0
-        button.titleLabel?.lineBreakMode = .byWordWrapping
+        var buttonConfig = UIButton.Configuration.plain()
+        buttonConfig.titleAlignment = .leading
+        buttonConfig.titleLineBreakMode = .byWordWrapping
+        buttonConfig.buttonSize = .medium
+        buttonConfig.imagePadding = 8
+        buttonConfig.contentInsets.leading = 0
+        buttonConfig.contentInsets.trailing = 0
+        let button = UIButton(configuration: buttonConfig)
+        button.contentHorizontalAlignment = .leading
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
 
     override init(frame: CGRect) {
         super.init(frame: frame)
-
-        backgroundColor = .quaternarySystemFill
-        layer.cornerRadius = 10
-        layer.borderColor = UIColor.secondarySystemFill.cgColor
-        layer.borderWidth = 1
 
         setupSubviews()
     }
@@ -157,14 +124,35 @@ final class AnnouncementView: UIView {
         fatalError("Not implemented")
     }
 
-    public func apply(_ announcement: AnnouncementItem) {
-        title = announcement.title
-        body = announcement.body
-        actionTitle = announcement.actionTitle
-        image = announcement.image
+    public func apply(_ announcement: AnnouncementItem, backgroundColor: UIColor = .quaternarySystemFill) {
+        self.backgroundColor = backgroundColor
+        if backgroundColor != .clear {
+            layer.cornerRadius = 10
+        } else {
+            layer.borderWidth = 0
+        }
+        titleLabel.text = announcement.title
+        bodyLabel.text = announcement.body
+        imageView.image = announcement.image
         onDidPressClose = announcement.onDidPressClose
-        onDidPressActionButton = announcement.onDidPressAction
-        layoutSubviews()
+        updateActionButton(with: announcement.action)
+
+        setupSubviews()
+    }
+
+    private func updateActionButton(with newAction: UIAction?) {
+        if let action {
+            actionButton.removeAction(action, for: .touchUpInside)
+        }
+        if let newAction {
+            actionButton.addAction(newAction, for: .touchUpInside)
+        }
+        action = newAction
+
+        var buttonConfig = actionButton.configuration!
+        buttonConfig.title = newAction?.title
+        buttonConfig.image = newAction?.image
+        actionButton.configuration = buttonConfig
     }
 
     private func setupSubviews() {
@@ -173,42 +161,40 @@ final class AnnouncementView: UIView {
             $0.removeFromSuperview()
         }
 
-        let hasImage = image != nil
-        let hasTitle = !(title?.isEmpty ?? true)
-        let hasBody = !(body?.isEmpty ?? true)
-        let hasButton = !(actionButton.currentTitle?.isEmpty ?? true) && (onDidPressActionButton != nil)
-        let canBeClosed = onDidPressClose != nil
+        self.setContentCompressionResistancePriority(.required, for: .vertical)
+        self.clipsToBounds = true
 
-        var stackedViews = [UIView]()
-
+        var topMargin: CGFloat = 4
+        var bottomMargin: CGFloat = -4
         let imageTrailingAnchor: NSLayoutXAxisAnchor
         let imageTrailingAnchorConstant: CGFloat
-        if hasImage {
+        if let _ = imageView.image {
             addSubview(imageView)
+            imageView.topAnchor
+                .constraint(equalTo: layoutMarginsGuide.topAnchor, constant: topMargin)
+                .activate()
             imageView.leadingAnchor
                 .constraint(equalTo: layoutMarginsGuide.leadingAnchor, constant: 8)
                 .activate()
-            imageView.topAnchor
-                .constraint(greaterThanOrEqualTo: layoutMarginsGuide.topAnchor)
-                .activate()
-            imageView.centerYAnchor
-                .constraint(equalTo: layoutMarginsGuide.centerYAnchor)
+            imageView.bottomAnchor
+                .constraint(lessThanOrEqualTo: layoutMarginsGuide.bottomAnchor, constant: bottomMargin)
                 .setPriority(.defaultHigh)
                 .activate()
             imageTrailingAnchor = imageView.trailingAnchor
-            imageTrailingAnchorConstant = 8
+            imageTrailingAnchorConstant = 16
         } else {
             imageTrailingAnchor = layoutMarginsGuide.leadingAnchor
             imageTrailingAnchorConstant = 8
         }
 
-        let titleBottomAnchor: NSLayoutYAxisAnchor
-        let titleBottomAnchorConstant: CGFloat
-        if hasTitle {
+        var stackedViews = [UIView]()
+        var prevViewBottom = layoutMarginsGuide.topAnchor
+        if let titleText = titleLabel.text,
+           !titleText.isEmpty
+        {
             addSubview(titleLabel)
-            stackedViews.append(titleLabel)
             titleLabel.topAnchor
-                .constraint(equalTo: layoutMarginsGuide.topAnchor)
+                .constraint(equalTo: prevViewBottom, constant: topMargin)
                 .activate()
             titleLabel.leadingAnchor
                 .constraint(equalTo: imageTrailingAnchor, constant: imageTrailingAnchorConstant)
@@ -216,23 +202,18 @@ final class AnnouncementView: UIView {
             titleLabel.trailingAnchor
                 .constraint(lessThanOrEqualTo: layoutMarginsGuide.trailingAnchor, constant: -8)
                 .activate()
-            titleLabel.bottomAnchor
-                .constraint(lessThanOrEqualTo: layoutMarginsGuide.bottomAnchor)
-                .activate()
-            titleBottomAnchor = titleLabel.bottomAnchor
-            titleBottomAnchorConstant = 8
-        } else {
-            titleBottomAnchor = layoutMarginsGuide.topAnchor
-            titleBottomAnchorConstant = 0
+            titleLabel.setContentCompressionResistancePriority(.required, for: .vertical)
+            stackedViews.append(titleLabel)
+            prevViewBottom = titleLabel.lastBaselineAnchor
+            topMargin = 8
         }
 
-        let bodyBottomAnchor: NSLayoutYAxisAnchor
-        let bodyBottomAnchorConstant: CGFloat
-        if hasBody {
+        if let bodyText = bodyLabel.text,
+           !bodyText.isEmpty
+        {
             addSubview(bodyLabel)
-            stackedViews.append(bodyLabel)
             bodyLabel.topAnchor
-                .constraint(equalTo: titleBottomAnchor, constant: titleBottomAnchorConstant)
+                .constraint(equalTo: prevViewBottom, constant: topMargin)
                 .activate()
             bodyLabel.leadingAnchor
                 .constraint(equalTo: imageTrailingAnchor, constant: imageTrailingAnchorConstant)
@@ -240,60 +221,60 @@ final class AnnouncementView: UIView {
             bodyLabel.trailingAnchor
                 .constraint(lessThanOrEqualTo: layoutMarginsGuide.trailingAnchor, constant: -8)
                 .activate()
-            bodyLabel.bottomAnchor
-                .constraint(lessThanOrEqualTo: layoutMarginsGuide.bottomAnchor)
-                .activate()
-            bodyBottomAnchor = bodyLabel.bottomAnchor
-            bodyBottomAnchorConstant = 8
-        } else {
-            bodyBottomAnchor = titleBottomAnchor
-            bodyBottomAnchorConstant = 0
+            bodyLabel.setContentCompressionResistancePriority(.required, for: .vertical)
+            stackedViews.append(bodyLabel)
+            prevViewBottom = bodyLabel.bottomAnchor
+            topMargin = 8
         }
 
-        if hasButton {
+        if let _ = action {
+            addSubview(actionButtonSeparator)
             addSubview(actionButton)
-            stackedViews.append(actionButton)
-            actionButton.topAnchor
-                .constraint(equalTo: bodyBottomAnchor, constant: bodyBottomAnchorConstant)
+            actionButtonSeparator.heightAnchor.constraint(equalToConstant: 0.5).activate()
+            actionButtonSeparator.topAnchor
+                .constraint(equalTo: prevViewBottom, constant: 8).activate()
+            actionButtonSeparator.leadingAnchor
+                .constraint(equalTo: imageTrailingAnchor, constant: imageTrailingAnchorConstant).activate()
+            actionButtonSeparator.trailingAnchor
+                .constraint(equalTo: layoutMarginsGuide.trailingAnchor, constant: -8).activate()
+
+            actionButton.layoutMarginsGuide.topAnchor
+                .constraint(equalTo: actionButtonSeparator.bottomAnchor, constant: 12)
                 .activate()
             actionButton.leadingAnchor
                 .constraint(equalTo: imageTrailingAnchor, constant: imageTrailingAnchorConstant)
                 .activate()
             actionButton.trailingAnchor
-                .constraint(equalTo: layoutMarginsGuide.trailingAnchor, constant: -8)
-                .activate()
-            actionButton.bottomAnchor
-                .constraint(lessThanOrEqualTo: layoutMarginsGuide.bottomAnchor)
+                .constraint(equalTo: trailingAnchor, constant: -8)
                 .activate()
             actionButton.titleLabel?.numberOfLines = 0
-        } else {
-            bodyBottomAnchor
-                .constraint(lessThanOrEqualTo: layoutMarginsGuide.bottomAnchor)
-                .activate()
+            actionButton.setContentCompressionResistancePriority(.required, for: .vertical)
+            stackedViews.append(actionButton)
+            bottomMargin = 4
         }
 
-        if canBeClosed {
+        if onDidPressClose != nil {
             addSubview(closeButton)
             closeButton.topAnchor
-                .constraint(equalTo: layoutMarginsGuide.topAnchor)
+                .constraint(equalTo: layoutMarginsGuide.topAnchor, constant: -4)
                 .activate()
             closeButton.trailingAnchor
-                .constraint(equalTo: layoutMarginsGuide.trailingAnchor)
+                .constraint(equalTo: trailingAnchor, constant: -4)
                 .activate()
 
             let closeButtonLeadingAnchor = stackedViews.first?.trailingAnchor ?? imageTrailingAnchor
             closeButton.leadingAnchor
-                .constraint(equalTo: closeButtonLeadingAnchor, constant: 8)
+                .constraint(greaterThanOrEqualTo: closeButtonLeadingAnchor, constant: 8)
                 .activate()
 
-            let closeButtonBottomGuide: NSLayoutYAxisAnchor
-            if stackedViews.count > 1 {
-                closeButtonBottomGuide = stackedViews[1].topAnchor
-            } else {
-                closeButtonBottomGuide = layoutMarginsGuide.bottomAnchor
-            }
             closeButton.bottomAnchor
-                .constraint(lessThanOrEqualTo: closeButtonBottomGuide)
+                .constraint(lessThanOrEqualTo: layoutMarginsGuide.bottomAnchor)
+                .activate()
+        }
+        if let lastStackedView = stackedViews.last {
+            lastStackedView.bottomAnchor
+                .constraint(equalTo: layoutMarginsGuide.bottomAnchor, constant: bottomMargin)
+                .setPriority(.required - 1)
                 .activate()
         }
     }

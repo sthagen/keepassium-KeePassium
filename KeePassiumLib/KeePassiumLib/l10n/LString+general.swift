@@ -57,6 +57,12 @@ extension LString {
         value: "Continue",
         comment: "Action/button to proceed with the action"
     )
+    public static let actionGotIt = NSLocalizedString(
+        "[Generic/GotIt/action]",
+        bundle: Bundle.framework,
+        value: "Got It",
+        comment: "Action to proceed after a warning, basically 'I understand the risk'"
+    )
     public static let actionSkip = NSLocalizedString(
         "[Generic] Skip",
         bundle: Bundle.framework,
@@ -172,6 +178,12 @@ extension LString {
         value: "Save as…",
         comment: "Action/button to save data to a different file"
     )
+    public static let actionForceSave = NSLocalizedString(
+        "[Generic/File/ForceSave]",
+        bundle: Bundle.framework,
+        value: "Force Save",
+        comment: "Action to save data, when we ignore minor problems in the process.")
+
     public static let actionShowMore = NSLocalizedString(
         "[Generic] Show more",
         bundle: Bundle.framework,
@@ -456,12 +468,6 @@ extension LString {
         value: "Unlock KeePassium",
         comment: "Call to action in the passcode input dialog."
     )
-    public static let eraseDataAfterFailedAttemptsTitle = NSLocalizedString(
-        "[AppLock/EraseData/title]",
-        bundle: Bundle.framework,
-        value: "Erase Data",
-        comment: "Title for setting to erase all data after failed passcode attempts"
-    )
 
     public static let actionCopyToClipboardTemplate = NSLocalizedString(
         "[Clipboard/Copy/namedValue]",
@@ -506,6 +512,12 @@ extension LString {
         bundle: Bundle.framework,
         value: "Forgot your password?",
         comment: "Message shown when user enters an invalid database password"
+    )
+    public static let actionUseFallbackDatabase = NSLocalizedString(
+        "[Database/Unlock/UseFallback/action]",
+        bundle: Bundle.framework,
+        value: "Use Local Copy",
+        comment: "Action: load a local (on-device) copy of a remote database"
     )
 
     public static let databaseStatusLoading = NSLocalizedString(
@@ -1285,13 +1297,6 @@ extension LString {
         comment: "Call to action: type in the secret key for OTP setup."
     )
 
-    public static let otpCodeCopyToClipboardDemo = "Demo"
-    public static let otpCodeCopiedToClipboard = NSLocalizedString(
-        "[OTP/CopiedToClipboard/title]",
-        bundle: Bundle.framework,
-        value: "One-time password copied to clipboard",
-        comment: "Notification next to the OTP code which was copied to clipboard"
-    )
     public static let otpCodeHereItIs = NSLocalizedString(
         "[OTP/Title/sentenceCase]",
         bundle: Bundle.framework,
@@ -1424,6 +1429,13 @@ extension LString {
         bundle: Bundle.framework,
         value: "Database file has changed. Reload?",
         comment: "Notification message about external changes to the loaded file."
+    )
+
+    public static let messageHoldKeyForMultiSelection = NSLocalizedString(
+        "[General/MultiSelectionKeys/hint]",
+        bundle: Bundle.framework,
+        value: "Press and hold Cmd or Shift key to select multiple items.",
+        comment: "Info message for keyboard-assisted selection"
     )
 }
 // swiftlint:enable line_length

@@ -27,33 +27,45 @@ final class OneDriveConnectionSetupCoordinator: RemoteDataSourceSetupCoordinator
     weak var delegate: OneDriveConnectionSetupCoordinatorDelegate?
 
     init(
+        mode: RemoteConnectionSetupMode,
+        scope: OAuthScope,
         stateIndicator: BusyStateIndicating,
-        selectionMode: RemoteItemSelectionMode = .file,
-        oldRef: URLReference?,
-        router: NavigationRouter
+        router: NavigationRouter,
     ) {
+        var scope = scope
+        switch mode {
+        case .pick: break
+        case .edit(let oldRef), .reauth(let oldRef):
+            if oldRef.url?.isOneDriveAppFolderScopedURL == true {
+                scope = .appFolder
+            }
+        }
         super.init(
-            mode: selectionMode,
             manager: OneDriveManager.shared,
-            oldRef: oldRef,
+            mode: mode,
+            scope: scope,
             stateIndicator: stateIndicator,
             router: router)
     }
 
     override func onAccountInfoAcquired(_ accountInfo: OneDriveDriveInfo) {
         self._accountInfo = accountInfo
-        if let _oldRef,
-           let url = _oldRef.url,
-           _oldRef.fileProvider == accountInfo.type.matchingFileProvider
-        {
-            trySelectFile(url, onFailure: { [weak self] in
-                guard let self else { return }
-                self._oldRef = nil
-                self.onAccountInfoAcquired(accountInfo)
-            })
-            return
+        let currentFileProvider = accountInfo.type.getMatchingFileProvider(scope: _scope)
+        switch _mode {
+        case .edit, .pick:
+            break
+        case .reauth(let oldRef):
+            if let url = oldRef.url,
+               oldRef.fileProvider == currentFileProvider
+            {
+                trySelectFile(url, onFailure: { [weak self] in
+                    guard let self else { return }
+                    self._mode = .edit(oldRef)
+                    self.onAccountInfoAcquired(accountInfo)
+                })
+                return
+            }
         }
-
         maybeSuggestPremium(isCorporateStorage: accountInfo.type.isCorporate) { [weak self] in
             self?.showWelcomeFolder()
         }
@@ -89,16 +101,21 @@ final class OneDriveConnectionSetupCoordinator: RemoteDataSourceSetupCoordinator
             assertionFailure()
             return
         }
-        let vc = RemoteFolderViewerVC.make()
-        vc.items = [
-            OneDriveItem.getPersonalFilesFolder(driveInfo: accountInfo),
-            OneDriveItem.getSharedWithMeFolder(driveInfo: accountInfo),
-        ]
-        vc.folder = nil
-        vc.folderName = accountInfo.type.description
-        vc.delegate = self
-        vc.selectionMode = selectionMode
-        _pushInitialViewController(vc, animated: true)
+
+        switch _scope {
+        case .appFolder:
+            let appFolderItem = OneDriveItem.getDedicatedAppFolder(driveInfo: accountInfo)
+            showFolder(folder: appFolderItem, stateIndicator: _stateIndicator)
+        case .fullAccess:
+            _showFolder(
+                items: [
+                    OneDriveItem.getPersonalFilesFolder(driveInfo: accountInfo),
+                    OneDriveItem.getSharedWithMeFolder(driveInfo: accountInfo),
+                ],
+                parent: nil,
+                title: accountInfo.type.description
+            )
+        }
     }
 
     override func didPressSave(to folder: RemoteFileItem, in viewController: RemoteFolderViewerVC) {
@@ -167,7 +184,8 @@ final class OneDriveConnectionSetupCoordinator: RemoteDataSourceSetupCoordinator
         in viewController: RemoteFolderViewerVC
     ) {
         let driveType = fileItem.driveInfo.type
-        guard driveType.matchingFileProvider.isAllowed else {
+        let fileProvider = driveType.getMatchingFileProvider(scope: _scope)
+        guard fileProvider.isAllowed else {
             Diag.error("OneDrive account type is blocked by org settings [type: \(driveType.description)]")
             viewController.showErrorAlert(FileAccessError.managedAccessDenied)
             _stateIndicator.indicateState(isBusy: false)

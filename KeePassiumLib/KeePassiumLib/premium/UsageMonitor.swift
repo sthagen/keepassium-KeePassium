@@ -39,12 +39,12 @@ public class UsageMonitor {
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(startInterval),
-            name: UIApplication.didBecomeActiveNotification,
+            name: UIScene.didActivateNotification,
             object: nil)
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(stopInterval),
-            name: UIApplication.willResignActiveNotification,
+            name: UIScene.willDeactivateNotification,
             object: nil)
         cleanupObsoleteData()
     }

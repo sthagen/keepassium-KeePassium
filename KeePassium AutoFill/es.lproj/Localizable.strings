@@ -1,14 +1,35 @@
 /* Notification when user tries to set up too weak an app protection passcode. */
 "[AppLock/weakPasscodeWarning]" = "Este código de acceso es fácil de adivinar. Intenta introducir uno más seguro.";
 
+/* Action in AutoFill: choose the entry and remember it for future use on this website. */
+"[AutoFill/AcceptAndRemember/action]" = "Aceptar y recordar";
+
+/* Title of a list */
+"[AutoFill/AllEntries/title]" = "Todas las entradas";
+
+/* Title of AutoFill context when no context is available. Usage: `Context: Unknown` */
+"[AutoFill/Context/Empty/title]" = "Desconocido";
+
+/* Title of a list with search results */
+"[AutoFill/FoundEntries/title]" = "Mejores coincidencias";
+
 /* Call for action to select an entry field for filling out. */
 "[AutoFill/InsertText/select]" = "Seleccionar campo";
 
-/* An identifier of the app that called AutoFill. The term is intentionally similar to https://ru.wikipedia.org/wiki/Caller_ID. [callerID: String] */
-"[AutoFill/Search/callerID]" = "Identificación de la persona que llama: %@";
+/* Section title for the recently used entry in AutoFill */
+"[AutoFill/RecentlyUsed/title]" = "Usada recientemente";
 
-/* Status message, shows which app or webpage launched AutoFill. For example: `Context: google.com` */
-"[AutoFill/Search/context]" = "Contexto: %@";
+/* Not an action, but a button to activate the same-named setting */
+"[AutoFill/RememberContext/action]" = "Recordar entradas seleccionadas";
+
+/* Call to action */
+"[AutoFill/RememberContext/callToAction]" = "Mejorar sugerencias de autorrelleno";
+
+/* Description of the 'Remember Selected Entries` feature */
+"[AutoFill/RememberContext/description]" = "KeePassium recordará qué entrada selecciona para cada sitio web y luego la sugerirá automáticamente.";
+
+/* Title for referring to the app or webpage that launched AutoFill. For example: `Context: google.com` */
+"[AutoFill/Search/Context/title]" = "Contexto";
 
 /* No comment provided by engineer. */
 "[AutoFill/Setup/footer]" = "«Autorrelleno» (AutoFill) no puede acceder automáticamente a los archivos de la aplicación principal de KeePassium.\n\n¿Por qué? Internamente, el sistema trata «Autorrelleno» como una aplicación separada, independiente del proceso principal de KeePassium. Por razones de seguridad, una aplicación no puede simplemente acceder a ningún archivo externo, a menos que se vinculen explícitamente estos archivos con esa aplicación. Así, el sistema garantiza que la aplicación solo puede acceder a los archivos permitidos.\n\nComo resultado, tanto la aplicación «Autorrelleno», como la aplicación principal de KeePassium deben recibir sus propios permisos para cada archivo externo. Afortunadamente, solo se necesita hacerlo una vez por cada nueva base de datos.";
@@ -25,8 +46,23 @@
 /* Must match Apple's translation, as found in iOS 17 Settings → Passwords → Password Options. If unsure, leave untranslated. */
 "[AutoFill/Setup/UncheckKeychain/usePasswordsAndPasskeysFrom]" = "Usar contraseñas y llaves de acceso de:";
 
+/* Field title: name of the group that contains the entry */
+"[Database/Entry/Location/title]" = "Ubicación";
+
+/* Title of a list with randomly generated usernames */
+"[Database/Entry/RandomUsernames/title]" = "Nombres de usuario aleatorios";
+
+/* Action/button that shows a list of usernames to pick from */
+"[Database/Entry/SelectUsername/action]" = "Seleccionar nombre de usuario";
+
+/* Action: select item from a list/menu, with item name in quotes. For example: `Select "Sample Group"` */
+"[Database/Item/SelectNamed/action]" = "Seleccionar «%@»";
+
 /* Action: create a passkey and add it to existing entry */
 "[Database/Passkey/AddToExisting/action]" = "Añadir llave de acceso a la entrada existente";
+
+/* Call to action: select an existing entry to add a new passkey to */
+"[Database/Passkey/AddToExisting/callToAction]" = "Elija una entrada para la nueva llave de acceso";
 
 /* Confirmation message before replacing an existing passkey. */
 "[Database/Passkey/AddToExisting/confirm]" = "Esta entrada ya tiene una llave de acceso. ¿Desea reemplazarla?";
@@ -69,4 +105,7 @@
 
 /* Call to action, invites the user to enable the Quick AutoFill feature */
 "[QuickAutoFill/Activate/callToAction]" = "Activar «Autorrelleno» rápido";
+
+/* Placeholder text for empty search results */
+"[Search/EmptyResult/title]" = "No se ha encontrado nada similar";
 

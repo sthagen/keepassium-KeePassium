@@ -8,7 +8,7 @@
 
 import KeePassiumLib
 
-class BaseCoordinator: NSObject, Coordinator, Refreshable {
+class BaseCoordinator: NSObject, Coordinator, Refreshable, SettingsObserver {
     var childCoordinators = [Coordinator]()
     var _dismissHandler: CoordinatorDismissHandler?
 
@@ -79,9 +79,7 @@ class BaseCoordinator: NSObject, Coordinator, Refreshable {
             }
         }
     }
-}
 
-extension BaseCoordinator: SettingsObserver {
     func settingsDidChange(key: Settings.Keys) {
         guard key != .recentUserActivityTimestamp else { return }
         refresh()

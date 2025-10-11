@@ -36,18 +36,17 @@ public class Entry2: Entry {
             customData[Xml2.ThirdParty.browserHideEntry].flatMap({ Bool(string: $0.value) })
         }
         set {
-            let dataItem = CustomData2.Item(value: String(describing: newValue), lastModificationTime: .now)
-            customData[Xml2.ThirdParty.browserHideEntry] = dataItem
+            if let newValue {
+                let dataItem = CustomData2.Item(value: String(newValue), lastModificationTime: .now)
+                customData[Xml2.ThirdParty.browserHideEntry] = dataItem
+            } else {
+                customData[Xml2.ThirdParty.browserHideEntry] = nil
+            }
         }
     }
 
-    public override var isHiddenFromSearch: Bool {
-        get {
-            browserHideEntry ?? false
-        }
-        set {
-            browserHideEntry = newValue
-        }
+    public override var isAutoFillable: Bool {
+        super.isAutoFillable && autoType.isEnabled && !(browserHideEntry ?? false)
     }
 
     override init(database: Database?, creationDate: Date = Date()) {

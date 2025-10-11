@@ -10,6 +10,8 @@ import KeePassiumLib
 import LocalAuthentication
 
 extension LAContext {
+    public static let biometricAuthReuseDuration = TimeInterval(3)
+
     public static func getBiometryType() -> LABiometryType {
         let context = LAContext()
         let policy = LAPolicy.deviceOwnerAuthenticationWithBiometrics

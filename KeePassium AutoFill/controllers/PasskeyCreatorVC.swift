@@ -14,6 +14,7 @@ protocol PasskeyCreatorDelegate: AnyObject {
     func didPressAddPasskeyToEntry(
         with params: PasskeyRegistrationParams,
         in viewController: PasskeyCreatorVC)
+    func didDismiss(_ viewController: PasskeyCreatorVC)
 }
 
 final class PasskeyCreatorVC: UIViewController {
@@ -50,6 +51,8 @@ final class PasskeyCreatorVC: UIViewController {
         primaryButton.configuration = primaryConfig
         secondaryButton.configuration = secondaryConfig
         secondaryButton.isEnabled = true
+
+        presentationController?.delegate = self
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -73,6 +76,12 @@ final class PasskeyCreatorVC: UIViewController {
     }
 }
 
+extension PasskeyCreatorVC: UIAdaptivePresentationControllerDelegate {
+    func presentationControllerDidDismiss(_ pc: UIPresentationController) {
+        delegate?.didDismiss(self)
+    }
+}
+
 extension LString {
     public static let titleCreatePasskey = NSLocalizedString(
         "[Database/Passkey/Create/title]",
@@ -83,6 +92,11 @@ extension LString {
         "[Database/Passkey/AddToExisting/action]",
         value: "Add Passkey to Existing Entry",
         comment: "Action: create a passkey and add it to existing entry"
+    )
+    public static let callToActionSelectEntryForPasskey = NSLocalizedString(
+        "[Database/Passkey/AddToExisting/callToAction]",
+        value: "Choose an entry for the new passkey",
+        comment: "Call to action: select an existing entry to add a new passkey to"
     )
     public static let titleConfirmReplacingExistingPasskey = NSLocalizedString(
         "[Database/Passkey/AddToExisting/confirm]",

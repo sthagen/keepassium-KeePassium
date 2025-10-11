@@ -1,0 +1,111 @@
+/* Notification when user tries to set up too weak an app protection passcode. */
+"[AppLock/weakPasscodeWarning]" = "Esta senha é fácil de adivinhar. Experimente uma senha mais forte.";
+
+/* Action in AutoFill: choose the entry and remember it for future use on this website. */
+"[AutoFill/AcceptAndRemember/action]" = "Aceitar e lembrar";
+
+/* Title of a list */
+"[AutoFill/AllEntries/title]" = "Todas as Entradas";
+
+/* Title of AutoFill context when no context is available. Usage: `Context: Unknown` */
+"[AutoFill/Context/Empty/title]" = "Desconhecido";
+
+/* Title of a list with search results */
+"[AutoFill/FoundEntries/title]" = "Melhores corresp.";
+
+/* Call for action to select an entry field for filling out. */
+"[AutoFill/InsertText/select]" = "Seleccionar Campo";
+
+/* Section title for the recently used entry in AutoFill */
+"[AutoFill/RecentlyUsed/title]" = "Usado recentemente";
+
+/* Not an action, but a button to activate the same-named setting */
+"[AutoFill/RememberContext/action]" = "Lembrar as entradas selecionadas";
+
+/* Call to action */
+"[AutoFill/RememberContext/callToAction]" = "Melhorar sugestões de preenchimento automático";
+
+/* Description of the 'Remember Selected Entries` feature */
+"[AutoFill/RememberContext/description]" = "KeePassium irá lembrar-se de qual a entrada que seleciona para cada website e depois irá fazer a sugestão automaticamente.";
+
+/* Title for referring to the app or webpage that launched AutoFill. For example: `Context: google.com` */
+"[AutoFill/Search/Context/title]" = "Contexto";
+
+/* No comment provided by engineer. */
+"[AutoFill/Setup/footer]" = "O Preenchimento Automático precisa de ser autorizado a aceder aos arquivos que já tem adicionados à aplicação KeePassium.\n\nPorquê? Internamente, o sistema trata o Preenchimento Automático como um se fosse a sua própria aplicação, independente do KeePassium principal. Por segurança, uma aplicação não pode aceder a ficheiros externos, a menos que lhe lhes seja dado acesso explicitamente. Assim, o sistema garante que cada aplicação só possa aceder aos ficheiros que tenham sido autorizados.\n\nPor conseguinte, tanto o Preenchimento Automático quanto a aplicação KeePassium precisam de autorização separada para cada ficheiro externo. Felizmente, é só uma vez que tem de fazer isto por ficheiro.";
+
+/* Must match Apple's translation, as found in iOS 18 Settings → General → AutoFill & Passwords. If unsure, leave untranslated. */
+"[AutoFill/Setup/UncheckKeychain/autofillFrom]" = "Preencher automaticamente de:";
+
+/* Call to action: deselect the `Keychain` option. Keychain is a glossary term. */
+"[AutoFill/Setup/UncheckKeychain/callToAction]" = "Desmarcar Porta-Chaves";
+
+/* Instruction to deselect another app in the settings [appName: String] */
+"[AutoFill/Setup/UncheckKeychain/message]" = "Para definir o KeePassium como o seu “password manager” por defeito, desactive \"%@\".";
+
+/* Must match Apple's translation, as found in iOS 17 Settings → Passwords → Password Options. If unsure, leave untranslated. */
+"[AutoFill/Setup/UncheckKeychain/usePasswordsAndPasskeysFrom]" = "Usar senhas e chaves de acesso de:";
+
+/* Field title: name of the group that contains the entry */
+"[Database/Entry/Location/title]" = "Localização";
+
+/* Title of a list with randomly generated usernames */
+"[Database/Entry/RandomUsernames/title]" = "Nomes de utilizador aleatórios";
+
+/* Action/button that shows a list of usernames to pick from */
+"[Database/Entry/SelectUsername/action]" = "Selec. o nome de utilizador";
+
+/* Action: select item from a list/menu, with item name in quotes. For example: `Select "Sample Group"` */
+"[Database/Item/SelectNamed/action]" = "Selecionar \"%@\"";
+
+/* Action: create a passkey and add it to existing entry */
+"[Database/Passkey/AddToExisting/action]" = "Adicionar Chave de Acesso a Entrada Existente";
+
+/* Call to action: select an existing entry to add a new passkey to */
+"[Database/Passkey/AddToExisting/callToAction]" = "Escolha uma entrada para a nova chave de acesso";
+
+/* Confirmation message before replacing an existing passkey. */
+"[Database/Passkey/AddToExisting/confirm]" = "Esta entrada já tem uma chave de acesso. Substituir?";
+
+/* Title of an optional dialog for creating new passkeys */
+"[Database/Passkey/Create/title]" = "Criar uma Chave de Acesso?";
+
+/* Name of the Apple Passwords application, see https://support.apple.com/120758 */
+"[Generic/ApplePasswordsApp/title]" = "Palavras-Passe";
+
+/* Apple Keychain software; is a glossary term. */
+"[Generic/Keychain/title]" = "Porta-Chaves";
+
+/* Menu action to add a user-provided word list file to the app. */
+"[PasswordGenerator/Wordlist/Import/menuAction]" = "Importar Vocabulário…";
+
+/* Password quality description. For example: `Password quality: Weak`. [level: String] */
+"[PasswordQuality/description]" = "Qualidade da palavra-passe: %@";
+
+/* Good password quality */
+"[PasswordQuality/Level] Good" = "Boa";
+
+/* Very good password quality */
+"[PasswordQuality/Level] Very good" = "Muito boa";
+
+/* Very weak password quality */
+"[PasswordQuality/Level] Very weak" = "Muito fraca";
+
+/* Weak password quality */
+"[PasswordQuality/Level] Weak" = "Fraca";
+
+/* Password quality description. Note the tilda that refers to an estimated/approximate value. For example: `Very good (~123 bits of entropy)`. [level: String, formattedBitCount: String] */
+"[PasswordQuality/LevelWithApproximateEntropy/description]" = "%1$@ (~%2$@ de entropia)";
+
+/* Password quality description. For example: `Very good (234 bits of entropy)`. [level: String, formattedBitCount: String] */
+"[PasswordQuality/LevelWithEntropy/description]" = "%1$@ (%2$@ de entropia)";
+
+/* Action/button to make password visible as plain-text */
+"[ProtectedTextField] Show Password" = "Mostrar Palavra-Passe";
+
+/* Call to action, invites the user to enable the Quick AutoFill feature */
+"[QuickAutoFill/Activate/callToAction]" = "Activar Preenchimento Automático Expresso";
+
+/* Placeholder text for empty search results */
+"[Search/EmptyResult/title]" = "Nada adequado encontrado";
+

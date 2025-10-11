@@ -15,10 +15,7 @@ extension UIDevice {
         #if targetEnvironment(macCatalyst)
         return false
         #else
-        let windows = AppGroup.applicationShared?
-            .connectedScenes
-            .compactMap { $0 as? UIWindowScene }
-            .flatMap { $0.windows }
+        let windows = AppGroup.applicationShared?.currentActiveScene.flatMap { $0.windows }
         guard let keyWindow = windows?.first(where: { $0.isKeyWindow }) else {
             return false
         }

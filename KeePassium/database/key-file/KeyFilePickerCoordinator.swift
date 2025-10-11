@@ -7,11 +7,12 @@
 //  For commercial licensing, please contact us.
 
 import KeePassiumLib
+import UniformTypeIdentifiers
 
 protocol KeyFilePickerCoordinatorDelegate: AnyObject {
     func didSelectKeyFile(
         _ fileRef: URLReference?,
-        cause: FileActivationCause?,
+        cause: ItemActivationCause?,
         in coordinator: KeyFilePickerCoordinator
     )
 
@@ -29,6 +30,7 @@ class KeyFilePickerCoordinator: FilePickerCoordinator {
     internal var _selectedKeyFile: URLReference?
     internal var _addingMode: AddingMode?
     internal var _fileExportHelper: FileExportHelper?
+    override var _allowedDropUTIs: [UTType] { FileType.keyFileUTIs }
 
     init(router: NavigationRouter) {
         let itemDecorator = ItemDecorator()
@@ -38,6 +40,7 @@ class KeyFilePickerCoordinator: FilePickerCoordinator {
             fileType: .keyFile,
             itemDecorator: itemDecorator,
             toolbarDecorator: toolbarDecorator,
+            dismissButtonStyle: .cancel,
             appearance: .insetGrouped
         )
         title = LString.titleKeyFiles
@@ -54,18 +57,34 @@ class KeyFilePickerCoordinator: FilePickerCoordinator {
         selectFile(fileRef, animated: animated)
     }
 
+    override func _updateAnnouncements() {
+        var announcements = [AnnouncementItem]()
+        if ProcessInfo.isRunningOnMac,
+           _filePickerVC.isEditing
+        {
+            announcements.append(.macMultiSelectHint())
+        }
+        self.announcements = announcements
+    }
+
     override var _contentUnavailableConfiguration: UIContentUnavailableConfiguration? {
         return EmptyListConfigurator.makeConfiguration(for: self)
     }
 
     override func didSelectFile(
         _ fileRef: URLReference?,
-        cause: FileActivationCause?,
+        cause: ItemActivationCause?,
         in viewController: FilePickerVC
     ) {
         assert(cause != nil, "Unexpected for single-panel mode")
-        delegate?.didSelectKeyFile(fileRef, cause: cause, in: self)
-        dismiss()
+        dismiss { [self] in
+            delegate?.didSelectKeyFile(fileRef, cause: cause, in: self)
+        }
+    }
+
+    override func didDropFile(_ fileURL: URL, to viewController: FilePickerVC) {
+        Diag.debug("Importing the dropped key file")
+        _addKeyFile(url: fileURL, accessMode: .import, presenter: viewController)
     }
 
     override func didEliminateFile(_ fileRef: URLReference, in coordinator: FilePickerCoordinator) {

@@ -13,13 +13,25 @@ protocol HardwareKeyPickerCoordinatorDelegate: AnyObject {
 }
 
 final class HardwareKeyPickerCoordinator: BaseCoordinator {
+    private enum Section: Int, CaseIterable {
+        case noHardwareKey
+        case yubiKeyNFC
+        case yubiKeyMFI
+        case hwKeyUSB
+    }
+
+    private var isNFCAvailable = false
+    private var isMFIAvailable = false
+    private var isUSBAvailable = false
+    private var isMFIoverUSB = false
+
     weak var delegate: HardwareKeyPickerCoordinatorDelegate?
 
     private var selectedKey: HardwareKey?
-    private let hardwareKeyPickerVC: HardwareKeyPicker
+    private let hardwareKeyPickerVC: HardwareKeyPickerVC
 
     override init(router: NavigationRouter) {
-        hardwareKeyPickerVC = HardwareKeyPicker.make()
+        hardwareKeyPickerVC = HardwareKeyPickerVC()
         super.init(router: router)
         hardwareKeyPickerVC.delegate = self
         hardwareKeyPickerVC.selectedKey = selectedKey
@@ -27,24 +39,95 @@ final class HardwareKeyPickerCoordinator: BaseCoordinator {
 
     override func start() {
         super.start()
+
+        isNFCAvailable = ChallengeResponseManager.instance.supportsNFC
+        isMFIAvailable = ChallengeResponseManager.instance.supportsMFI
+        isUSBAvailable = ChallengeResponseManager.instance.supportsUSB
+        isMFIoverUSB = ChallengeResponseManager.instance.supportsMFIoverUSB
+        hardwareKeyPickerVC.update(with: makeSections())
+
         _pushInitialViewController(hardwareKeyPickerVC, dismissButtonStyle: .cancel, animated: true)
+        refresh()
     }
 
     override func refresh() {
         super.refresh()
-        hardwareKeyPickerVC.refresh()
+        hardwareKeyPickerVC.update(with: makeSections())
     }
-}
 
-extension HardwareKeyPickerCoordinator {
+    private func makeSections() -> [HardwareKeyPickerSection] {
+        let needsPremium = !PremiumManager.shared.isAvailable(feature: .canUseHardwareKeys)
 
-    public func setSelectedKey(_ hardwareKey: HardwareKey?) {
+        var sections: [HardwareKeyPickerSection] = []
+        sections.append(HardwareKeyPickerSection(header: nil, footer: nil, items: [.noKey]))
+
+        if !ProcessInfo.isRunningOnMac {
+            sections.append(HardwareKeyPickerSection(
+                header: LString.hardwareKeyPortNFC,
+                footer: AppGroup.isAppExtension ? LString.theseHardwareKeyNotAvailableInAutoFill : nil,
+                items: [
+                    .keyType(.init(
+                        kind: .yubikey,
+                        interface: .nfc,
+                        isEnabled: isNFCAvailable,
+                        needsPremium: needsPremium
+                    ))
+                ]
+            ))
+            sections.append(HardwareKeyPickerSection(
+                header: isMFIoverUSB ? LString.hardwareKeyPortLightningOverUSBC : LString.hardwareKeyPortLightning,
+                footer: isMFIoverUSB ? LString.hardwareKeyRequiresUSBtoLightningAdapter : nil,
+                items: [
+                    .keyType(.init(
+                        kind: .yubikey,
+                        interface: .mfi,
+                        isEnabled: isMFIAvailable,
+                        needsPremium: needsPremium
+                    ))
+                ]
+            ))
+        }
+
+        let usbFooterText: String?
+        if ProcessInfo.isCatalystApp {
+            usbFooterText = AppGroup.isAppExtension ? LString.theseHardwareKeyNotAvailableInAutoFill : nil
+        } else if ProcessInfo.isiPadAppOnMac {
+            usbFooterText = LString.usbUnavailableIPadAppOnMac
+        } else {
+            usbFooterText = LString.usbHardwareKeyNotSupported
+        }
+        sections.append(HardwareKeyPickerSection(
+            header: LString.hardwareKeyPortUSB,
+            footer: usbFooterText,
+            items: [
+                .keyType(.init(
+                    kind: .yubikey,
+                    interface: .usb,
+                    isEnabled: isUSBAvailable,
+                    needsPremium: needsPremium)),
+                .keyType(.init(
+                    kind: .onlykey,
+                    interface: .usb,
+                    isEnabled: isUSBAvailable,
+                    needsPremium: needsPremium))
+            ]
+        ))
+
+        sections.append(HardwareKeyPickerSection(
+            header: nil,
+            footer: nil,
+            items: [.infoLink(LString.actionLearnMore)]
+        ))
+        return sections
+    }
+
+    func setSelectedKey(_ hardwareKey: HardwareKey?) {
         self.selectedKey = hardwareKey
         hardwareKeyPickerVC.selectedKey = hardwareKey
     }
 
     private func maybeSelectKey(_ hardwareKey: HardwareKey?) {
-        if PremiumManager.shared.isAvailable(feature: .canUseHardwareKeys) {
+        if PremiumManager.shared.isAvailable(feature: .canUseHardwareKeys) || hardwareKey == nil {
             setSelectedKey(hardwareKey)
             delegate?.didSelectKey(hardwareKey, in: self)
             dismiss()
@@ -55,8 +138,12 @@ extension HardwareKeyPickerCoordinator {
     }
 }
 
-extension HardwareKeyPickerCoordinator: HardwareKeyPickerDelegate {
-    func didSelectKey(_ hardwareKey: HardwareKey?, in picker: HardwareKeyPicker) {
+extension HardwareKeyPickerCoordinator: HardwareKeyPickerVC.Delegate {
+    func didSelectKey(_ hardwareKey: HardwareKey?, in picker: HardwareKeyPickerVC) {
         maybeSelectKey(hardwareKey)
+    }
+
+    func didPressLearnMore(in viewController: HardwareKeyPickerVC) {
+        URLOpener(viewController).open(url: URL.AppHelp.yubikeySetup)
     }
 }

@@ -18,5 +18,20 @@ public extension LString {
             bundle: Bundle.framework,
             value: "Contains a passkey.",
             comment: "Accessibility notification for entries with a passkey")
+        public static let containsIncompatiblePasskey = NSLocalizedString(
+            "[Accessibility/containsIncompatiblePasskey]",
+            bundle: Bundle.framework,
+            value: "Contains a passkey incompatible with this device.",
+            comment: "Accessibility notification for entries with a problematic passkey")
+        public static let containsAttachments = NSLocalizedString(
+            "[Accessibility/containsAttachments]",
+            bundle: Bundle.framework,
+            value: "Contains attachments.",
+            comment: "Accessibility notification for entries with attached files.")
+        public static let containsOTP = NSLocalizedString(
+            "[Accessibility/containsOTP]",
+            bundle: Bundle.framework,
+            value: "Contains one-time password.",
+            comment: "Accessibility notification for entries with OTP codes.")
     }
 }

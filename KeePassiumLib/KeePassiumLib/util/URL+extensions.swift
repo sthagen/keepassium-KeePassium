@@ -232,7 +232,7 @@ public extension URL {
             return WebDAVFileURL.getDescription(for: self)
         } else if isOneDrivePersonalFileURL || isOneDriveBusinessFileURL {
             return self.getOneDriveLocationDescription()
-        } else if isDropboxFileURL {
+        } else if isDropboxPersonalFileURL || isDropboxBusinessFileURL {
             return self.getDropboxLocationDescription()
         } else if isGoogleDriveFileURL {
             return self.getGoogleDriveLocationDescription()

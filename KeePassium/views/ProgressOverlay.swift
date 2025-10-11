@@ -9,9 +9,14 @@
 import KeePassiumLib
 import UIKit
 
-@IBDesignable
-class ProgressOverlay: UIView {
-    typealias UnresponsiveCancelHandler = () -> Void
+final class ProgressOverlay: UIView {
+    typealias CancelActionHandler = (CancelAction) -> Void
+
+    enum CancelAction {
+        case cancel
+        case useFallback
+        case repeatedCancel
+    }
 
     public var title: String? {
         didSet {
@@ -19,12 +24,15 @@ class ProgressOverlay: UIView {
         }
     }
 
-    public var isCancellable: Bool {
-        get {
-            return cancelButton.isEnabled
+    public var isCancellable = false {
+        didSet {
+            updateButtons()
         }
-        set {
-            cancelButton.isEnabled = newValue
+    }
+
+    public var hasFallback = false {
+        didSet {
+            updateButtons()
         }
     }
 
@@ -41,16 +49,32 @@ class ProgressOverlay: UIView {
         }
     }
 
-    public var unresponsiveCancelHandler: UnresponsiveCancelHandler? 
+    override public var isOpaque: Bool {
+        didSet {
+            if isOpaque {
+                backgroundColor = .systemGroupedBackground
+                panel.backgroundColor = .clear
+                panel.layer.shadowRadius = 0
+            } else {
+                backgroundColor = .systemGroupedBackground.withAlphaComponent(0.5)
+                panel.backgroundColor = .systemBackground
+                panel.layer.shadowRadius = 40
+            }
+        }
+    }
+
+    public var cancelActionHandler: CancelActionHandler?
 
     private var cancelPressCounter = 0
     private let cancelCountConsideredUnresponsive = 3
 
+    private var panel: UIView!
     private var spinner: UIActivityIndicatorView!
     private var statusLabel: UILabel!
     private var percentLabel: UILabel!
     private var progressView: UIProgressView!
     private var cancelButton: UIButton!
+    private var fallbackButton: UIButton!
     private weak var progress: ProgressEx?
 
     private var animatingStatusConstraint: NSLayoutConstraint!
@@ -63,6 +87,7 @@ class ProgressOverlay: UIView {
     static func addTo(_ parent: UIView, title: String, animated: Bool) -> ProgressOverlay {
         let overlay = ProgressOverlay(frame: parent.bounds)
         overlay.title = title
+
         if animated {
             overlay.alpha = 0.0
             parent.addSubview(overlay)
@@ -79,10 +104,12 @@ class ProgressOverlay: UIView {
             parent.addSubview(overlay)
         }
         overlay.translatesAutoresizingMaskIntoConstraints = false
-        overlay.topAnchor.constraint(equalTo: parent.topAnchor, constant: 0).isActive = true
-        overlay.bottomAnchor.constraint(equalTo: parent.bottomAnchor, constant: 0).isActive = true
-        overlay.leadingAnchor.constraint(equalTo: parent.leadingAnchor, constant: 0).isActive = true
-        overlay.trailingAnchor.constraint(equalTo: parent.trailingAnchor, constant: 0).isActive = true
+        NSLayoutConstraint.activate([
+            overlay.topAnchor.constraint(equalTo: parent.topAnchor),
+            overlay.bottomAnchor.constraint(equalTo: parent.bottomAnchor),
+            overlay.leadingAnchor.constraint(equalTo: parent.leadingAnchor),
+            overlay.trailingAnchor.constraint(equalTo: parent.trailingAnchor),
+        ])
         parent.layoutSubviews()
 
         overlay.accessibilityViewIsModal = true
@@ -96,9 +123,8 @@ class ProgressOverlay: UIView {
         setupViews()
         setupLayout()
         updateSpinner()
-
-        translatesAutoresizingMaskIntoConstraints = true
-        autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        updateButtons()
+        isOpaque = true
     }
 
     func dismiss(animated: Bool, completion: ((Bool) -> Void)? = nil) {
@@ -119,13 +145,23 @@ class ProgressOverlay: UIView {
     }
 
     private func setupViews() {
-        backgroundColor = UIColor.systemGroupedBackground
+        backgroundColor = .systemBackground.withAlphaComponent(0.5)
+
+        panel = UIView()
+        panel.backgroundColor = .systemBackground
+        panel.layer.cornerRadius = 20
+        panel.layer.shadowRadius = 40
+        panel.layer.shadowOffset = CGSize(width: 0, height: 0)
+        panel.layer.shadowOpacity = 0.5
+        panel.layer.shadowColor = UIColor.label.cgColor
+        addSubview(panel)
+
         spinner = UIActivityIndicatorView(style: .medium)
         spinner.hidesWhenStopped = false
         spinner.isHidden = false
         spinner.alpha = 0.0
         spinner.isAccessibilityElement = false
-        addSubview(spinner)
+        panel.addSubview(spinner)
 
         statusLabel = UILabel()
         statusLabel.text = ""
@@ -133,62 +169,84 @@ class ProgressOverlay: UIView {
         statusLabel.lineBreakMode = .byWordWrapping
         statusLabel.font = UIFont.preferredFont(forTextStyle: .callout)
         statusLabel.accessibilityTraits.insert(.updatesFrequently)
-        addSubview(statusLabel)
+        panel.addSubview(statusLabel)
 
         percentLabel = UILabel()
         percentLabel.text = ""
         percentLabel.numberOfLines = 1
         percentLabel.font = UIFont.preferredFont(forTextStyle: .caption1)
         statusLabel.accessibilityTraits.insert(.updatesFrequently)
-        addSubview(percentLabel)
+        panel.addSubview(percentLabel)
 
         progressView = UIProgressView()
         progressView.progress = 0.0
         progressView.accessibilityTraits.insert(.updatesFrequently)
-        addSubview(progressView)
+        panel.addSubview(progressView)
 
-        cancelButton = UIButton(type: .system)
-        cancelButton.setTitle(LString.actionCancel, for: .normal)
+        var cancelConfig = UIButton.Configuration.plain()
+        cancelConfig.title = LString.actionCancel
+        cancelButton = UIButton(configuration: cancelConfig)
+        cancelButton.role = .cancel
         cancelButton.addTarget(self, action: #selector(didPressCancel), for: .touchUpInside)
-        addSubview(cancelButton)
+        panel.addSubview(cancelButton)
+
+        var fallbackConfig = UIButton.Configuration.plain()
+        fallbackConfig.title = LString.actionUseFallbackDatabase
+        fallbackConfig.buttonSize = .small
+        fallbackButton = UIButton(configuration: fallbackConfig)
+        fallbackButton.addTarget(self, action: #selector(didPressFallback), for: .touchUpInside)
+        panel.addSubview(fallbackButton)
     }
 
     private func setupLayout() {
+        panel.translatesAutoresizingMaskIntoConstraints = false
         progressView.translatesAutoresizingMaskIntoConstraints = false
-        progressView.leadingAnchor.constraint(greaterThanOrEqualTo: leadingAnchor, constant: 16.0).isActive = true
-        progressView.trailingAnchor.constraint(lessThanOrEqualTo: trailingAnchor, constant: -16.0).isActive = true
-        let widthConstraint = progressView.widthAnchor.constraint(equalToConstant: 400.0)
-        widthConstraint.priority = .defaultHigh
-        widthConstraint.isActive = true
-
-        progressView.centerXAnchor.constraint(equalTo: centerXAnchor, constant: 0).isActive = true
-        progressView.centerYAnchor.constraint(equalTo: centerYAnchor, constant: 0).isActive = true
-        progressView.heightAnchor.constraint(equalToConstant: 2.0).isActive = true
-
         spinner.translatesAutoresizingMaskIntoConstraints = false
-        spinner.leadingAnchor.constraint(equalTo: progressView.leadingAnchor, constant: 0).isActive = true
-        spinner.centerYAnchor.constraint(equalTo: statusLabel.centerYAnchor).isActive = true
-
         statusLabel.translatesAutoresizingMaskIntoConstraints = false
-        statusLabel.bottomAnchor.constraint(equalTo: progressView.topAnchor, constant: -8.0).isActive = true
-        statusLabel.trailingAnchor
-            .constraint(lessThanOrEqualTo: percentLabel.leadingAnchor, constant: 8.0)
-            .isActive = true
+        percentLabel.translatesAutoresizingMaskIntoConstraints = false
+        cancelButton.translatesAutoresizingMaskIntoConstraints = false
+        fallbackButton.translatesAutoresizingMaskIntoConstraints = false
 
+        NSLayoutConstraint.activate([
+            panel.leadingAnchor.constraint(greaterThanOrEqualTo: leadingAnchor, constant: 8),
+            panel.trailingAnchor.constraint(lessThanOrEqualTo: trailingAnchor, constant: -8),
+            panel.centerXAnchor.constraint(equalTo: centerXAnchor),
+            panel.centerYAnchor.constraint(equalTo: centerYAnchor),
+
+            progressView.leadingAnchor.constraint(equalTo: panel.leadingAnchor, constant: 16),
+            progressView.trailingAnchor.constraint(equalTo: panel.trailingAnchor, constant: -16),
+
+            progressView.centerXAnchor.constraint(equalTo: panel.centerXAnchor),
+            progressView.centerYAnchor.constraint(equalTo: panel.centerYAnchor),
+            progressView.heightAnchor.constraint(equalToConstant: 2),
+
+            spinner.leadingAnchor.constraint(equalTo: progressView.leadingAnchor),
+            spinner.centerYAnchor.constraint(equalTo: statusLabel.centerYAnchor),
+
+            statusLabel.topAnchor.constraint(greaterThanOrEqualTo: panel.topAnchor, constant: 16),
+            statusLabel.bottomAnchor.constraint(equalTo: progressView.topAnchor, constant: -8),
+            statusLabel.trailingAnchor.constraint(lessThanOrEqualTo: percentLabel.leadingAnchor, constant: 8),
+
+            percentLabel.bottomAnchor.constraint(equalTo: statusLabel.bottomAnchor),
+            percentLabel.trailingAnchor.constraint(equalTo: progressView.trailingAnchor, constant: -8),
+
+            cancelButton.topAnchor.constraint(equalTo: progressView.bottomAnchor, constant: 16),
+            cancelButton.centerXAnchor.constraint(equalTo: progressView.centerXAnchor),
+
+            fallbackButton.topAnchor.constraint(equalTo: cancelButton.bottomAnchor, constant: 8),
+            fallbackButton.centerXAnchor.constraint(equalTo: progressView.centerXAnchor),
+            fallbackButton.bottomAnchor.constraint(lessThanOrEqualTo: panel.bottomAnchor, constant: -16),
+        ])
+
+        panel.widthAnchor.constraint(equalToConstant: 400.0)
+            .setPriority(.defaultHigh)
+            .activate()
         staticStatusConstraint = statusLabel.leadingAnchor
-            .constraint(equalTo: progressView.leadingAnchor, constant: 8.0)
-        staticStatusConstraint.priority = .defaultLow
-        staticStatusConstraint.isActive = true
+            .constraint(equalTo: progressView.leadingAnchor, constant: 8)
+            .setPriority(.defaultLow)
+            .activate()
         animatingStatusConstraint = statusLabel.leadingAnchor
             .constraint(equalTo: spinner.trailingAnchor, constant: 8.0)
-
-        percentLabel.translatesAutoresizingMaskIntoConstraints = false
-        percentLabel.bottomAnchor.constraint(equalTo: statusLabel.bottomAnchor, constant: 0).isActive = true
-        percentLabel.trailingAnchor.constraint(equalTo: progressView.trailingAnchor, constant: -8.0).isActive = true
-
-        cancelButton.translatesAutoresizingMaskIntoConstraints = false
-        cancelButton.topAnchor.constraint(equalTo: progressView.bottomAnchor, constant: 8.0).isActive = true
-        cancelButton.centerXAnchor.constraint(equalTo: progressView.centerXAnchor, constant: 0).isActive = true
     }
 
     private func updateSpinner() {
@@ -215,9 +273,21 @@ class ProgressOverlay: UIView {
         statusLabel.text = progress.localizedDescription
         percentLabel.text = String(format: "%.0f%%", 100.0 * progress.fractionCompleted)
         progressView.setProgress(Float(progress.fractionCompleted), animated: false)
-        cancelButton.isEnabled = cancelButton.isEnabled && progress.isCancellable && !progress.isCancelled
+
         isAnimating = progress.isIndeterminate
         self.progress = progress
+        updateButtons()
+    }
+
+    private func updateButtons() {
+        if let progress {
+            cancelButton.isEnabled = isCancellable && progress.isCancellable
+            fallbackButton.isEnabled = cancelButton.isEnabled && !progress.isCancelled
+        } else {
+            cancelButton.isEnabled = false
+            fallbackButton.isEnabled = false
+        }
+        fallbackButton.isHidden = !hasFallback
     }
 
     @objc
@@ -225,8 +295,17 @@ class ProgressOverlay: UIView {
         progress?.cancel()
         cancelPressCounter += 1
         if cancelPressCounter >= cancelCountConsideredUnresponsive {
-            unresponsiveCancelHandler?()
+            cancelActionHandler?(.repeatedCancel)
             cancelPressCounter = 0
+        } else {
+            cancelActionHandler?(.cancel)
         }
+    }
+
+    @objc
+    private func didPressFallback(_ sender: UIButton) {
+        assert(hasFallback, "Fallback button is supposed to be hidden/disabled")
+        progress?.cancel()
+        cancelActionHandler?(.useFallback)
     }
 }

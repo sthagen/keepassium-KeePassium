@@ -28,9 +28,16 @@ public enum FileProvider: Hashable {
         "com.keepassium.fileprovider.webdav": .keepassiumWebDAV,
         "com.keepassium.fileprovider.onedrive": .keepassiumOneDriveLegacy,
         "com.keepassium.fileprovider.onedrive.personal": .keepassiumOneDrivePersonal,
+        "com.keepassium.fileprovider.onedrive.personal.appfolder": .keepassiumOneDrivePersonalAppFolder,
         "com.keepassium.fileprovider.onedrive.business": .keepassiumOneDriveBusiness,
-        "com.keepassium.fileprovider.dropbox": .keepassiumDropbox,
+        "com.keepassium.fileprovider.onedrive.business.appfolder": .keepassiumOneDriveBusinessAppFolder,
+        "com.keepassium.fileprovider.dropbox": .keepassiumDropboxLegacy,
+        "com.keepassium.fileprovider.dropbox.personal": .keepassiumDropboxPersonal,
+        "com.keepassium.fileprovider.dropbox.personal.appfolder": .keepassiumDropboxPersonalAppFolder,
+        "com.keepassium.fileprovider.dropbox.business": .keepassiumDropboxBusiness,
+        "com.keepassium.fileprovider.dropbox.business.appfolder": .keepassiumDropboxBusinessAppFolder,
         "com.keepassium.fileprovider.googledrive": .keepassiumGoogleDrive,
+        "com.keepassium.fileprovider.googledrive.appfolder": .keepassiumGoogleDriveAppFolder,
         "mega.ios.MEGAPickerFileProvider": .megaNz,
         "de.telekom.Mediencenter.FileProviderExtension": .magentaCloud,
         "it.twsweb.Nextcloud.File-Provider-Extension": .nextcloud,
@@ -72,10 +79,17 @@ public enum FileProvider: Hashable {
 
     case keepassiumOneDriveLegacy
     case keepassiumOneDrivePersonal
+    case keepassiumOneDrivePersonalAppFolder
     case keepassiumOneDriveBusiness
+    case keepassiumOneDriveBusinessAppFolder
 
-    case keepassiumDropbox
+    case keepassiumDropboxLegacy
+    case keepassiumDropboxPersonal
+    case keepassiumDropboxPersonalAppFolder
+    case keepassiumDropboxBusiness
+    case keepassiumDropboxBusinessAppFolder
     case keepassiumGoogleDrive
+    case keepassiumGoogleDriveAppFolder
     case megaNz
     case magentaCloud
     case nextcloud
@@ -182,12 +196,27 @@ public enum FileProvider: Hashable {
             return LString.connectionTypeOneDrive
         case .keepassiumOneDrivePersonal:
             return LString.connectionTypeOneDrivePersonal
+        case .keepassiumOneDrivePersonalAppFolder:
+            return Self.decorateForAppFolderScope(LString.connectionTypeOneDrivePersonal)
         case .keepassiumOneDriveBusiness:
             return LString.connectionTypeOneDriveForBusiness
-        case .keepassiumDropbox:
+        case .keepassiumOneDriveBusinessAppFolder:
+            return Self.decorateForAppFolderScope(LString.connectionTypeOneDriveForBusiness)
+        case .keepassiumDropboxLegacy:
+            assertionFailure("Unrecognized Dropbox type. Should be either Personal or Business instead")
             return LString.connectionTypeDropbox
+        case .keepassiumDropboxPersonal:
+            return LString.connectionTypeDropbox
+        case .keepassiumDropboxPersonalAppFolder:
+            return Self.decorateForAppFolderScope(LString.connectionTypeDropbox)
+        case .keepassiumDropboxBusiness:
+            return LString.connectionTypeDropboxBusiness
+        case .keepassiumDropboxBusinessAppFolder:
+            return Self.decorateForAppFolderScope(LString.connectionTypeDropboxBusiness)
         case .keepassiumGoogleDrive:
             return LString.connectionTypeGoogleDrive
+        case .keepassiumGoogleDriveAppFolder:
+            return Self.decorateForAppFolderScope(LString.connectionTypeGoogleDrive)
         case .megaNz:
             return NSLocalizedString(
                 "[FileProvider/Mega.nz/name]",
@@ -319,6 +348,10 @@ public enum FileProvider: Hashable {
         // swiftlint:enable line_length
     }
 
+    public static func decorateForAppFolderScope(_ fileProviderName: String) -> String {
+        return fileProviderName + "*" // a subtle "footnote"
+    }
+
     private func getLocalStorageName() -> String {
         guard UIDevice.current.userInterfaceIdiom == .pad else {
             return NSLocalizedString(
@@ -348,9 +381,16 @@ public enum FileProvider: Hashable {
         case .keepassiumWebDAV,
              .keepassiumOneDriveLegacy,
              .keepassiumOneDrivePersonal,
+             .keepassiumOneDrivePersonalAppFolder,
              .keepassiumOneDriveBusiness,
-             .keepassiumDropbox,
-             .keepassiumGoogleDrive:
+             .keepassiumOneDriveBusinessAppFolder,
+             .keepassiumDropboxLegacy,
+             .keepassiumDropboxPersonal,
+             .keepassiumDropboxPersonalAppFolder,
+             .keepassiumDropboxBusiness,
+             .keepassiumDropboxBusinessAppFolder,
+             .keepassiumGoogleDrive,
+             .keepassiumGoogleDriveAppFolder:
             return true
         default:
             return false

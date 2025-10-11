@@ -24,13 +24,13 @@ final class AutoFillSettingsCoordinator: BaseCoordinator {
 
         NotificationCenter.default.addObserver(
             self,
-            selector: #selector(appDidBecomeActive),
-            name: UIApplication.didBecomeActiveNotification,
+            selector: #selector(sceneDidBecomeActive),
+            name: UIScene.didActivateNotification,
             object: nil)
     }
 
     @objc
-    private func appDidBecomeActive(_ notification: Notification) {
+    private func sceneDidBecomeActive(_ notification: Notification) {
         refresh()
     }
 
@@ -56,6 +56,7 @@ final class AutoFillSettingsCoordinator: BaseCoordinator {
         autoFillSettingsVC.isQuickAutoFillEnabled = settings.isQuickTypeEnabled
         autoFillSettingsVC.isFillPerfectResult = settings.autoFillPerfectMatch
         autoFillSettingsVC.isCopyOTPOnFill = settings.isCopyTOTPOnAutoFill
+        autoFillSettingsVC.contextSavingMode = settings.autoFillContextSavingMode
     }
 }
 
@@ -152,6 +153,13 @@ extension AutoFillSettingsCoordinator: AutoFillSettingsVC.Delegate {
     func didChangeCopyOTPOnFill(_ isOn: Bool, in viewController: AutoFillSettingsVC) {
         Settings.current.isCopyTOTPOnAutoFill = isOn
         viewController.showNotificationIfManaged(setting: .copyTOTPOnAutoFill)
+        refresh()
+    }
+
+    func didChangeContextSavingMode(_ mode: AutoFillContextSavingMode, in viewController: AutoFillSettingsVC) {
+        Settings.current.autoFillContextSavingMode = mode
+        Settings.current.autoFillContextSavingModeChosenTimestamp = .now
+        viewController.showNotificationIfManaged(setting: .autoFillContextSavingMode)
         refresh()
     }
 }

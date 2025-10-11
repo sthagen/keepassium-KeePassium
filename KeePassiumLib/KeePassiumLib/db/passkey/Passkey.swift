@@ -41,24 +41,33 @@ public class Passkey {
         static let ed: UInt8   = 0x80
     }
 
+    fileprivate static let defaultBEFlagSet = true
+    fileprivate static let defaultBSFlagSet = true
+
     let credentialID: Data
     private(set) var privateKeyPEM: String
     public let relyingParty: String
     public let username: String
     let userHandle: Data
+    let beFlag: Bool
+    let bsFlag: Bool
 
     init(
         credentialID: Data,
         privateKeyPEM: String,
         relyingParty: String,
         username: String,
-        userHandle: Data
+        userHandle: Data,
+        beFlag: Bool,
+        bsFlag: Bool
     ) {
         self.credentialID = credentialID
         self.privateKeyPEM = privateKeyPEM
         self.relyingParty = relyingParty
         self.username = username
         self.userHandle = userHandle
+        self.beFlag = beFlag
+        self.bsFlag = bsFlag
     }
 
     public static func make(from entry: Entry) -> Passkey? {
@@ -86,31 +95,17 @@ public class Passkey {
             privateKeyPEM: privateKeyPEM,
             relyingParty: relyingParty,
             username: username,
-            userHandle: userHandle
+            userHandle: userHandle,
+            beFlag: isFlagSet(EntryField.passkeyFlagBE, in: entry2) ?? defaultBEFlagSet,
+            bsFlag: isFlagSet(EntryField.passkeyFlagBS, in: entry2) ?? defaultBSFlagSet
         )
     }
 
-    public static func probablyPresent(in entry: Entry) -> Bool {
-        guard let entry2 = entry as? Entry2 else { return false }
-
-        guard let credentialID = entry2.getField(EntryField.passkeyCredentialID)?.resolvedValue,
-              let privateKeyPEM = entry2.getField(EntryField.passkeyPrivateKeyPEM)?.resolvedValue,
-              let relyingParty = entry2.getField(EntryField.passkeyRelyingParty)?.resolvedValue,
-              let userHandle = entry2.getField(EntryField.passkeyUserHandle)?.resolvedValue,
-              let username = entry2.getField(EntryField.passkeyUsername)?.resolvedValue
-        else {
-            return false
+    fileprivate static func isFlagSet(_ fieldName: String, in entry: Entry2) -> Bool? {
+        guard let flagFieldValue = entry.getField(fieldName)?.resolvedValue else {
+            return nil
         }
-
-        guard credentialID.isNotEmpty,
-              privateKeyPEM.isNotEmpty,
-              relyingParty.isNotEmpty,
-              userHandle.isNotEmpty,
-              username.isNotEmpty
-        else {
-            return false
-        }
-        return true
+        return flagFieldValue == "1"
     }
 
     public func asCredentialIdentity(recordIdentifier: String?) -> ASPasskeyCredentialIdentity {
@@ -121,28 +116,38 @@ public class Passkey {
             userHandle: userHandle,
             recordIdentifier: recordIdentifier)
     }
+}
 
-    public func apply(to entry: Entry2) {
-        entry.setField(
-            name: EntryField.passkeyCredentialID,
-            value: credentialID.base64URLEncodedString(),
-            isProtected: true)
-        entry.setField(
-            name: EntryField.passkeyPrivateKeyPEM,
-            value: privateKeyPEM,
-            isProtected: true)
-        entry.setField(
-            name: EntryField.passkeyRelyingParty,
-            value: relyingParty,
-            isProtected: false)
-        entry.setField(
-            name: EntryField.passkeyUserHandle,
-            value: userHandle.base64URLEncodedString(),
-            isProtected: true)
-        entry.setField(
-            name: EntryField.passkeyUsername,
-            value: username,
-            isProtected: false)
+extension Passkey {
+    public enum PresenceHint {
+        case noPasskey
+        case passkeyPresent(isUsable: Bool)
+    }
+
+    public static func checkPresence(in entry: Entry) -> PresenceHint {
+        guard let entry2 = entry as? Entry2 else { return .noPasskey }
+
+        guard let credentialID = entry2.getField(EntryField.passkeyCredentialID)?.resolvedValue,
+              let privateKeyPEM = entry2.getField(EntryField.passkeyPrivateKeyPEM)?.resolvedValue,
+              let relyingParty = entry2.getField(EntryField.passkeyRelyingParty)?.resolvedValue,
+              let userHandle = entry2.getField(EntryField.passkeyUserHandle)?.resolvedValue,
+              let username = entry2.getField(EntryField.passkeyUsername)?.resolvedValue
+        else {
+            return .noPasskey
+        }
+
+        guard credentialID.isNotEmpty,
+              privateKeyPEM.isNotEmpty,
+              relyingParty.isNotEmpty,
+              userHandle.isNotEmpty,
+              username.isNotEmpty
+        else {
+            return .noPasskey
+        }
+        let flagBE = isFlagSet(EntryField.passkeyFlagBE, in: entry2) ?? defaultBEFlagSet
+        let flagBS = isFlagSet(EntryField.passkeyFlagBS, in: entry2) ?? defaultBSFlagSet
+        let isUsable = flagBE && flagBS
+        return .passkeyPresent(isUsable: isUsable)
     }
 }
 
@@ -169,7 +174,13 @@ extension Passkey {
     private func getAuthenticatorData() -> Data {
         let rpIDHash = relyingParty.utf8data.sha256.asData
 
-        let flags = AuthDataFlags.uv | AuthDataFlags.up | AuthDataFlags.be | AuthDataFlags.bs
+        var flags = AuthDataFlags.uv | AuthDataFlags.up
+        if beFlag {
+            flags |= AuthDataFlags.be
+        }
+        if bsFlag {
+            flags |= AuthDataFlags.bs
+        }
 
         let counter = Data(repeating: 0, count: 4)
 
@@ -183,7 +194,9 @@ extension Passkey {
     }
 
     private func signWithPrivateKey(_ challenge: Data) -> Data? {
-        return signUsingES256(challenge) ?? signUsingEd25519(challenge)
+        return signUsingES256(challenge)
+            ?? signUsingEd25519(challenge)
+            ?? signUsingRS256(challenge)
     }
 
     private func signUsingES256(_ challenge: Data) -> Data? {
@@ -232,6 +245,29 @@ extension Passkey {
             return nil
         }
     }
+
+    private func signUsingRS256(_ challenge: Data) -> Data? {
+        let privateKey: RS256PrivateKey
+        do {
+            privateKey = try RS256PrivateKey(pemRepresentation: privateKeyPEM)
+        } catch {
+            let message = (error as NSError).debugDescription
+            log.debug("Failed to parse as RS256 private key: \(message, privacy: .public)")
+            Diag.debug("Failed to parse as RS256 private key [message: \(message)]")
+            return nil
+        }
+        do {
+            let signature = try privateKey.signature(for: challenge)
+            log.debug("Signed with RS256")
+            Diag.debug("Signed with RS256")
+            return signature
+        } catch {
+            let message = (error as NSError).debugDescription
+            log.error("Failed to sign using RS256: \(message, privacy: .public)")
+            Diag.error("Failed to sign using RS256 [message: \(message)]")
+            return nil
+        }
+    }
 }
 
 public class NewPasskey: Passkey {
@@ -253,7 +289,9 @@ public class NewPasskey: Passkey {
             privateKeyPEM: privateKey.pemRepresentation,
             relyingParty: relyingParty,
             username: username,
-            userHandle: userHandle
+            userHandle: userHandle,
+            beFlag: Self.defaultBEFlagSet,
+            bsFlag: Self.defaultBSFlagSet
         )
     }
 
@@ -283,18 +321,18 @@ public class NewPasskey: Passkey {
         let rpIdHash = CryptoKit.SHA256.hash(data: relyingParty.data(using: .utf8)!)
         authData.append(contentsOf: rpIdHash)
 
-        let flags = AuthDataFlags.at
+        var flags = AuthDataFlags.at
                   | AuthDataFlags.uv
                   | AuthDataFlags.up
-                  | AuthDataFlags.be
-                  | AuthDataFlags.bs
+                  | (beFlag ? AuthDataFlags.be : 0)
+                  | (bsFlag ? AuthDataFlags.bs : 0)
         authData.append(flags)
 
         authData.append(contentsOf: UInt32(0).bigEndian.bytes)
 
         authData.append(contentsOf: aaguid.data.asData)
         authData.append(contentsOf: UInt16(credentialID.count).bigEndian.bytes)
-        authData.append(contentsOf: credentialID.bytes)
+        authData.append(contentsOf: Array(credentialID))
         let encodedPublicKey = cborEncodePublicKey(privateKey.publicKey)
         authData.append(contentsOf: encodedPublicKey)
         let attestationObject = cborEncodeAttestation(authData)
@@ -312,24 +350,70 @@ public class NewPasskey: Passkey {
 
         let x = Array(rawPublicKey.prefix(upTo: 33))
         let y = Array(rawPublicKey.suffix(32))
-        let dict: CBOR = [
+        let dict: KeyValuePairs = [
             1: CBOR(integerLiteral: 2),
             3: CBOR(integerLiteral: ASCOSEAlgorithmIdentifier.ES256.rawValue),
             -1: CBOR(integerLiteral: ASCOSEEllipticCurveIdentifier.P256.rawValue),
             -2: CBOR.byteString(x),
             -3: CBOR.byteString(y)
         ]
-        let encoded = Data(dict.encode())
+        let encoded = Data(dict.encode(useStringKeys: false))
         return encoded
     }
 
     private func cborEncodeAttestation(_ authData: Data) -> Data {
-        let dict: CBOR = [
+        let dict: KeyValuePairs = [
             "fmt": "none",
             "attStmt": CBOR.map([:]),
-            "authData": CBOR.byteString(authData.bytes)
+            "authData": CBOR.byteString(Array(authData))
         ]
-        let encoded = dict.encode()
+        let encoded = dict.encode(useStringKeys: true)
         return Data(encoded)
+    }
+}
+
+extension DatabaseOperation {
+    public static func createPasskeyEntry(with passkey: Passkey, in group: Group2) -> [DatabaseOperation] {
+        let createOp = createEntry(in: group)
+        let createdEntryUUID = createOp.uuid
+        let editOp = applyPasskey(passkey, to: createdEntryUUID)
+        editOp.addFieldChange(name: EntryField.title, value: passkey.relyingParty)
+        editOp.addFieldChange(name: EntryField.userName, value: passkey.username)
+        editOp.addFieldChange(name: EntryField.url, value: "https://" + passkey.relyingParty)
+        return [createOp, editOp]
+    }
+
+    public static func applyPasskey(_ passkey: Passkey, to targetEntryUUID: UUID) -> EditEntryOperation {
+        let result = EditEntryOperation(uuid: targetEntryUUID, modificationTime: .now, fields: [
+            EntryField(
+                name: EntryField.passkeyCredentialID,
+                value: passkey.credentialID.base64URLEncodedString(),
+                isProtected: true),
+            EntryField(
+                name: EntryField.passkeyPrivateKeyPEM,
+                value: passkey.privateKeyPEM,
+                isProtected: true),
+            EntryField(
+                name: EntryField.passkeyRelyingParty,
+                value: passkey.relyingParty,
+                isProtected: false),
+            EntryField(
+                name: EntryField.passkeyUserHandle,
+                value: passkey.userHandle.base64URLEncodedString(),
+                isProtected: true),
+            EntryField(
+                name: EntryField.passkeyUsername,
+                value: passkey.username,
+                isProtected: false),
+            EntryField(
+                name: EntryField.passkeyFlagBE,
+                value: passkey.beFlag ? "1" : "0",
+                isProtected: false),
+            EntryField(
+                name: EntryField.passkeyFlagBS,
+                value: passkey.bsFlag ? "1" : "0",
+                isProtected: false),
+        ])
+        return result
     }
 }

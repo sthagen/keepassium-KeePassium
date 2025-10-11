@@ -27,14 +27,23 @@ extension FileProvider {
         case .keepassiumWebDAV:
             return .fileProviderWebDAV
         case .keepassiumOneDrivePersonal,
-             .keepassiumOneDriveBusiness:
+             .keepassiumOneDrivePersonalAppFolder,
+             .keepassiumOneDriveBusiness,
+             .keepassiumOneDriveBusinessAppFolder:
             return .fileProviderOneDrive
         case .keepassiumOneDriveLegacy:
             assertionFailure("Should be either Personal or Business instead")
             return .fileProviderOneDrive
-        case .keepassiumDropbox:
+        case .keepassiumDropboxPersonal,
+             .keepassiumDropboxPersonalAppFolder,
+             .keepassiumDropboxBusiness,
+             .keepassiumDropboxBusinessAppFolder:
             return .fileProviderDropbox
-        case .keepassiumGoogleDrive:
+        case .keepassiumDropboxLegacy:
+            assertionFailure("Should be either Personal or Business instead")
+            return .fileProviderDropbox
+        case .keepassiumGoogleDrive,
+            .keepassiumGoogleDriveAppFolder:
             return .fileProviderGoogleDrive
         case .nextcloud:
             return .fileProviderNextCloud

@@ -1,14 +1,35 @@
 /* Notification when user tries to set up too weak an app protection passcode. */
 "[AppLock/weakPasscodeWarning]" = "このパスコードは簡単に推測できます。より強力なパスコードを入力してみてください。";
 
+/* Action in AutoFill: choose the entry and remember it for future use on this website. */
+"[AutoFill/AcceptAndRemember/action]" = "承認して記憶";
+
+/* Title of a list */
+"[AutoFill/AllEntries/title]" = "すべてのエントリー";
+
+/* Title of AutoFill context when no context is available. Usage: `Context: Unknown` */
+"[AutoFill/Context/Empty/title]" = "不明";
+
+/* Title of a list with search results */
+"[AutoFill/FoundEntries/title]" = "最も適合するエントリー";
+
 /* Call for action to select an entry field for filling out. */
 "[AutoFill/InsertText/select]" = "フィールドを選択";
 
-/* An identifier of the app that called AutoFill. The term is intentionally similar to https://ru.wikipedia.org/wiki/Caller_ID. [callerID: String] */
-"[AutoFill/Search/callerID]" = "呼出先ID: %@";
+/* Section title for the recently used entry in AutoFill */
+"[AutoFill/RecentlyUsed/title]" = "最近使用したエントリー";
 
-/* Status message, shows which app or webpage launched AutoFill. For example: `Context: google.com` */
-"[AutoFill/Search/context]" = "コンテキスト: %@";
+/* Not an action, but a button to activate the same-named setting */
+"[AutoFill/RememberContext/action]" = "選択したエントリーを記憶する";
+
+/* Call to action */
+"[AutoFill/RememberContext/callToAction]" = "自動入力候補の改善";
+
+/* Description of the 'Remember Selected Entries` feature */
+"[AutoFill/RememberContext/description]" = "KeePassiumは各ウェブサイトで選択したエントリーを記憶し、自動的に提案します。";
+
+/* Title for referring to the app or webpage that launched AutoFill. For example: `Context: google.com` */
+"[AutoFill/Search/Context/title]" = "コンテキスト";
 
 /* No comment provided by engineer. */
 "[AutoFill/Setup/footer]" = "自動入力は、メインアプリ内のファイルに勝手にはアクセスできません。\n\nなぜか。自動入力はメインアプリとは別のアプリとして扱われており、安全のため外部のファイルに直接はアクセスできない仕組みになっているためです――ユーザーが明示的に指定しない限りは。この指定を通して、ユーザーが意図したファイルだけにしかアプリがアクセスできないことが保証されています。\n\nその結果、メインアプリと自動入力はそれぞれ別々にファイルアクセスの許可を必要とします。ただ、これは一度すれば済む手続きです。";
@@ -25,8 +46,23 @@
 /* Must match Apple's translation, as found in iOS 17 Settings → Passwords → Password Options. If unsure, leave untranslated. */
 "[AutoFill/Setup/UncheckKeychain/usePasswordsAndPasskeysFrom]" = "使用するパスワードとパスキーの取得元";
 
+/* Field title: name of the group that contains the entry */
+"[Database/Entry/Location/title]" = "場所";
+
+/* Title of a list with randomly generated usernames */
+"[Database/Entry/RandomUsernames/title]" = "ランダムなユーザー名";
+
+/* Action/button that shows a list of usernames to pick from */
+"[Database/Entry/SelectUsername/action]" = "ユーザー名を選択";
+
+/* Action: select item from a list/menu, with item name in quotes. For example: `Select "Sample Group"` */
+"[Database/Item/SelectNamed/action]" = "\"%@\" を選択";
+
 /* Action: create a passkey and add it to existing entry */
 "[Database/Passkey/AddToExisting/action]" = "既存のエントリーにパスキーを追加";
+
+/* Call to action: select an existing entry to add a new passkey to */
+"[Database/Passkey/AddToExisting/callToAction]" = "新しいパスキーのエントリーを選択してください";
 
 /* Confirmation message before replacing an existing passkey. */
 "[Database/Passkey/AddToExisting/confirm]" = "このエントリーにはすでにパスキーが設定されています。置き換えますか？";
@@ -69,4 +105,7 @@
 
 /* Call to action, invites the user to enable the Quick AutoFill feature */
 "[QuickAutoFill/Activate/callToAction]" = "クイック自動入力をオン";
+
+/* Placeholder text for empty search results */
+"[Search/EmptyResult/title]" = "該当するものはありません";
 

@@ -8,65 +8,23 @@
 
 import KeePassiumLib
 
-class AppDelegate: UIResponder, UIApplicationDelegate {
-    var window: UIWindow?
-
-    private var mainCoordinator: MainCoordinator!
-
+final class AppServices {
     #if targetEnvironment(macCatalyst)
-    var macUtils: MacUtils?
+    fileprivate(set) var macUtils: MacUtils?
     #endif
+    fileprivate(set) var autoTypeHelper: AutoTypeHelper?
+    weak var mainCoordinator: MainCoordinator?
+}
 
-    override var next: UIResponder? { mainCoordinator }
+final class AppDelegate: UIResponder, UIApplicationDelegate {
+    public var appServices = AppServices()
+
+    override var next: UIResponder? { appServices.mainCoordinator }
 
     func application(
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
     ) -> Bool {
-        initAppGlobals(application)
-
-        let window = WatchdogAwareWindow(frame: UIScreen.main.bounds)
-        let args = ProcessInfo.processInfo.arguments
-        if args.contains("darkMode") {
-            window.overrideUserInterfaceStyle = .dark
-        }
-
-        let incomingURL: URL? = launchOptions?[.url] as? URL
-        let hasIncomingURL = incomingURL != nil
-
-        var proposeAppReset = false
-        #if targetEnvironment(macCatalyst)
-        loadMacUtilsPlugin()
-        if let macUtils, macUtils.isControlKeyPressed() {
-            proposeAppReset = true
-        }
-        let autoTypeHelper = AutoTypeHelper(macUtils: macUtils)
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(sceneWillDeactivate),
-            name: UIScene.willDeactivateNotification,
-            object: nil
-        )
-        #else
-        let autoTypeHelper = AutoTypeHelper(macUtils: nil)
-        #endif
-
-        if UIDevice.current.userInterfaceIdiom == .pad {
-            window.makeKeyAndVisible()
-            mainCoordinator = MainCoordinator(window: window, autoTypeHelper: autoTypeHelper)
-            mainCoordinator.start(hasIncomingURL: hasIncomingURL, proposeReset: proposeAppReset)
-        } else {
-            mainCoordinator = MainCoordinator(window: window, autoTypeHelper: autoTypeHelper)
-            mainCoordinator.start(hasIncomingURL: hasIncomingURL, proposeReset: proposeAppReset)
-            window.makeKeyAndVisible()
-        }
-
-        self.window = window
-
-        return true
-    }
-
-    private func initAppGlobals(_ application: UIApplication) {
         #if PREPAID_VERSION
         BusinessModel.type = .prepaid
         #else
@@ -84,49 +42,39 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         Swizzler.swizzle()
 
         SettingsMigrator.processAppLaunch(with: Settings.current)
+
+        appServices = AppServices()
+        #if targetEnvironment(macCatalyst)
+        appServices.macUtils = loadMacUtilsPlugin()
+        appServices.autoTypeHelper = AutoTypeHelper(macUtils: appServices.macUtils)
+        #endif
+        return true
     }
 
     func applicationWillTerminate(_ application: UIApplication) {
         PremiumManager.shared.finishObservingTransactions()
     }
 
-    func application(
-        _ application: UIApplication,
-        open url: URL,
-        options: [UIApplication.OpenURLOptionsKey: Any] = [:]
-    ) -> Bool {
-        let result = mainCoordinator.processIncomingURL(
-            url,
-            sourceApp: options[UIApplication.OpenURLOptionsKey.sourceApplication] as? String,
-            openInPlace: options[.openInPlace] as? Bool)
-        return result
-    }
-
     #if targetEnvironment(macCatalyst)
-    private func loadMacUtilsPlugin() {
+    private func loadMacUtilsPlugin() -> MacUtils? {
         let bundleFileName = "MacUtils.bundle"
         guard let bundleURL = Bundle.main.builtInPlugInsURL?.appendingPathComponent(bundleFileName) else {
             Diag.error("Failed to find MacUtils plugin, macOS-specific functions will be limited")
-            return
+            return nil
         }
 
         guard let bundle = Bundle(url: bundleURL) else {
             Diag.error("Failed to load MacUtils plugin, macOS-specific functions will be limited")
-            return
+            return nil
         }
 
         let className = "MacUtils.MacUtilsImpl"
         guard let pluginClass = bundle.classNamed(className) as? MacUtils.Type else {
             Diag.error("Failed to instantiate MacUtils plugin, macOS-specific functions will be limited")
-            return
+            return nil
         }
 
-        macUtils = pluginClass.init()
-    }
-
-    @objc
-    private func sceneWillDeactivate(_ notification: Notification) {
-        macUtils?.disableSecureEventInput()
+        return pluginClass.init()
     }
     #endif
 }

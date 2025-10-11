@@ -21,28 +21,41 @@ struct GroupedItems {
 typealias SearchResults = [GroupedItems]
 
 final class SearchHelper {
-    func findEntries(database: Database, searchText: String, excludeGroupUUID: UUID? = nil) -> SearchResults {
+    func findEntries(
+        in database: Database,
+        searchText: String,
+        onlyAutoFillable: Bool = false,
+        excludeGroupUUID: UUID? = nil
+    ) -> SearchResults {
         return find(
-            database: database,
+            in: database,
             searchText: searchText,
             flattenGroups: true,
+            onlyAutoFillable: onlyAutoFillable,
             excludeGroupUUID: excludeGroupUUID
         )
     }
 
-    func findEntriesAndGroups(database: Database, searchText: String, excludeGroupUUID: UUID? = nil) -> SearchResults {
+    func findEntriesAndGroups(
+        in database: Database,
+        searchText: String,
+        onlyAutoFillable: Bool = false,
+        excludeGroupUUID: UUID? = nil
+    ) -> SearchResults {
         return find(
-            database: database,
+            in: database,
             searchText: searchText,
             flattenGroups: false,
+            onlyAutoFillable: onlyAutoFillable,
             excludeGroupUUID: excludeGroupUUID
         )
     }
 
     private func find(
-        database: Database,
+        in database: Database,
         searchText: String,
         flattenGroups: Bool,
+        onlyAutoFillable: Bool,
         excludeGroupUUID: UUID?
     ) -> SearchResults {
         let settings = Settings.current
@@ -64,6 +77,7 @@ final class SearchHelper {
             compareOptions: compareOptions,
             excludeGroupUUID: excludeGroupUUID,
             flattenGroups: flattenGroups,
+            onlyAutoFillable: onlyAutoFillable,
             text: searchText)
         let scoredItems = performSearch(in: database, query: query)
         let searchResults = arrangeByGroups(scoredItems: scoredItems)
@@ -76,8 +90,13 @@ final class SearchHelper {
         let foundCount = database.search(query: query, foundEntries: &foundEntries, foundGroups: &foundGroups)
         Diag.verbose("Found \(foundCount) groups and entries using query")
 
+        if query.onlyAutoFillable {
+            foundEntries = foundEntries.filter { entry in
+                let canAutoType = (entry.parent as? Group2)?.resolvingIsAutoTypeEnabled() ?? true
+                return canAutoType && entry.isAutoFillable
+            }
+        }
         let scoredEntries = foundEntries
-            .filter { !$0.isHiddenFromSearch }
             .map { ScoredItem(item: $0, similarityScore: 1.0) }
         let scoredGroups = foundGroups
             .filter { $0.uuid != query.excludeGroupUUID }

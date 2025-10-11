@@ -1,0 +1,24 @@
+/* Class = "UILabel"; text = "Database File Name"; ObjectID = "2iK-ct-ygq"; */
+"2iK-ct-ygq.text" = "Nome da Base de Dados";
+
+/* Class = "UIButton"; configuration.title = "Save Database"; ObjectID = "h6C-CG-RVI"; Note = "Action: save the new database (will show a file picker dialog)."; */
+"h6C-CG-RVI.configuration.title" = "Guardar Base de Dados";
+
+/* Class = "UIButton"; normalTitle = "Save Database"; ObjectID = "h6C-CG-RVI"; Note = "Action: save the new database (will show a file picker dialog)."; */
+"h6C-CG-RVI.normalTitle" = "Guardar Base de Dados";
+
+/* Class = "UITextField"; placeholder = "No Key File"; ObjectID = "pvt-FS-0Yx"; Note = "Placeholder: don't use key file (should match the No Key File option in key file picker)."; */
+"pvt-FS-0Yx.placeholder" = "Sem ficheiro-chave";
+
+/* Class = "UITextField"; placeholder = "Password"; ObjectID = "uHk-Yt-mBh"; Note = "Placeholder: master password of the database"; */
+"uHk-Yt-mBh.placeholder" = "Palavra-Passe";
+
+/* Class = "UILabel"; text = "Master Key"; ObjectID = "VjQ-di-Ilx"; Note = "Common title for the password/key file fields."; */
+"VjQ-di-Ilx.text" = "Chave-Mestra";
+
+/* Class = "UITextField"; placeholder = "e.g. MyPasswords"; ObjectID = "XNL-lc-2Ti"; Note = "Default name for a new database."; */
+"XNL-lc-2Ti.placeholder" = "ex.: AsMinhasPasswords";
+
+/* Class = "UITextField"; text = "MyPasswords"; ObjectID = "XNL-lc-2Ti"; Note = "Default name for a new database."; */
+"XNL-lc-2Ti.text" = "AsMinhasPasswords";
+

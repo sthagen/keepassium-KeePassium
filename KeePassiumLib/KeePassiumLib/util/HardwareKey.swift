@@ -8,7 +8,7 @@
 
 import Foundation
 
-final public class HardwareKey: Codable, Equatable, CustomStringConvertible {
+final public class HardwareKey: Codable, Hashable, Equatable, CustomStringConvertible {
     public enum Kind: String, Codable, CustomStringConvertible {
         case yubikey
         case onlykey
@@ -23,8 +23,9 @@ final public class HardwareKey: Codable, Equatable, CustomStringConvertible {
     public enum Slot: Int, Codable {
         case slot1 = 1
         case slot2 = 2
-        public var number: Int {
-            return rawValue
+
+        public var localizedDescription: String {
+            String.localizedStringWithFormat(LString.hardwareKeySlotN, rawValue)
         }
     }
 
@@ -55,15 +56,21 @@ final public class HardwareKey: Codable, Equatable, CustomStringConvertible {
         return (lhs.kind == rhs.kind) && (lhs.slot == rhs.slot) && (lhs.interface == rhs.interface)
     }
 
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(interface)
+        hasher.combine(kind)
+        hasher.combine(slot)
+    }
+
     public var description: String {
-        return "\(kind.description) \(interface) Slot \(slot.number)"
+        return "\(kind.description) \(interface) Slot \(slot.rawValue)"
     }
 
     public var localizedDescription: String {
         return String.localizedStringWithFormat(
             LString.hardwareKeySlotNTemplate,
             kind.description,
-            slot.number
+            slot.rawValue
         )
     }
 

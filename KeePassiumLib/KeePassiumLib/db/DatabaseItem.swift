@@ -13,9 +13,16 @@ open class DatabaseItem: Taggable {
         case modifiedAt(_ date: Date)
     }
 
+    public let runtimeUUID = UUID()
+
+    public var uuid: UUID
     public weak var parent: Group?
 
     public var tags: [String] = []
+
+    internal init(uuid: UUID) {
+        self.uuid = uuid
+    }
 
     public func resolvingTags() -> [String] {
         var resolvedTags = tags
@@ -42,8 +49,11 @@ open class DatabaseItem: Taggable {
         return false
     }
 
-    public func touch(_ mode: TouchMode, updateParents: Bool = true) {
+    public func move(to parent: Group) {
         fatalError("Pure abstract method")
     }
 
+    public func touch(_ mode: TouchMode, updateParents: Bool = true) {
+        fatalError("Pure abstract method")
+    }
 }

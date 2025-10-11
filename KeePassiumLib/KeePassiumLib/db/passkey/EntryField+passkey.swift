@@ -12,4 +12,6 @@ public extension EntryField {
     static let passkeyRelyingParty = "KPEX_PASSKEY_RELYING_PARTY"
     static let passkeyUsername = "KPEX_PASSKEY_USERNAME"
     static let passkeyUserHandle = "KPEX_PASSKEY_USER_HANDLE"
+    static let passkeyFlagBE = "KPEX_PASSKEY_FLAG_BE"
+    static let passkeyFlagBS = "KPEX_PASSKEY_FLAG_BS"
 }

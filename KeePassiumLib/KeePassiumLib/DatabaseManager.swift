@@ -70,9 +70,12 @@ public class DatabaseManager {
             mode: .overwriteLatest,
             timestamp: .now
         )
-        guard let latestBackupURL else {
+        guard let latestBackupURL,
+              FileManager.default.fileExists(atPath: latestBackupURL.path)
+        else {
             return nil
         }
+
         do {
             let ref = try URLReference(from: latestBackupURL, location: .internalBackup)
             return ref

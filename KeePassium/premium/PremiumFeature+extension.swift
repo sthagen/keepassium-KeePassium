@@ -26,6 +26,8 @@ extension PremiumFeature {
             return LString.premiumFeaturePasswordAuditTitle
         case .canOpenLinkedDatabases:
             return LString.premiumFeatureLinkedDatabasesTitle
+        case .canCreateEntriesInAutoFill:
+            return LString.premiumFeatureCreativeAutoFillTitle
         }
     }
 
@@ -45,6 +47,8 @@ extension PremiumFeature {
             return LString.premiumFeatureLinkedDatabasesDescription
         case .canRelocateAcrossDatabases:
             return LString.premiumFeatureGenericDescription
+        case .canCreateEntriesInAutoFill:
+            return LString.premiumFeatureCreativeAutoFillDescription
         }
     }
 }

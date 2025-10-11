@@ -1,6 +1,6 @@
 //  KeePassium Password Manager
 //  Copyright © 2018-2025 KeePassium Labs <info@keepassium.com>
-// 
+//
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License version 3 as published
 //  by the Free Software Foundation: https://www.gnu.org/licenses/).
@@ -13,7 +13,6 @@ public class Group: DatabaseItem, Eraseable {
     public static let defaultOpenIconID = IconID.folderOpen
 
     public weak var database: Database?
-    public var uuid: UUID
     public var iconID: IconID
     public var name: String
     public var notes: String
@@ -55,7 +54,6 @@ public class Group: DatabaseItem, Eraseable {
     init(database: Database?) {
         self.database = database
 
-        uuid = UUID.ZERO
         iconID = Group.defaultIconID
         name = ""
         notes = ""
@@ -71,7 +69,7 @@ public class Group: DatabaseItem, Eraseable {
         lastAccessTime = now
         expiryTime = now
 
-        super.init()
+        super.init(uuid: UUID.ZERO)
     }
     deinit {
         erase()
@@ -172,10 +170,16 @@ public class Group: DatabaseItem, Eraseable {
         isChildrenModified = true
     }
 
-    public func move(to newGroup: Group) {
-        guard parent !== newGroup else { return }
+    override public func move(to newGroup: Group) {
+        guard newGroup.isAllowedDestination(for: self) else { assertionFailure(); return }
         parent?.remove(group: self)
         newGroup.add(group: self)
+    }
+
+    public func isAllowedDestination(for item: DatabaseItem) -> Bool {
+        guard item.runtimeUUID != self.runtimeUUID else { return false }
+        guard !item.isAncestor(of: self) else { return false }
+        return true
     }
 
     public func findGroup(byUUID uuid: UUID) -> Group? {
@@ -199,7 +203,7 @@ public class Group: DatabaseItem, Eraseable {
         return entries.first(where: { $0.uuid == uuid })
     }
 
-    public func createEntry(creationDate: Date = Date(), detached: Bool = false) -> Entry {
+    public func createEntry(creationDate: Date = Date(), detached: Bool = false, uuid: UUID? = nil) -> Entry {
         fatalError("Pure virtual method")
     }
 
@@ -265,31 +269,48 @@ public class Group: DatabaseItem, Eraseable {
             return
         }
 
-        for group in groups {
-            if query.flattenGroups {
-                if group.matches(query: query, scope: .tags) {
-                    var entries: [Entry] = []
-                    group.collectAllEntries(to: &entries)
-                    foundEntries.append(contentsOf: entries)
-                } else if group.matches(query: query, scope: .fields) {
-                    foundEntries.append(contentsOf: group.entries)
-                    for subgroup in group.groups {
-                        subgroup.filter(query: query, foundEntries: &foundEntries, foundGroups: &foundGroups)
-                    }
-                } else {
-                    group.filter(query: query, foundEntries: &foundEntries, foundGroups: &foundGroups)
+        if query.flattenGroups {
+            if !isRoot && matches(query: query, scope: .tags) {
+                findAllEntries(deep: true, to: &foundEntries)
+                return
+            } else if !isRoot && matches(query: query, scope: .fields) {
+                findAllEntries(deep: false, to: &foundEntries)
+                groups.forEach { subgroup in
+                    subgroup.filter(query: query, foundEntries: &foundEntries, foundGroups: &foundGroups)
                 }
+                return
             } else {
-                if group.matches(query: query, scope: .any) {
-                    foundGroups.append(group)
-                }
-                group.filter(query: query, foundEntries: &foundEntries, foundGroups: &foundGroups)
+            }
+        } else {
+            if matches(query: query, scope: .any),
+               !isRoot
+            {
+                foundGroups.append(self)
             }
         }
 
-        for entry in entries {
+        entries.forEach { entry in
             if entry.matches(query: query, scope: .any) {
                 foundEntries.append(entry)
+            }
+        }
+        groups.forEach { subgroup in
+            subgroup.filter(query: query, foundEntries: &foundEntries, foundGroups: &foundGroups)
+        }
+    }
+
+    private func findAllEntries(deep: Bool, to foundEntries: inout [Entry]) {
+        guard !isDeleted,
+              isIncludeChildrenInSearch
+        else {
+            return
+        }
+
+        foundEntries.append(contentsOf: entries)
+
+        if deep {
+            groups.forEach { subgroup in
+                subgroup.findAllEntries(deep: deep, to: &foundEntries)
             }
         }
     }

@@ -10,29 +10,12 @@ import AuthenticationServices
 import DomainParser
 import KeePassiumLib
 
-struct FuzzySearchResults {
-    var exactMatch: SearchResults
-    var partialMatch: SearchResults
-
-    var isEmpty: Bool { return exactMatch.isEmpty && partialMatch.isEmpty }
-
-    var perfectMatch: Entry? {
-        guard exactMatch.count == 1,
-              let theOnlyGroup = exactMatch.first,
-              theOnlyGroup.scoredItems.count == 1,
-              let theOnlyScoredEntry = theOnlyGroup.scoredItems.first?.item as? Entry
-        else {
-            return nil
-        }
-        return theOnlyScoredEntry
-    }
-}
-
 extension SearchHelper {
     func find(
         database: Database,
         serviceIdentifiers: [ASCredentialServiceIdentifier],
-        passkeyRelyingParty: String?
+        passkeyRelyingParty: String?,
+        allowOnly itemKind: AutoFillItemKind?
     ) -> FuzzySearchResults {
         var relevantEntries = [ScoredItem]()
         if let passkeyRelyingParty {
@@ -51,7 +34,9 @@ extension SearchHelper {
                 }
             }
         }
-
+        if let itemKind {
+            relevantEntries = relevantEntries.filter { itemKind.matches($0.item) }
+        }
         let exactMatchEntries = relevantEntries.filter { $0.similarityScore >= 0.99 }
         let partialMatchEntries = relevantEntries.filter { $0.similarityScore < 0.99 }
         let exactMatch = arrangeByGroups(scoredItems: exactMatchEntries)
@@ -77,10 +62,7 @@ extension SearchHelper {
                 let parent2 = entry.parent as? Group2
                 let canSearch = parent2?.resolvingIsSearchingEnabled() ?? true
                 let canAutoType = parent2?.resolvingIsAutoTypeEnabled() ?? true
-                return canSearch && canAutoType
-            }
-            .filter { entry in
-                !(entry.isDeleted || entry.isHiddenFromSearch)
+                return canSearch && canAutoType && entry.isAutoFillable
             }
             .map { entry in
                 return ScoredItem(
@@ -107,10 +89,7 @@ extension SearchHelper {
                 let parent2 = entry.parent as? Group2
                 let canSearch = parent2?.resolvingIsSearchingEnabled() ?? true
                 let canAutoType = parent2?.resolvingIsAutoTypeEnabled() ?? true
-                return canSearch && canAutoType
-            }
-            .filter { entry in
-                !(entry.isDeleted || entry.isExpired || entry.isHiddenFromSearch)
+                return canSearch && canAutoType && entry.isAutoFillable
             }
             .map { entry in
                 return ScoredItem(
@@ -317,10 +296,7 @@ extension SearchHelper {
                 let parent2 = entry.parent as? Group2
                 let canSearch = parent2?.resolvingIsSearchingEnabled() ?? true
                 let canAutoType = parent2?.resolvingIsAutoTypeEnabled() ?? true
-                return canSearch && canAutoType
-            }
-            .filter { entry in
-                !(entry.isDeleted || entry.isExpired || entry.isHiddenFromSearch)
+                return canSearch && canAutoType && entry.isAutoFillable
             }
         return relevantEntries.map { ScoredItem(item: $0, similarityScore: 1.0) }
     }

@@ -86,7 +86,9 @@ class ItemRelocationCoordinator: BaseCoordinator {
         case .external:
             databasePickerCoordinator?.startExternalDatabasePicker(fileRef, presenter: presenter)
         case .remote:
-            databasePickerCoordinator?.startRemoteDatabasePicker(fileRef, presenter: presenter)
+            databasePickerCoordinator?.startRemoteDatabasePicker(
+                mode: .reauth(fileRef),
+                presenter: presenter)
         case .internalBackup, .internalDocuments, .internalInbox:
             assertionFailure("Should not be here. Can reinstate only external or remote files.")
             return
@@ -103,27 +105,10 @@ extension ItemRelocationCoordinator {
             return false
         }
 
-        if let database1 = targetDatabase as? Database1,
-           let root1 = database1.root,
-           group === root1
-        {
-            for item in itemsToRelocate {
-                if item.value is Entry1 {
-                    return false
-                }
-            }
+        return itemsToRelocate.allSatisfy {
+            guard let dbItem = $0.value else { return false }
+            return group.isAllowedDestination(for: dbItem)
         }
-
-        if sourceDatabase === targetDatabase {
-            let hasImmovableItems = itemsToRelocate.contains {
-                guard let itemToMove = $0.value else { return false }
-                return itemToMove === group || itemToMove.isAncestor(of: group)
-            }
-            if hasImmovableItems {
-                return false
-            }
-        }
-        return true
     }
 
 
@@ -446,7 +431,7 @@ extension ItemRelocationCoordinator: DatabasePickerCoordinatorDelegate {
 
     func didSelectDatabase(
         _ fileRef: URLReference?,
-        cause: FileActivationCause?,
+        cause: ItemActivationCause?,
         in coordinator: DatabasePickerCoordinator
     ) {
         assert(cause != nil, "Unexpected for single-panel mode")
@@ -454,6 +439,10 @@ extension ItemRelocationCoordinator: DatabasePickerCoordinatorDelegate {
         assert(!DatabaseSettingsManager.shared.isReadOnly(fileRef), "Cannot relocate to read-only DB")
         _router.navigationController.hideAllToasts()
         unlockDatabase(fileRef)
+    }
+
+    func didPressShowDiagnostics(at popoverAnchor: PopoverAnchor?, in viewController: UIViewController) {
+        showDiagnostics()
     }
 }
 

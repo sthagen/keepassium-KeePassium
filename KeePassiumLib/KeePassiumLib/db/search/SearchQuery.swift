@@ -50,6 +50,7 @@ public struct SearchQuery {
     public let fieldScope: FieldScope
     public let compareOptions: String.CompareOptions
     public let flattenGroups: Bool
+    public let onlyAutoFillable: Bool
 
     public let text: String
     let queryWords: [any Word]
@@ -59,12 +60,14 @@ public struct SearchQuery {
         compareOptions: String.CompareOptions,
         excludeGroupUUID: UUID?,
         flattenGroups: Bool,
+        onlyAutoFillable: Bool,
         text: String
     ) {
         self.fieldScope = fieldScope
         self.compareOptions = compareOptions
         self.excludeGroupUUID = excludeGroupUUID
         self.flattenGroups = flattenGroups
+        self.onlyAutoFillable = onlyAutoFillable
         self.text = text
         self.queryWords = Self.makeWords(from: text)
     }

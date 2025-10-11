@@ -1,8 +1,41 @@
+/* Menu item that shows info about KeePassium app */
+"[About/altTitle]" = "Informazioni su KeePassium";
+
+/* Section in settings: icon for the app */
+"[Appearance/AppIcon/title]" = "Icona app";
+
+/* Section in settings: icons for database */
+"[Appearance/DatabaseIcons/title]" = "Icone database";
+
+/* Short name of the default/system font. For example: `Font: Default` */
+"[Appearance/DefaultFont/shortTitle]" = "Default";
+
+/* Title of a setting: whether the Entry Viewer should open on the same tab/page when switching between entries, or switch to the first tab instead. */
+"[Appearance/EntryViewer/OpenLastUsedTab/title]" = "Apri l'ultima scheda utilizzata";
+
+/* Section in settings: parameters related to entry viewer component */
+"[Appearance/EntryViewer/title]" = "Visualizzatore voci";
+
+/* Title of a setting option: font */
+"[Appearance/Font/title]" = "Font";
+
+/* Action: set text size to standard size */
+"[Appearance/TextSize/reset]" = "Ripristina dimensione testo predefinita";
+
+/* Title of a setting option: font size */
+"[Appearance/TextSize/title]" = "Dimensione testo";
+
+/* Group of settings for user interface appearance (text size, icons, etc) */
+"[Appearance/title]" = "Aspetto";
+
 /* Title of the app history (changelog) screen */
 "[AppHistory/title]" = "Novità";
 
 /* Notification when user tries to set up too weak an app protection passcode. */
-"[AppLock/weakPasscodeWarning]" = "Questo codice è facile da indovinare. Prova a inserirne uno più forte.";
+"[AppLock/weakPasscodeWarning]" = "Questo codice è facile da indovinare. Prova a inserirne uno più complesso.";
+
+/* Subtitle for `Contact Us`. Keep it short. */
+"[ContactUs/subtitle]" = "Suggerimenti? Problemi? Facci sapere!";
 
 /* Item in the credits list */
 "[Credits/Item/aexml]" = "AEXML di Marko Tadić";
@@ -65,6 +98,9 @@
 "[Credits/Item/twoFish]" = "Implementazione Twofish di Niels Ferguson";
 
 /* Item in the credits list */
+"[Credits/Item/whatsNewKit]" = "WhatsNewKit di Sven Tiigi";
+
+/* Item in the credits list */
 "[Credits/Item/wordlists]" = "Liste vocaboli per frasi segrete dell'EFF";
 
 /* Item in the credits list */
@@ -110,7 +146,7 @@
 "[Database/Create/orgRequiresStronger]" = "La tua organizzazione richiede una password del database più complessa.";
 
 /* Note for a sample entry */
-"[Database/Create/TemplateEntry/notes] You can also store some notes, if you like." = "Puoi anche conservare delle note, se vuoi.";
+"[Database/Create/TemplateEntry/notes] You can also store some notes, if you like." = "Puoi anche aggiungere delle note, se vuoi.";
 
 /* Password for a sample entry. Translation is optional. */
 "[Database/Create/TemplateEntry/password] pa$$word" = "pa$$word";
@@ -146,16 +182,22 @@
 "[Database/DownloadFavicons/intro]" = "KeePassium contatterà i siti web associati a ogni voce.";
 
 /* Description of favicon downloader feature. 'Doing this' refers to downloading favicons. */
-"[Database/DownloadFavicons/warning]" = "Fare questo mentre si è connessi a una rete pubblica o monitorata può esporre la lista di siti web su cui si ha un account.";
+"[Database/DownloadFavicons/warning]" = "Se stai usando una rete pubblica o monitorata, questa operazione potrebbe esporre la lista di siti web su cui hai un account.";
+
+/* Placeholder text in an empty group */
+"[Database/Group/empty]" = "Questo gruppo è vuoto";
 
 /* Warning that one key derivation function (KDF) should be preferred to another. Example: 'AES-KDF is considered weak. Use Argon2id instead.' */
 "[Database/KDF/consideredWeak]" = "%1$@ è ritenuto debole. Usa %2$@ al suo posto.";
 
 /* Notification message about encryption settings. */
-"[Database/KDF/tooSlow]" = "Queste impostazioni potrebbero essere troppo lente per alcuni dispositivi.";
+"[Database/KDF/tooSlow]" = "Queste impostazioni potrebbero rallentare alcuni dispositivi.";
 
 /* Call to action when encryption settings are too weak. */
-"[Database/KDF/tooWeak]" = "Aumenta le impostazioni per la massima protezione dei dati.";
+"[Database/KDF/tooWeak]" = "Aumenta i valori per una protezione dei dati ottimale.";
+
+/* Subtitle for `Diagnostic Log`. Keep it short. */
+"[DiagLog/subtitle]" = "Per troubleshooting avanzato";
 
 /* Confirmation message to replace an existing entry attachment with a new one. */
 "[Entry/Files/Add] Replace existing attachment?" = "Sostituire l'allegato esistente?";
@@ -178,6 +220,27 @@
 /* Title of entry viewer's tab with advanced/secondary properties */
 "[Entry/Tab/More/title]" = "Altro";
 
+/* Name of Apple Passwords' CSV file format */
+"[Format/ApplePasswordsCSV]" = "Password di Apple (.csv)";
+
+/* Name of Enpass' JSON file format */
+"[Format/EnpassJSON]" = "Enpass (.json)";
+
+/* Error message when CSV parsing fails [lineNumber: Int] */
+"[Import/CSV/Error/InvalidFormat]" = "Formato CSV non valido alla riga %d.";
+
+/* Error message when CSV parsing fails [lineNumber: Int, colNumber: Int] */
+"[Import/CSV/Error/InvalidFormat/withColumn]" = "Formato CSV non valido alla riga %1$d, colonna %2$d.";
+
+/* Error message when Enpass import fails due to corrupted attachment data [attachmentName: String, itemName: String] */
+"[Import/Enpass/Error/CorruptedAttachment]" = "Dati danneggiati per l'allegato \"%1$@\" nell'elemento \"%2$@\".";
+
+/* Error shown when trying to import from an empty file */
+"[Import/Error/EmptyFile]" = "Il file in arrivo è vuoto.";
+
+/* Error message when JSON parsing fails */
+"[Import/JSON/ParsingError]" = "Analisi del file JSON non riuscita.";
+
 /* Action/button */
 "[Onboarding/AddExistingDatabase/action]" = "Aggiungi database esistente";
 
@@ -185,7 +248,7 @@
 "[Onboarding/AppProtection/activate]" = "Attiva protezione app";
 
 /* Text in the App Protection onboarding screen. */
-"[Onboarding/AppProtection/text1]" = "KeePassium è il tuo caveau. La protezione app assicura che solo tu possa aprirlo.";
+"[Onboarding/AppProtection/text1]" = "KeePassium è il tuo caveau. La protezione app fa sì che solo tu possa aprirlo.";
 
 /* Title of the App Protection onboarding screen */
 "[Onboarding/AppProtection/title]" = "Solo per i tuoi occhi";
@@ -194,10 +257,10 @@
 "[Onboarding/AutoFill/activate]" = "Attiva inserimento automatico";
 
 /* Text in the Password AutoFill onboarding screen. */
-"[Onboarding/AutoFill/text1]" = "Con Inserimento automatico puoi liberarti delle schermate di accesso con un solo tasto.";
+"[Onboarding/AutoFill/text1]" = "Grazie all'inserimento automatico, per accedere ai tuoi account basterà premere un tasto.";
 
 /* Text in the Password AutoFill onboarding screen. */
-"[Onboarding/AutoFill/text2]" = "Per iniziare, attiva Inserimento automatico password nelle impostazioni di sistema.";
+"[Onboarding/AutoFill/text2]" = "Per iniziare, attiva l'inserimento automatico nelle impostazioni di sistema.";
 
 /* Title of the Password AutoFill onboarding screen */
 "[Onboarding/AutoFill/title]" = "Inserimento automatico";
@@ -233,13 +296,13 @@
 "[Onboarding/Security/text1]" = "Le tue informazioni sono criptate in una cassaforte (database). Le casseforti sono conservate in un caveau (KeePassium).";
 
 /* Text in the Security intro screen */
-"[Onboarding/Security/text2]" = "Il caveau e le casseforti hanno chiavi diverse e solo tu le conosci.";
+"[Onboarding/Security/text2]" = "Il caveau e le casseforti hanno chiavi diverse e solo tu sai quali sono.";
 
 /* Title of the Security intro screen */
 "[Onboarding/Security/title]" = "Massima sicurezza";
 
 /* Action to skip selected item/items in future password audits. */
-"[PasswordAudit/Action/Exclude]" = "Escludi dall'ispezione";
+"[PasswordAudit/Action/Exclude]" = "Escludi da ispezione";
 
 /* Status message: password audit in progress */
 "[PasswordAudit/Auditing/status]" = "Ispezione password in corso";
@@ -278,7 +341,7 @@
 "[PasswordQuality/Level] Very good" = "Ottima";
 
 /* Very weak password quality */
-"[PasswordQuality/Level] Very weak" = "Molto debole";
+"[PasswordQuality/Level] Very weak" = "Pessima";
 
 /* Weak password quality */
 "[PasswordQuality/Level] Weak" = "Debole";
@@ -289,14 +352,344 @@
 /* Password quality description. For example: `Very good (234 bits of entropy)`. [level: String, formattedBitCount: String] */
 "[PasswordQuality/LevelWithEntropy/description]" = "%1$@ (%2$@ di entropia)";
 
+/* Status: special premium for beta-testing environment is active */
+"[Premium/Status/BetaTesting/title]" = "In beta";
+
+/* Status: current version of the app. For example: `Current version: 1.23`. Should be similar to the `Licensed version` string. [version: String] */
+"[Premium/Status/currentVersion]" = "Versione attuale: %@";
+
+/* Status: premium subscription has expired. For example: `Expired 1 day ago`. [timeFormatted: String, includes the time unit (day, hour, minute)] */
+"[Premium/Status/expiredAgo]" = "Scaduto %@ fa. Rinnovo richiesto.";
+
+/* Status: licensed premium version of the app. For example: `Licensed version: 1.23`. [version: String] */
+"[Premium/Status/licensedVersion]" = "Versione autorizzata: %@";
+
+/* Status: scheduled renewal date of a premium subscription. For example: `Next renewal on 1 Jan 2050`. [expiryDateString: String] */
+"[Premium/Status/nextRenewal]" = "Prossimo rinnovo il %@";
+
+/* Status when the user has a premium version */
+"[Premium/Status/title]" = "Versione Premium";
+
+/* Status: validity period of once-and-forever premium */
+"[Premium/Status/ValidForever/title]" = "Valido per sempre";
+
+/* Status: how long the app has been used during some time period. For example: `App being useful: 1hr/month, about 12hr/year`. [monthlyUsage: String, annualUsage: String — already include the time unit (hours, minutes)] */
+"[Premium/usage] App being useful: %@/month, that is around %@/year." = "Utilità app: %1$@/ mese, circa %2$@/anno.";
+
 /* Action/button to make password visible as plain-text */
 "[ProtectedTextField] Show Password" = "Mostra password";
+
+/* Explanation why the app needs camera access permission. */
+"[QRCodeScanner/CameraPermission/description]" = "KeePassium richiede l'accesso a Fotocamera per scansionare codici QR.";
+
+/* Error message when the app cannot use the camera. */
+"[QRCodeScanner/Error/CameraBusy]" = "La fotocamera è già in uso.";
+
+/* Error message */
+"[QRCodeScanner/Error/ImageCorrupted]" = "L'immagine selezionata è danneggiata.";
+
+/* Error message with a suggested action. */
+"[QRCodeScanner/Error/Internal]" = "Errore interno nel lettore di codici QR. Per ulteriori dettagli, vedere il registro di diagnostica.";
+
+/* Notification message */
+"[QRCodeScanner/Error/NoQRCodeFound]" = "Sembra che l'immagine con contenga alcun codice QR.";
+
+/* Error message when camera/gallery/etc is either missing or forbidden. */
+"[QRCodeScanner/Error/SourceNoAvailable]" = "Fonte dell'immagine non disponibile.";
+
+/* Call to action/instruction for QR code scanner. */
+"[QRCodeScanner/Info/callToAction]" = "Inquadra un codice QR con la fotocamera.";
+
+/* Description of the Quick AutoFill feature. */
+"[QuickAutoFill/description]" = "L'inserimento automatico rapido mostra le voci rilevanti di fianco ai campi password, senza aprire KeePassium.";
+
+/* Placeholder text for empty search results */
+"[Search/EmptyResult/title]" = "Nessuna corrispondenza trovata";
 
 /* Title of the confirmation dialog for `Delete` action for several items */
 "[Selection/Delete/confirmation]" = "Eliminare la selezione?";
 
 /* Title of the confirmation dialog for `Exclude from audit` action for several items */
 "[Selection/ExcludeFromAudit/confirmation]" = "Escludere la selezione dall'ispezione password?";
+
+/* Title of a section in settings: parameters that protect access to data */
+"[Settings/AccessControl/title]" = "Protezione accesso";
+
+/* Call to action (protect the app from unauthorized access) */
+"[Settings/AppLoc/Activate/callToAction]" = "Attiva protezione app";
+
+/* Description of `Activate app protection` call to action. */
+"[Settings/AppLock/Activate/description]" = "Proteggi KeePassium da accessi non autorizzati.";
+
+/* Description of biometric unlock settings */
+"[Settings/AppLock/Biometric/description]" = "Consente di utilizzare l'autenticazione biometrica come alternativa rapida (ma meno sicura) al codice di blocco.";
+
+/* Settings switch: whether App Protection is allowed to use Touch ID/Face ID. Example: 'Use Touch ID'. [biometryTypeName: String] */
+"[Settings/AppLock/Biometric/title] Use %@" = "Usa %@";
+
+/* Explanation for the `Lock on App Launch` setting */
+"[Settings/AppLock/LockOnLaunch/description]" = "Assicura che KeePassium venga bloccato dopo la chiusura forzata dell'app o il riavvio del dispositivo.";
+
+/* Setting switch: whether to lock the app after it was terminated and relaunched. */
+"[Settings/AppLock/LockOnLaunch/title]" = "Blocca all'avvio dell'app";
+
+/* Explanation for the `Lock on macOS Screen Lock` setting */
+"[Settings/AppLock/LockOnScreenLock/description]" = "Garantisce che KeePassium venga bloccato quando blocchi il tuo Mac.";
+
+/* Title of a yes/no setting: whether to lock app when computer screen is locked (see https://support.apple.com/en-gb/guide/mac-help/mchl8e8b6a34/mac) */
+"[Settings/AppLock/LockOnScreenLock/title]" = "Blocca quando lo schermo di macOS è bloccato";
+
+/* Description of the `Lock on Wrong Passcode` setting */
+"[Settings/AppLock/LockOnWrongPasscode/description]" = "Se immetti un codice errato, KeePassium chiuderà tutti i database e cancellerà tutte le chiavi principali dal portachiavi.";
+
+/* Title in the settings: whether to lock databases when user enters a wrong app protection passcode. */
+"[Settings/AppLock/LockOnWrongPasscode/title]" = "Blocca in caso di un codice di accesso errato";
+
+/* Description of the `Passcode Attempts Until App Reset` setting */
+"[Settings/AppLock/PasscodeAttemptsUntilAppReset/description]" = "Reimpostando l'app verranno eliminate tutte le chiavi memorizzate e le impostazioni, nonché tutti i backup del database, i file importati e i link a file esterni. Tuttavia, se la reimpostazione viene attivata da Inserimento automatico, i file importati potrebbero essere conservati a causa di limitazioni tecniche.";
+
+/* An option in Settings. Will be shown as 'Passcode Attempts Until App Reset: Do not reset' */
+"[Settings/AppLock/PasscodeAttemptsUntilAppReset/Never/title]" = "Non reimpostare";
+
+/* Title in the settings: number of failed passcode attempts that will reset the app into 'just installed' state. */
+"[Settings/AppLock/PasscodeAttemptsUntilAppReset/title]" = "Tentativi prima della reimpostazione dell'app";
+
+/* Settings: subtitle of the `App Protection` section. biometryTypeName will be either 'Touch ID' or 'Face ID'. [biometryTypeName: String] */
+"[Settings/AppLock/subtitle] App Lock, %@, timeout" = "Blocco app, %@, timeout";
+
+/* Settings: subtitle of the `App Protection` section when biometric auth is not available. */
+"[Settings/AppLock/subtitle] App Lock, passcode, timeout" = "Blocco app, codice, timeout";
+
+/* Description of the App Lock Timeout setting */
+"[Settings/AppLock/Timeout/description]" = "L'app si bloccherà automaticamente dopo questo intervallo di tempo.";
+
+/* Title for App Lock Timeout setting */
+"[Settings/AppLock/Timeout/title]" = "Timeout";
+
+/* Settings section: protection of the app from unauthorized access */
+"[Settings/AppLock/title]" = "Protezione app";
+
+/* Settings section: what happens if user enters incorrect App Protection passcode. */
+"[Settings/AppLock/WrongPasscode/title]" = "Codice errato";
+
+/* Description of those 'App Protection Timeout' options that trigger when the app is minimized. For example: 'Timeout: 3 seconds (After leaving the app) */
+"[Settings/AppLockTimeout/AfterLeavingApp/description]" = "Dopo aver lasciato l'app";
+
+/* Description of those 'App Protection Timeout' options that trigger when the user has been idle for a while. For example: 'Timeout: 3 seconds (After last interaction) */
+"[Settings/AppLockTimeout/description] After last interaction" = "Dopo ultima interazione";
+
+/* An option in Settings. Will be shown as 'App Lock: Timeout: Immediately' */
+"[Settings/AppLockTimeout/Immediately/title] " = "Immediatamente";
+
+/* An option in Settings. Will be shown as 'App Lock: Timeout: Never' */
+"[Settings/AppLockTimeout/Never/title]" = "Mai";
+
+/* Action that opens system settings or instructions */
+"[Settings/AutoFill/Activate/action]" = "Attiva inserimento automatico";
+
+/* Description for the AutoFill setup instructions */
+"[Settings/AutoFill/Activate/description]" = "Prima di utilizzarlo, devi attivare l'inserimento automatico in Impostazioni.";
+
+/* Description of the 'Copy OTP to Clipboard' setting */
+"[Settings/AutoFill/CopyOTP/Description]" = "Quando l'inserimento automatico inserisce il nome utente e la password, può anche copiare la password monouso (OTP) per te.";
+
+/* Title of a yes/no setting: copy one-time password to clipboard when using AutoFill */
+"[Settings/AutoFill/CopyOTP/title]" = "Copia OTP negli appunti";
+
+/* Description of the 'Remember Selected Entries' setting. */
+"[Settings/AutoFill/RememberContext/description]" = "KeePassium ricorderà le voci che selezioni per ogni sito web e quindi le suggerirà automaticamente.";
+
+/* Title of a yes/no setting: remember which entry was used for AutoFill on which website. */
+"[Settings/AutoFill/RememberContext/title]" = "Ricorda le voci selezionate";
+
+/* Title of a help article on how to activate AutoFill. */
+"[Settings/AutoFill/Setup Guide/title]" = "Guida per l'inserimento automatico";
+
+/* No comment provided by engineer. */
+"[Settings/AutoFill/UnavailableInIntune/description]" = "L'inserimento automatico non è disponibile in KeePassium per Intune.";
+
+/* Description of the 'Fill-In Perfect Result Automatically' setting */
+"[Settings/AutoFill/UsePerfectMatch/description]" = "Quando l'inserimento automatico trova una voce perfettamente corrispondente, questa verrà incollata automaticamente.";
+
+/* Title of a yes/no setting: automatically use the single best match found by AutoFill search */
+"[Settings/AutoFill/UsePerfectMatch/title]" = "Inserisci risultato perfetto in automatico";
+
+/* Option in settings: whether to open the last used database automatically on start. */
+"[Settings/AutoOpenPreviousDatabase/title]" = "Apri ultimo database";
+
+/* Title of a section in settings */
+"[Settings/AutoSearch/title]" = "Ricerca automatica";
+
+/* Action to clear/erase info about which database uses which key file */
+"[Settings/ClearKeyFileAssociations/action]" = "Dimentica file chiave associati";
+
+/* Title of the success message for `Clear Key File Associations` button */
+"[Settings/ClearKeyFileAssociations/Cleared/title]" = "Dimenticate";
+
+/* Title of the success message for `Clear Master Keys` button */
+"[Settings/ClearMasterKeys/Cleared/title]" = "Dimenticate";
+
+/* Title of a setting: time after which clipboard will be cleared */
+"[Settings/Clipboard/Timeout/title]" = "Timeout appunti";
+
+/* Section title in Settings */
+"[Settings/Clipboard/title]" = "Appunti";
+
+/* Description of the 'Clipboard Timeout' setting. */
+"[Settings/ClipboardTimeout/description]" = "Quando copi qualsiasi cosa, KeePassium svuoterà automaticamente i tuoi appunti dopo un certo di tempo.";
+
+/* An option in Settings. Will be shown as 'Clipboard Timeout: Never' */
+"[Settings/ClipboardTimeout/Never/title]" = "Mai";
+
+/* Description of the 'Make Backup Copies' setting */
+"[Settings/DatabaseBackup/Active/description]" = "Prima di salvare un database, KeePassium creerà automaticamente una copia, per sicurezza.";
+
+/* Title of a yes/no setting: whether to back up databases before saving them */
+"[Settings/DatabaseBackup/Active/title]" = "Crea copie di sicurezza";
+
+/* Confirmation dialog message to delete all backup files */
+"[Settings/DatabaseBackup/DeleteAll/confirm]" = "Eliminare tutte le copie di sicurezza?";
+
+/* Action to delete all backup files from the app. `ALL` is in capitals as a highlight. [backupFileCount: Int] */
+"[Settings/DatabaseBackup/DeleteAll/title]" = "Elimina TUTTE le copie di sicurezza (%d)";
+
+/* Description of the 'Exclude Backup Files from System Backup' setting */
+"[Settings/DatabaseBackup/ExcludeFromSystemBackup/description]" = "Specifica se le copie di sicurezza dei database create da KeePassium debbano essere escluse dal backup di iCloud/iTunes. Si applica a tutte le copie di sicurezza esistenti e future.";
+
+/* Title of a yes/no setting: whether app's internal backup copies should be excluded from global system backup */
+"[Settings/DatabaseBackup/ExcludeFromSystemBackup/title]" = "Escludi le copie di sicurezza dal backup di sistema";
+
+/* Setting title: how long to keep backup copies. Example: 'Keep Backup Files: Forever' */
+"[Settings/DatabaseBackup/KeepingDuration/Forever/title]" = "Per sempre";
+
+/* Setting title: how long to keep backup copies. For example: `Keep Backup Files: 3 days` */
+"[Settings/DatabaseBackup/KeepingDuration/title]" = "Conserva copie di sicurezza";
+
+/* Status message: there are no backup files to delete */
+"[Settings/DatabaseBackup/NoFiles/title]" = "Nessuna copia di sicurezza trovata";
+
+/* Description of the `Periodic Cleanup` settings */
+"[Settings/DatabaseBackup/PeriodicCleanup/description]" = "KeePassium può eliminare automaticamente i vecchi file di backup per liberare un po' di spazio.";
+
+/* Settings section: automatic deletion of old backup files */
+"[Settings/DatabaseBackup/PeriodicCleanup/title]" = "Pulizia periodica";
+
+/* Description of the 'Show Backup Files' setting */
+"[Settings/DatabaseBackup/ShowBackupFiles/description]" = "Le copie di sicurezza appariranno insieme ai file originali.";
+
+/* Section header, refers to Apple's backup services (https://support.apple.com/HT203977) */
+"[Settings/DatabaseBackup/SystemBackup/title]" = "Backup di iTunes e iCloud";
+
+/* Title of a settings section: backup of databases */
+"[Settings/DatabaseBackup/title]" = "Backup database";
+
+/* Description of the `Database Timeout` setting */
+"[Settings/DatabaseLockTimeout/description]" = "Se non interagisci con l'app per un po' di tempo, il database verrà chiuso per la tua sicurezza. Per aprirlo, dovrai reinserire la password principale.";
+
+/* Title of a setting: the time after which databases will be locked. */
+"[Settings/DatabaseLockTimeout/title]" = "Timeout database";
+
+/* A description/subtitle for the 'Database Timeout: Immediately'. */
+"[Settings/DatabaseTimeout/Immediately/description]" = "All'uscita dall'app";
+
+/* An option in Settings. Will be shown as 'Database Timeout: Immediately' */
+"[Settings/DatabaseTimeout/Immediately/title" = "Immediatamente";
+
+/* An option in Settings. Will be shown as 'Database Timeout: Never' */
+"[Settings/DatabaseTimeout/Never/title]" = "Mai";
+
+/* Section title: advanced/expert settings */
+"[Settings/DataProtection/Advanced/title]" = "Avanzate";
+
+/* Title of a section in settings */
+"[Settings/DataProtection/AutomaticLock/title]" = "Blocco automatico";
+
+/* Setting switch: whether to lock databases after device reboot. */
+"[Settings/DataProtection/LockOnReboot/title]" = "Blocca al riavvio del dispositivo";
+
+/* Title of a yes/no setting: whether to lock databases when computer screen is locked (see https://support.apple.com/en-gb/guide/mac-help/mchl8e8b6a34/mac) */
+"[Settings/DataProtection/LockOnScreenLock/title]" = "Blocca quando lo schermo di macOS è bloccato";
+
+/* Subtitle for `Data Protection` section in settings */
+"[Settings/DataProtection/subtitle]" = "Chiavi principali, file chiave";
+
+/* Description of the 'Hide Passwords' setting. */
+"[Settings/HidePasswords/description]" = "Nascondi le password e altri campi protetti con degli asterischi (consigliato).";
+
+/* Title of a yes/no setting */
+"[Settings/HidePasswords/title]" = "Nascondi password";
+
+/* Description of the 'Remember Key Files' setting */
+"[Settings/KeyFiles/Remember/description]" = "Ricorda e seleziona automaticamente l'ultimo file chiave usato per ogni database. Dimenticare le associazioni non influisce sui file.";
+
+/* Title of a section in Settings */
+"[Settings/KeyFiles/title]" = "File chiave";
+
+/* Description of the 'Cache Derived Encryption Keys' setting */
+"[Settings/MasterKeys/CacheDerived/description]" = "Le chiavi in cache consentono a KeePassium di saltare la derivazione delle chiavi e le scansioni di YubiKey ove possibile.";
+
+/* Action: clear/erase/delete stored master keys */
+"[Settings/MasterKeys/Clear/action]" = "Dimentica chiavi principali";
+
+/* Title of a yes/no setting. */
+"[Settings/MasterKeys/ClearOnTimeout/title]" = "Dimentica chiavi principali al timeout";
+
+/* Description of the 'Remember Master Keys' setting. */
+"[Settings/MasterKeys/Remember/description]" = "Una volta sbloccato un database, la sua chiave principale può essere memorizzata nel portachiavi sicuro del dispositivo. La prossima volta, KeePassium userà quella chiave così che tu non debba inserire ancora la tua password principale.";
+
+/* Title of a section in settings */
+"[Settings/OTP/title]" = "Password monouso";
+
+/* Title of a section in settings */
+"[Settings/Premium/title]" = "Premium";
+
+/* Title of a section in Settings */
+"[Settings/ProtectedFields/title]" = "Campi protetti";
+
+/* Title of a section in settings */
+"[Settings/QuickUnlock/title]" = "Sblocco rapido";
+
+/* Title of a setting: whether search looks in field names */
+"[Settings/Search/InFieldNames/title]" = "Cerca nei nomi dei campi";
+
+/* Title of a setting: whether search looks in passwords */
+"[Settings/Search/InPasswords/title]" = "Cerca nelle password";
+
+/* Title of a setting: whether search looks in values of protected fields */
+"[Settings/Search/InProtectValues/title]" = "Cerca nei valori protetti";
+
+/* Title of a setting: which fields to consider in search */
+"[Settings/Search/Scope/title]" = "Estensione ricerca";
+
+/* Description of the 'Start with Search' setting. */
+"[Settings/Search/StartWithSearch/description]" = "Dopo l'apertura di un database, mostra automaticamente il campo di ricerca.";
+
+/* Title of a setting: whether to open search field immediately after opening a database */
+"[Settings/Search/StartWithSearch/title]" = "Cerca all'avvio";
+
+/* Section title in settings */
+"[Settings/Search/title]" = "Cerca";
+
+/* Description of the 'Ask for Confirmation' setting. */
+"[Settings/ShakeGestureAction/Confirm/description]" = "Viene eseguito senza conferma se l'app è bloccata.";
+
+/* Title for a setting: whether the app should show an 'Are you sure?' before continuing */
+"[Settings/ShakeGestureAction/Confirm/title]" = "Chiedi conferma";
+
+/* Title for a setting: what the app should do when the user shakes the device */
+"[Settings/ShakeGestureAction/title]" = "Quando si scuote il dispositivo";
+
+/* Title of a section in settings: parameters that control what happens when the app is started. */
+"[Settings/Start/title]" = "Inizia";
+
+/* Title of a section in settings: technical support and diagnostics */
+"[Settings/Support/title]" = "Supporto";
+
+/* Description of the 'Universal Clipboard' setting. */
+"[Settings/UniversalClipboard/description]" = "Usa gli appunti condivisi per copiare e incollare tra dispositivi Apple. Sui dispositivi esterni, gli appunti vengono svuotati dopo due minuti.";
+
+/* Apple's term: https://support.apple.com/102430 */
+"[Settings/UniversalClipboard/title]" = "Appunti condivisi";
 
 /* Action/button to create a new item tag */
 "[Tags/Create/action]" = "Crea tag";
@@ -329,5 +722,47 @@
 "[Tags/Section/Selected]" = "Tag selezionati";
 
 /* Title: the number of times a tag is encountered in the database. */
-"[Tags/UsageCount/title]" = "Conteggio";
+"[Tags/UsageCount/title]" = "N. utilizzi";
+
+/* Call to action in What's New announcement */
+"[WhatsNew/Announcement/body]" = "Scopri le nuove funzionalità e i miglioramenti in KeePassium.";
+
+/* Button which opens the What's New screen. */
+"[WhatsNew/Announcement/button]" = "Novità";
+
+/* Description of a feature highlight, a call to action. */
+"[WhatsNew/Feature/AppScopedConnections/description]" = "Proteggi i tuoi dati nel cloud con le autorizzazioni limitate alla cartella dell'app.";
+
+/* Title of a feature highlight, a noun phrase. */
+"[WhatsNew/Feature/AppScopedConnections/title]" = "Accesso al cloud più sicuro";
+
+/* Description of a feature highlight, a call to action. */
+"[WhatsNew/Feature/AutoFillWithMemory/description]" = "KeePassium ricorda le voci che scegli su ogni sito web.";
+
+/* Title of a feature highlight, a noun phrase. */
+"[WhatsNew/Feature/AutoFillWithMemory/title]" = "Inserimento automatico più intelligente";
+
+/* Description of a feature highlight, a call to action. */
+"[WhatsNew/Feature/AutoType/description]" = "Accedi rapidamente a qualsiasi app o browser web utilizzando l'emulazione della pressione di tasti.";
+
+/* Title of a feature highlight, a noun phrase. */
+"[WhatsNew/Feature/AutoType/title]" = "Completamento automatico delle password";
+
+/* Description of a feature highlight, a call to action. */
+"[WhatsNew/Feature/CreativeAutoFill/description]" = "Crea nuove voci in Inserimento automatico con i campi principali precompilati automaticamente.";
+
+/* Title of a feature highlight, a noun phrase. */
+"[WhatsNew/Feature/CreativeAutoFill/title]" = "Iscrizioni più rapide";
+
+/* Description of a feature highlight, a call to action. `Browse alphabetically` refers to a phonebook-like index with letters. */
+"[WhatsNew/Feature/MoreInteractions/description]" = "Trascina e rilascia, seleziona più elementi e sfoglia in ordine alfabetico.";
+
+/* Title of a feature highlight, a noun phrase. */
+"[WhatsNew/Feature/MoreInteractions/title]" = "Altri modi per interagire";
+
+/* Title of the detailed history of app changes over time. */
+"[WhatsNew/FullChangelog/title]" = "Registro modifiche dettagliato";
+
+/* Full title for release highlights */
+"[WhatsNew/fullTitle]" = "Novità di KeePassium";
 

@@ -1,14 +1,35 @@
 /* Notification when user tries to set up too weak an app protection passcode. */
 "[AppLock/weakPasscodeWarning]" = "Tento kód aplikace se dá snadno uhodnout. Zkuste zadat nějaký silnější.";
 
+/* Action in AutoFill: choose the entry and remember it for future use on this website. */
+"[AutoFill/AcceptAndRemember/action]" = "Přijmout a zapamatovat";
+
+/* Title of a list */
+"[AutoFill/AllEntries/title]" = "Všechny záznamy";
+
+/* Title of AutoFill context when no context is available. Usage: `Context: Unknown` */
+"[AutoFill/Context/Empty/title]" = "Neznámý";
+
+/* Title of a list with search results */
+"[AutoFill/FoundEntries/title]" = "Nejlepší shody";
+
 /* Call for action to select an entry field for filling out. */
 "[AutoFill/InsertText/select]" = "Vybrat pole";
 
-/* An identifier of the app that called AutoFill. The term is intentionally similar to https://ru.wikipedia.org/wiki/Caller_ID. [callerID: String] */
-"[AutoFill/Search/callerID]" = "Caller ID: %@";
+/* Section title for the recently used entry in AutoFill */
+"[AutoFill/RecentlyUsed/title]" = "Nedávno použité";
 
-/* Status message, shows which app or webpage launched AutoFill. For example: `Context: google.com` */
-"[AutoFill/Search/context]" = "Kontext: %@";
+/* Not an action, but a button to activate the same-named setting */
+"[AutoFill/RememberContext/action]" = "Zapamatovat vybrané záznamy";
+
+/* Call to action */
+"[AutoFill/RememberContext/callToAction]" = "Vylepšete návrhy pro Automatické vyplňování";
+
+/* Description of the 'Remember Selected Entries` feature */
+"[AutoFill/RememberContext/description]" = "KeePassium si zapamatuje, který záznam jste vybrali pro jednotlivé webové stránky, a poté jej automaticky navrhne.";
+
+/* Title for referring to the app or webpage that launched AutoFill. For example: `Context: google.com` */
+"[AutoFill/Search/Context/title]" = "Kontext";
 
 /* No comment provided by engineer. */
 "[AutoFill/Setup/footer]" = "Služba automatického vyplňování hesel nemá přístup k databázovým souborům, které jste přidali v hlavní aplikaci KeePassium.\n\nProč? Operační systém považuje službu automatického vyplňování za samostatnou aplikaci, která je nezávislá na té hlavní. Z bezpečnostních důvodů mohou aplikace přistupovat pouze k těm souborům, ke kterým jim dáte svolení.\n\nZ tohoto důvodu je nutné dát svolení k přístupu jak samotné aplikaci KeePassium, tak službě automatického vyplňování. Tohle je však potřeba provést pouze jednou.";
@@ -25,8 +46,23 @@
 /* Must match Apple's translation, as found in iOS 17 Settings → Passwords → Password Options. If unsure, leave untranslated. */
 "[AutoFill/Setup/UncheckKeychain/usePasswordsAndPasskeysFrom]" = "Používat hesla a přístupové klíče z:";
 
+/* Field title: name of the group that contains the entry */
+"[Database/Entry/Location/title]" = "Umístění";
+
+/* Title of a list with randomly generated usernames */
+"[Database/Entry/RandomUsernames/title]" = "Náhodná uživatelská jména";
+
+/* Action/button that shows a list of usernames to pick from */
+"[Database/Entry/SelectUsername/action]" = "Vybrat uživatelské jméno";
+
+/* Action: select item from a list/menu, with item name in quotes. For example: `Select "Sample Group"` */
+"[Database/Item/SelectNamed/action]" = "Vybrat „%@“";
+
 /* Action: create a passkey and add it to existing entry */
 "[Database/Passkey/AddToExisting/action]" = "Přidat přístupový klíč k existujícímu záznamu";
+
+/* Call to action: select an existing entry to add a new passkey to */
+"[Database/Passkey/AddToExisting/callToAction]" = "Vyberte záznam pro nový přístupový klíč";
 
 /* Confirmation message before replacing an existing passkey. */
 "[Database/Passkey/AddToExisting/confirm]" = "Tento záznam již přístupový klíč obsahuje. Chcete ho nahradit?";
@@ -69,4 +105,7 @@
 
 /* Call to action, invites the user to enable the Quick AutoFill feature */
 "[QuickAutoFill/Activate/callToAction]" = "Aktivovat Automatické Vyplňování";
+
+/* Placeholder text for empty search results */
+"[Search/EmptyResult/title]" = "Nenalezeny žádné výsledky";
 

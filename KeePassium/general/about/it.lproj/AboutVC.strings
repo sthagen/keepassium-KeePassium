@@ -2,7 +2,7 @@
 "7bL-fQ-OUc.headerTitle" = "Feedback";
 
 /* Class = "UILabel"; text = "Do you like what you see?"; ObjectID = "AMd-x7-PDa"; Note = "First part of the 'Do you like what you see? / Leave an App Store review.\""; */
-"AMd-x7-PDa.text" = "Ti piace quello che vedi?";
+"AMd-x7-PDa.text" = "Ti trovi bene?";
 
 /* Class = "UITableViewSection"; headerTitle = "Privacy Policy"; ObjectID = "JbR-nf-D9o"; Note = "Section: privacy policy"; */
 "JbR-nf-D9o.headerTitle" = "Politica sulla privacy";

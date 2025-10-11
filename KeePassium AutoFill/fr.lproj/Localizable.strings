@@ -1,14 +1,35 @@
 /* Notification when user tries to set up too weak an app protection passcode. */
 "[AppLock/weakPasscodeWarning]" = "Ce code d'accès est facile à deviner. Essayez d'en saisir un plus complexe.";
 
+/* Action in AutoFill: choose the entry and remember it for future use on this website. */
+"[AutoFill/AcceptAndRemember/action]" = "Accepter et mémoriser";
+
+/* Title of a list */
+"[AutoFill/AllEntries/title]" = "Toutes les entrées";
+
+/* Title of AutoFill context when no context is available. Usage: `Context: Unknown` */
+"[AutoFill/Context/Empty/title]" = "Inconnu";
+
+/* Title of a list with search results */
+"[AutoFill/FoundEntries/title]" = "Meilleurs résultats";
+
 /* Call for action to select an entry field for filling out. */
 "[AutoFill/InsertText/select]" = "Sélectionnez le champ";
 
-/* An identifier of the app that called AutoFill. The term is intentionally similar to https://ru.wikipedia.org/wiki/Caller_ID. [callerID: String] */
-"[AutoFill/Search/callerID]" = "ID d'appel : %@";
+/* Section title for the recently used entry in AutoFill */
+"[AutoFill/RecentlyUsed/title]" = "Utilisés récemment";
 
-/* Status message, shows which app or webpage launched AutoFill. For example: `Context: google.com` */
-"[AutoFill/Search/context]" = "Contexte: %@";
+/* Not an action, but a button to activate the same-named setting */
+"[AutoFill/RememberContext/action]" = "Se souvenir des entrées sélectionnées";
+
+/* Call to action */
+"[AutoFill/RememberContext/callToAction]" = "Améliorer les suggestions de saisie automatique";
+
+/* Description of the 'Remember Selected Entries` feature */
+"[AutoFill/RememberContext/description]" = "KeePassium se souviendra de l'entrée que vous sélectionnez pour chaque site web et la suggérera automatiquement.";
+
+/* Title for referring to the app or webpage that launched AutoFill. For example: `Context: google.com` */
+"[AutoFill/Search/Context/title]" = "Contexte";
 
 /* No comment provided by engineer. */
 "[AutoFill/Setup/footer]" = "La Saisie automatique ne peut pas accéder automatiquement aux fichiers que vous avez déjà dans l'application principale KeePassium.\n\nPourquoi ? En coulisses, le système traite la fonction de Saisie automatique comme une application distincte, indépendante du processus principal de KeePassium. Pour des raisons de sécurité, une application ne peut simplement pas accéder à des fichiers externes – sauf si vous liez explicitement ces fichiers à cette application. Ainsi, le système garantit que l'application ne peut accéder qu'aux quelques fichiers dont vous avez autorisé l'accès.\n\nPar conséquent, la fonction de Saisie automatique et l'application principale KeePassium doivent avoir leurs propres autorisations pour chaque fichier externe. Heureusement, il s'agit d'une procédure unique.";
@@ -25,8 +46,23 @@
 /* Must match Apple's translation, as found in iOS 17 Settings → Passwords → Password Options. If unsure, leave untranslated. */
 "[AutoFill/Setup/UncheckKeychain/usePasswordsAndPasskeysFrom]" = "Utiliser des mots de passe et des clés d’identification provenant de:";
 
+/* Field title: name of the group that contains the entry */
+"[Database/Entry/Location/title]" = "Emplacement";
+
+/* Title of a list with randomly generated usernames */
+"[Database/Entry/RandomUsernames/title]" = "Noms d'utilisateur aléatoires";
+
+/* Action/button that shows a list of usernames to pick from */
+"[Database/Entry/SelectUsername/action]" = "Sélectionner le nom d'utilisateur";
+
+/* Action: select item from a list/menu, with item name in quotes. For example: `Select "Sample Group"` */
+"[Database/Item/SelectNamed/action]" = "Sélectionner « %@ »";
+
 /* Action: create a passkey and add it to existing entry */
 "[Database/Passkey/AddToExisting/action]" = "Ajouter une clé d'accès à l'entrée existante";
+
+/* Call to action: select an existing entry to add a new passkey to */
+"[Database/Passkey/AddToExisting/callToAction]" = "Choisissez une entrée pour la nouvelle clé d'accès";
 
 /* Confirmation message before replacing an existing passkey. */
 "[Database/Passkey/AddToExisting/confirm]" = "Cette entrée a déjà une clé d'accès. Souhaitez-vous la remplacer ?";
@@ -69,4 +105,7 @@
 
 /* Call to action, invites the user to enable the Quick AutoFill feature */
 "[QuickAutoFill/Activate/callToAction]" = "Activer la Saisie automatique rapide";
+
+/* Placeholder text for empty search results */
+"[Search/EmptyResult/title]" = "Aucun résultat pertinent trouvé";
 

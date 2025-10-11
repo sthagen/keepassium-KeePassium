@@ -56,13 +56,13 @@ struct AppHistory: Decodable {
                 case .info:
                     return .infoCircle
                 case .feature:
-                    return .plusCircleFill
-                case .fix:
-                    return .antCircle
+                    return .plusCircle
                 case .improvement, .refinement:
-                    return .arrowUpCircleFill
+                    return .screwdriver
+                case .fix:
+                    return .hammer
                 case .change:
-                    return .infoCircleFill
+                    return .infoCircle
                 }
             }
 
@@ -70,9 +70,11 @@ struct AppHistory: Decodable {
                 switch self {
                 case .feature:
                     return .systemGreen
+                case .improvement, .refinement:
+                    return .systemTealBlue
                 case .fix:
                     return .systemRed
-                case .improvement, .refinement, .change, .info:
+                case .change, .info:
                     return .systemBlue
                 }
             }

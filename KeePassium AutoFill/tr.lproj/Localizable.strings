@@ -1,6 +1,3 @@
-/* An identifier of the app that called AutoFill. The term is intentionally similar to https://ru.wikipedia.org/wiki/Caller_ID. [callerID: String] */
-"[AutoFill/Search/callerID]" = "Caller ID: %@";
-
 /* No comment provided by engineer. */
 "[AutoFill/Setup/footer]" = "Otomatik Doldurma, ana KeePassium uygulamasında halihazırda var olan bilgilere otomatik olarak erişemez.\n\nPeki neden? Arka plandaki işleyişte; sistem Otomatik Doldurmayı ana KeePassium uygulamasından bağımsız apayrı bir uygulama gibi görmekte. Güvenlik kaynaklı sebeplerden ötürü, siz spesifik olarak aralarında bağıntı kurup izin vermedikçe; bir uygulama hiçbir dış dosyaya kolayca erişemez. Böylece sistem, uygulamanın sadece sizin izin verdiğiniz dosyalara erişebildiğini garanti eder.\n\nSonuç olarak, hem Otomatik Doldurma hem de KeePassium uygulaması veritabanınızı okumak ve değiştirmek için ayrı ayrı yetkilendirilmeye ihtiyaç duyar. Şükür ki, bu tek seferlik bir bürokrasidir.";
 
@@ -12,4 +9,7 @@
 
 /* Action/button to make password visible as plain-text */
 "[ProtectedTextField] Show Password" = "Şifreyi Göster";
+
+/* Placeholder text for empty search results */
+"[Search/EmptyResult/title]" = "Uygun bir şey bulunamadı";
 

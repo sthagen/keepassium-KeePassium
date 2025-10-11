@@ -14,6 +14,7 @@ protocol PasswordAuditCoordinatorDelegate: AnyObject {
     func didPressEditEntry(
         _ entry: Entry,
         at popoverAnchor: PopoverAnchor,
+        in coordinator: PasswordAuditCoordinator,
         onDismiss: @escaping () -> Void)
     func didRelocateDatabase(_ databaseFile: DatabaseFile, to url: URL)
 }
@@ -171,7 +172,7 @@ extension PasswordAuditCoordinator: PasswordAuditResultsVCDelegate {
         in viewController: PasswordAuditResultsVC,
         onDismiss: @escaping () -> Void
     ) {
-        delegate?.didPressEditEntry(entry, at: popoverAnchor, onDismiss: onDismiss)
+        delegate?.didPressEditEntry(entry, at: popoverAnchor, in: self, onDismiss: onDismiss)
     }
 
     func requestFormatUpgradeIfNecessary(

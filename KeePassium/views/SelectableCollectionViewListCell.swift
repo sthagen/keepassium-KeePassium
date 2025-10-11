@@ -24,9 +24,11 @@ class SelectableCollectionViewListCell: UICollectionViewListCell {
         super.updateConfiguration(using: state)
         var bgConfig = defaultBackgroundConfiguration().updated(for: state)
         bgConfig.backgroundColorTransformer = .init { color in
-            if state.isFocused {
+            if state.isFocused || state.cellDropState == .targeted {
                 return .focusTint
-            } else if state.isHighlighted || state.isSelected {
+            } else if state.isSelected {
+                return .selectionTint
+            } else if state.isHighlighted {
                 return .systemFill
             } else {
                 return color

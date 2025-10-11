@@ -9,149 +9,212 @@
 import KeePassiumLib
 
 extension DatabasePickerCoordinator {
-    class ToolbarDecorator: FilePickerToolbarDecorator {
+    final class ToolbarDecorator: FilePickerToolbarDecorator {
         weak var coordinator: DatabasePickerCoordinator?
 
-        func getToolbarItems() -> [UIBarButtonItem]? {
+        func getLeftBarButtonItems(mode: FilePickerToolbarMode) -> [UIBarButtonItem]? {
             guard let coordinator else { assertionFailure(); return nil }
-            switch coordinator.mode {
-            case .autoFill, .light:
-                return nil
-            case .full:
-                break
+            switch mode {
+            case .normal, .bulkEdit:
+                return makeLeftBarButtonItems(coordinator: coordinator)
             }
-
-            let passGenItem = UIBarButtonItem(
-                title: LString.PasswordGenerator.titleRandomGenerator,
-                image: .symbol(.dieFace3),
-                primaryAction: UIAction { [weak coordinator] action in
-                    let popoverAnchor = action.presentationSourceItem?.asPopoverAnchor
-                    coordinator?.didPressPasswordGenerator(at: popoverAnchor)
-                }
-            )
-            let refreshItem = UIBarButtonItem(
-                systemItem: .refresh,
-                primaryAction: UIAction { [weak coordinator] action in
-                    coordinator?.refresh()
-                }
-            )
-            let appSettingsItem = UIBarButtonItem(
-                title: LString.titleSettings,
-                image: .symbol(.gearshape),
-                primaryAction: UIAction { [weak coordinator] action in
-                    let popoverAnchor = action.presentationSourceItem?.asPopoverAnchor
-                    coordinator?.didPressAppSettings(at: popoverAnchor)
-                }
-            )
-
-            return [
-                passGenItem,
-                UIBarButtonItem.flexibleSpace(),
-                refreshItem,
-                UIBarButtonItem.flexibleSpace(),
-                appSettingsItem
-            ]
         }
 
-        func getLeadingItemGroups() -> [UIBarButtonItemGroup]? {
+        func getRightBarButtonItems(mode: FilePickerToolbarMode) -> [UIBarButtonItem]? {
             guard let coordinator else { assertionFailure(); return nil }
-            switch coordinator.mode {
-            case .full:
-                return nil
-            case .autoFill, .light:
-                let diagnosticAction = UIAction(title: LString.titleDiagnosticLog) { [weak coordinator] _ in
-                    coordinator?.didPressShowDiagnostics()
-                }
-                let cancelItem = UIBarButtonItem(
-                    systemItem: .cancel,
-                    primaryAction: UIAction { [weak coordinator] action in
-                        coordinator?.didPressCancel()
-                    },
-                    menu: UIMenu(children: [diagnosticAction])
+            switch mode {
+            case let .normal(hasSelectableFiles):
+                return makeNormalRightBarButtonItems(
+                    hasSelectableFiles: hasSelectableFiles,
+                    coordinator: coordinator
                 )
-                let itemGroup = UIBarButtonItemGroup(barButtonItems: [cancelItem], representativeItem: nil)
-                return [itemGroup]
+            case .bulkEdit:
+                let doneBulkEditingButton = UIBarButtonItem(systemItem: .done, primaryAction: UIAction {
+                    [weak coordinator] _ in
+                    coordinator?._didPressDoneBulkEditing()
+                })
+                return [doneBulkEditingButton]
             }
         }
 
-        func getTrailingItemGroups() -> [UIBarButtonItemGroup]? {
+        func getToolbarItems(mode: FilePickerToolbarMode) -> [UIBarButtonItem]? {
             guard let coordinator else { assertionFailure(); return nil }
-            let needPremium = coordinator.needsPremiumToAddDatabase()
-            var menuItems = [UIMenuElement]()
-
-            #if MAIN_APP
-            switch coordinator.mode {
-            case .full, .light:
-                let createDatabaseAction = UIAction(
-                    title: LString.titleNewDatabase,
-                    image: needPremium ? .premiumBadge : .symbol(.plus),
-                    handler: { [weak coordinator] action in
-                        let popoverAnchor = action.presentationSourceItem?.asPopoverAnchor
-                        coordinator?.didPressCreateDatabase(at: popoverAnchor)
-                    }
-                )
-                menuItems.append(createDatabaseAction)
-            case .autoFill:
-                assertionFailure("Tried to use .autoFill mode in main app")
+            switch mode {
+            case .normal:
+                return makeNormalToolbar(coordinator: coordinator)
+            case .bulkEdit(let selectedItems):
+                return makeBulkEditToolbar(for: selectedItems, coordinator: coordinator)
             }
-            #endif
-
-            let appConfig = ManagedAppConfig.shared
-            let addExternalDatabaseAction = UIAction(
-                title: LString.actionOpenDatabase,
-                image: needPremium ? .premiumBadge : .symbol(.folder),
-                attributes: appConfig.areSystemFileProvidersAllowed ? [] : [.disabled],
-                handler: { [weak coordinator] action in
-                    let popoverAnchor = action.presentationSourceItem?.asPopoverAnchor
-                    coordinator?.didPressAddExternalDatabase(at: popoverAnchor)
-                }
-            )
-            menuItems.append(addExternalDatabaseAction)
-
-            let addRemoteDatabaseAction = UIAction(
-                title: LString.actionConnectToServer,
-                image: needPremium ? UIImage.premiumBadge : UIImage.symbol(.network),
-                attributes: appConfig.areInAppFileProvidersAllowed ? [] : [.disabled],
-                handler: { [weak coordinator] action in
-                    let popoverAnchor = action.presentationSourceItem?.asPopoverAnchor
-                    coordinator?.didPressAddRemoteDatabase(at: popoverAnchor)
-                }
-            )
-            menuItems.append(UIMenu(inlineChildren: [addRemoteDatabaseAction]))
-
-            let showBackupAction = UIAction(
-                title: LString.titleShowBackupFiles,
-                attributes: [],
-                state: Settings.current.isBackupFilesVisible ? .on : .off,
-                handler: { [weak coordinator] action in
-                    let areShown = (action.state == .on)
-                    coordinator?.didToggleShowBackupFiles(shouldShow: !areShown)
-                }
-            )
-            menuItems.append(showBackupAction)
-
-            let currentSortOrder = Settings.current.filesSortOrder
-            let sortMenuItems = UIMenu.makeFileSortMenuItems(
-                current: currentSortOrder,
-                handler: { [weak coordinator] newSortOrder in
-                    coordinator?.didChangeSortOrder(to: newSortOrder)
-                }
-            )
-            let sortOptionsMenu = UIMenu.make(
-                title: LString.titleSortOrder,
-                subtitle: currentSortOrder.title,
-                children: sortMenuItems
-            )
-            menuItems.append(sortOptionsMenu)
-
-            let listActionsMenu = UIMenu.make(children: menuItems)
-            let listActionsItem = UIBarButtonItem(
-                title: LString.titleMoreActions,
-                image: .symbol(.ellipsisCircle),
-                menu: listActionsMenu)
-            let itemGroup = UIBarButtonItemGroup(barButtonItems: [listActionsItem], representativeItem: nil)
-            return [itemGroup]
         }
+    }
+}
+
+extension DatabasePickerCoordinator.ToolbarDecorator {
+    private func makeLeftBarButtonItems(coordinator: DatabasePickerCoordinator) -> [UIBarButtonItem]? {
+        switch coordinator.mode {
+        case .full, .light:
+            return nil
+        case .autoFill:
+            let diagnosticAction = UIAction(title: LString.titleDiagnosticLog) { [weak coordinator] _ in
+                coordinator?.didPressShowDiagnostics()
+            }
+            let cancelItem = UIBarButtonItem(
+                systemItem: .cancel,
+                primaryAction: UIAction { [weak coordinator] action in
+                    coordinator?.didPressCancel()
+                },
+                menu: UIMenu(children: [diagnosticAction])
+            )
+            return [cancelItem]
+        }
+    }
+
+    private func makeNormalRightBarButtonItems(
+        hasSelectableFiles: Bool,
+        coordinator: DatabasePickerCoordinator
+    ) -> [UIBarButtonItem]? {
+        let needPremium = coordinator.needsPremiumToAddDatabase()
+        var menuItems = [UIMenuElement]()
+
+        #if MAIN_APP
+        switch coordinator.mode {
+        case .full, .light:
+            let createDatabaseAction = UIAction(
+                title: LString.titleNewDatabase,
+                image: needPremium ? .premiumBadge : .symbol(.plus),
+                handler: { [weak coordinator] action in
+                    let popoverAnchor = action.presentationSourceItem?.asPopoverAnchor
+                    coordinator?.didPressCreateDatabase(at: popoverAnchor)
+                }
+            )
+            menuItems.append(createDatabaseAction)
+        case .autoFill:
+            assertionFailure("Tried to use .autoFill mode in main app")
+        }
+        #endif
+
+        let appConfig = ManagedAppConfig.shared
+        let addExternalDatabaseAction = UIAction(
+            title: LString.actionOpenDatabase,
+            image: needPremium ? .premiumBadge : .symbol(.folder),
+            attributes: appConfig.areSystemFileProvidersAllowed ? [] : [.disabled],
+            handler: { [weak coordinator] action in
+                let popoverAnchor = action.presentationSourceItem?.asPopoverAnchor
+                coordinator?.didPressAddExternalDatabase(at: popoverAnchor)
+            }
+        )
+        menuItems.append(addExternalDatabaseAction)
+
+        let addRemoteDatabaseAction = UIAction(
+            title: LString.actionConnectToServer,
+            image: needPremium ? UIImage.premiumBadge : UIImage.symbol(.network),
+            attributes: appConfig.areInAppFileProvidersAllowed ? [] : [.disabled],
+            handler: { [weak coordinator] action in
+                let popoverAnchor = action.presentationSourceItem?.asPopoverAnchor
+                coordinator?.didPressAddRemoteDatabase(at: popoverAnchor)
+            }
+        )
+        menuItems.append(UIMenu(inlineChildren: [addRemoteDatabaseAction]))
+
+        let selectItemsAction = UIAction(
+            title: LString.actionSelect,
+            image: .symbol(.checkmarkCircle),
+            attributes: hasSelectableFiles ? [] : [.disabled],
+            handler: { [weak coordinator] _ in
+                coordinator?._startSelecting()
+            }
+        )
+        menuItems.append(selectItemsAction)
+
+        let showBackupAction = UIAction(
+            title: LString.titleShowBackupFiles,
+            image: .symbol(.databaseBackup),
+            state: Settings.current.isBackupFilesVisible ? .on : .off,
+            handler: { [weak coordinator] action in
+                let areShown = (action.state == .on)
+                coordinator?.didToggleShowBackupFiles(shouldShow: !areShown)
+            }
+        )
+        menuItems.append(showBackupAction)
+
+        let currentSortOrder = Settings.current.filesSortOrder
+        let sortMenuItems = UIMenu.makeFileSortMenuItems(
+            current: currentSortOrder,
+            handler: { [weak coordinator] newSortOrder in
+                coordinator?.didChangeSortOrder(to: newSortOrder)
+            }
+        )
+        let sortOptionsMenu = UIMenu.make(
+            title: LString.titleSortOrder,
+            subtitle: currentSortOrder.title,
+            children: sortMenuItems
+        )
+        menuItems.append(sortOptionsMenu)
+
+        let listActionsMenu = UIMenu.make(children: menuItems)
+        let listActionsItem = UIBarButtonItem(
+            title: LString.titleMoreActions,
+            image: .symbol(.ellipsisCircle),
+            menu: listActionsMenu)
+        return [listActionsItem]
+    }
+
+    private func makeNormalToolbar(coordinator: DatabasePickerCoordinator) -> [UIBarButtonItem]? {
+        switch coordinator.mode {
+        case .autoFill, .light:
+            return nil
+        case .full:
+            break
+        }
+
+        let passGenItem = UIBarButtonItem(
+            title: LString.PasswordGenerator.titleRandomGenerator,
+            image: .symbol(.dieFace3),
+            primaryAction: UIAction { [weak coordinator] action in
+                let popoverAnchor = action.presentationSourceItem?.asPopoverAnchor
+                coordinator?.didPressPasswordGenerator(at: popoverAnchor)
+            }
+        )
+        let refreshItem = UIBarButtonItem(
+            systemItem: .refresh,
+            primaryAction: UIAction { [weak coordinator] action in
+                coordinator?.refresh()
+            }
+        )
+        let appSettingsItem = UIBarButtonItem(
+            title: LString.titleSettings,
+            image: .symbol(.gearshape),
+            primaryAction: UIAction { [weak coordinator] action in
+                let popoverAnchor = action.presentationSourceItem?.asPopoverAnchor
+                coordinator?.didPressAppSettings(at: popoverAnchor)
+            }
+        )
+
+        return [
+            passGenItem,
+            UIBarButtonItem.flexibleSpace(),
+            refreshItem,
+            UIBarButtonItem.flexibleSpace(),
+            appSettingsItem
+        ]
+    }
+
+    private func makeBulkEditToolbar(
+        for selectedFiles: [URLReference],
+        coordinator: DatabasePickerCoordinator
+    ) -> [UIBarButtonItem] {
+        let bulkDeleteButton = UIBarButtonItem(
+            systemItem: .trash,
+            primaryAction: UIAction { [weak coordinator] action in
+                coordinator?._confirmAndBulkDeleteFiles(
+                    selectedFiles,
+                    at: action.presentationSourceItem?.asPopoverAnchor
+                )
+            }
+        )
+        bulkDeleteButton.title = LString.actionDelete
+        bulkDeleteButton.isEnabled = selectedFiles.count > 0
+        return [UIBarButtonItem.flexibleSpace(), bulkDeleteButton]
     }
 }
 

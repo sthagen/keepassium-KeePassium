@@ -34,13 +34,16 @@ extension KeyFilePickerCoordinator {
         }
 
         func getAccessories(for fileItem: FilePickerItem.FileInfo) -> [UICellAccessory]? {
+            var accessories = [UICellAccessory]()
             let fileMenuAccessory = UICellAccessory.customView(configuration: .init(
                 customView: makeFileMenuButton(for: fileItem),
-                placement: .trailing(displayed: .always),
+                placement: .trailing(displayed: .whenNotEditing),
                 tintColor: .actionTint,
                 maintainsFixedSize: false)
             )
-            return [fileMenuAccessory]
+            accessories.append(fileMenuAccessory)
+            accessories.append(.multiselect(displayed: .whenEditing))
+            return accessories
         }
 
         func getContextMenu(for item: FilePickerItem.FileInfo, at popoverAnchor: PopoverAnchor) -> UIMenu? {

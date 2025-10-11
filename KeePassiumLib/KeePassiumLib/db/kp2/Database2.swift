@@ -1267,13 +1267,6 @@ public class Database2: Database {
             }
         )
     }
-
-    public func setPasskey(_ passkey: Passkey, for entry: Entry2) {
-        entry.backupState()
-        passkey.apply(to: entry)
-        entry.touch(.accessed)
-        entry.touch(.modified, updateParents: false)
-    }
 }
 
 extension Database2 {

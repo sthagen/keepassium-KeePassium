@@ -145,7 +145,8 @@ extension PremiumCoordinator: PremiumManagerDelegate {
             stop(completion: {
                 StoreReviewSuggester.maybeShowAppReview(
                     appVersion: AppInfo.version,
-                    occasion: .didPurchasePremium
+                    occasion: .didPurchasePremium,
+                    presenter: UIApplication.shared.currentActiveScene
                 )
             })
         }

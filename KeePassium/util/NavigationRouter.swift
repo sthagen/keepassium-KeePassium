@@ -75,13 +75,10 @@ final public class RouterNavigationController: UINavigationController {
 
 final public class NavigationRouter: NSObject {
     public typealias PopHandler = (() -> Void)
-    public typealias CollapsedDetailDismissalHandler = ((UIViewController) -> Void)
 
     public private(set) var navigationController: RouterNavigationController
     private var popHandlers = [(ObjectIdentifier, PopHandler, String)]()
     private weak var oldDelegate: UINavigationControllerDelegate?
-
-    public var collapsedDetailDismissalHandler: CollapsedDetailDismissalHandler?
 
     weak var dismissAttemptDelegate: NavigationRouterDismissAttemptDelegate?
 
@@ -114,6 +111,10 @@ final public class NavigationRouter: NSObject {
         let navVC = RouterNavigationController()
         let router = NavigationRouter(navVC)
         navVC.modalPresentationStyle = style
+        if style == .popover && popoverAnchor == nil {
+            assert(popoverAnchor != nil, "Popover without anchor would fail")
+            navVC.modalPresentationStyle = .pageSheet
+        }
         navVC.presentationController?.delegate = router
         if let popover = navVC.popoverPresentationController {
             popoverAnchor?.apply(to: popover)
@@ -266,7 +267,9 @@ final public class NavigationRouter: NSObject {
 
     public func popAll(completion: (() -> Void)? = nil) {
         fireAllPopHandlers()
-        navigationController.setViewControllers([UIViewController()], animated: false)
+        if Thread.isMainThread {
+            navigationController.setViewControllers([UIViewController()], animated: false)
+        }
         completion?()
     }
 
@@ -340,9 +343,6 @@ extension NavigationRouter: UINavigationControllerDelegate {
 
         let didDismissCollapsedDetailView =
             isCollapsedSplitVC(navigationController) && (fromVC is UINavigationController)
-        if didDismissCollapsedDetailView {
-            collapsedDetailDismissalHandler?(fromVC)
-        }
 
         firePopHandlersBetween(fromVC, viewController, ignoreUpper: didDismissCollapsedDetailView)
         oldDelegate?.navigationController?(

@@ -133,6 +133,16 @@ extension LString {
         bundle: Bundle.framework,
         value: "Requires Apple USB-C to Lightning adapter",
         comment: "A notice for hardware keys that need an adapter for physical connection to device.")
+    public static let hardwareKeySlotN = NSLocalizedString(
+        "[HardwareKey/SlotN]",
+        bundle: Bundle.framework,
+        value: "Slot %d",
+        comment: "Hardware key slot number. [slotNumber: Int]")
+    public static let titleSlot = NSLocalizedString(
+        "[HardwareKey/SlotTitle]",
+        bundle: Bundle.framework,
+        value: "Slot",
+        comment: "Title for hardware key slot selection menu.")
 
 
     public static let titleDatabaseSettings = NSLocalizedString(
@@ -471,6 +481,21 @@ extension LString {
         bundle: Bundle.framework,
         value: "One or more databases have unsaved changes made in AutoFill.",
         comment: "Notification message")
+    public static let recoveredEntriesGroupNameTemplate = NSLocalizedString(
+        "[Database/UnsavedChanges/RecoveredEntriesGroup/name]",
+        bundle: Bundle.framework,
+        value: "Recovered Changes (%@)",
+        comment: "Title of a group where problematic pending changes are saved. %@ is the date of recovery.")
+    public static let messageCouldNotApplySomeChanges = NSLocalizedString(
+        "[Database/UnsavedChanges/couldNotApply]",
+        bundle: Bundle.framework,
+        value: "Some pending changes could not be applied automatically; recent modifications might be missing.",
+        comment: "Notification message")
+    public static let messageProblematicChangesInfo = NSLocalizedString(
+        "[Database/UnsavedChanges/Problematic/info]",
+        bundle: Bundle.framework,
+        value: "Some pending changes refer to missing entries or groups. KeePassium will create these items in a separate group and apply the changes there.",
+        comment: "Notification message about a problem with unsaved/pending changes.")
     public static let actionSaveChanges = NSLocalizedString(
         "[Database/UnsavedChanges/saveAction]",
         bundle: Bundle.framework,

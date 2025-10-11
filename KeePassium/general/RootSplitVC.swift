@@ -9,12 +9,33 @@
 import KeePassiumLib
 
 class RootSplitVC: UISplitViewController {
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        self.preferredDisplayMode = .oneBesideSecondary
+    override var delegate: (any UISplitViewControllerDelegate)? {
+        didSet { fatalError("Can't touch this, used internally") }
+    }
+
+    private let placeholderRouter: NavigationRouter
+
+    private weak var secondaryRouter: NavigationRouter?
+
+    init() {
+        let placeholderVC = PlaceholderVC.instantiateFromStoryboard()
+        placeholderRouter = NavigationRouter(RouterNavigationController(rootViewController: placeholderVC))
+
+        super.init(style: .doubleColumn)
+        super.delegate = self
+        preferredSplitBehavior = .tile
+        preferredDisplayMode = .oneBesideSecondary
+        displayModeButtonVisibility = ProcessInfo.isRunningOnMac ? .automatic : .never
+        setViewController(placeholderVC.navigationController, for: .secondary)
+
+        maximumPrimaryColumnWidth = 700
         if ProcessInfo.isRunningOnMac {
             preferredPrimaryColumnWidthFraction = Settings.current.primaryPaneWidthFraction
         }
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("Not implemented")
     }
 
     override func viewWillDisappear(_ animated: Bool) {
@@ -24,31 +45,38 @@ class RootSplitVC: UISplitViewController {
         }
     }
 
-    public func setDetailRouter(_ router: NavigationRouter) {
-        assert(viewControllers.count > 0) 
-
-        if viewControllers.count == 1 {
-            let vc = viewControllers.first! 
-            guard let primaryNavVC = vc as? UINavigationController else {
-                Diag.warning("Expected UINavigationController, got \(vc.debugDescription) instead")
-                assertionFailure()
-                return
+    public func setSecondaryRouter(_ router: NavigationRouter?) {
+        guard router !== self.secondaryRouter else {
+            if router !== placeholderRouter {
+                show(.secondary)
             }
-            primaryNavVC.pushViewController(router.navigationController, animated: true)
-        } else {
-            var _viewControllers = viewControllers
-            _viewControllers = _viewControllers.dropLast()
-            _viewControllers.append(router.navigationController)
-            viewControllers = _viewControllers
-        }
-    }
-
-    public func ensurePrimaryVisible() {
-        guard isCollapsed else { return }
-        guard let navVC = viewControllers.first! as? UINavigationController else {
-            assertionFailure()
             return
         }
-        navVC.popToRootViewController(animated: false)
+
+        let newRouter = router ?? placeholderRouter
+        setViewController(newRouter.navigationController, for: .secondary)
+
+        if let oldSecondaryRouter = self.secondaryRouter,
+           oldSecondaryRouter !== placeholderRouter
+        {
+            oldSecondaryRouter.popAll()
+        }
+        self.secondaryRouter = newRouter
+        if newRouter !== placeholderRouter {
+            show(.secondary)
+        }
+    }
+}
+
+extension RootSplitVC: UISplitViewControllerDelegate {
+    func splitViewController(
+        _ svc: UISplitViewController,
+        topColumnForCollapsingToProposedTopColumn proposedTopColumn: UISplitViewController.Column
+    ) -> UISplitViewController.Column {
+        let secondaryVC = svc.viewController(for: .secondary)
+        if proposedTopColumn == .secondary && secondaryVC == placeholderRouter.navigationController {
+            return .primary
+        }
+        return proposedTopColumn
     }
 }

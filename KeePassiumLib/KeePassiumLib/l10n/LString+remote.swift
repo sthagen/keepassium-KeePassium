@@ -15,6 +15,12 @@ extension LString {
         value: "Connect to Server",
         comment: "Action: connect to a network server ")
 
+    public static let actionEditConnection = NSLocalizedString(
+        "[RemoteConnection/Edit/action]",
+        bundle: Bundle.framework,
+        value: "Edit Connection…",
+        comment: "Action: change properties of a remote network connection")
+
     public static let titleRemoteConnection = NSLocalizedString(
         "[RemoteConnection/title]",
         bundle: Bundle.framework,
@@ -37,6 +43,11 @@ extension LString {
         bundle: Bundle.framework,
         value: "OneDrive for Business",
         comment: "Name of a cloud storage service. Must match Microsoft's translation, see  https://partner.microsoft.com/solutions/onedrive-for-business")
+    public static let connectionTypeDedicatedAppFolder = NSLocalizedString(
+        "[StorageService/DedicatedAppFolder/title]",
+        bundle: Bundle.framework,
+        value: "App Folder Only",
+        comment: "Subtitle for a storage service: the app will have access only to its own dedicated folder.")
     public static let connectionTypeDropbox = "Dropbox"
     public static let connectionTypeDropboxBusiness = NSLocalizedString(
         "[StorageService/DropboxBusiness/title]",
@@ -65,6 +76,11 @@ extension LString {
         bundle: Bundle.framework,
         value: "Connection",
         comment: "Network connection. For example `Connection: WebDAV` or `Connection: MyCloud`.")
+    public static let directConnectionTitle = NSLocalizedString(
+        "[RemoteConnection/Direct/title]",
+        bundle: Bundle.framework,
+        value: "Online Services",
+        comment: "Title of a list with online storage services like OneDrive, Dropbox, etc.")
     public static let directConnectionDescription = NSLocalizedString(
         "[RemoteConnection/Direct/description]",
         bundle: Bundle.framework,
