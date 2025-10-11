@@ -13,7 +13,7 @@ final class GroupViewerGroupCell: SelectableCollectionViewListCell {
     func configure(with group: Group, accessories: [UICellAccessory]?) {
         var config = UIListContentConfiguration.valueCell()
         config.text = group.name
-        config.textProperties.numberOfLines = 1
+        config.textProperties.numberOfLines = 3
         config.textProperties.font = .preferredFont(forTextStyle: .headline)
 
         let childrenCount = group.groups.count + group.entries.count

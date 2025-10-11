@@ -13,7 +13,7 @@ final class GroupViewerEntryCell: SelectableCollectionViewListCell {
     func configure(with entry: Entry, accessories: [UICellAccessory]?) {
         var config = UIListContentConfiguration.cell()
         config.text = entry.resolvedTitle
-        config.textProperties.numberOfLines = 1
+        config.textProperties.numberOfLines = 3
         config.textProperties.font = .preferredFont(forTextStyle: .body)
 
         config.secondaryText = entry.resolvedSubtitle
