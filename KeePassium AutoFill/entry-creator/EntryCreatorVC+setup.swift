@@ -21,6 +21,7 @@ extension EntryCreatorVC {
         _collectionView.allowsSelection = false
         _collectionView.allowsFocus = true
         _collectionView.alwaysBounceVertical = false
+        _collectionView.delegate = self
 
         view.addSubview(_collectionView)
         _collectionView.translatesAutoresizingMaskIntoConstraints = false

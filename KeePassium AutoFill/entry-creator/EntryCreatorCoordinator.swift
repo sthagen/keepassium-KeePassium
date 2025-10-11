@@ -63,18 +63,21 @@ extension EntryCreatorCoordinator {
     }
 
     func _didSelectLocation(_ group: Group) {
+        Watchdog.shared.restart()
         _entryData.parentGroup = group
         refresh()
         _entryCreatorVC.accessibilityFocusLocation()
     }
 
     func _didSelectUsername(_ username: String) {
+        Watchdog.shared.restart()
         _entryData.username = username
         refresh()
         _entryCreatorVC.setFirstResponderField(EntryField.userName)
     }
 
     func _didSetPassword(_ password: String) {
+        Watchdog.shared.restart()
         _entryData.password = password
         refresh()
         _entryCreatorVC.setFirstResponderField(EntryField.password)
@@ -138,6 +141,7 @@ extension EntryCreatorCoordinator {
 
 extension EntryCreatorCoordinator: EntryCreatorVC.Delegate {
     func didChangeValue(of fieldName: String, to newValue: String, in viewController: EntryCreatorVC) {
+        Watchdog.shared.restart()
         switch fieldName {
         case EntryField.title:
             _entryData.title = newValue
@@ -156,6 +160,7 @@ extension EntryCreatorCoordinator: EntryCreatorVC.Delegate {
     }
 
     func didChangeVisibility(of fieldName: String, isHidden: Bool, in viewController: EntryCreatorVC) {
+        Watchdog.shared.restart()
         switch fieldName {
         case EntryField.password:
             _entryData.isPasswordProtected = isHidden
@@ -168,6 +173,7 @@ extension EntryCreatorCoordinator: EntryCreatorVC.Delegate {
     }
 
     func didPressDone(in viewController: EntryCreatorVC) {
+        Watchdog.shared.restart()
         performPremiumActionOrOfferUpgrade(for: .canCreateEntriesInAutoFill, in: viewController) {
             [weak self] in
             self?._finishCreation()

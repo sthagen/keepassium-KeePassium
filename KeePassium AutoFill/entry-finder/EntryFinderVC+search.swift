@@ -49,6 +49,10 @@ extension EntryFinderVC: UISearchResultsUpdating, UISearchControllerDelegate {
             searchController.searchBar.becomeFirstResponderWhenSafe()
         }
     }
+
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        Watchdog.shared.restart()
+    }
 }
 
 extension EntryFinderVC: UISearchBarDelegate {

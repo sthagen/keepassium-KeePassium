@@ -45,6 +45,7 @@ extension GroupViewerVC {
 
 extension GroupViewerVC: UISearchResultsUpdating, UISearchControllerDelegate {
     func updateSearchResults(for searchController: UISearchController) {
+        Watchdog.shared.restart()
         let searchText = searchController.searchBar.text
         delegate?.didChangeSearchQuery(searchText, in: self)
     }
@@ -56,6 +57,7 @@ extension GroupViewerVC: UISearchResultsUpdating, UISearchControllerDelegate {
     }
 
     func didDismissSearchController(_ searchController: UISearchController) {
+        Watchdog.shared.restart()
         searchController.searchBar.text = nil
     }
 }
