@@ -23,6 +23,8 @@ protocol DatabasePickerCoordinatorDelegate: AnyObject {
         cause: ItemActivationCause?,
         in coordinator: DatabasePickerCoordinator
     )
+
+    func didCancelOTPAuthURLImport(in coordinator: DatabasePickerCoordinator)
 }
 
 extension DatabasePickerCoordinatorDelegate {
@@ -38,6 +40,9 @@ extension DatabasePickerCoordinatorDelegate {
     func didPressShowRandomGenerator(at popoverAnchor: PopoverAnchor?, in viewController: UIViewController) {
         assertionFailure("Called a method not implemented by delegate")
     }
+    func didCancelOTPAuthURLImport(in coordinator: DatabasePickerCoordinator) {
+        assertionFailure("Called a method not implemented by delegate")
+    }
 }
 
 class DatabasePickerCoordinator: FilePickerCoordinator {
@@ -48,6 +53,7 @@ class DatabasePickerCoordinator: FilePickerCoordinator {
     internal var _hasPendingTransactions = false
     internal var _databaseBeingEdited: URLReference?
     override var _allowedDropUTIs: [UTType] { FileType.databaseUTIs }
+    internal var _hasIncomingOTPAuthURL = false
 
     init(router: NavigationRouter, mode: DatabasePickerMode) {
         self.mode = mode
@@ -84,6 +90,11 @@ class DatabasePickerCoordinator: FilePickerCoordinator {
 
     public func getFirstListedDatabase() -> URLReference? {
         return _fileReferences.first
+    }
+
+    public func setHasIncomingOTPAuthURL(_ value: Bool) {
+        _hasIncomingOTPAuthURL = value
+        refresh(animated: true, reloadInfo: false)
     }
 
     override func _updateAnnouncements() {

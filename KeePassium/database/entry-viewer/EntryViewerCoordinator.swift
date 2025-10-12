@@ -436,16 +436,17 @@ extension EntryViewerCoordinator {
 }
 
 extension EntryViewerCoordinator {
-    private func showEntryFieldEditor() {
+    @discardableResult
+    private func showEntryFieldEditor() -> EntryFieldEditorCoordinator? {
         guard canEditEntry else {
             assertionFailure()
             Diag.warning("Tried to modify a non-editable entry")
-            return
+            return nil
         }
         guard let parent = entry.parent else {
             Diag.warning("Entry's parent group is undefined")
             assertionFailure()
-            return
+            return nil
         }
 
         let modalRouter = NavigationRouter.createModal(style: .formSheet, at: nil)
@@ -461,6 +462,7 @@ extension EntryViewerCoordinator {
 
         _router.present(modalRouter, animated: true, completion: nil)
         addChildCoordinator(entryFieldEditorCoordinator, onDismiss: nil)
+        return entryFieldEditorCoordinator
     }
 
     private func showHistoryEntry(_ entry: Entry) {
@@ -963,6 +965,21 @@ extension EntryViewerCoordinator: EntryViewerPagesVCDelegate {
             Diag.debug("Dropped files added, refreshing and saving")
             self?.refresh(animated: true)
             self?.saveDatabase()
+        }
+    }
+}
+
+extension EntryViewerCoordinator {
+    func setIncomingOTPAuthURL(_ url: URL) {
+        let existingEntryFieldEditorCoo = childCoordinators
+            .compactMap { $0 as? EntryFieldEditorCoordinator }
+            .first
+        if let entryEditor = existingEntryFieldEditorCoo {
+            Diag.debug("Importing OTPAuth URL to existing editor")
+            entryEditor.importOTPAuthURL(url)
+        } else if let entryEditor = showEntryFieldEditor() {
+            Diag.debug("Importing OTPAuth URL to new editor")
+            entryEditor.importOTPAuthURL(url)
         }
     }
 }

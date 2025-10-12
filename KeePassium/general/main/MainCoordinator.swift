@@ -48,6 +48,8 @@ final class MainCoordinator: UIResponder, Coordinator {
 
     internal var _isInitialDatabase = true
 
+    internal var _incomingOTPAuthURL: URL?
+
     internal var _toolbarDelegate: MainToolbarDelegate?
     internal let _autoTypeHelper: AutoTypeHelper?
     internal var _presenterForModals: UIViewController {

@@ -208,6 +208,16 @@
 #endif
             </array>
         </dict>
+        <dict>
+            <key>CFBundleTypeRole</key>
+            <string>Editor</string>
+            <key>CFBundleURLName</key>
+            <string>OTP Authentication</string>
+            <key>CFBundleURLSchemes</key>
+            <array>
+                <string>otpauth</string>
+            </array>
+        </dict>
 #ifdef INTUNE
         <dict>
             <key>CFBundleTypeRole</key>

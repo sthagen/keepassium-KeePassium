@@ -17,6 +17,10 @@ public extension URL {
 
     var isRemoteURL: Bool { !isFileURL }
 
+    var isDeepLinkURL: Bool { scheme == AppGroup.appURLScheme }
+
+    var isOTPAuthURL: Bool { scheme == "otpauth" }
+
     var isInTrashDirectory: Bool {
         do {
             let fileManager = FileManager.default

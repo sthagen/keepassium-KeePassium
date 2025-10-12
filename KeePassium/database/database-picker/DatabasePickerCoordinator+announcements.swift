@@ -11,10 +11,18 @@ import KeePassiumLib
 extension DatabasePickerCoordinator {
     internal func _makeAnnouncements() -> [AnnouncementItem] {
         var announcements = [AnnouncementItem]()
-        if mode == .autoFill,
-           FileKeeper.shared.areSandboxFilesLikelyMissing()
-        {
-            announcements.append(makeSandboxUnreachableAnnouncement(for: _filePickerVC))
+
+        switch mode {
+        case .full:
+            if _hasIncomingOTPAuthURL {
+                announcements.append(makeIncomingOTPAuthURLAnnouncement(for: _filePickerVC))
+            }
+        case .autoFill:
+            if FileKeeper.shared.areSandboxFilesLikelyMissing() {
+                announcements.append(makeSandboxUnreachableAnnouncement(for: _filePickerVC))
+            }
+        case .light:
+            break
         }
 
         if _hasPendingTransactions {
@@ -72,5 +80,17 @@ extension DatabasePickerCoordinator {
                 image: .symbol(.unsavedChanges, tint: .warningMessage)
             )
         }
+    }
+
+    private func makeIncomingOTPAuthURLAnnouncement(for viewController: UIViewController) -> AnnouncementItem {
+        return AnnouncementItem(
+            title: LString.titleSetupVerificationOTPCode,
+            body: LString.messageSelectDatabaseForOTPSetup,
+            image: .symbol(.oneTimePassword),
+            onDidPressClose: { [weak self] _ in
+                guard let self else { return }
+                delegate?.didCancelOTPAuthURLImport(in: self)
+            }
+        )
     }
 }

@@ -221,8 +221,7 @@ final class EntryFieldEditorCoordinator: BaseCoordinator {
         refresh()
 
         fieldEditorVC.showNotification(
-            LString.actionDone,
-            image: .symbol(.oneTimePassword),
+            LString.otpSetupComplete,
             duration: 1
         )
     }
@@ -239,6 +238,10 @@ final class EntryFieldEditorCoordinator: BaseCoordinator {
             accountName: entry.resolvedUserName.isEmpty ? nil : entry.resolvedUserName
         )
         setOTPConfig(uri: otpauthURI.absoluteString, isQRBased: false)
+    }
+
+    func importOTPAuthURL(_ url: URL) {
+        setOTPConfig(uri: url.absoluteString, isQRBased: false)
     }
 
     func showPasswordGenerator(

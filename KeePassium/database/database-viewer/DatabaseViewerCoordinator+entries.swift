@@ -9,9 +9,15 @@
 import KeePassiumLib
 
 extension DatabaseViewerCoordinator {
-    private var entryViewerCoordinator: EntryViewerCoordinator? {
+    internal var _entryViewerCoordinator: EntryViewerCoordinator? {
         childCoordinators
             .compactMap { $0 as? EntryViewerCoordinator }
+            .first
+    }
+
+    internal var _entryEditorCoordinator: EntryFieldEditorCoordinator? {
+        childCoordinators
+            .compactMap { $0 as? EntryFieldEditorCoordinator }
             .first
     }
 
@@ -36,12 +42,16 @@ extension DatabaseViewerCoordinator {
             childCoordinators.removeAll(where: { $0 is EntryViewerCoordinator })
             return
         }
+        let canEditEntry = DatabaseViewerPermissionManager
+            .getPermissions(for: entry, in: _databaseFile)
+            .contains(.editItem)
+        let canImportOTP = canEditEntry && _database is Database2
 
-        if let entryViewerCoordinator = self.entryViewerCoordinator {
+        if let entryViewerCoordinator = self._entryViewerCoordinator {
             entryViewerCoordinator.setEntry(
                 entry,
                 isHistoryEntry: false,
-                canEditEntry: _canEditDatabase && !entry.isDeleted
+                canEditEntry: canEditEntry
             )
             guard let _entryViewerRouter else {
                 Diag.error("Coordinator without a router, aborting")
@@ -49,6 +59,12 @@ extension DatabaseViewerCoordinator {
                 return
             }
             _splitViewController.setSecondaryRouter(_entryViewerRouter)
+
+            if let _incomingOTPAuthURL, canImportOTP {
+                DispatchQueue.main.async { [weak entryViewerCoordinator] in
+                    entryViewerCoordinator?.setIncomingOTPAuthURL(_incomingOTPAuthURL)
+                }
+            }
             return
         }
 
@@ -58,7 +74,7 @@ extension DatabaseViewerCoordinator {
             entry: entry,
             databaseFile: _databaseFile,
             isHistoryEntry: false,
-            canEditEntry: _canEditDatabase && !entry.isDeleted,
+            canEditEntry: canEditEntry,
             router: entryViewerRouter,
             progressHost: self
         )
@@ -69,6 +85,12 @@ extension DatabaseViewerCoordinator {
         })
 
         _splitViewController.setSecondaryRouter(entryViewerRouter)
+
+        if let _incomingOTPAuthURL, canImportOTP {
+            DispatchQueue.main.async { [weak entryViewerCoordinator] in
+                entryViewerCoordinator?.setIncomingOTPAuthURL(_incomingOTPAuthURL)
+            }
+        }
     }
 
     internal func _showEntryCreator() {
@@ -83,7 +105,7 @@ extension DatabaseViewerCoordinator {
     ) {
         Diag.info("Will edit entry")
         guard let parent = _currentGroup else {
-            Diag.warning("Parent group is not definted")
+            Diag.warning("Parent group is not defined")
             assertionFailure()
             return
         }
@@ -98,6 +120,8 @@ extension DatabaseViewerCoordinator {
         entryFieldEditorCoordinator.delegate = self
         entryFieldEditorCoordinator.start()
         modalRouter.dismissAttemptDelegate = entryFieldEditorCoordinator
+
+        _importIncomingOTPAuthURL(to: entryFieldEditorCoordinator)
 
         _presenterForModals.present(modalRouter, animated: true, completion: nil)
         addChildCoordinator(entryFieldEditorCoordinator, onDismiss: { [onDismiss] _ in
@@ -167,6 +191,15 @@ extension DatabaseViewerCoordinator {
         }
         URLOpener(_topGroupViewer).open(url: url)
     }
+
+    private func _importIncomingOTPAuthURL(to entryFieldEditorCoordinator: EntryFieldEditorCoordinator) {
+        guard let incomingOTPAuthURL = _incomingOTPAuthURL else {
+            return
+        }
+
+        Diag.info("Importing incoming OTP URL to entry editor")
+        entryFieldEditorCoordinator.importOTPAuthURL(incomingOTPAuthURL)
+    }
 }
 
 extension DatabaseViewerCoordinator {
@@ -201,6 +234,10 @@ extension DatabaseViewerCoordinator {
 extension DatabaseViewerCoordinator: EntryViewerCoordinatorDelegate {
     func didUpdateEntry(_ entry: Entry, in coordinator: EntryViewerCoordinator) {
         refresh()
+
+        if _incomingOTPAuthURL != nil {
+            delegate?.didCompleteOTPAuthURLImport(in: self)
+        }
     }
 
     func didRelocateDatabase(_ databaseFile: DatabaseFile, to url: URL) {
@@ -230,6 +267,11 @@ extension DatabaseViewerCoordinator: EntryFieldEditorCoordinatorDelegate {
         } else {
             _selectEntry(entry)
         }
+
+        if _incomingOTPAuthURL != nil {
+            delegate?.didCompleteOTPAuthURLImport(in: self)
+        }
+
         StoreReviewSuggester.maybeShowAppReview(
             appVersion: AppInfo.version,
             occasion: .didEditItem,
