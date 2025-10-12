@@ -111,7 +111,30 @@ extension DatabaseViewerCoordinator {
                     _updateAnnouncements()
                 }
             )
-        default:
+        case .managedAccessDenied,
+             .networkAccessDenied,
+             .noInfoAvailable,
+             .internalError:
+            recoveryAction = nil
+        case .networkError,
+             .serverSideError:
+            recoveryAction = nil
+        case .timeout,
+             .fileProviderDoesNotRespond,
+             .fileProviderNotFound,
+             .systemError:
+            let helpURL = originalRef.error?.helpURL ?? URL.AppHelp.usingFallbackDatabase
+            recoveryAction = UIAction(
+                title: LString.actionLearnMore,
+                handler: { [weak self] _ in
+                    guard let presenter = self?._presenterForModals else { return }
+                    URLOpener(presenter).open(url: helpURL)
+                }
+            )
+        case .targetFileIsReadOnly:
+            assertionFailure("Unexpected loading error case")
+            recoveryAction = nil
+        case .none:
             recoveryAction = nil
         }
         return AnnouncementItem(

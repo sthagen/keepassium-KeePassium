@@ -134,7 +134,11 @@ extension RemoteDataSource {
                 case .success(let fileContents):
                     completion(.success(ByteArray(data: fileContents)))
                 case .failure(let error):
-                    completion(.failure(.systemError(error)))
+                    let fileAccessError = FileAccessError.make(
+                        from: error,
+                        fileName: url.lastPathComponent,
+                        fileProvider: fileProvider)
+                    completion(.failure(fileAccessError))
                 }
             }
         )
@@ -172,7 +176,11 @@ extension RemoteDataSource {
                 case .success:
                     completion(.success)
                 case .failure(let error):
-                    completion(.failure(.systemError(error)))
+                    let fileAccessError = FileAccessError.make(
+                        from: error,
+                        fileName: url.lastPathComponent,
+                        fileProvider: fileProvider)
+                    completion(.failure(fileAccessError))
                 }
             }
         )
@@ -221,7 +229,11 @@ extension RemoteDataSource {
                             recoveryAction: recoveryAction
                         )))
                     default:
-                        completion(.failure(.systemError(error)))
+                        let fileAccessError = FileAccessError.make(
+                            from: error,
+                            fileName: url.lastPathComponent,
+                            fileProvider: fileProvider)
+                        completion(.failure(fileAccessError))
                     }
                 }
             }

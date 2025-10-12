@@ -122,7 +122,7 @@ final class DatabaseUnlockerVC: UIViewController, Refreshable {
     func showErrorMessage(
         _ text: String,
         reason: String? = nil,
-        helpAnchor: String? = nil,
+        helpURL: URL? = nil,
         haptics: HapticFeedback.Kind? = nil,
         action: ErrorMessageView.Action? = nil
     ) {
@@ -138,7 +138,7 @@ final class DatabaseUnlockerVC: UIViewController, Refreshable {
         errorMessageView.message = text
         if let action {
             errorMessageView.action = action
-        } else if let helpAnchor, let helpURL = URL(string: helpAnchor) {
+        } else if let helpURL {
             errorMessageView.action = .init(title: LString.actionViewHelpArticle) { [weak self] in
                 guard let self else { return }
                 URLOpener(self).open(url: helpURL)

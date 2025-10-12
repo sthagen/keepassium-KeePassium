@@ -342,7 +342,7 @@ extension DatabaseUnlockerCoordinator {
             databaseUnlockerVC.showErrorMessage(
                 error.localizedDescription,
                 reason: error.failureReason,
-                helpAnchor: error.helpAnchor,
+                helpURL: error.helpURL,
                 haptics: .error
             )
         }
@@ -362,7 +362,7 @@ extension DatabaseUnlockerCoordinator {
             databaseUnlockerVC.showErrorMessage(
                 error.localizedDescription,
                 reason: error.failureReason,
-                helpAnchor: error.helpAnchor,
+                helpURL: error.helpURL,
                 haptics: .error
             )
             return

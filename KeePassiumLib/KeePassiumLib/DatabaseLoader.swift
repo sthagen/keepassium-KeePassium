@@ -99,6 +99,17 @@ public class DatabaseLoader: ProgressObserver {
             }
         }
 
+        public var helpURL: URL? {
+            switch self {
+            case .databaseUnreachable(let reasonUnreachable):
+                return reasonUnreachable.helpURL
+            case .keyFileUnreachable(let reasonUnreachable):
+                return reasonUnreachable.helpURL
+            default:
+                return nil
+            }
+        }
+
         public enum DatabaseUnreachableReason: LocalizedError {
             case cannotFindDatabaseFile(reason: FileAccessError)
             case cannotOpenDatabaseFile(reason: FileAccessError)
@@ -117,6 +128,15 @@ public class DatabaseLoader: ProgressObserver {
                 case .cannotFindDatabaseFile(let reason),
                      .cannotOpenDatabaseFile(let reason):
                     return reason.localizedDescription
+                }
+            }
+
+            public var helpURL: URL? {
+                switch self {
+                case .cannotFindDatabaseFile(let fileAccessError):
+                    return fileAccessError.helpURL
+                case .cannotOpenDatabaseFile(let fileAccessError):
+                    return fileAccessError.helpURL
                 }
             }
         }
@@ -139,6 +159,15 @@ public class DatabaseLoader: ProgressObserver {
                 case .cannotFindKeyFile(let reason),
                      .cannotOpenKeyFile(let reason):
                     return reason.localizedDescription
+                }
+            }
+
+            public var helpURL: URL? {
+                switch self {
+                case .cannotFindKeyFile(let fileAccessError):
+                    return fileAccessError.helpURL
+                case .cannotOpenKeyFile(let fileAccessError):
+                    return fileAccessError.helpURL
                 }
             }
         }
