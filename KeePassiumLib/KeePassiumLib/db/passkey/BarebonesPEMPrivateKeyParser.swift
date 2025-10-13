@@ -15,7 +15,6 @@ final class BarebonesPEMPrivateKeyParser {
     private static let pemHeader = "-----BEGIN PRIVATE KEY-----"
     private static let pemFooter = "-----END PRIVATE KEY-----"
 
-
     static func parse(
         pemRepresentation pem: String,
         expectedPrefix: Data? = nil,

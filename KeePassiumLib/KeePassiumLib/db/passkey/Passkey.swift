@@ -321,7 +321,7 @@ public class NewPasskey: Passkey {
         let rpIdHash = CryptoKit.SHA256.hash(data: relyingParty.data(using: .utf8)!)
         authData.append(contentsOf: rpIdHash)
 
-        var flags = AuthDataFlags.at
+        let flags = AuthDataFlags.at
                   | AuthDataFlags.uv
                   | AuthDataFlags.up
                   | (beFlag ? AuthDataFlags.be : 0)

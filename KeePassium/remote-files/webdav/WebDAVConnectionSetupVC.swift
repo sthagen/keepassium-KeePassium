@@ -44,7 +44,7 @@ final class WebDAVConnectionSetupVC: UITableViewController {
     }
 
     private var sections: [Section] {
-        var sections : [Section] = []
+        var sections: [Section] = []
         if config.showsServerURLField {
             sections.append(.server)
         }
@@ -107,7 +107,9 @@ final class WebDAVConnectionSetupVC: UITableViewController {
 
         tableView.register(SwitchCell.classForCoder(), forCellReuseIdentifier: CellID.switchCell)
         tableView.register(TextFieldCell.classForCoder(), forCellReuseIdentifier: CellID.textFieldCell)
-        tableView.register(ProtectedTextFieldCell.classForCoder(), forCellReuseIdentifier: CellID.protectedTextFieldCell)
+        tableView.register(
+            ProtectedTextFieldCell.classForCoder(),
+            forCellReuseIdentifier: CellID.protectedTextFieldCell)
         tableView.register(ButtonCell.classForCoder(), forCellReuseIdentifier: CellID.buttonCell)
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: CellID.fullUrlCell)
         tableView.alwaysBounceVertical = false
