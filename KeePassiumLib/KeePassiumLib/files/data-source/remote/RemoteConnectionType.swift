@@ -20,23 +20,43 @@ public enum RemoteConnectionType: Hashable {
         .oneDrivePersonal(scope: .appFolder),
         .oneDriveForBusiness(scope: .fullAccess),
         .oneDriveForBusiness(scope: .appFolder),
-        .webdav,
+        .genericHTTP,
+        .hetzner,
+        .hiDriveIonos,
+        .hiDriveStrato,
+        .koofr,
+        .magentaCloud,
+        .nextcloud,
+        .owncloud,
+        .qnap,
+        .synology,
+        .genericWebDAV,
+        .woelkli,
     ]
 
-    case webdav
     case oneDrivePersonal(scope: OAuthScope)
     case oneDriveForBusiness(scope: OAuthScope)
     case dropboxPersonal(scope: OAuthScope)
     case dropboxBusiness(scope: OAuthScope)
     case googleDrive(scope: OAuthScope)
     case googleWorkspace(scope: OAuthScope)
+    case genericWebDAV
+    case genericHTTP
+    case hetzner
+    case hiDriveIonos
+    case hiDriveStrato
+    case koofr
+    case magentaCloud
+    case nextcloud
+    case owncloud
+    case qnap
+    case synology
+    case woelkli
 }
 
 extension RemoteConnectionType: CustomStringConvertible {
     public var description: String {
         switch self {
-        case .webdav:
-            return LString.connectionTypeWebDAV
         case .oneDrivePersonal(let scope):
             switch scope {
             case .fullAccess:
@@ -79,6 +99,30 @@ extension RemoteConnectionType: CustomStringConvertible {
             case .appFolder:
                 return FileProvider.decorateForAppFolderScope(LString.connectionTypeGoogleWorkspace)
             }
+        case .genericWebDAV:
+            return LString.connectionTypeWebDAV
+        case .genericHTTP:
+            return LString.connectionTypeHTTP
+        case .hetzner:
+            return LString.connectionTypeHetzner
+        case .hiDriveIonos:
+            return LString.connectionTypeHiDriveIonos
+        case .hiDriveStrato:
+            return LString.connectionTypeHiDriveStrato
+        case .koofr:
+            return LString.connectionTypeKoofr
+        case .magentaCloud:
+            return LString.connectionTypeMagentaCloud
+        case .nextcloud:
+            return LString.connectionTypeNextcloud
+        case .owncloud:
+            return LString.connectionTypeOwnCloud
+        case .qnap:
+            return LString.connectionTypeQNAP
+        case .synology:
+            return LString.connectionTypeSynology
+        case .woelkli:
+            return LString.connectionTypeWoelkli
         }
     }
 
@@ -98,8 +142,6 @@ extension RemoteConnectionType: CustomStringConvertible {
 
     public var fileProvider: FileProvider {
         switch self {
-        case .webdav:
-            return .keepassiumWebDAV
         case .oneDrivePersonal(let scope):
             switch scope {
             case .fullAccess:
@@ -135,6 +177,19 @@ extension RemoteConnectionType: CustomStringConvertible {
             case .appFolder:
                 return .keepassiumGoogleDriveAppFolder
             }
+        case .genericWebDAV,
+             .genericHTTP,
+             .hetzner,
+             .hiDriveIonos,
+             .hiDriveStrato,
+             .koofr,
+             .magentaCloud,
+             .nextcloud,
+             .owncloud,
+             .qnap,
+             .synology,
+             .woelkli:
+            return .keepassiumWebDAV
         }
     }
 }
@@ -142,10 +197,21 @@ extension RemoteConnectionType: CustomStringConvertible {
 extension RemoteConnectionType {
     public var isBusinessCloud: Bool {
         switch self {
-        case .webdav,
-             .oneDrivePersonal,
+        case .oneDrivePersonal,
              .dropboxPersonal,
-             .googleDrive:
+             .googleDrive,
+             .genericWebDAV,
+             .genericHTTP,
+             .hetzner,
+             .hiDriveIonos,
+             .hiDriveStrato,
+             .koofr,
+             .magentaCloud,
+             .nextcloud,
+             .owncloud,
+             .qnap,
+             .synology,
+             .woelkli:
             return false
         case .oneDriveForBusiness,
              .dropboxBusiness,

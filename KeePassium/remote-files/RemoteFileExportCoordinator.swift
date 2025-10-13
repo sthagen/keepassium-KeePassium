@@ -248,8 +248,19 @@ extension RemoteFileExportCoordinator: ConnectionTypePickerDelegate {
         viewController.ensuringNetworkAccessPermitted { [weak self] in
             guard let self else { return }
             switch connectionType {
-            case .webdav:
-                startWebDAVSetup(stateIndicator: viewController)
+            case .genericWebDAV,
+                 .genericHTTP,
+                 .hetzner,
+                 .hiDriveIonos,
+                 .hiDriveStrato,
+                 .koofr,
+                 .magentaCloud,
+                 .nextcloud,
+                 .owncloud,
+                 .qnap,
+                 .synology,
+                 .woelkli:
+                startWebDAVSetup(connectionType: connectionType, stateIndicator: viewController)
             case .oneDrivePersonal(let scope), .oneDriveForBusiness(let scope):
                 startOneDriveSetup(scope: scope, stateIndicator: viewController)
             case .dropboxPersonal(let scope), .dropboxBusiness(let scope):
@@ -383,10 +394,11 @@ extension RemoteFileExportCoordinator: OneDriveConnectionSetupCoordinatorDelegat
 }
 
 extension RemoteFileExportCoordinator: WebDAVConnectionSetupCoordinatorDelegate {
-    private func startWebDAVSetup(stateIndicator: BusyStateIndicating) {
+    private func startWebDAVSetup(connectionType: RemoteConnectionType, stateIndicator: BusyStateIndicating) {
         let setupCoordinator = WebDAVConnectionSetupCoordinator(
             mode: .pick(.folder),
-            router: _router,
+            connectionType: connectionType,
+            router: _router
         )
         setupCoordinator.delegate = self
         setupCoordinator.start()

@@ -14,7 +14,7 @@ extension RemoteConnectionType {
         case dropbox
         case googleDrive
         case oneDrive
-        case webdav
+        case other
 
         var description: String {
             switch self {
@@ -24,8 +24,8 @@ extension RemoteConnectionType {
                 return LString.connectionTypeGoogleDrive
             case .oneDrive:
                 return LString.connectionTypeOneDrive
-            case .webdav:
-                return LString.connectionTypeWebDAV
+            case .other:
+                return LString.connectionTypeOtherLocations
             }
         }
 
@@ -37,8 +37,19 @@ extension RemoteConnectionType {
                 return self == .oneDrive
             case .googleDrive, .googleWorkspace:
                 return self == .googleDrive
-            case .webdav:
-                return self == .webdav
+            case .genericHTTP,
+                 .genericWebDAV,
+                 .hetzner,
+                 .hiDriveIonos,
+                 .hiDriveStrato,
+                 .koofr,
+                 .magentaCloud,
+                 .nextcloud,
+                 .owncloud,
+                 .qnap,
+                 .synology,
+                 .woelkli:
+                return self == .other
             }
         }
 
@@ -50,9 +61,24 @@ extension RemoteConnectionType {
                 return FileProvider.keepassiumGoogleDrive.iconSymbol
             case .oneDrive:
                 return FileProvider.keepassiumOneDrivePersonal.iconSymbol
-            case .webdav:
-                return FileProvider.keepassiumWebDAV.iconSymbol
+            case .other:
+                return .network
             }
+        }
+    }
+
+    var iconSymbol: SymbolName? {
+        guard fileProvider == .keepassiumWebDAV else {
+            return fileProvider.iconSymbol
+        }
+        switch self {
+        case .genericWebDAV: return .fileProviderWebDAV
+        case .genericHTTP: return .fileProviderHTTP
+        case .nextcloud: return .fileProviderNextCloud
+        case .owncloud: return .fileProviderOwnCloud
+        case .synology: return .fileProviderNAS
+        default:
+            return .fileProviderWebDAV
         }
     }
 }

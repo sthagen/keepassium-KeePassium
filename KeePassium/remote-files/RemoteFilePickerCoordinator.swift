@@ -61,7 +61,7 @@ final class RemoteFilePickerCoordinator: BaseCoordinator {
     private func getConnectionType(by fileProvider: FileProvider?) -> RemoteConnectionType? {
         switch fileProvider {
         case .keepassiumWebDAV:
-            return .webdav
+            return .genericWebDAV
         case .keepassiumDropboxPersonal:
             return .dropboxPersonal(scope: .fullAccess)
         case .keepassiumDropboxPersonalAppFolder:
@@ -102,8 +102,19 @@ extension RemoteFilePickerCoordinator: ConnectionTypePickerDelegate {
 
     func didSelect(connectionType: RemoteConnectionType, in viewController: ConnectionTypePickerVC) {
         switch connectionType {
-        case .webdav:
-            startWebDAVSetup(stateIndicator: viewController)
+        case .genericWebDAV,
+             .genericHTTP,
+             .hetzner,
+             .hiDriveIonos,
+             .hiDriveStrato,
+             .koofr,
+             .magentaCloud,
+             .nextcloud,
+             .owncloud,
+             .qnap,
+             .synology,
+             .woelkli:
+            startWebDAVSetup(connectionType: connectionType, stateIndicator: viewController)
         case .oneDrivePersonal(let scope), .oneDriveForBusiness(let scope):
             startOneDriveSetup(scope: scope, stateIndicator: viewController)
         case .dropboxPersonal(let scope), .dropboxBusiness(let scope):
@@ -121,10 +132,11 @@ extension RemoteFilePickerCoordinator: ConnectionTypePickerDelegate {
 }
 
 extension RemoteFilePickerCoordinator: WebDAVConnectionSetupCoordinatorDelegate {
-    private func startWebDAVSetup(stateIndicator: BusyStateIndicating) {
+    private func startWebDAVSetup(connectionType: RemoteConnectionType, stateIndicator: BusyStateIndicating) {
         let setupCoordinator = WebDAVConnectionSetupCoordinator(
             mode: mode,
-            router: _router,
+            connectionType: connectionType,
+            router: _router
         )
         setupCoordinator.delegate = self
         setupCoordinator.start()

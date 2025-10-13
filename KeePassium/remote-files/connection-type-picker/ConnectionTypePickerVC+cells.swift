@@ -135,7 +135,7 @@ extension ConnectionTypePickerVC {
             content.secondaryText = LString.Error.storageAccessDeniedByOrg
         }
         content.textProperties.font = .preferredFont(forTextStyle: .body)
-        content.image = .symbol(connectionType.fileProvider.iconSymbol)
+        content.image = .symbol(connectionType.iconSymbol)
         let isEnabled = status.isAllowed && !status.isBusy
         if isEnabled {
             content.textProperties.color = .label
