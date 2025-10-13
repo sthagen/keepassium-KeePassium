@@ -1435,6 +1435,18 @@
 /* Action: pick a photo (from gallery) to scan as QR code */
 "[OTP/Setup/ScanQRPhoto]" = "从照片扫描二维码";
 
+/* Call to action/instruction during setup of OTP codes. */
+"[OTP/Setup/SelectDatabase/message]" = "选择数据库以设置验证码（一次性密码）。";
+
+/* Call to action/instruction during setup of OTP codes. */
+"[OTP/Setup/SelectEntry/message]" = "选择条目以设置验证码（一次性密码）。";
+
+/* Confirmation message after successful OTP setup */
+"[OTP/Setup/Success]" = "OTP 设置完成";
+
+/* Title of a dialog related to setup of one-time passwords (OTP) */
+"[OTP/Setup/Title]" = "验证码设置";
+
 /* Description of an OTP code; sentence case. */
 "[OTP/Title/sentenceCase]" = "一次性密码";
 
@@ -1795,6 +1807,9 @@
 /* Network address of a file */
 "[RemoteConnection/FileURL]" = "文件 URL";
 
+/* Complete WebDAV URL including path prefix */
+"[RemoteConnection/FullURL]" = "完整 URL";
+
 /* Name of a predefined Google Drive folder which contains user's own files */
 "[RemoteConnection/GoogleDrive/Folder/myDrive]" = "我的云端硬盘";
 
@@ -1839,6 +1854,9 @@
 
 /* Description of the `Integration via Files app` sync method. */
 "[RemoteConnection/ViaFilesApp/description]" = "KeePassium 会将文件同步分配给存储提供商的应用。有些应用会比其他应用运行得更好。";
+
+/* Link to a help page for an online storage service. The parameter is the service name in fixed neutral form. Example: 'Nextcloud Setup Guide' or 'Synology NAS Setup Guide'. */
+"[RemoteConnection/WebDAVService/SetupGuide]" = "%@ 设置指南";
 
 /* Name of an input field for entering the password again */
 "[Repeat Password/Field/title]" = "重复密码";

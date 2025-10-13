@@ -1435,6 +1435,18 @@
 /* Action: pick a photo (from gallery) to scan as QR code */
 "[OTP/Setup/ScanQRPhoto]" = "Scan QR-code uit foto";
 
+/* Call to action/instruction during setup of OTP codes. */
+"[OTP/Setup/SelectDatabase/message]" = "Selecteer database om de verificatiecode (eenmalig wachtwoord) in te stellen.";
+
+/* Call to action/instruction during setup of OTP codes. */
+"[OTP/Setup/SelectEntry/message]" = "Selecteer item om de verificatiecode (eenmalig wachtwoord) in te stellen.";
+
+/* Confirmation message after successful OTP setup */
+"[OTP/Setup/Success]" = "OTP-instelling voltooid";
+
+/* Title of a dialog related to setup of one-time passwords (OTP) */
+"[OTP/Setup/Title]" = "Instelling verificatiecode";
+
 /* Description of an OTP code; sentence case. */
 "[OTP/Title/sentenceCase]" = "Eenmalig wachtwoord";
 
@@ -1795,6 +1807,9 @@
 /* Network address of a file */
 "[RemoteConnection/FileURL]" = "Bestandsurl";
 
+/* Complete WebDAV URL including path prefix */
+"[RemoteConnection/FullURL]" = "Volledige URL";
+
 /* Name of a predefined Google Drive folder which contains user's own files */
 "[RemoteConnection/GoogleDrive/Folder/myDrive]" = "Mijn Drive";
 
@@ -1839,6 +1854,9 @@
 
 /* Description of the `Integration via Files app` sync method. */
 "[RemoteConnection/ViaFilesApp/description]" = "KeePassium wijst bestandssynchronisatie toe aan de app van je opslagdienst. Sommige apps werken beter dan andere.";
+
+/* Link to a help page for an online storage service. The parameter is the service name in fixed neutral form. Example: 'Nextcloud Setup Guide' or 'Synology NAS Setup Guide'. */
+"[RemoteConnection/WebDAVService/SetupGuide]" = "%@-installatiehandleiding";
 
 /* Name of an input field for entering the password again */
 "[Repeat Password/Field/title]" = "Herhaal wachtwoord";
