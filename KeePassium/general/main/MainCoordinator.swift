@@ -75,7 +75,9 @@ final class MainCoordinator: UIResponder, Coordinator {
 
         #if targetEnvironment(macCatalyst)
         DispatchQueue.main.async { [self] in
-            _setupMacToolbar()
+            if !isAppLockVisible {
+                _setupMacToolbar()
+            }
         }
         #endif
 
