@@ -50,6 +50,9 @@ final class MainCoordinator: UIResponder, Coordinator {
 
     internal var _incomingOTPAuthURL: URL?
 
+    #if targetEnvironment(macCatalyst)
+    internal var _mainToolbar: NSToolbar?
+    #endif
     internal var _toolbarDelegate: MainToolbarDelegate?
     internal let _autoTypeHelper: AutoTypeHelper?
     internal var _presenterForModals: UIViewController {
