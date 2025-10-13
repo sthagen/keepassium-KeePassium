@@ -12,7 +12,7 @@
                     "type": 2
                 },
                 {
-                    "title": "Added: Auto-Type via emulated key presses",
+                    "title": "Added: macOS: Auto-Type via emulated key presses",
                     "os": "macos",
                     "github": "#415, #210",
                     "credits": "everyone"
@@ -45,7 +45,7 @@
                     "credits": "everyone"
                 },
                 {
-                    "title": "Added: Support for OnlyKey challenge-response",
+                    "title": "Added: macOS: Support for OnlyKey challenge-response",
                     "os": "macos",
                     "credits": "everyone",
                     "type": 2
@@ -56,12 +56,12 @@
                     "credits": "O35dE"
                 },
                 {
-                    "title": "Added: Option to lock app and/or database on macOS screen lock",
+                    "title": "Added: macOS: Option to lock app and/or database on macOS screen lock",
                     "os": "macos",
                     "credits": "everyone"
                 },
                 {
-                    "title": "Added: Scanning QR codes from camera",
+                    "title": "Added: macOS: Scanning QR codes from camera",
                     "os": "macos",
                     "github": "#421",
                     "credits": "vit9696"
@@ -80,11 +80,11 @@
                     "title": "Added: Possibility to export databases to WebDAV"
                 },
                 {
-                    "title": "Added: Import from Apple Passwords CSV",
+                    "title": "Added: macOS: Import from Apple Passwords CSV",
                     "os": "macos"
                 },
                 {
-                    "title": "Added: Import from Enpass JSON",
+                    "title": "Added: macOS: Import from Enpass JSON",
                     "os": "macos"
                 },
                 {
@@ -95,9 +95,17 @@
                     "title": "Added: What's New highlights"
                 },
                 {
+                    "title": "Improved: KeePassium can be set as the default app for setting up verification codes (OTPs)",
+                    "github": "#326",
+                    "credits": "everyone"
+                },
+                {
                     "title": "Improved: When sorted alphabetically, database viewer will show a side index for quick scrolling",
                     "github": "#432",
                     "credits": "everyone"
+                },
+                {
+                    "title": "Improved: Simplified setup for popular WebDAV-compatible services"
                 },
                 {
                     "title": "Improved: AutoFill now shows the recently selected entry (within 10 seconds)",
@@ -134,7 +142,6 @@
                 },
                 {
                     "title": "Improved: Cmd+Shift+U will open entry URL",
-                    "os": "macos",
                     "credits": "Craig"
                 },
                 {
@@ -151,7 +158,7 @@
                     "title": "Improved: WebDAV setup accepts both direct file URL or a folder path"
                 },
                 {
-                    "title": "Improved: Preserve split panel widths between launches",
+                    "title": "Improved: macOS: Preserve split panel widths between launches",
                     "os": "macos",
                     "credits": "Stuart"
                 },
@@ -246,7 +253,7 @@
                     "credits": "magebarf"
                 },
                 {
-                    "title": "Fixed: Selecting a premium plan with a mouse",
+                    "title": "Fixed: macOS: Selecting a premium plan with a mouse",
                     "github": "#420",
                     "os": "macos",
                     "credits": "vit9696"
@@ -261,9 +268,13 @@
                     "credits": "everyone"
                 },
                 {
-                    "title": "Fixed: Short app protection timeouts did not work properly",
+                    "title": "Fixed: macOS: Short app protection timeouts did not work properly",
                     "os": "macos",
                     "credits": "everyone"
+                },
+                {
+                    "title": "Fixed: macOS: Increased the default app protection timeout to 1 minute to avoid undesired lock ups",
+                    "os": "macos"
                 },
                 {
                     "title": "Fixed: AutoFill could get stuck in Face ID loop, especially on iOS 26",
@@ -309,9 +320,13 @@
                     "credits": "Ray"
                 },
                 {
-                    "title": "Fixed: Preserve toolbar display mode on macOS 15",
+                    "title": "Fixed: macOS: Preserve toolbar display mode on macOS 15",
                     "os": "macos",
                     "credits": "u/binroth"
+                },
+                {
+                    "title": "Fixed: macOS: Visibility of the app title and toolbar",
+                    "os": "macos"
                 },
                 {
                     "title": "Fixed: otpauth URI format for manually configured OTPs",
