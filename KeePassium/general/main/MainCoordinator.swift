@@ -87,6 +87,17 @@ final class MainCoordinator: UIResponder, Coordinator {
         assert(childCoordinators.isEmpty)
         removeAllChildCoordinators()
     }
+
+    func windowSceneCoordinatesDidChange(_ bounds: CGRect) {
+        _appLockWindow?.bounds = bounds
+        _appLockWindow?.layoutIfNeeded()
+
+        _appCoverWindow?.bounds = bounds
+        _appCoverWindow?.layoutIfNeeded()
+
+        _biometricsBackgroundWindow?.bounds = bounds
+        _biometricsBackgroundWindow?.layoutIfNeeded()
+    }
 }
 
 extension MainCoordinator {
