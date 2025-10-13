@@ -224,7 +224,7 @@ extension Settings {
             }
 
             return maybeFixAutoFillBiometricIDLoop(
-                ProcessInfo.isRunningOnMac ? .after10seconds : .immediately
+                ProcessInfo.isRunningOnMac ? .after1minute : .immediately
             )
         }
         set {
@@ -244,7 +244,8 @@ extension Settings {
             let stored = UserDefaults.appGroupShared
                 .object(forKey: Keys.lockAppOnLaunch.rawValue)
                 as? Bool
-            return stored ?? false
+            let defaultValue = ProcessInfo.isRunningOnMac ? true : false
+            return stored ?? defaultValue
         }
         set {
             _updateAndNotify(
