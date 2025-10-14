@@ -328,7 +328,11 @@ extension FileDataProvider {
                 completionQueue.addOperation {
                     let nsError = coordinatorError as NSError
                     Diag.error("File coordination failed [message: \(nsError.debugDescription)]")
-                    completion(.failure(.systemError(coordinatorError)))
+                    let fileAccessError = FileAccessError.make(
+                        from: nsError,
+                        fileName: intent.url.lastPathComponent,
+                        fileProvider: fileProvider)
+                    completion(.failure(fileAccessError))
                 }
                 return
             }

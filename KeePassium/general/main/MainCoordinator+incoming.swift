@@ -24,24 +24,34 @@ extension MainCoordinator {
         }
         #endif
         Diag.info("Will process incoming URL [inPlace: \(String(describing: openInPlace)), URL: \(url.redacted)]")
-        guard let _databaseViewerCoordinator else {
+        if let _databaseViewerCoordinator,
+           mustCloseDatabaseToImportURL(url)
+        {
+            _databaseViewerCoordinator.closeDatabase(
+                shouldLock: false,
+                reason: .appLevelOperation,
+                animated: false,
+                completion: { [weak self] in
+                    self?.handleIncomingURL(url, openInPlace: openInPlace ?? true)
+                }
+            )
+        } else {
             handleIncomingURL(url, openInPlace: openInPlace ?? true)
-            return true
         }
-        _databaseViewerCoordinator.closeDatabase(
-            shouldLock: false,
-            reason: .appLevelOperation,
-            animated: false,
-            completion: { [weak self] in
-                self?.handleIncomingURL(url, openInPlace: openInPlace ?? true)
-            }
-        )
         return true
     }
 
+    private func mustCloseDatabaseToImportURL(_ url: URL) -> Bool {
+        return !(url.isDeepLinkURL || url.isOTPAuthURL)
+    }
+
     private func handleIncomingURL(_ url: URL, openInPlace: Bool) {
-        guard url.scheme != AppGroup.appURLScheme else {
+        if url.isDeepLinkURL {
             processDeepLink(url)
+            return
+        }
+        if url.isOTPAuthURL {
+            _handleIncomingOTPAuthURL(url)
             return
         }
 
@@ -55,6 +65,18 @@ extension MainCoordinator {
         }
     }
 
+    private func _handleIncomingOTPAuthURL(_ url: URL) {
+        assert(url.isOTPAuthURL)
+
+        guard TOTPGeneratorFactory.isValidURI(url.absoluteString) else {
+            Diag.warning("Invalid OTP URL received [url: \(url.redacted)]")
+            return
+        }
+
+        Diag.info("Valid OTP URL received, storing for import [url: \(url.redacted)]")
+        _setIncomingOTPAuthURL(url)
+    }
+
     private func processDeepLink(_ url: URL) {
         assert(url.scheme == AppGroup.appURLScheme)
         switch url {
@@ -65,6 +87,12 @@ extension MainCoordinator {
         default:
             Diag.warning("Unrecognized URL, ignoring [url: \(url.absoluteString)]")
         }
+    }
+
+    internal func _setIncomingOTPAuthURL(_ url: URL?) {
+        _incomingOTPAuthURL = url
+        _databasePickerCoordinator.setHasIncomingOTPAuthURL(_incomingOTPAuthURL != nil)
+        _databaseViewerCoordinator?.setIncomingOTPAuthURL(url)
     }
 }
 

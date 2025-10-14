@@ -26,6 +26,8 @@ protocol DatabaseViewerCoordinatorDelegate: AnyObject {
         compositeKey: CompositeKey,
         in coordinator: DatabaseViewerCoordinator
     )
+
+    func didCompleteOTPAuthURLImport(in coordinator: DatabaseViewerCoordinator)
 }
 
 final class DatabaseViewerCoordinator: BaseCoordinator {
@@ -74,6 +76,8 @@ final class DatabaseViewerCoordinator: BaseCoordinator {
     internal var _hasUnsavedBulkChanges = false
     internal var _progressOverlay: ProgressOverlay?
 
+    internal var _incomingOTPAuthURL: URL?
+
     internal var databaseSaver: DatabaseSaver?
     internal var fileExportHelper: FileExportHelper?
     internal var fileImportHelper: FileImportHelper?
@@ -117,6 +121,9 @@ final class DatabaseViewerCoordinator: BaseCoordinator {
 
         _pushInitialGroupViewers(replacingTopVC: _splitViewController.isCollapsed)
         _showEntry(nil)
+        if _splitViewController.isExpanded {
+            _splitViewController.show(.primary)
+        }
 
         Settings.current.startupDatabase = _databaseFile.originalReference
 
@@ -192,6 +199,18 @@ final class DatabaseViewerCoordinator: BaseCoordinator {
         }
         Diag.debug("Database closed [locked: \(shouldLock), reason: \(reason)]")
         stop(animated: animated, completion: completion)
+    }
+
+    func setIncomingOTPAuthURL(_ url: URL?) {
+        _incomingOTPAuthURL = url
+        refresh(animated: true)
+        guard let _incomingOTPAuthURL else { return }
+
+        if let entryEditorCoordinator = _entryEditorCoordinator {
+            entryEditorCoordinator.importOTPAuthURL(_incomingOTPAuthURL)
+        } else if let entryViewerCoordinator = _entryViewerCoordinator {
+            entryViewerCoordinator.setIncomingOTPAuthURL(_incomingOTPAuthURL)
+        }
     }
 }
 

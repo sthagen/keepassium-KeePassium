@@ -1,8 +1,30 @@
 #CHANGELOG
 
+## [2.4.167] - 2025-10-13
+
+### Improved
+
+- KeePassium can be set as the default app for setting up verification codes (OTPs) (#326) [thanks, everyone]
+- Simplified setup for popular WebDAV-compatible services
+- Possibility to hide/show the sidebar on the iPad
+- Allow longer texts in primary column in group viewer [thanks, Stuart]
+- Added help links for more file access errors
+
+### Fixed
+
+- Crash on search (regression in 2.4.166) [thanks, everyone]
+- AutoFill sometimes failed to enforce app protection (regression in 2.4.166)
+- AutoFill could lock up during interaction (regression in 2.4.166)
+- Alphabetic index in short and mixed-case lists [thanks, Stuart]
+- Keyboard sometimes failed to appear in AutoFill (#133)
+- macOS: App title was visible above the app lock screen
+- macOS: Main toolbar sometimes did not appear
+- macOS: Increased default app protection timeout to 1 minute to avoid undesired lock ups
+
+
 ## [2.4.166] - 2025-10-10
 
-### Feat
+### Added
 
 - Create new entries in AutoFill (closes #87) [thanks, everyone]
 - Direct cloud connections now possible with reduced, app-folder permissions (OneDrive, Dropbox, Google Drive) (closes #285) [thanks, everyone]

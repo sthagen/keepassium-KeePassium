@@ -156,6 +156,7 @@ fileprivate extension EntryCreatorCoordinator.ItemDecorator {
     }
 
     func didSelectPassword(_ password: String, mode: PasswordGeneratorMode) {
+        Watchdog.shared.restart()
         let passGenConfig = Settings.current.passwordGeneratorConfig
         passGenConfig.lastMode = mode
         Settings.current.passwordGeneratorConfig = passGenConfig
@@ -166,6 +167,7 @@ fileprivate extension EntryCreatorCoordinator.ItemDecorator {
 
 extension EntryCreatorCoordinator: PasswordGeneratorCoordinatorDelegate {
     func _showPasswordGenerator() {
+        Watchdog.shared.restart()
         let passGenCoordinator = PasswordGeneratorCoordinator(
             router: _router,
             quickMode: false,

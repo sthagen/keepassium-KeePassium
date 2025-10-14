@@ -1268,6 +1268,12 @@ extension LString {
         value: "Enter Manually",
         comment: "Button/action: proceed with manual OTP setup"
     )
+    public static let otpSetupComplete = NSLocalizedString(
+        "[OTP/Setup/Success]",
+        bundle: Bundle.framework,
+        value: "OTP setup complete",
+        comment: "Confirmation message after successful OTP setup"
+    )
 
     public static let otpQRCodeNotValid = NSLocalizedString(
         "[OTP/Scan/InvalidData]",
@@ -1304,6 +1310,26 @@ extension LString {
         comment: "Description of an OTP code; sentence case."
     )
 
+    public static let titleSetupVerificationOTPCode = NSLocalizedString(
+        "[OTP/Setup/Title]",
+        bundle: Bundle.framework,
+        value: "Verification Code Setup",
+        comment: "Title of a dialog related to setup of one-time passwords (OTP)"
+    )
+
+    public static let messageSelectDatabaseForOTPSetup = NSLocalizedString(
+        "[OTP/Setup/SelectDatabase/message]",
+        bundle: Bundle.framework,
+        value: "Select database for setting up the verification code (one-time password).",
+        comment: "Call to action/instruction during setup of OTP codes."
+    )
+
+    public static let messageSelectEntryForOTPSetup = NSLocalizedString(
+        "[OTP/Setup/SelectEntry/message]",
+        bundle: Bundle.framework,
+        value: "Select entry for setting up the verification code (one-time password).",
+        comment: "Call to action/instruction during setup of OTP codes."
+    )
 
     public static let itemIconPickerStandardIcons = NSLocalizedString(
         "[ItemIconPicker/StandardIcons]",

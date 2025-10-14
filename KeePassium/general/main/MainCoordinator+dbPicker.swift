@@ -99,6 +99,10 @@ extension MainCoordinator: DatabasePickerCoordinatorDelegate {
         }
     }
 
+    func didCancelOTPAuthURLImport(in coordinator: DatabasePickerCoordinator) {
+        _setIncomingOTPAuthURL(nil)
+    }
+
     func didPressShowRandomGenerator(at popoverAnchor: PopoverAnchor?, in viewController: UIViewController) {
         _showPasswordGenerator(at: popoverAnchor, in: viewController)
     }

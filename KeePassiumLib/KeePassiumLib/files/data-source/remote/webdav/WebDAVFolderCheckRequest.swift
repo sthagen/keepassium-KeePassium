@@ -74,8 +74,12 @@ final class WebDAVFolderCheckRequest: WebDAVRequestBase {
         } catch {
             let nsError = error as NSError
             Diag.error("Failed to parse server response [message: \(nsError.description)]")
-            completionQueue.addOperation {
-                self.completion(.failure(.systemError(error)))
+            completionQueue.addOperation { [self] in
+                let fileAccessError = FileAccessError.make(
+                    from: error,
+                    fileName: url.lastPathComponent,
+                    fileProvider: .keepassiumWebDAV)
+                self.completion(.failure(fileAccessError))
             }
         }
     }

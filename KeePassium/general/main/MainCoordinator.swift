@@ -48,6 +48,11 @@ final class MainCoordinator: UIResponder, Coordinator {
 
     internal var _isInitialDatabase = true
 
+    internal var _incomingOTPAuthURL: URL?
+
+    #if targetEnvironment(macCatalyst)
+    internal var _mainToolbar: NSToolbar?
+    #endif
     internal var _toolbarDelegate: MainToolbarDelegate?
     internal let _autoTypeHelper: AutoTypeHelper?
     internal var _presenterForModals: UIViewController {
@@ -73,7 +78,9 @@ final class MainCoordinator: UIResponder, Coordinator {
 
         #if targetEnvironment(macCatalyst)
         DispatchQueue.main.async { [self] in
-            _setupMacToolbar()
+            if !isAppLockVisible {
+                _setupMacToolbar()
+            }
         }
         #endif
 
@@ -84,6 +91,17 @@ final class MainCoordinator: UIResponder, Coordinator {
         NotificationCenter.default.removeObserver(self)
         assert(childCoordinators.isEmpty)
         removeAllChildCoordinators()
+    }
+
+    func windowSceneCoordinatesDidChange(_ bounds: CGRect) {
+        _appLockWindow?.bounds = bounds
+        _appLockWindow?.layoutIfNeeded()
+
+        _appCoverWindow?.bounds = bounds
+        _appCoverWindow?.layoutIfNeeded()
+
+        _biometricsBackgroundWindow?.bounds = bounds
+        _biometricsBackgroundWindow?.layoutIfNeeded()
     }
 }
 

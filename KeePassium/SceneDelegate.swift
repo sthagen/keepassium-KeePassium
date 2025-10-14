@@ -69,6 +69,15 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             )
         }
     }
+
+    func windowScene(
+        _ windowScene: UIWindowScene,
+        didUpdate previousCoordinateSpace: any UICoordinateSpace,
+        interfaceOrientation previousInterfaceOrientation: UIInterfaceOrientation,
+        traitCollection previousTraitCollection: UITraitCollection
+    ) {
+        mainCoordinator?.windowSceneCoordinatesDidChange(windowScene.coordinateSpace.bounds)
+    }
 }
 
 #if targetEnvironment(macCatalyst)

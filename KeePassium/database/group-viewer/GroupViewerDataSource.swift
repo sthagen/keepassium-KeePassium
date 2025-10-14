@@ -28,6 +28,9 @@ final class GroupViewerDataSource: UICollectionViewDiffableDataSource<GroupViewe
         sortedKeyLetters.removeAll()
         index.removeAll()
         let items = snapshot().itemIdentifiers
+        if items.count < 7 {
+            return nil
+        }
         for item in items {
             switch item {
             case .announcement, .emptyStatePlaceholder, .group:
@@ -46,7 +49,7 @@ final class GroupViewerDataSource: UICollectionViewDiffableDataSource<GroupViewe
     private func toIndexKey(_ symbol: Character?) -> String {
         switch symbol {
         case .some(let c) where c.isLetter:
-            return String(c)
+            return String(c).localizedUppercase // combines "a" and "A" items
         default:
             return "#"
         }

@@ -310,8 +310,10 @@
 				"remote-files/RemoteDataSourceSetupCoordinator.swift",
 				"remote-files/RemoteFilePickerCoordinator.swift",
 				"remote-files/RemoteFolderViewerVC.swift",
+				"remote-files/webdav/WebDAVConnectionConfiguration.swift",
 				"remote-files/webdav/WebDAVConnectionSetupCoordinator.swift",
 				"remote-files/webdav/WebDAVConnectionSetupVC.swift",
+				"remote-files/webdav/WebDAVProvider.swift",
 				util/a11y/AccessibilityHelper.swift,
 				util/AppEraser.swift,
 				util/AppInfo.swift,
@@ -497,8 +499,10 @@
 				"remote-files/RemoteDataSourceSetupCoordinator.swift",
 				"remote-files/RemoteFilePickerCoordinator.swift",
 				"remote-files/RemoteFolderViewerVC.swift",
+				"remote-files/webdav/WebDAVConnectionConfiguration.swift",
 				"remote-files/webdav/WebDAVConnectionSetupCoordinator.swift",
 				"remote-files/webdav/WebDAVConnectionSetupVC.swift",
+				"remote-files/webdav/WebDAVProvider.swift",
 				util/a11y/AccessibilityHelper.swift,
 				util/AppEraser.swift,
 				util/AppInfo.swift,
@@ -1415,7 +1419,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 166;
+				CURRENT_PROJECT_VERSION = 167;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -1486,7 +1490,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 166;
+				CURRENT_PROJECT_VERSION = 167;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = NO;
 				ENABLE_NS_ASSERTIONS = NO;

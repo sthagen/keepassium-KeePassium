@@ -25,6 +25,9 @@ extension MainCoordinator {
         )
         dbViewerCoordinator.delegate = self
         dbViewerCoordinator.start()
+        if let _incomingOTPAuthURL {
+            dbViewerCoordinator.setIncomingOTPAuthURL(_incomingOTPAuthURL)
+        }
         addChildCoordinator(dbViewerCoordinator, onDismiss: { [weak self] _ in
             self?._databaseViewerCoordinator = nil
             UIMenu.rebuildMainMenu()
@@ -139,5 +142,10 @@ extension MainCoordinator: DatabaseViewerCoordinatorDelegate {
         in coordinator: DatabaseViewerCoordinator
     ) {
         _switchToDatabase(databaseRef, key: compositeKey, in: coordinator)
+    }
+
+    func didCompleteOTPAuthURLImport(in coordinator: DatabaseViewerCoordinator) {
+        Diag.info("Clearing incoming OTP Auth URL")
+        _setIncomingOTPAuthURL(nil)
     }
 }

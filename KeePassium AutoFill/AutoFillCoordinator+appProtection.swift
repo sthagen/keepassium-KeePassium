@@ -80,8 +80,8 @@ extension AutoFillCoordinator: WatchdogDelegate {
                 options: .transitionCrossDissolve,
                 completion: { [weak self] _ in
                     guard let self else { return }
-                    if _isNeedsOnboarding() {
-                        _presentOnboarding()
+                    if !_isStartTasksCompleted {
+                        _runAfterStartTasks()
                     }
                 }
             )

@@ -69,6 +69,7 @@ extension URL {
 
         public static let yubikeySetup = URL(string: "https://keepassium.com/apphelp/yubikey-setup/")!
 
+        public static let usingFallbackDatabase = URL(string: "https://keepassium.com/apphelp/database-unreachable-using-fallback/")!
         public static let databaseFileIsInTrashWarning = URL(string: "https://keepassium.com/apphelp/database-recently-deleted-warning/")!
         public static let temporaryBackupDatabaseWarning = URL(string: "https://keepassium.com/apphelp/temporary-backup-database-warning/")!
 

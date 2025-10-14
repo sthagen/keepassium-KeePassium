@@ -170,15 +170,15 @@ extension FileAccessError {
         }
     }
 
-    public var helpAnchor: String? {
+    public var helpURL: URL? {
         switch self {
         case .fileProviderDoesNotRespond:
-            return URL.AppHelp.fileProviderUnresponsive.absoluteString
+            return URL.AppHelp.fileProviderUnresponsive
         case .systemError(let originalError):
             let nsError = originalError as? NSError
             switch (nsError?.domain, nsError?.code) {
             case (Self.fileProviderErrorDomain, -1005):
-                return URL.AppHelp.fileDoesNotExist.absoluteString
+                return URL.AppHelp.fileDoesNotExist
             default:
                 break
             }
@@ -223,7 +223,8 @@ extension FileAccessError {
                 message: message,
                 recoveryAction: LString.Error.actionReAddFileToAllowAccess
             )
-
+        case (NSURLErrorDomain, _):
+            return .networkError(message: nsError.localizedDescription)
         case ("NSFileProviderInternalErrorDomain", 0),
             (Self.fileProviderErrorDomain, -2001):
             return .fileProviderNotFound(fileProvider: fileProvider)

@@ -32,6 +32,10 @@ extension DatabaseViewerCoordinator {
             ))
         }
 
+        if let incomingOTPAnnouncement = maybeMakeIncomingOTPAuthURLAnnouncement(for: _topGroupViewer) {
+            announcements.append(incomingOTPAnnouncement)
+        }
+
         if let whatsNewAnnouncement = WhatsNewHelper.makeAnnouncement(
             presenter: _topGroupViewer,
             completion: { [weak self] in self?.refresh(animated: true) }
@@ -107,7 +111,30 @@ extension DatabaseViewerCoordinator {
                     _updateAnnouncements()
                 }
             )
-        default:
+        case .managedAccessDenied,
+             .networkAccessDenied,
+             .noInfoAvailable,
+             .internalError:
+            recoveryAction = nil
+        case .networkError,
+             .serverSideError:
+            recoveryAction = nil
+        case .timeout,
+             .fileProviderDoesNotRespond,
+             .fileProviderNotFound,
+             .systemError:
+            let helpURL = originalRef.error?.helpURL ?? URL.AppHelp.usingFallbackDatabase
+            recoveryAction = UIAction(
+                title: LString.actionLearnMore,
+                handler: { [weak self] _ in
+                    guard let presenter = self?._presenterForModals else { return }
+                    URLOpener(presenter).open(url: helpURL)
+                }
+            )
+        case .targetFileIsReadOnly:
+            assertionFailure("Unexpected loading error case")
+            recoveryAction = nil
+        case .none:
             recoveryAction = nil
         }
         return AnnouncementItem(
@@ -159,6 +186,26 @@ extension DatabaseViewerCoordinator {
             body: messages.joined(separator: "\n\n"),
             image: .symbol(.unsavedChanges, tint: .warningMessage),
             action: saveAction
+        )
+    }
+
+    private func maybeMakeIncomingOTPAuthURLAnnouncement(
+        for viewController: GroupViewerVC
+    ) -> AnnouncementItem? {
+        guard _incomingOTPAuthURL != nil,
+              _canEditDatabase,
+              _database is Database2
+        else {
+            return nil
+        }
+        return AnnouncementItem(
+            title: LString.titleSetupVerificationOTPCode,
+            body: LString.messageSelectEntryForOTPSetup,
+            image: .symbol(.oneTimePassword),
+            onDidPressClose: { [weak self] _ in
+                guard let self else { return }
+                delegate?.didCompleteOTPAuthURLImport(in: self)
+            }
         )
     }
 

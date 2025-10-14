@@ -15,6 +15,35 @@ extension MainCoordinator {
             assertionFailure()
             return
         }
+        scene.sizeRestrictions?.minimumSize = CGSize(width: 400, height: 600)
+        guard let titlebar = scene.titlebar else {
+            assertionFailure()
+            return
+        }
+        titlebar.titleVisibility = .visible
+        titlebar.separatorStyle = .automatic
+
+        if _mainToolbar == nil {
+            _mainToolbar = createMainToolbar()
+        }
+
+        DispatchQueue.main.async { [self] in
+            titlebar.toolbar = _mainToolbar
+            titlebar.toolbarStyle = .unifiedCompact
+        }
+    }
+
+    internal func _removeMacToolbar() {
+        let scenes = UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }
+        scenes.forEach {
+            let titlebar = $0.titlebar
+            titlebar?.titleVisibility = .hidden
+            titlebar?.separatorStyle = .none
+            titlebar?.toolbar = nil
+        }
+    }
+
+    private func createMainToolbar() -> NSToolbar {
         let toolbar = NSToolbar(identifier: "main")
         _toolbarDelegate = MainToolbarDelegate(mainCoordinator: self)
         toolbar.delegate = _toolbarDelegate
@@ -23,21 +52,7 @@ extension MainCoordinator {
         } else {
             toolbar.displayMode = .iconOnly
         }
-
-        let titlebar = scene.titlebar
-        titlebar?.toolbar = toolbar
-        titlebar?.toolbarStyle = .automatic
-        titlebar?.titleVisibility = .visible
-        scene.sizeRestrictions?.minimumSize = CGSize(width: 400, height: 600)
-    }
-
-    internal func _removeMacToolbar() {
-        let scenes = UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }
-        scenes.forEach {
-            let titlebar = $0.titlebar
-            titlebar?.titleVisibility = .hidden
-            titlebar?.toolbar = nil
-        }
+        return toolbar
     }
 }
 #endif

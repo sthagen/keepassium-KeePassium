@@ -63,6 +63,7 @@ class AutoFillCoordinator: BaseCoordinator {
 
     private var isServicesInitialized = false
     private var isStarted = false
+    internal var _isStartTasksCompleted = false
     private let memoryPressureSource = DispatchSource.makeMemoryPressureSource(eventMask: [.warning, .critical])
 
     init(
@@ -145,11 +146,6 @@ class AutoFillCoordinator: BaseCoordinator {
 
         if !isAppLockVisible {
             rootController.showChildViewController(_router.navigationController)
-            if _isNeedsOnboarding() {
-                DispatchQueue.main.async { [weak self] in
-                    self?._presentOnboarding()
-                }
-            }
         }
 
         _showDatabasePicker()
@@ -170,10 +166,15 @@ class AutoFillCoordinator: BaseCoordinator {
         Diag.info("Intune account is enrolled")
         #endif
 
-        runAfterStartTasks()
+        _runAfterStartTasks()
     }
 
-    private func runAfterStartTasks() {
+    internal func _runAfterStartTasks() {
+        if isAppLockVisible || _isStartTasksCompleted {
+            return
+        }
+        _isStartTasksCompleted = true
+
         #if INTUNE
         applyIntuneAppConfig()
 
@@ -185,6 +186,11 @@ class AutoFillCoordinator: BaseCoordinator {
 
         guard Settings.current.isAutoFillFinishedOK else {
             _showCrashReport()
+            return
+        }
+
+        if _isNeedsOnboarding() {
+            _presentOnboarding()
             return
         }
 

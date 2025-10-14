@@ -59,7 +59,11 @@ internal class WebDAVRequestBase: WebDAVRequest {
     func handleClientError(_ error: Error) {
         Diag.error("WebDAV client error [message: \(error.localizedDescription)]")
         guard let urlError = error as? URLError else {
-            finishWith(error: .systemError(error))
+            let fileAccessError = FileAccessError.make(
+                from: error,
+                fileName: url.lastPathComponent,
+                fileProvider: .keepassiumWebDAV)
+            finishWith(error: fileAccessError)
             return
         }
 
@@ -76,7 +80,11 @@ internal class WebDAVRequestBase: WebDAVRequest {
         case NSURLErrorTimedOut:
             finishWith(error: .timeout(fileProvider: .keepassiumWebDAV))
         default:
-            finishWith(error: .systemError(urlError))
+            let fileAccessError = FileAccessError.make(
+                from: urlError,
+                fileName: url.lastPathComponent,
+                fileProvider: .keepassiumWebDAV)
+            finishWith(error: fileAccessError)
         }
     }
 
