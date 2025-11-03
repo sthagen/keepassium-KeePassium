@@ -16,3 +16,6 @@
 /* Privacy - Photo Library Additions Usage Description */
 "NSPhotoLibraryAddUsageDescription" = "KeePassium vyžaduje vaše povolenie na export súborov do vašej knižnice fotografií.";
 
+/* Privacy - Photo Library Usage Description */
+"NSPhotoLibraryUsageDescription" = "KeePassium potrebuje prístup k vybraným obrázkom pre vlastné ikony a na skenovanie QR kódov pre nastavenie OTP.";
+

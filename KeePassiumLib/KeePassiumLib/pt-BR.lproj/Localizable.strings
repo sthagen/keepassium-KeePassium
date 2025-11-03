@@ -1435,6 +1435,18 @@
 /* Action: pick a photo (from gallery) to scan as QR code */
 "[OTP/Setup/ScanQRPhoto]" = "Escanear QR a partir da foto";
 
+/* Call to action/instruction during setup of OTP codes. */
+"[OTP/Setup/SelectDatabase/message]" = "Selecione o banco de dados para configurar o código de verificação (senha de uso único).";
+
+/* Call to action/instruction during setup of OTP codes. */
+"[OTP/Setup/SelectEntry/message]" = "Selecione a entrada para configurar o código de verificação (senha de uso único).";
+
+/* Confirmation message after successful OTP setup */
+"[OTP/Setup/Success]" = "Configuração de OTP concluída";
+
+/* Title of a dialog related to setup of one-time passwords (OTP) */
+"[OTP/Setup/Title]" = "Configuração do código de verificação";
+
 /* Description of an OTP code; sentence case. */
 "[OTP/Title/sentenceCase]" = "Código de uso único";
 
@@ -1842,6 +1854,9 @@
 
 /* Description of the `Integration via Files app` sync method. */
 "[RemoteConnection/ViaFilesApp/description]" = "O KeePassium atribuirá a sincronização de arquivos ao aplicativo do seu serviço de armazenamento. Alguns aplicativos funcionam melhor do que outros.";
+
+/* Link to a help page for an online storage service. The parameter is the service name in fixed neutral form. Example: 'Nextcloud Setup Guide' or 'Synology NAS Setup Guide'. */
+"[RemoteConnection/WebDAVService/SetupGuide]" = "Guia de Configuração do %@";
 
 /* Name of an input field for entering the password again */
 "[Repeat Password/Field/title]" = "Repita a senha";

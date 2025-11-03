@@ -7,6 +7,24 @@
 /* Call to action: perform accessibilty `activate` action to listen to text/content. */
 "[Accessibility/activateToListen]" = "تنشيط للاستماع.";
 
+/* Accessibility notification for entries with attached files. */
+"[Accessibility/containsAttachments]" = "تحتوي على ملفات مرفقة.";
+
+/* Accessibility notification for entries with a problematic passkey */
+"[Accessibility/containsIncompatiblePasskey]" = "تحتوي على مفتاح مرور غير متوافق مع هذا الجهاز.";
+
+/* Accessibility notification for entries with OTP codes. */
+"[Accessibility/containsOTP]" = "تحتوي على كلمة مرور تستخدم لمرة واحدة.";
+
+/* Accessibility notification for entries with a passkey */
+"[Accessibility/containsPasskey]" = "تحتوي على مفتاح مرور.";
+
+/* Action which resets the app as if it was just installed. */
+"[App/ResetEverything/action]" = "إعادة ضبط";
+
+/* Confirmation message before resetting the app to just-installed state. */
+"[App/ResetEverything/title]" = "هل تريد إعادة ضبط التطبيق؟";
+
 /* Action/button to unlock the App Lock with passcode */
 "[AppLock] Unlock" = "فتح القفل";
 
@@ -34,6 +52,12 @@
 /* Type of keyboard to show for App Lock passcode: digits only (PIN code). */
 "[AppLock/Passcode/KeyboardType/title] Numeric" = "عددي";
 
+/* Notification for business users when they set up too weak app protection passcode. */
+"[AppLock/Passcode/orgRequiresStonger]" = "تشترط المنظمة استخدام رمز مرور أكثر تعقيدًا.";
+
+/* Hint/call to action about keyboard shortcut */
+"[AppLock/Passcode/pressEscForTouchID]" = "اضغط على الزر Esc لاستخدام بصمة الإصبع";
+
 /* Notification that the modified AppLock passcode has been saved. */
 "[AppLock/passcodeUpdated/title]" = "تمَّ تحديث رمز المرور بنجاح.";
 
@@ -48,6 +72,24 @@
 
 /* Title of a message related to upgrading to the premium version */
 "[AutoFill/Premium/Upgrade/Manual/title] Premium Upgrade" = "ترقية للإصدار المميز";
+
+/* Call to action / instruction on how to enable accessibility permission */
+"[AutoType/AccessibilityPrompt/callToAction]" = "افتح \"إعدادات النظام ← الخصوصية والأمان ← تسهيلات الاستخدام\" وقم بتمكين KeePassium هناك.";
+
+/* Message explaining why accessibility permission is needed */
+"[AutoType/AccessibilityPrompt/message]" = "يحتاج تطبيق KeePassium للحصول على إذنك لإرسال ضغطات المفاتيح إلى التطبيقات الأخرى.";
+
+/* Title of a dialog asking user to provide a security permission */
+"[AutoType/AccessibilityPrompt/title]" = "يحتاج تطبيق KeePassium للحصول على إذنك";
+
+/* Action: send key presses to 'type in' entry data into another app */
+"[AutoType/action]" = "تنفيذ الكتابة التلقائية";
+
+/* Button to open system settings (accessibility, permissions, etc) */
+"[AutoType/Action/OpenSettings]" = "فتح الإعدادات";
+
+/* Title for error when auto-type fails */
+"[AutoType/Error/Title]" = "تعذرت الكتابة التلقائية";
 
 /* Name of biometric authentication method. Trademarked, do not translate unless Apple traslated it to your language. */
 "[BiometricAuthType] Face ID" = "Face ID";
@@ -118,20 +160,110 @@
 /* Action: add/import an image as a custom icon */
 "[Database/CustomIcon/add]" = "إضافة أيقونة مُخصصة";
 
+/* Notification when some custom icons are about to be deleted [iconCount: Int] */
+"[Database/CustomIcon/All/count]" = "كل الأيقونات المخصصة: %d";
+
 /* Action: delete all custom icons */
 "[Database/CustomIcon/deleteAll]" = "حذف الكل";
+
+/* Action: delete unused icons */
+"[Database/CustomIcon/deleteUnused]" = "حذف الأيقونات غير المستخدمة";
+
+/* Action: download icon of a website */
+"[Database/CustomIcon/DownloadFavicon/action]" = "تنزيل الأيقونة المفضلة";
+
+/* Action/button to download favicons of websites mentioned in selected entries. */
+"[Database/CustomIcon/DownloadFavicons/action]" = "تنزيل الأيقونات المفضلة";
+
+/* Report of favicon download results. */
+"[Database/CustomIcon/DownloadFavicons/stats]" = "عدد الإدخالات التي تمت معالجتها: %1$d\nعدد الأيقونات التي تم تحديثها: %2$d";
+
+/* Status message: multiple website favicons are being downloaded */
+"[Database/CustomIcon/DownloadFavicons/status]" = "جارٍ تنزيل الأيقونات المفضلة";
+
+/* Status message: a website favicon is being downloaded */
+"[Database/CustomIcon/DownloadOneFavicon/status]" = "جارٍ تنزيل الأيقونة المفضلة";
+
+/* Notification when some custom icons are not used by any group or entry [iconCount: Int] */
+"[Database/CustomIcon/Unused/count]" = "الأيقونات غير المستخدمة: %d";
 
 /* Message to confirm deletion of a database file. (This deletes the file itself) */
 "[Database/Delete/Confirm/text] Delete database file?\n Make sure you have a backup." = "حذف ملف قاعدة البيانات؟\nتأكد من أن يكون لديك نسخة احتياطية.";
 
+/* Action to modify database encryption settings. */
+"[Database/EncryptionSettings/Change/action]" = "تغيير إعدادات التشفير";
+
+/* Parameter name in database encryption settings. Example: 'Encryption Algorithm: AES-256' */
+"[Database/EncryptionSettings/dataCipher]" = "خوارزمية التشفير";
+
+/* Parameter name in database encryption settings. Defines the number of times/iterations a calculation (transform) should be executed. Example: 'Transform Rounds: 100' */
+"[Database/EncryptionSettings/iterations]" = "تكرارات التحويل";
+
 /* Parameter name in database encryption settings. This is a term, see https://en.wikipedia.org/wiki/Key_derivation_function. Example: 'Key Derivation Function: Argon2' */
 "[Database/EncryptionSettings/kdf]" = "دالة اشتقاق المفتاح";
+
+/* Parameter name in database encryption settings. Defines the amount of memory that should be used by an algorithm. Example: 'Memory Usage: 16 MB' */
+"[Database/EncryptionSettings/memory]" = "استخدام الذاكرة";
+
+/* Warning for too high value of the `Memory usage` parameter in database encryption settings. */
+"[Database/EncryptionSettings/memoryAutoFillWarning]" = "متطلبات الذاكرة العالية يمكن أن تتسبب في جعل قاعدة البيانات هذه غير متوافقة مع التعبئة التلقائية لكلمات المرور.";
+
+/* Action/button button in database encryption settings. Resets the settings to recommended values. */
+"[Database/EncryptionSettings/reset]" = "إعادة الضبط إلى الإعدادات الموصى بها";
+
+/* Parameter name in database encryption settings. Defines the number of computations to run in parallel/simultaneously. Example: 'Parallelism: 2 threads' */
+"[Database/EncryptionSettings/threads]" = "التوازي";
+
+/* Title: database encryption settings. */
+"[Database/EncryptionSettings/title]" = "إعدادات التشفير";
+
+/* Info message for entries that contain information for opening a different database. */
+"[Database/Entry/LinkedDatabase/message]" = "يشير هذا الإدخال إلى قاعدة بيانات أخرى.";
+
+/* Notification message before database export. */
+"[Database/Export/PlainText/warning]" = "سوف يحتوي الملف المصدّر على بياناتك بتنسيق نص عادي، دون أي حماية.";
+
+/* Notification message about external changes to the loaded file. */
+"[Database/ExternalChange/notification]" = "تغيّر ملف قاعدة البيانات. هل تريد إعادة التحميل؟";
+
+/* Status message: checking if currently loaded database is the latest version */
+"[Database/ExternalChange/Status/checkInProgress]" = "جارٍ التحقق من التغييرات…";
+
+/* Status message: failed to check if currently loaded database is the latest version */
+"[Database/ExternalChange/Status/failed]" = "تعذر التحديث";
+
+/* Status message: currently loaded database is the latest version */
+"[Database/ExternalChange/Status/upToDate]" = "محدّثة";
+
+/* Info message when changing database file format. */
+"[Database/FormatVersion/Conversion/allDataPreserved]" = "سيتم الإبقاء على جميع بياناتك.";
+
+/* Error message when creating a new passkey. */
+"[Database/FormatVersion/PasskeysNotSupported]" = "التنسيق الحالي لقاعدة البيانات لا يدعم مفاتيح المرور.";
+
+/* Info message when the app needs to change database file format. [oldFormat, newFormat: String] */
+"[Database/FormatVersion/Upgrade/text]" = "يحتاج تطبيق KeePassium إلى ترقية تنسيق ملف قاعدة البيانات (من %1$@ إلى %2$@). قد تحتاج إلى تحديث التطبيقات الأخرى التي تستخدم قاعدة البيانات هذه.";
+
+/* Title of an info message when the app needs to change database file format. */
+"[Database/FormatVersion/Upgrade/title]" = "قبل المتابعة";
+
+/* Title of an icon collection: icons provided by the system */
+"[Database/IconSet/System/title]" = "النظام";
+
+/* Status of a database item (entry or group) after it was edited. */
+"[Database/Item/Edited/state]" = "تم التعديل";
 
 /* Notification when user tries to copy data from KDBX to older KDB database. */
 "[Database/LesserTargetFormat/warning]" = "صيغة قاعدة البيانات هذه قديمة، قد تضيع بعض البيانات.";
 
 /* Placeholder shown when there are no database files available */
 "[Database/List/empty]" = "لا توجد ملفات قاعدة بيانات";
+
+/* Call to action. 'Open' here is used as 'launch'. */
+"[Database/List/LocalMissing/callToAction]" = "افتح التطبيق";
+
+/* Recommendation for solving a problem with a list of files. */
+"[Database/List/LocalMissing/message]" = "في حال عدم ظهور بعض الملفات المحلية في القائمة، يُرجى تشغيل تطبيق KeePassium الأساسي أولًا.";
 
 /* Title of the database picker list */
 "[Database/List/title]" = "قواعد البيانات";
@@ -148,11 +280,17 @@
 /* Error message */
 "[Database/Load/Error] Cannot open key file" = "يتعذَّر فتح ملف المفتاح";
 
+/* Error message, when the real file format is recognized. For example: 'Incorrect database format: JPEG.' */
+"[Database/Load/Error] Incorrect database format" = "تنسيق قاعدة البيانات غير صحيح: %@.";
+
 /* Error shown when both master password and key file are empty */
 "[Database/Load/Error] Please provide at least a password or a key file" = "يُرجى تعيِّين كلمة مرور أو ملف مفتاح على الأقل";
 
 /* Error message */
 "[Database/Load/Error] Unrecognized database format" = "صيغة قاعدة البيانات غير معترف بها";
+
+/* Error message */
+"[Database/Load/Error/encryptedByIntune]" = "قاعدة البيانات هذه محمية بواسطة سياسات تكنولوجيا المعلومات الخاصة بالشركة وMicrosoft Intune.";
 
 /* Message shown after we show a cached local database instead of the (unavailable) original database. */
 "[Database/Loading/FromCache/text]" = "يتعذَّر الوصول إلى قاعدة البيانات.\nهذِهِ أحدث نُسخة محليَّة.";
@@ -178,6 +316,9 @@
 /* Glossary term: noun, a master key for encrypting the database */
 "[Database/MasterKey/title]" = "‮المفتاح الرئيس";
 
+/* Title of database creation dialog */
+"[Database/New/title]" = "قاعدة بيانات جديدة";
+
 /* Action/button */
 "[Database/Open/action] Open Database" = "فتح قاعدة البيانات";
 
@@ -196,11 +337,23 @@
 /* Title of a warning message, shown after opening a problematic database */
 "[Database/Opened/Warning/title] Your database is ready, but there was an issue." = "قاعدة البيانات الخاصة بك جاهزة، ولكن هناك مشكلة.";
 
+/* Title of a list with database-related actions (e.g. lock database, change master key, etc) */
+"[Database/Operations/title]" = "العمليات التشغيلية لقاعدة البيانات";
+
+/* Error message about creation of a new passkey. */
+"[Database/Passkey/Error/UnsupportedAlgorithm/description]" = "خوارزمية مفتاح المرور غير مدعومة";
+
+/* Status message: preparing database print preview. */
+"[Database/Print/preparingPreview]" = "جارٍ تحضير المعاينة…";
+
 /* Progress status: finished loading database */
 "[Database/Progress] Done" = "تمَّ التحميل";
 
 /* Progress status */
 "[Database/Progress] Loading key file..." = "يجري تحميل ملف المفتاح...";
+
+/* Database loading/saving status: checking whether our database was modified from another device. */
+"[Database/Progress/checkingDatabaseForModifications]" = "جارٍ التحقق من قاعدة البيانات للتعديلات…";
 
 /* Database loading status: fetching the database file from disk/cloud */
 "[Database/Progress/downloading]" = "يجري تنزيل ملف قاعدة البيانات...";
@@ -214,11 +367,26 @@
 /* Database loading/saving status: replacing field references with their values */
 "[Database/Progress/resolvingFieldReferences]" = "يجري حل مراجع الحقول…";
 
+/* Database saving status: deciding how to handle conflicting changes. */
+"[Database/Progress/resolvingSyncConflict]" = "جارٍ حل التعارض مع المزامنة…";
+
+/* Database saving status */
+"[Database/Progress/writingDatabaseFile]" = "جارٍ كتابة ملف قاعدة البيانات…";
+
+/* Suggested solution/call to action when intermediate sync app fails. */
+"[Database/RecommendRemote/callToAction]" = "حاول الاتصال بوحدة التخزين السحابي مباشرةً من تطبيق KeePassium.";
+
+/* Action/button */
+"[Database/Reload/action]" = "إعادة تحميل قاعدة البيانات";
+
 /* Message to confirm removal of database file from the app. (This keeps the file, but removes its reference from the app.) */
 "[Database/Remove/Confirm/text] Remove database from the list?\n The file will remain intact and you can add it again later." = "إزالة قاعدة البيانات من القائمة؟\n سيبقى الملف سليماً ويمكنك إضافته مرة أخرى لاحقاً.";
 
 /* Action/button to save the current database. */
 "[Database/Save/action] Save Database" = "حفظ قاعدة البيانات باسم";
+
+/* Action/button to save file to a remote server. */
+"[Database/SaveToServer/action]" = "حفظ في الخادم";
 
 /* Status message: finished saving a database */
 "[Database/Saving/Status] Done" = "تمَّ التحميل";
@@ -231,6 +399,21 @@
 
 /* File settings parameter: time after which file will be considered unreachable. Example: `Consider File Unreachable: in 10 seconds`.) */
 "[Database/Settings/ConsiderFileUnreachable/title]" = "اعتبار الملف لا يمكن الوصول إليه";
+
+/* File settings parameter: what to do when file was changed by another app/device. (For example: `Database Modified Externally: Don't check`) */
+"[Database/Settings/ExternalChanges/dontCheck]" = "عدم التحقق";
+
+/* File settings parameter: what to do when file was changed by another app/device. (For example: `Database Modified Externally: Notify`) */
+"[Database/Settings/ExternalChanges/notify]" = "التنبيه";
+
+/* File settings parameter: what to do when file was changed by another app/device. (For example: `Database Modified Externally: Reload Automatically`) */
+"[Database/Settings/ExternalChanges/reload]" = "إعادة التحميل تلقائيًا";
+
+/* File settings parameter: what to do when file was changed by another app/device. (For example: `Database Modified Externally: Notify`) */
+"[Database/Settings/ExternalChanges/title]" = "قاعدة البيانات تم تعديلها خارجيًا";
+
+/* Title: what to do when a cloud-stored file cannot be loaded. (For example: `If File is Unreachable: Re-add File`.) */
+"[Database/Settings/FallbackStrategy/ReAddFile/title]" = "إعادة إضافة الملف";
 
 /* Title: what to do when (remote) file cannot be loaded. (For example: `If File is Unreachable: Show Error`.) */
 "[Database/Settings/FallbackStrategy/ShowError/title]" = "إظهار رسالة خطأ";
@@ -291,6 +474,36 @@
 
 /* Message shown when user enters an invalid database password */
 "[Database/Unlock/wrongPassword/question]" = "هل نسيت كلمة السر؟";
+
+/* Notification message */
+"[Database/UnsavedChanges/autoFillCrashed]" = "لم تتمكن ميزة التعبئة التلقائية من حفظ بعض التغييرات لوجود قيود تقنية.";
+
+/* Notification message */
+"[Database/UnsavedChanges/cannotModifyYet]" = "للأسف، لا تستطيع ميزة التعبئة التلقائية تعديل قواعد البيانات الكبيرة بعد. نحن نعمل على حل هذه المشكلة.";
+
+/* Notification message */
+"[Database/UnsavedChanges/couldNotApply]" = "تعذر تطبيق بعض التغييرات المعلقة تلقائيًا؛ قد تكون هناك تعديلات حديثة مفقودة.";
+
+/* Call to action shown in AutoFill module. */
+"[Database/UnsavedChanges/OpenAppCallToAction]" = "لحفظ التغييرات، افتح تطبيق KeePassium الرئيسي.";
+
+/* Notification message about a problem with unsaved/pending changes. */
+"[Database/UnsavedChanges/Problematic/info]" = "تشير بعض التغييرات المعلقة إلى الإدخالات أو المجموعات المفقودة. سينشئ تطبيق KeePassium هذه العناصر في مجموعة منفصلة ويطبّق التغييرات هناك.";
+
+/* Title of a group where problematic pending changes are saved. %@ is the date of recovery. */
+"[Database/UnsavedChanges/RecoveredEntriesGroup/name]" = "التغييرات المستردة (%@)";
+
+/* Action/button to save accummulated modifications */
+"[Database/UnsavedChanges/saveAction]" = "حفظ التغييرات";
+
+/* Notification message */
+"[Database/UnsavedChanges/someDatabases]" = "هناك تغييرات غير محفوظة في التعبئة التلقائية لقاعدة بيانات واحدة أو أكثر.";
+
+/* Notification message */
+"[Database/UnsavedChanges/thisDatabase]" = "قاعدة البيانات هذه بها تغييرات غير محفوظة تم إجراؤها في التعبئة التلقائية.";
+
+/* Title: there are temporary changes to be saved */
+"[Database/UnsavedChanges/title]" = "هناك تغييرات غير محفوظة";
 
 /* Error message */
 "[Database1/FormatError] Database file is corrupted." = "ملف قاعدة البيانات تالف.";
@@ -481,8 +694,32 @@
 /* Default name of a newly created entry field */
 "[Entry/Edit/CreateField/defaultName] Field Name" = "اسم الحقل";
 
+/* Action/button to add a new field to the entry */
+"[Entry/Field/Add/action]" = "إضافة حقل";
+
+/* On/off state: whether to show full-size or compact menu */
+"[Entry/Field/CompactMenu/title]" = "طريقة عرض مضغوطة";
+
+/* Notification: a reference to an entry field has been copied to clipboard */
+"[Entry/Field/CopyReference/acknowledgement]" = "تم نسخ مرجع الحقل إلى الحافظة";
+
+/* Action: copy a reference to the selected entry field to clipboard */
+"[Entry/Field/CopyReference/action]" = "نسخ مرجع الحقل";
+
+/* Title for a generic user-defined entry field. */
+"[Entry/Field/Custom/title]" = "حقل مخصص";
+
+/* Action: display text using large font */
+"[Entry/Field/LargeType/action]" = "عرض بالحجم الكبير";
+
+/* Name of an entry field */
+"[Entry/Field/name] Icon" = "الأيقونة";
+
 /* Name of an entry field */
 "[Entry/Field/name] Notes" = "المُلاحظات";
+
+/* Title of an entry field */
+"[Entry/Field/name] Passkey" = "مفتاح المرور";
 
 /* Name of an entry field */
 "[Entry/Field/name] Password" = "كلمة المرور";
@@ -496,8 +733,23 @@
 /* Name of an entry field */
 "[Entry/Field/name] User Name" = "اسم المُستخدِم";
 
+/* Title of a setting: whether the entry's field is protected (shown as asterisks). */
+"[Entry/Field/Protected/title]" = "الحقول المحمية";
+
+/* Action: display text using QR code */
+"[Entry/Field/QRCode/action]" = "عرض كرمز QR";
+
+/* Name of an entry field */
+"[Entry/Field/tags] Tags" = "الوسوم";
+
+/* Title of an alternative URL, with a number [number: String] */
+"[Entry/Field/URL/Extra/title]" = "عنوان URL‏ ‎(%d)";
+
 /* Status message: loading file to be attached to an entry */
 "[Entry/Files/Add] Loading attachment file" = "إضافة ملف مرفق";
+
+/* Title of a list with frequently used entry fields. */
+"[Entry/FrequentlyUsedFields/title]" = "المستخدمة بشكل متكرر";
 
 /* Title of a field with entry creation date and time */
 "[Entry/History] Creation Date" = "تاريخ الإنشاء";
@@ -511,6 +763,9 @@
 /* Title of a field with entry's last modification date and time */
 "[Entry/History] Last Modification Date" = "تاريخ آخر تعديل";
 
+/* Title of a field with entry's modification date and time */
+"[Entry/History] Modification Date" = "تاريخ التعديل";
+
 /* Title of a list with previous versions/revisions of an entry. */
 "[Entry/History] Previous Versions" = "الإصدارات السابقة";
 
@@ -521,7 +776,7 @@
 "[Entry/New/defaultTitle] New Entry" = "سجل جديد";
 
 /* Glossary term: noun, an entry in database. */
-"[Entry/title]" = "سجل";
+"[Entry/title]" = "إدخال";
 
 /* Warning shown when opening files from Recycle Bin location. Translation of 'Recently Deleted' should match that in the Files app. [fileName: String] */
 "[File/In Trash/warning]" = "إنَّ '%@' موجود في \"المحذوفة مؤخرًا\" وقد يتمُّ حذفه قريبًا. للحِفاظ على بياناتك، انقل المَلف إلى موقع أكثر ديمومة.";
@@ -550,6 +805,12 @@
 /* Error message shown when there's internal inconsistency in KeePassium. */
 "[FileAccessError/internalError]" = "خطأ داخلي في KeePassium، يُرجى إعلامنا بذلك.";
 
+/* Error message: organization's IT administrator has forbidden access to a data storage location. */
+"[FileAccessError/ManagedAccessDenied/title]" = "لا يمكن الوصول إلى وحدة التخزين هذه بسبب إعدادات مؤسستك.";
+
+/* Error message: network access is forbidden by system or app settings. */
+"[FileAccessError/NetworkAccessDenied/generic]" = "تحظر الإعدادات الوصول إلى الشبكة.";
+
 /* Error message: storage provider app (e.g. Google Drive) does not respond to requests. */
 "[FileAccessError/NoResponse/genericFileProvider]" = "مزود خدمة التخزين لا يستجيب.";
 
@@ -565,11 +826,26 @@
 /* Suggestion for error recovery */
 "[FileAccessError/OneDriveReadOnly/recoverySuggestion]" = "استخدم خيار التصدير لحفظ الملف في موقع آخر.";
 
+/* Error message for file with an expired access permission [fileName: String]. */
+"[FileAccessError/PermissionRequired/reason]" = "يحتاج تطبيق KeePassium الحصول على إذنك للوصول إلى '%@'.";
+
+/* Action/button for error recovery */
+"[FileAccessError/PermissionRequired/recoveryAction]" = "حدد الملف مرة أخرى للسماح بالوصول";
+
 /* Error message: storage provider app (e.g. Google Drive) does not respond to requests (quickly enough). */
 "[FileAccessError/Timeout/genericFileProvider]" = "مزود خدمة التخزين لا يستجيب.";
 
 /* Error message: file provider does not respond to requests (quickly enough). For example: `Google Drive does not respond` */
 "[FileAccessError/Timeout/knownFileProvider]" = "%@ لا يستجيب.";
+
+/* Section header for attributes of a file (e.g. hidden, excluded from backup, etc) */
+"[FileInfo/Attributes/header]" = "خصائص الملف";
+
+/* Title of a setting: is the file hidden */
+"[FileInfo/Attributes/Hidden/title]" = "مخفي";
+
+/* Warning message for 'hidden' files. */
+"[FileInfo/Attributes/Hidden/warning]" = "الملفات المخفية مرئية بدرجة أقل للمستخدم العادي، ولكنها لا تحسّن من أمان البيانات.";
 
 /* Section header: file backup settings */
 "[FileInfo/Backup/header]" = "النسخ الاحتياطية";
@@ -637,6 +913,9 @@
 /* Localized name of the storage service iCloud Drive (https://icloud.com/iclouddrive) */
 "[FileProvider/iCloud Drive/name]" = "iCloud Drive";
 
+/* Localized name of the storage service: MagentaCLOUD (https://www.telekom.de/zubuchoptionen/magenta-cloud) */
+"[FileProvider/MagentaCloud/name]" = "MagentaCLOUD";
+
 /* Localized name of the storage service: MEGA (https://mega.nz) */
 "[FileProvider/Mega.nz/name]" = "MEGA.nz";
 
@@ -673,6 +952,9 @@
 /* Localized name of the storage app: Seafile Pro (https://apps.apple.com/us/app/seafile-pro/id639202512) */
 "[FileProvider/Seafile Pro/name]" = "Seafile Pro";
 
+/* Localized name of the storage app: Secure ShellFish (https://apps.apple.com/app/ssh-files-secure-shellfish/id1336634154) */
+"[FileProvider/Secure ShellFish/name]" = "Secure ShellFish";
+
 /* Localized name of the storage service: SMB server (network share) via native iOS integration. */
 "[FileProvider/SMB/name]" = "SMB server";
 
@@ -699,6 +981,18 @@
 
 /* Title of the dialog for picking the destination group for move/copy operations */
 "[General/DestinationGroup/title] Choose a Destination" = "اختر وجهة";
+
+/* Feature status: disabled/inactive. Keep it short, possibly abbreviated. */
+"[General/Feature/Off]" = "إيقاف";
+
+/* Feature status: enabled/active. Keep it short, possibly abbreviated. */
+"[General/Feature/On]" = "نشط";
+
+/* Placeholder for folders without files */
+"[General/FileList/Empty/title]" = "المجلد فارغ";
+
+/* Info message for keyboard-assisted selection */
+"[General/MultiSelectionKeys/hint]" = "اضغط مع الاستمرار على مفتاح Cmd أو Shift لتحديد عناصر متعددة.";
 
 /* Action/button to cancel whatever is going on */
 "[Generic] Cancel" = "إلغاء";
@@ -739,6 +1033,12 @@
 /* Action/button to export an item to another app */
 "[Generic] Export" = "تصدير";
 
+/* Action/button shown below error messages. Tapping the button will start the fixing/repairing workflow described in the error message. */
+"[Generic] Fix this" = "حل المشكلة";
+
+/* Action/button to import an item to another app */
+"[Generic] Import" = "استيراد";
+
 /* Action/button to view more help/info about some topic */
 "[Generic] Learn more" = "اعرف المزيد…";
 
@@ -757,6 +1057,9 @@
 /* Action/button to replace/overwrite an item */
 "[Generic] Overwrite" = "الكتابة فوق الملف";
 
+/* Action/button to print a document */
+"[Generic] Print" = "طباعة";
+
 /* Action/button to rename an item */
 "[Generic] Rename" = "إعادة التسمية";
 
@@ -765,6 +1068,9 @@
 
 /* Action/button to restore a backup/archived item in its original place */
 "[Generic] Restore" = "استعادة";
+
+/* Action: repeat the previous (failed) action */
+"[Generic] Retry" = "أعد المحاولة";
 
 /* Action/button to open Finder (macOS file manager) and highlight a given file */
 "[Generic] Reveal in Finder" = "الكشف في الباحِث";
@@ -784,6 +1090,15 @@
 /* Action/button to skip the current step and proceed with the next one */
 "[Generic] Skip" = "تَخطِّي";
 
+/* Action/button to change the order of items in a list (move them higher/lower). */
+"[Generic/Action/ReorderItems]" = "إعادة ترتيب";
+
+/* Action/button to select some items in a list. */
+"[Generic/Action/SelectItems]" = "تحديد";
+
+/* Number of entries found in an incoming file. For example: 'Found entries: 42' [itemCount: Int] */
+"[Generic/Count/ImportedEntries]" = "الإدخالات التي تم العثور عليها: %d";
+
 /* Name of the Recently Deleted (Recycle Bin) directory, as shown in the Files app */
 "[Generic/Directory/Recently Deleted/name]" = "سلة المحذوفات";
 
@@ -795,6 +1110,12 @@
 
 /* Action/button to remove a file from the app (the file remains, but the app forgets about it) */
 "[Generic/File] Remove" = "إزالة";
+
+/* Title of a generic file export screen. */
+"[Generic/File/Export/title]" = "تصدير الملف";
+
+/* Action to save data, when we ignore minor problems in the process. */
+"[Generic/File/ForceSave]" = "فرض الحفظ";
 
 /* Action/button to save data to a different file */
 "[Generic/File/Save as]" = "حفظ باسم…";
@@ -808,8 +1129,14 @@
 /* Title of an error message about file import */
 "[Generic/File/title] Import Error" = "خطأ في الاستيراد";
 
+/* Action to proceed after a warning, basically 'I understand the risk' */
+"[Generic/GotIt/action]" = "حسنًا";
+
 /* Title of a list with predefined quick-choice values (for example: 'Presets: 1 week, 1 months, 1 year') */
 "[Generic/Presets]" = "الإعدادات الجاهزة";
+
+/* Action: refresh list of items, usually files */
+"[Generic/RefreshList/action]" = "تحديث القائمة";
 
 /* Title of a search field (a noun, not verb) */
 "[Generic/Search/title]" = "البحث";
@@ -822,6 +1149,12 @@
 
 /* Title of an warning message */
 "[Generic/title] Warning" = "تحذير";
+
+/* Title of a menu with various utilities */
+"[Generic/Tools/title]" = "الأدوات";
+
+/* Action/button to open an online support article (about a specific error) */
+"[Generic/ViewHelpArticle/action]" = "عرض المقالة المساعدة";
 
 /* Title of a screen/list view configuration: sort order, visible items, etc */
 "[Generic/ViewOptions/title]" = "خيارات العرض";
@@ -838,11 +1171,56 @@
 /* Title of a form for editing a group */
 "[Group/Edit/title] Edit Group" = "تحرير المجموعة";
 
+/* VoiceOver description of a menu with group-related actions */
+"[Group/Menu/a11y/title]" = "قائمة المجموعات";
+
 /* Default name of a new group */
 "[Group/New/defaultName] New Group" = "مجموعة جديدة";
 
 /* Title for the Notes field in group editor */
 "[Group/Notes/title]" = "المُلاحظات";
+
+/* Action/button to delete everything inside the Recycle Bin */
+"[Group/RecycleBin/Empty/action]" = "إفراغ سلة المحذوفات";
+
+/* Title of the confirmation dialog for `Empty Recycle Bin` action */
+"[Group/RecycleBin/Empty/confirmTitle]" = "هل تريد حذف كل شيء في سلة المحذوفات نهائيًا؟";
+
+/* Title of the Entries section visible while editing */
+"[Group/Section/Entries/title]" = "الإدخالات";
+
+/* Title of the Groups section visible while editing */
+"[Group/Section/Groups/title]" = "المجموعات";
+
+/* VoiceOver description of a smart group [groupTitle: String] */
+"[Group/Smart/a11y/description]" = "%@، مجموعة ذكية";
+
+/* Action/button to show a help article */
+"[Group/Smart/about]" = "نُبذة عن المجموعات الذكية…";
+
+/* Action/button to create a new Smart Group */
+"[Group/Smart/Create/action]" = "إنشاء مجموعة ذكية";
+
+/* Default name of a new smart group */
+"[Group/Smart/New/defaultName]" = "مجموعة ذكية جديدة";
+
+/* Title of a list: all entries in the database */
+"[Group/Smart/Preset/allEntries]" = "كل الإدخالات";
+
+/* Title of a list: entries that are beyond their expiration date. */
+"[Group/Smart/Preset/expiredEntries]" = "الإدخالات منتهية الصلاحية";
+
+/* Title of a list: entries with one-time passwords (OTP) */
+"[Group/Smart/Preset/otpEntries]" = "الإدخالات التي تحتوي على رمز OTP";
+
+/* Title of a list: entries that contain passkeys */
+"[Group/Smart/Preset/passkeyEntries]" = "الإدخالات التي تحتوي على مفاتيح مرور";
+
+/* Title for the Smart Group search conditions in group editor */
+"[Group/Smart/Query/title]" = "عوامل تصفية المجموعة الذكية";
+
+/* Glossary term: noun, a smart group in database. */
+"[Group/Smart/title]" = "مجموعة ذكية";
 
 /* Glossary term: noun, a group in database. */
 "[Group/title]" = "المجموعة";
@@ -853,8 +1231,17 @@
 /* A notification that hardware keys (e.g. YubiKey) cannot be used in AutoFill (the OS does not allow the AutoFill to use NFC/MFI). */
 "[HardwareKey/AutoFill/NotAvailable] Hardware keys are not available in AutoFill." = "أجهزة المفاتيح غير مُتاحة في التعبئة التلقائية.";
 
+/* Information notice for a list of hardware keys. */
+"[HardwareKey/AutoFill/TheseNotAvailable]" = "أجهزة المفاتيح هذه غير متوفرة في التعبئة التلقائية.";
+
 /* Name of an input field which shows selected hardware key */
 "[HardwareKey/Field/title]" = "جهاز مفتاح";
+
+/* Connector type for older Apple devices, used through a USB adapter. https://en.wikipedia.org/wiki/Lightning_(connector) */
+"[HardwareKey/Interface/LightningViaUSBAdapter]" = "Lightning (عبر مهايئ USB)";
+
+/* A notice for hardware keys that need an adapter for physical connection to device. */
+"[HardwareKey/LightningOverUSB/RequiresAdapter]" = "يتطلب محول USB-C إلى Lightning من Apple";
 
 /* Master key/unlock option: don't use hardware keys */
 "[HardwareKey/None] No Hardware Key" = "عدم استخدام جهاز مفاتيح";
@@ -862,11 +1249,32 @@
 /* Title of a list with possible hardware key connections */
 "[HardwareKey/Picker/title]" = "حهاز مفاتيح";
 
+/* Title of a slot of a hardware key. For example: `YubiKey Slot 1`. */
+"[HardwareKey/Slot/title]" = "%1$@ المنفذ %2$d";
+
+/* Hardware key slot number. [slotNumber: Int] */
+"[HardwareKey/SlotN]" = "المنفذ %d";
+
+/* Title for hardware key slot selection menu. */
+"[HardwareKey/SlotTitle]" = "المنفذ";
+
+/* Information notice. 'Challenge-response' is a glossary term. */
+"[HardwareKey/USB/chalRespNotSupported]" = "لا يدعم هذا الجهاز بروتوكول التحدي والاستجابة عبر اتصال USB.";
+
+/* Information notice */
+"[HardwareKey/USB/iPadAppOnMac]" = "منفذ USB غير متوفر لأن هذا تطبيق مخصص لأجهزة iPad ويعمل حاليًا على نظام التشغيل macOS. استخدم التطبيق المخصص لأجهزة Mac بدلًا من ذلك.";
+
 /* Generic title of in-app help article */
 "[Help Viewer/title]" = "المساعدة";
 
 /* Name of an entry field. Acronym `HOTP` should not be translated. */
 "[HOTP/FieldName]" = "رمز مُرور المرة الواحدة (HOTP)";
+
+/* Info message for enterprise users */
+"[Intune/OrgNeedsToManage]" = "لحماية بياناتها، تحتاج مؤسستك إلى إدارة هذا التطبيق. لإكمال هذا الإجراء، سجل الدخول باستخدام حساب العمل أو المدرسة.";
+
+/* Info message for users who accidentally installed the enterprise version. */
+"[Intune/PersonalVersionElsewhere]" = "الإصدار الشخصي من تطبيق KeePassium متاح على App Store.";
 
 /* Notification that an archived/historical item (e.g entry) has been successfully restored */
 "[Item/History/Restored]" = "اُستُعيدَ الإصدار السابق";
@@ -877,14 +1285,38 @@
 /* Possible value of the `Password AutoFill` setting. For example: 'Password AutoFill: Allowed' */
 "[Item/Properties/AutoFill/allowed]" = "مَسمُوح";
 
+/* Possible value of the `Password AutoFill` setting. For example: 'Password AutoFill: Disabled' */
+"[Item/Properties/AutoFill/disabled]" = "معطل";
+
+/* Title of a setting: whether the item (e.g. entry) should be used in AutoFill feature. App-specific setting for KeePassXC. */
+"[Item/Properties/AutoFill/KeePassXC/title]" = "التعبئة التلقائية لكلمات المرور (KeePassXC)";
+
+/* Title of a setting: whether the item (e.g. entry) should be used in AutoFill feature */
+"[Item/Properties/AutoFill/title]" = "التعبئة التلقائية لكلمات المرور";
+
+/* Default value of an item property. For example: 'Password Audit: Inherit from parent group (Allowed)'. [inheritedValue: String] */
+"[Item/Properties/inheritedValue]" = "مستمد من المجموعة الأصلية (%@)";
+
 /* Possible value of the `Password Audit` setting. For example: 'Password Audit: Allowed' */
 "[Item/Properties/PasswordAudit/allowed]" = "مَسمُوح";
+
+/* Possible value of the `Password Audit` setting. For example: 'Password Audit: Disabled' */
+"[Item/Properties/PasswordAudit/disabled]" = "معطل";
+
+/* Title of a setting: whether the item (e.g. entry) should be included in password audit */
+"[Item/Properties/PasswordAudit/title]" = "التدقيق في كلمات المرور";
 
 /* Possible value of the `Search` setting. Example: 'Search: Allowed' */
 "[Item/Properties/Search/allowed]" = "مَسمُوح";
 
+/* Possible value of the `Search` setting, when the item should be excluded from search results. Example: 'Search: Disabled' */
+"[Item/Properties/Search/disabled]" = "معطل";
+
 /* Title of a setting: whether the item (e.g. entry) should be considered during search. Example: 'Search: Allowed' */
 "[Item/Properties/Search/title] Search" = "البحث";
+
+/* Title of a list with item (e.g. entry) properties/settings, such as searchability, auto-typing, etc */
+"[Item/Properties/title]" = "الخصائص";
 
 /* Name of an entry/group category (visual style): default one, like in KeePass */
 "[ItemCategory] Default (KeePass)" = "الافتراضي (KeePass)";
@@ -907,6 +1339,12 @@
 /* Action: add a key file into the app, by importing or creating one. `Key file` is a glossary term. */
 "[KeyFile/Add/action]" = "إضافة ملف مفتاح";
 
+/* Action: create new key file. */
+"[KeyFile/Create/action]" = "إنشاء ملف المفتاح";
+
+/* Default name for new key files. Should match the `key file` term in the glossary. */
+"[KeyFile/Create/defaultName]" = "keyfile.dat";
+
 /* Message to confirm deletion of a key file. */
 "[KeyFile/Delete/Confirm/text] Delete key file?\n Make sure you have a backup." = "حذف ملف المفتاح؟\n تأكد أن لديك نسخة احتياطية.";
 
@@ -915,6 +1353,15 @@
 
 /* Name of an input field which shows selected key file */
 "[KeyFile/Field/title]" = "ملف المفتاح";
+
+/* Action: import/add a key file into the app. `Key file` is a glossary term. */
+"[KeyFile/Import/action]" = "استيراد ملف المفتاح";
+
+/* Description of the `Import Key File` action. */
+"[KeyFile/Import/actionDescription]" = "إضافة ملف إلى التطبيق";
+
+/* Placeholder shown when there are no key files available */
+"[KeyFile/List/empty]" = "لا توجد ملفات مفاتيح";
 
 /* Title of the list with key files. */
 "[KeyFile/List/title]" = "ملفات المفاتيح";
@@ -928,6 +1375,12 @@
 /* Message to confirm removal of a key file from the app. (This keeps the file, but removes its reference from the app.) */
 "[KeyFile/Remove/Confirm/text] Remove key file from the list?\n The file will remain intact and you can add it again later." = "إزالة ملف المفتاح من القائمة؟\n سيبقى الملف سليماً ويمكنك إضافته لاحقاً مرة أخرى.";
 
+/* Action: use a key file at its storage location, without importing to the app. */
+"[KeyFile/Use/action]" = "تحديد ملف المفتاح";
+
+/* Description of the `Select Key File` action. */
+"[KeyFile/Use/actionDescription]" = "الاستخدام من دون إضافة";
+
 /* Error message when the key file is misformatted or damaged */
 "[KeyFileError/Corrupted/title]" = "ملف المفتاح تالِف";
 
@@ -940,17 +1393,65 @@
 /* Menu title: app settings */
 "[Menu/Settings/title]" = "الإعدادات";
 
+/* Title of a menu: sort order of files in a list */
+"[Menu/Sort] Sort Files By" = "ترتيب الملفات حسب";
+
+/* Title of a menu: sort order of groups and entries in a list */
+"[Menu/Sort] Sort Items By" = "ترتيب العناصر حسب";
+
+/* Suggestion/hint on how to fix an accompanying error. */
+"[Org/ContactYourAdmin]" = "يرجى التواصل مع مسؤول تكنولوجيا المعلومات.";
+
+/* Error message, euphemism for missing corporate license */
+"[Org/LicenseMissing]" = "لم يتمكن تطبيق KeePassium من العثور على حساب المؤسسة لمنظمتك.";
+
 /* Name of an entry field */
 "[OTP/FieldName]" = "رمز مُرور المرة الواحدة";
 
 /* Error shown when scanned QR code cannot be used for OTP */
 "[OTP/Scan/InvalidData]" = "رمز الاستجابة السريعة هذا غير مُلائم لإعداد OTP.";
 
+/* Error shown when a manually entered OTP secret is misformatted. */
+"[OTP/Scan/InvalidSecretCode]" = "الرمز السري المُدخل غير ملائم لإعداد كلمة المرور لمرة واحدة.";
+
 /* Message to confirm user intentions */
 "[OTP/Scan/OverwriteWarning]" = "تمَّ بالفعل إعداد كلمة مرور لمرة واحدة لهذا المُدخل. هل تريد استبدالها؟";
 
 /* Call for action. Acronym `OTP` should not be translated. */
 "[OTP/Setup]" = "إعداد كلمة مرور لمرة واحدة (OTP)";
+
+/* Button/action: proceed with manual OTP setup */
+"[OTP/Setup/EnterManually]" = "الإدخال يدويًا";
+
+/* Call to action: type in the secret key for OTP setup. */
+"[OTP/Setup/EnterSecretCode/callToAction]" = "اكتب الرمز السري";
+
+/* Button/action: proceed with QR code based OTP setup */
+"[OTP/Setup/ScanQRCode]" = "مسح رمز QR ضوئيًا";
+
+/* Action: pick an image (from files) to scan as QR code */
+"[OTP/Setup/ScanQRImageFile]" = "مسح رمز QR ضوئيًا من ملف";
+
+/* Action: pick a photo (from gallery) to scan as QR code */
+"[OTP/Setup/ScanQRPhoto]" = "مسح رمز QR ضوئيًا من صورة";
+
+/* Call to action/instruction during setup of OTP codes. */
+"[OTP/Setup/SelectDatabase/message]" = "اختر قاعدة البيانات لإعداد رمز التحقق (كلمة المرور لمرة واحدة).";
+
+/* Call to action/instruction during setup of OTP codes. */
+"[OTP/Setup/SelectEntry/message]" = "اختر إدخالًا لإعداد رمز التحقق (كلمة المرور لمرة واحدة).";
+
+/* Confirmation message after successful OTP setup */
+"[OTP/Setup/Success]" = "اكتمل إعداد كلمة المرور لمرة واحدة";
+
+/* Title of a dialog related to setup of one-time passwords (OTP) */
+"[OTP/Setup/Title]" = "إعداد رمز التحقق";
+
+/* Description of an OTP code; sentence case. */
+"[OTP/Title/sentenceCase]" = "كلمة مرور لمرة واحدة";
+
+/* Action/button: accept/use the generated password */
+"[PasswordGenerator/Accept/action]" = "قبول";
 
 /* Error message from the random text generator. */
 "[PasswordGenerator/CannotGenerateText/title]" = "يَتَعَذَّرُ تَوليدُ النَّص";
@@ -1054,14 +1555,32 @@
 /* Name of a wordlist for passphrase generator. `EFF` is an organization name. */
 "[PasswordGenerator/Wordlist/EFFLarge/title]" = "قائمة كلمات EFF الكبيرة (7776 كلمة)";
 
+/* Name of a wordlist for passphrase generator. `EFF` is an organization name. */
+"[PasswordGenerator/Wordlist/EFFShort/title]" = "قائمة كلمات EFF القصيرة رقم %d (1296 كلمة)";
+
+/* Error message when importing a text file [lineNumber: Int, problemDescription: String] */
+"[PasswordGenerator/Wordlist/ImportError/reason]" = "تعذر استيراد الملف بسبب وجود مشكلة في السطر %1$d (%2$@)";
+
 /* List of words to be used for a passphrase. */
 "[PasswordGenerator/Wordlist/title]" = "قَائِمَةُ الكَلِمات";
+
+/* Title of a premium feature */
+"[Premium/Benefits/BusinessClouds/title]" = "المزامنة مع وحدات التخزين في الشركات";
+
+/* Call to action / Title of a premium feature */
+"[Premium/Benefits/CreativeAutoFill/title]" = "إنشاء الحسابات أسرع";
 
 /* Explanation of the premium feature */
 "[Premium/Benefits/HardwareKeys/details]" = "قم بحماية أسرارك بمفتاح الأجهزة، مثل YubiKey.";
 
 /* Title of a premium feature */
 "[Premium/Benefits/HardwareKeys/title]" = "استخدام أجهزة المفاتيح";
+
+/* Explanation of the premium feature */
+"[Premium/Benefits/LinkedDatabases/details]" = "افتح قاعدة بيانات أخرى بخطوة واحدة، باستخدام بيانات الاعتماد المخزنة في إحدى الإدخالات.";
+
+/* Title of a premium feature */
+"[Premium/Benefits/LinkedDatabases/title]" = "فتح قواعد البيانات المرتبطة";
 
 /* Explanation of the premium feature */
 "[Premium/Benefits/MultiDB/details]" = "إضافة قواعد بيانات متعددة والتنقل بسرعة بينهم.";
@@ -1071,6 +1590,9 @@
 
 /* List of premium benefits/advantages */
 "[Premium/Benefits/Negative/header] " = "ما الذي تفقده";
+
+/* Title of a premium feature */
+"[Premium/Benefits/PasswordAudit/title]" = "التحقق من كلمات مرورك";
 
 /* List of premium benefits/advantages */
 "[Premium/Benefits/Positive/header] " = "ما تحصل عليه";
@@ -1192,6 +1714,18 @@
 /* Message shown after buying or subscribing. */
 "[Premium/Upgrade/Success/thankYou]" = "شكرا لك على الشراء!";
 
+/* Description/call to action for the `Business Cloud Storage` premium feature. */
+"[PremiumFeature/BusinessClouds/description]" = "الاتصال مباشرةً بحسابات وحدات التخزين في الشركات، مثل OneDrive for Business.";
+
+/* Title of a premium feature: access to company's cloud accounts like 'OneDrive for Business' */
+"[PremiumFeature/BusinessClouds/title]" = "وحدات التخزين السحابي في الشركات";
+
+/* Description/advertisement for the `Faster Sign-Ups` premium feature */
+"[PremiumFeature/CreativeAutoFill/description]" = "أنشئ إدخالات جديدة في ميزة التعبئة التلقائية عن طريق تعبئة الحقول الأساسية بشكل مُسبق.";
+
+/* Title of a premium feature: easier registration of new accounts, directly in AutoFill dialog */
+"[PremiumFeature/CreativeAutoFill/title]" = "سرعة في عمليات التسجيل";
+
 /* A generic description of a premium feature */
 "[PremiumFeature/Generic/description]" = "قم بالترقية إلى المميز والاستمتاع بـ KeePassium في أفضل حالاتها.";
 
@@ -1204,11 +1738,23 @@
 /* Title of a premium feature: ability use hardware keys (e.g. YubiKey) for encryption (In Title Case) */
 "[PremiumFeature/HardwareKeys/title] Hardware Keys" = "حهاز مفاتيح";
 
+/* Description/advertisement for the `Linked Databases` premium feature */
+"[PremiumFeature/LinkedDatabases/description]" = "عند الترقية إلى الإصدار المميز، يمكنك فتح قواعد البيانات المرتبطة في خطوة واحدة.";
+
+/* Title of a premium feature: ability to open databases referenced in another database (In Title Case) */
+"[PremiumFeature/LinkedDatabases/title]" = "قواعد البيانات المرتبطة";
+
 /* Description/advertisement for the `Multiple Databases` premium feature */
 "[PremiumFeature/MultiDB/description] Easily switch between databases in the premium version." = "التبديل بسهولة بين قواعد البيانات في النسخة المميزة.";
 
 /* Title of a premium feature: ability to use multiple databases (In Title Case) */
 "[PremiumFeature/MultiDB/title] Multiple Databases" = "قواعد بيانات مُتعدِدة";
+
+/* Description/call to action for the `Password Audit` premium feature. */
+"[PremiumFeature/PasswordAudit/description]" = "اكتشف ما إذا كانت أي من كلمات المرور لديك قد جرى الكشف عنها في أحد اختراقات البيانات المعروفة.";
+
+/* Title of a premium feature: discover which passwords are known to be compromized */
+"[PremiumFeature/PasswordAudit/title]" = "التدقيق في كلمات المرور";
 
 /* Description/call to action for the `Quick AutoFill` premium feature. */
 "[PremiumFeature/QuickAutoFill/description]" = "ملء نماذج تسجيل الدخول بضغطة واحدة، حتى بدون فتح KeePassium.";
@@ -1218,6 +1764,9 @@
 
 /* A brief summary of the privacy policy (for offline mode) */
 "[PrivacyPolicy/Offline/text]" = "لا تجمع KeePassium أي بيانات شخصية أو تحليلية ولا تشاركها مع أي شخص.";
+
+/* A brief summary of the privacy policy (for online mode) */
+"[PrivacyPolicy/Online/text]" = "لا يجمع KeePassium أي بيانات شخصية أو تحليلية.\nقد تتطلب بعض الميزات تبادلاً للبيانات مع خدمات خارجية (بناءً على طلبك ولغرض توفير تلك الخدمات لك فحسب). ويخضع هذا التبادل لسياسة الخصوصية الخاصة بالخدمة المعنية.";
 
 /* Section: privacy policy */
 "[PrivacyPolicy/title]" = "سياسة الخصوصية";
@@ -1231,11 +1780,92 @@
 /* Name of a feature that shows relevant entries directly next to the login/password forms. */
 "[QuickAutoFill/title]" = "ملء تلقائي سريع";
 
+/* Network security setting */
+"[RemoteConnection/AllowUntrusted/title]" = "السماح بالشهادات غير الموثوق بها";
+
+/* Network connection. For example `Connection: WebDAV` or `Connection: MyCloud`. */
+"[RemoteConnection/Connection/title]" = "الاتصال";
+
+/* Action: connect to a network server */
+"[RemoteConnection/connectToServer]" = "الاتصال بالخادم";
+
+/* Title of a section: username, password, etc */
+"[RemoteConnection/Credentials]" = "بيانات الاعتماد";
+
+/* Description of the `Direct connection` sync method. */
+"[RemoteConnection/Direct/description]" = "سيكون هناك تواصل مباشر بين تطبيق KeePassium وذاكرة التخزين الخاصة بك عبر الإنترنت. يضمن لك ذلك نقل الملفات بشكل موثوق.";
+
+/* Title of a list with online storage services like OneDrive, Dropbox, etc. */
+"[RemoteConnection/Direct/title]" = "الخدمات عبر الإنترنت";
+
+/* Action: change properties of a remote network connection */
+"[RemoteConnection/Edit/action]" = "تعديل الاتصال…";
+
+/* Error message: user credentials rejected by the server */
+"[RemoteConnection/Error/AuthenticationFailed/title]" = "فشلت المصادقة";
+
+/* Network address of a file */
+"[RemoteConnection/FileURL]" = "عنوان URL للملف";
+
+/* Complete WebDAV URL including path prefix */
+"[RemoteConnection/FullURL]" = "عنوان URL الكامل";
+
+/* Name of a predefined Google Drive folder which contains user's own files */
+"[RemoteConnection/GoogleDrive/Folder/myDrive]" = "ملفاتي على Drive";
+
+/* Name of a predefined GoogleDrive folder which contains files shared with this user */
+"[RemoteConnection/GoogleDrive/Folder/sharedWithMe]" = "الملفات المشتركة معي";
+
 /* Name of a predefined OneDrive folder which contains user's own files */
 "[RemoteConnection/OneDrive/Folder/files]" = "الملفات";
 
+/* Name of a predefined OneDrive folder which contains files shared with this user */
+"[RemoteConnection/OneDrive/Folder/sharedWithMe]" = "تمت مشاركتها";
+
+/* Network address of a WebDAV server */
+"[RemoteConnection/ServerURL]" = "عنوان URL للخادم";
+
+/* Action: authenticate to Dropbox account */
+"[RemoteConnection/SignIn/Dropbox/action]" = "تسجيل الدخول إلى Dropbox";
+
+/* Error description: the user should manually sign in to their Dropbox account */
+"[RemoteConnection/SignIn/Dropbox/authorizationRequried]" = "يطلب Dropbox منك تسجيل الدخول مجددًا.";
+
+/* Action: authenticate to Google Drive account */
+"[RemoteConnection/SignIn/GoogleDrive/action]" = "تسجيل الدخول إلى Google Drive";
+
+/* Error description: the user should manually sign in to their Google Drive account */
+"[RemoteConnection/SignIn/GoogleDrive/authorizationRequried]" = "يطلب منك Google Drive تسجيل الدخول مجددًا.";
+
+/* Action: authenticate to OneDrive account */
+"[RemoteConnection/SignIn/OneDrive/action]" = "تسجيل الدخول إلى OneDrive";
+
+/* Error description: the user should manually sign in to their OneDrive account */
+"[RemoteConnection/SignIn/OneDrive/authorizationRequried]" = "يطلب منك OneDrive تسجيل الدخول مجددًا.";
+
+/* No comment provided by engineer. */
+"[RemoteConnection/SignIn/PrivateMode/description]" = "افتح صفحة تسجيل الدخول في وضع المتصفح الخاص";
+
+/* No comment provided by engineer. */
+"[RemoteConnection/SignIn/PrivateMode/title]" = "الوضع الخاص";
+
+/* Title: connection to a network storage */
+"[RemoteConnection/title]" = "الاتصال عن بُعد";
+
+/* Description of the `Integration via Files app` sync method. */
+"[RemoteConnection/ViaFilesApp/description]" = "سوف يُسند تطبيق KeePassium مهمة مزامنة الملفات إلى تطبيق مقدم خدمة التخزين. علمًا بأن أداء بعض التطبيقات أفضل من غيرها.";
+
+/* Link to a help page for an online storage service. The parameter is the service name in fixed neutral form. Example: 'Nextcloud Setup Guide' or 'Synology NAS Setup Guide'. */
+"[RemoteConnection/WebDAVService/SetupGuide]" = "دليل إعداد %@";
+
 /* Name of an input field for entering the password again */
 "[Repeat Password/Field/title]" = "أعد كلمة المرور";
+
+/* Description of the auto-download favicons feature */
+"[Settings/AutoDownloadFavicons/description]" = "سيعمل على تنزيل أيقونة الموقع الإلكتروني تلقائيًا بعد تعديل أحد الإدخالات.";
+
+/* Settings option: automatically download website icons/favicons */
+"[Settings/AutoDownloadFavicons/title]" = "تنزيل الأيقونات المفضلة تلقائيًا";
 
 /* Title of AutoFill settings screen */
 "[Settings/AutoFill/title]" = "التعبئة التلقائية لكلمات المرور";
@@ -1261,17 +1891,65 @@
 /* Title of list view configuration screen */
 "[Settings/ListSettings/title]" = "إعدادات القوائم";
 
+/* Notification when corporate user tries to use a feature forbidden by organization's IT department. */
+"[Settings/Managed/BlockedFeature/notification]" = "حظرت المنظمة التابع لها هذه الميزة.";
+
+/* Notification when corporate user tries to change an app setting controlled by organization's IT department. */
+"[Settings/Managed/notification]" = "تتحكم المنظمة التابع لها في هذا الإعداد.";
+
 /* Setting: preserve (cache) calculated database keys */
 "[Settings/MasterKeys/CacheDerived/title]" = "مفاتيح التشفير المشتقة من ذاكرة التخزين المؤقت";
 
 /* Title of a yes/no setting */
 "[Settings/MasterKeys/Remember/title]" = "تذكر المفاتيح الرئيسة";
 
+/* Confirmation dialog message */
+"[Settings/NetworkAccess/Confirmation/text]" = "هل تريد السماح إلى تطبيق KeePassium بإجراء اتصالات عبر الشبكة بالخدمات الخارجية؟";
+
 /* Settings section: how/whether the app is allowed to use networks/Internet */
 "[Settings/NetworkAccess/title]" = "الوصول إلى الشبكة";
 
+/* Description of the `Stay Offline` mode. */
+"[Settings/NetworkAccessMode/Offline/description]" = "الحد الأقصى من الخصوصية";
+
+/* Setting option: the app should work offline */
+"[Settings/NetworkAccessMode/Offline/title]" = "البقاء دون اتصال";
+
+/* Description of the `Allow Network Access` mode. */
+"[Settings/NetworkAccessMode/Online/description]" = "الحد الأقصى من الوظائف التشغيلية";
+
+/* Setting option: the app is permitted to use online features */
+"[Settings/NetworkAccessMode/Online/title]" = "السماح بالوصول إلى الشبكة";
+
+/* Action/button which resets some settings to their default state. */
+"[Settings/RestoreDefaults/action]" = "استعادة الإعدادات الافتراضية";
+
+/* Call to action (explains why a setting is disabled) */
+"[Settings/ShakeGestureAction/LockApp/disabledTitle]" = "عليك أولًا تفعيل الحماية في التطبيق";
+
+/* An option in Settings. Will be shown as 'When Shaken: Lock App' */
+"[Settings/ShakeGestureAction/LockApp/shortTitle]" = "قفل التطبيق";
+
+/* An option in Settings. Will be shown as 'When Shaken: Lock All Databases' */
+"[Settings/ShakeGestureAction/LockDatabases/shortTitle]" = "قفل كل قواعد البيانات";
+
+/* An option in Settings. Will be shown as 'When Shaken: Do Nothing' */
+"[Settings/ShakeGestureAction/Nothing/shortTitle]" = "عدم اتخاذ أي إجراء";
+
+/* An option in Settings. Will be shown as 'When Shaken: Quit App' */
+"[Settings/ShakeGestureAction/QuitApp/shortTitle]" = "إنهاء التطبيق";
+
 /* Title of the app settings screen */
 "[Settings/title]" = "الإعدادات";
+
+/* Title of a settings value. For example: `Remember Master Keys: No` */
+"[Settings/Value/No/title]" = "لا";
+
+/* Title of a settings value, when it is not customized and we default to app's global settings. For example: `Remember Master Keys: Use App Settings (No)` */
+"[Settings/Value/UseAppSettings/title]" = "استخدام إعدادات التطبيق (%@)";
+
+/* Title of a settings value. For example: `Remember Master Keys: Yes` */
+"[Settings/Value/Yes/title]" = "نعم";
 
 /* List sorting option (for file names). Example: 'Sort by: Name' */
 "[SortBy/FileName]" = "الاسم";
@@ -1279,11 +1957,26 @@
 /* List sorting option, when no sorting is selected. Example: 'Sort by: None' */
 "[SortBy/None]" = "لا شيء";
 
+/* List sorting option, when items are manually ordered by the user. Example: 'Sort order: Custom' */
+"[SortOrder/Custom]" = "مخصص";
+
+/* Subtitle for a storage service: the app will have access only to its own dedicated folder. */
+"[StorageService/DedicatedAppFolder/title]" = "مجلد التطبيق فقط";
+
 /* Name of a cloud storage service */
 "[StorageService/DropboxBusiness/title]" = "Dropbox Business";
 
 /* Name of a cloud storage service */
 "[StorageService/DropboxPro/title]" = "Dropbox Pro";
+
+/* Name of a cloud storage service */
+"[StorageService/GoogleWorkspace/title]" = "Google Workspace";
+
+/* Name of a cloud storage service. Must match Microsoft's translation, see  https://partner.microsoft.com/solutions/onedrive-for-business */
+"[StorageService/OneDriveForBusiness/title]" = "OneDrive for Business";
+
+/* Title of a file storage service option (for example: Dropbox, OneDrive, Other Services) */
+"[StorageService/OtherServices/title]" = "خدمات أخرى";
 
 /* Template text of a bug report email */
 "[Support/template] (Please describe the problem here)" = "(يُرجى وصف المُشكلة هُنا)";
@@ -1329,6 +2022,12 @@
 
 /* Human-readable file location: the file is on device, inside the app sandbox. Example: 'File Location: Local copy' */
 "[URLReference/Location] Local copy" = "النُسَخة المحلية";
+
+/* Human-readable file location. Example: 'File Location: Remote server' */
+"[URLReference/Location/RemoteServer]" = "خادم بعيد";
+
+/* Error shown when user selects a file path instead of folder path in WebDAV. */
+"[WebDAV/Export/NeedsFolder]" = "يرجى تحديد المسار إلى مجلد";
 
 /* Call for action: insert YubiKey 5Ci to the Lightning port */
 "[YubiKey] Insert the key" = "أدخل المفتاح";

@@ -10,6 +10,9 @@
 /* Short name of the default/system font. For example: `Font: Default` */
 "[Appearance/DefaultFont/shortTitle]" = "Förvalt";
 
+/* Title of a setting: whether the Entry Viewer should open on the same tab/page when switching between entries, or switch to the first tab instead. */
+"[Appearance/EntryViewer/OpenLastUsedTab/title]" = "Öppna den senast använda fliken";
+
 /* Section in settings: parameters related to entry viewer component */
 "[Appearance/EntryViewer/title]" = "Visningsprogram för post";
 
@@ -93,6 +96,9 @@
 
 /* Item in the credits list */
 "[Credits/Item/twoFish]" = "Twofish implementation av Niels Ferguson";
+
+/* Item in the credits list */
+"[Credits/Item/whatsNewKit]" = "WhatsNewKit av Sven Tiigi";
 
 /* Item in the credits list */
 "[Credits/Item/wordlists]" = "Lista på lösenordsfraser från EFF";
@@ -214,8 +220,26 @@
 /* Title of entry viewer's tab with advanced/secondary properties */
 "[Entry/Tab/More/title]" = "Mer";
 
+/* Name of Apple Passwords' CSV file format */
+"[Format/ApplePasswordsCSV]" = "Apple-lösenord (.csv)";
+
 /* Name of Enpass' JSON file format */
 "[Format/EnpassJSON]" = "Enpass (.json)";
+
+/* Error message when CSV parsing fails [lineNumber: Int] */
+"[Import/CSV/Error/InvalidFormat]" = "Ogiltigt CSV-format på rad %d.";
+
+/* Error message when CSV parsing fails [lineNumber: Int, colNumber: Int] */
+"[Import/CSV/Error/InvalidFormat/withColumn]" = "Ogiltigt CSV-format på rad %1$d, kolumn %2$d.";
+
+/* Error message when Enpass import fails due to corrupted attachment data [attachmentName: String, itemName: String] */
+"[Import/Enpass/Error/CorruptedAttachment]" = "Skadade data i bilagan '%1$@' i objekt '%2$@'.";
+
+/* Error shown when trying to import from an empty file */
+"[Import/Error/EmptyFile]" = "Den inkommande filen är tom.";
+
+/* Error message when JSON parsing fails */
+"[Import/JSON/ParsingError]" = "Det gick inte att parsa JSON-filen.";
 
 /* Action/button */
 "[Onboarding/AddExistingDatabase/action]" = "Lägg till existerande databas";
@@ -355,6 +379,27 @@
 /* Action/button to make password visible as plain-text */
 "[ProtectedTextField] Show Password" = "Visa lösenord";
 
+/* Explanation why the app needs camera access permission. */
+"[QRCodeScanner/CameraPermission/description]" = "KeePassium behöver åtkomst till kameran för att skanna QR-koder.";
+
+/* Error message when the app cannot use the camera. */
+"[QRCodeScanner/Error/CameraBusy]" = "Kameran används redan.";
+
+/* Error message */
+"[QRCodeScanner/Error/ImageCorrupted]" = "Den valda bilden är skadad.";
+
+/* Error message with a suggested action. */
+"[QRCodeScanner/Error/Internal]" = "Internt fel i QR-kodläsaren. Du hittar information i diagnostikloggen.";
+
+/* Notification message */
+"[QRCodeScanner/Error/NoQRCodeFound]" = "Det finns ingen QR-kod i bilden.";
+
+/* Error message when camera/gallery/etc is either missing or forbidden. */
+"[QRCodeScanner/Error/SourceNoAvailable]" = "Bildkällan är inte tillgänglig.";
+
+/* Call to action/instruction for QR code scanner. */
+"[QRCodeScanner/Info/callToAction]" = "Rikta kameran mot en QR-kod.";
+
 /* Description of the Quick AutoFill feature. */
 "[QuickAutoFill/description]" = "Snabb Autofyll visar relevanta poster precis bredvid lösenordsfältet, utan att öppna KeePassium.";
 
@@ -388,8 +433,26 @@
 /* Setting switch: whether to lock the app after it was terminated and relaunched. */
 "[Settings/AppLock/LockOnLaunch/title]" = "Lås vid programstart";
 
+/* Explanation for the `Lock on macOS Screen Lock` setting */
+"[Settings/AppLock/LockOnScreenLock/description]" = "Låser KeePassium när du låser din Mac.";
+
+/* Title of a yes/no setting: whether to lock app when computer screen is locked (see https://support.apple.com/en-gb/guide/mac-help/mchl8e8b6a34/mac) */
+"[Settings/AppLock/LockOnScreenLock/title]" = "Lås med macOS-skärmlås";
+
 /* Description of the `Lock on Wrong Passcode` setting */
 "[Settings/AppLock/LockOnWrongPasscode/description]" = "Om du anger fel PIN-Kod för AppLock kommer KeePassium stänga alla databaser och rensa alla huvudnycklar från nyckelkedjan.";
+
+/* Title in the settings: whether to lock databases when user enters a wrong app protection passcode. */
+"[Settings/AppLock/LockOnWrongPasscode/title]" = "Lås om fel lösenkod anges";
+
+/* Description of the `Passcode Attempts Until App Reset` setting */
+"[Settings/AppLock/PasscodeAttemptsUntilAppReset/description]" = "Om du återställer appen raderas alla lagrade nycklar, inställningar, databassäkerhetskopior, importerade filer och länkar till externa filer. Men om återställningen av appen aktiveras från Autofyll, kan importerade filer finnas kvar på grund av tekniska begränsningar.";
+
+/* An option in Settings. Will be shown as 'Passcode Attempts Until App Reset: Do not reset' */
+"[Settings/AppLock/PasscodeAttemptsUntilAppReset/Never/title]" = "Återställ inte";
+
+/* Title in the settings: number of failed passcode attempts that will reset the app into 'just installed' state. */
+"[Settings/AppLock/PasscodeAttemptsUntilAppReset/title]" = "Försök innan appen återställs";
 
 /* Settings: subtitle of the `App Protection` section. biometryTypeName will be either 'Touch ID' or 'Face ID'. [biometryTypeName: String] */
 "[Settings/AppLock/subtitle] App Lock, %@, timeout" = "App Lock, %@, timeout";
@@ -432,6 +495,12 @@
 
 /* Title of a yes/no setting: copy one-time password to clipboard when using AutoFill */
 "[Settings/AutoFill/CopyOTP/title]" = "Kopiera engångslösenord till urklipp";
+
+/* Description of the 'Remember Selected Entries' setting. */
+"[Settings/AutoFill/RememberContext/description]" = "KeePassium kommer ihåg vilken post du valt för varje webbplats och föreslår den sedan automatiskt.";
+
+/* Title of a yes/no setting: remember which entry was used for AutoFill on which website. */
+"[Settings/AutoFill/RememberContext/title]" = "Kom ihåg valda poster";
 
 /* Title of a help article on how to activate AutoFill. */
 "[Settings/AutoFill/Setup Guide/title]" = "Kom igång med Autofyll";
@@ -538,6 +607,9 @@
 /* Setting switch: whether to lock databases after device reboot. */
 "[Settings/DataProtection/LockOnReboot/title]" = "Lås för omstart av enhet";
 
+/* Title of a yes/no setting: whether to lock databases when computer screen is locked (see https://support.apple.com/en-gb/guide/mac-help/mchl8e8b6a34/mac) */
+"[Settings/DataProtection/LockOnScreenLock/title]" = "Lås med macOS-skärmlås";
+
 /* Subtitle for `Data Protection` section in settings */
 "[Settings/DataProtection/subtitle]" = "Huvudnycklar, nyckelfiler";
 
@@ -598,6 +670,15 @@
 /* Section title in settings */
 "[Settings/Search/title]" = "Sök";
 
+/* Description of the 'Ask for Confirmation' setting. */
+"[Settings/ShakeGestureAction/Confirm/description]" = "Om appen är låst agerar den utan bekräftelse.";
+
+/* Title for a setting: whether the app should show an 'Are you sure?' before continuing */
+"[Settings/ShakeGestureAction/Confirm/title]" = "Be om bekräftelse";
+
+/* Title for a setting: what the app should do when the user shakes the device */
+"[Settings/ShakeGestureAction/title]" = "När den skakar";
+
 /* Title of a section in settings: parameters that control what happens when the app is started. */
 "[Settings/Start/title]" = "Start";
 
@@ -643,6 +724,45 @@
 /* Title: the number of times a tag is encountered in the database. */
 "[Tags/UsageCount/title]" = "Antal användningar";
 
+/* Call to action in What's New announcement */
+"[WhatsNew/Announcement/body]" = "Upptäck nya funktioner och förbättringar i KeePassium.";
+
 /* Button which opens the What's New screen. */
 "[WhatsNew/Announcement/button]" = "Nyheter";
+
+/* Description of a feature highlight, a call to action. */
+"[WhatsNew/Feature/AppScopedConnections/description]" = "Skydda dina molndata med behörighet endast för appmappen.";
+
+/* Title of a feature highlight, a noun phrase. */
+"[WhatsNew/Feature/AppScopedConnections/title]" = "Säker molnåtkomst";
+
+/* Description of a feature highlight, a call to action. */
+"[WhatsNew/Feature/AutoFillWithMemory/description]" = "KeePassium kommer ihåg posten som du väljer på varje webbplats.";
+
+/* Title of a feature highlight, a noun phrase. */
+"[WhatsNew/Feature/AutoFillWithMemory/title]" = "Autofyll smartare";
+
+/* Description of a feature highlight, a call to action. */
+"[WhatsNew/Feature/AutoType/description]" = "Logga in på appar eller webbläsare snabbt med tangenttrycksemulering.";
+
+/* Title of a feature highlight, a noun phrase. */
+"[WhatsNew/Feature/AutoType/title]" = "Ange lösenord automatiskt";
+
+/* Description of a feature highlight, a call to action. */
+"[WhatsNew/Feature/CreativeAutoFill/description]" = "Skapa nya poster i Autofyll där huvudfälten fylls i automatiskt.";
+
+/* Title of a feature highlight, a noun phrase. */
+"[WhatsNew/Feature/CreativeAutoFill/title]" = "Registrera dig snabbare";
+
+/* Description of a feature highlight, a call to action. `Browse alphabetically` refers to a phonebook-like index with letters. */
+"[WhatsNew/Feature/MoreInteractions/description]" = "Dra och släpp, välj flera objekt och bläddra i alfabetisk ordning.";
+
+/* Title of a feature highlight, a noun phrase. */
+"[WhatsNew/Feature/MoreInteractions/title]" = "Fler sätt att interagera";
+
+/* Title of the detailed history of app changes over time. */
+"[WhatsNew/FullChangelog/title]" = "Detaljerad ändringslogg";
+
+/* Full title for release highlights */
+"[WhatsNew/fullTitle]" = "Vad är nytt i KeePassium";
 

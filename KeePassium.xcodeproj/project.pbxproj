@@ -16,6 +16,7 @@
 		751146E6233F9E2900443BCD /* KeePassiumLib.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 751146E5233F9E2900443BCD /* KeePassiumLib.framework */; };
 		7521EAD82E8D55B700016FB8 /* WhatsNewKit in Frameworks */ = {isa = PBXBuildFile; productRef = 7521EAD72E8D55B700016FB8 /* WhatsNewKit */; };
 		7521EADA2E8D55BE00016FB8 /* WhatsNewKit in Frameworks */ = {isa = PBXBuildFile; productRef = 7521EAD92E8D55BE00016FB8 /* WhatsNewKit */; };
+		754A34CA2EB0F89C0050FBC4 /* IntuneMAMSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 754A34C92EB0F89C0050FBC4 /* IntuneMAMSwift */; };
 		7550D242215D792000360E0C /* AuthenticationServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7550D231215D758800360E0C /* AuthenticationServices.framework */; };
 		756D946D2BA2F27D0084BDF5 /* YubiKit in Frameworks */ = {isa = PBXBuildFile; productRef = 756D946C2BA2F27D0084BDF5 /* YubiKit */; settings = {ATTRIBUTES = (Weak, ); }; };
 		756D946F2BA2F29F0084BDF5 /* YubiKit in Frameworks */ = {isa = PBXBuildFile; productRef = 756D946E2BA2F29F0084BDF5 /* YubiKit */; };
@@ -23,10 +24,6 @@
 		7598963F2341590300DF39AA /* KeePassiumLib.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 75FEC2222175292C0034334B /* KeePassiumLib.framework */; };
 		759896402341590300DF39AA /* KeePassiumLib.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 75FEC2222175292C0034334B /* KeePassiumLib.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		75A26778228F4E820097C693 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 75A26777228F4E820097C693 /* StoreKit.framework */; };
-		75A5452428B64F6C00B942FE /* IntuneMAMSwift.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 75A5452328B64F6C00B942FE /* IntuneMAMSwift.xcframework */; };
-		75A5452528B64F6D00B942FE /* IntuneMAMSwift.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 75A5452328B64F6C00B942FE /* IntuneMAMSwift.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		75A5452728B64F9000B942FE /* IntuneMAMSwiftStub.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 75A5452628B64F9000B942FE /* IntuneMAMSwiftStub.xcframework */; };
-		75A5452828B64F9000B942FE /* IntuneMAMSwiftStub.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 75A5452628B64F9000B942FE /* IntuneMAMSwiftStub.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		75B38C4D233E5B7C006BDEFC /* AuthenticationServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7550D231215D758800360E0C /* AuthenticationServices.framework */; };
 		75B38C4E233E5B7C006BDEFC /* LocalAuthentication.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 75CD363E21521FAE0018AF46 /* LocalAuthentication.framework */; };
 		75B38C4F233E5B7C006BDEFC /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 75A26777228F4E820097C693 /* StoreKit.framework */; };
@@ -172,8 +169,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				75A5452528B64F6D00B942FE /* IntuneMAMSwift.xcframework in Embed Frameworks */,
-				75A5452828B64F9000B942FE /* IntuneMAMSwiftStub.xcframework in Embed Frameworks */,
 				75D076D328B639D200F02E39 /* KeePassiumLib.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
@@ -705,14 +700,12 @@
 				75D2190829C220A700D6F327 /* WebKit.framework in Frameworks */,
 				75D2190229C2209300D6F327 /* QuartzCore.framework in Frameworks */,
 				75D2191529C2214B00D6F327 /* libc++.tbd in Frameworks */,
-				75A5452428B64F6C00B942FE /* IntuneMAMSwift.xcframework in Frameworks */,
 				75D0766C28B639D200F02E39 /* KeePassiumLib.framework in Frameworks */,
 				75D2190429C2209900D6F327 /* Security.framework in Frameworks */,
 				75D0766D28B639D200F02E39 /* LocalAuthentication.framework in Frameworks */,
 				F331EF302A8509BA0084473D /* Zxcvbn in Frameworks */,
 				75D218F829C21FCB00D6F327 /* MessageUI.framework in Frameworks */,
 				75D218FC29C2205700D6F327 /* CoreServices.framework in Frameworks */,
-				75A5452728B64F9000B942FE /* IntuneMAMSwiftStub.xcframework in Frameworks */,
 				7521EADA2E8D55BE00016FB8 /* WhatsNewKit in Frameworks */,
 				75D2191629C2215600D6F327 /* libsqlite3.tbd in Frameworks */,
 				75D0766E28B639D200F02E39 /* AuthenticationServices.framework in Frameworks */,
@@ -720,6 +713,7 @@
 				75D218FE29C2206000D6F327 /* ImageIO.framework in Frameworks */,
 				75D218FA29C2205100D6F327 /* AudioToolbox.framework in Frameworks */,
 				75D0766F28B639D200F02E39 /* StoreKit.framework in Frameworks */,
+				754A34CA2EB0F89C0050FBC4 /* IntuneMAMSwift in Frameworks */,
 				75D0767028B639D200F02E39 /* YubiKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -928,6 +922,7 @@
 				75D2192E29C4C24800D6F327 /* MSAL */,
 				F331EF2F2A8509BA0084473D /* Zxcvbn */,
 				7521EAD92E8D55BE00016FB8 /* WhatsNewKit */,
+				754A34C92EB0F89C0050FBC4 /* IntuneMAMSwift */,
 			);
 			productName = KeePassium;
 			productReference = 75D076D828B639D200F02E39 /* KeePassium Org.app */;
@@ -1087,6 +1082,7 @@
 				75D2192B29C4C23700D6F327 /* XCRemoteSwiftPackageReference "microsoft-authentication-library-for-objc" */,
 				F331EF262A8509860084473D /* XCRemoteSwiftPackageReference "zxcvbn-ios" */,
 				F33344342E844F90002EE262 /* XCRemoteSwiftPackageReference "WhatsNewKit" */,
+				754A34C62EB0F81A0050FBC4 /* XCRemoteSwiftPackageReference "ms-intune-app-sdk-ios" */,
 			);
 			preferredProjectObjectVersion = 48;
 			productRefGroup = 754BF07C2082A6BD00E3A292 /* Products */;
@@ -1419,7 +1415,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 167;
+				CURRENT_PROJECT_VERSION = 170;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -1490,7 +1486,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 167;
+				CURRENT_PROJECT_VERSION = 170;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = NO;
 				ENABLE_NS_ASSERTIONS = NO;
@@ -1915,6 +1911,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		754A34C62EB0F81A0050FBC4 /* XCRemoteSwiftPackageReference "ms-intune-app-sdk-ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/keepassium/ms-intune-app-sdk-ios";
+			requirement = {
+				branch = "keepassium-168";
+				kind = branch;
+			};
+		};
 		75D075AF28B639D200F02E39 /* XCRemoteSwiftPackageReference "yubikit-ios" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/keepassium/yubikit-ios.git";
@@ -1967,6 +1971,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = F33344342E844F90002EE262 /* XCRemoteSwiftPackageReference "WhatsNewKit" */;
 			productName = WhatsNewKit;
+		};
+		754A34C92EB0F89C0050FBC4 /* IntuneMAMSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 754A34C62EB0F81A0050FBC4 /* XCRemoteSwiftPackageReference "ms-intune-app-sdk-ios" */;
+			productName = IntuneMAMSwift;
 		};
 		756D946C2BA2F27D0084BDF5 /* YubiKit */ = {
 			isa = XCSwiftPackageProductDependency;

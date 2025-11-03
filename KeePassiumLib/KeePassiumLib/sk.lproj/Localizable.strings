@@ -7,6 +7,18 @@
 /* Call to action: perform accessibilty `activate` action to listen to text/content. */
 "[Accessibility/activateToListen]" = "Aktivujte, k chcete počúvať.";
 
+/* Accessibility notification for entries with attached files. */
+"[Accessibility/containsAttachments]" = "Obsahuje prílohy.";
+
+/* Accessibility notification for entries with a problematic passkey */
+"[Accessibility/containsIncompatiblePasskey]" = "Obsahuje prihlasovací kľúč nekompatibilný s týmto zariadením.";
+
+/* Accessibility notification for entries with OTP codes. */
+"[Accessibility/containsOTP]" = "Obsahuje jednorazové heslo.";
+
+/* Accessibility notification for entries with a passkey */
+"[Accessibility/containsPasskey]" = "Obsahuje prihlasovací kľúč.";
+
 /* Action which resets the app as if it was just installed. */
 "[App/ResetEverything/action]" = "Resetovať";
 
@@ -60,6 +72,24 @@
 
 /* Title of a message related to upgrading to the premium version */
 "[AutoFill/Premium/Upgrade/Manual/title] Premium Upgrade" = "Prejsť na Premium";
+
+/* Call to action / instruction on how to enable accessibility permission */
+"[AutoType/AccessibilityPrompt/callToAction]" = "Otvorte systémové nastavenia → Súkromie a bezpečnosť → Prístupnosť a tam aktivujte KeePassium.";
+
+/* Message explaining why accessibility permission is needed */
+"[AutoType/AccessibilityPrompt/message]" = "KeePassium potrebuje vaše povolenie na odoslanie informácií o stlačení klávesov do iných aplikácií.";
+
+/* Title of a dialog asking user to provide a security permission */
+"[AutoType/AccessibilityPrompt/title]" = "KeePassium potrebuje vaše povolenie";
+
+/* Action: send key presses to 'type in' entry data into another app */
+"[AutoType/action]" = "Automaticky vyplniť";
+
+/* Button to open system settings (accessibility, permissions, etc) */
+"[AutoType/Action/OpenSettings]" = "Otvoriť nastavenia";
+
+/* Title for error when auto-type fails */
+"[AutoType/Error/Title]" = "Automatické vypĺňanie zlyhalo";
 
 /* Name of biometric authentication method. Trademarked, do not translate unless Apple traslated it to your language. */
 "[BiometricAuthType] Face ID" = "Face ID";
@@ -130,8 +160,14 @@
 /* Action: add/import an image as a custom icon */
 "[Database/CustomIcon/add]" = "Pridaj vlastnú ikonu";
 
+/* Notification when some custom icons are about to be deleted [iconCount: Int] */
+"[Database/CustomIcon/All/count]" = "Všetky vlastné ikony: %d";
+
 /* Action: delete all custom icons */
 "[Database/CustomIcon/deleteAll]" = "Vymazať všetko";
+
+/* Action: delete unused icons */
+"[Database/CustomIcon/deleteUnused]" = "Vymazať nepoužívané ikony";
 
 /* Action: download icon of a website */
 "[Database/CustomIcon/DownloadFavicon/action]" = "Stiahnuť Favicon";
@@ -147,6 +183,9 @@
 
 /* Status message: a website favicon is being downloaded */
 "[Database/CustomIcon/DownloadOneFavicon/status]" = "Sťahovanie favicon";
+
+/* Notification when some custom icons are not used by any group or entry [iconCount: Int] */
+"[Database/CustomIcon/Unused/count]" = "Nájdené nepoužívané ikony: %d";
 
 /* Message to confirm deletion of a database file. (This deletes the file itself) */
 "[Database/Delete/Confirm/text] Delete database file?\n Make sure you have a backup." = "Vymazať databázový súbor?\n Uistite sa, že máte zálohu.";
@@ -181,6 +220,9 @@
 /* Info message for entries that contain information for opening a different database. */
 "[Database/Entry/LinkedDatabase/message]" = "Tento záznam odkazuje na inú databázu.";
 
+/* Notification message before database export. */
+"[Database/Export/PlainText/warning]" = "Exportovaný súbor bude obsahovať vaše údaje v podobe obyčajného textu bez akejkoľvek ochrany.";
+
 /* Notification message about external changes to the loaded file. */
 "[Database/ExternalChange/notification]" = "Súbor databázy sa zmenil. Chcete ho znovu načítať?";
 
@@ -196,6 +238,9 @@
 /* Info message when changing database file format. */
 "[Database/FormatVersion/Conversion/allDataPreserved]" = "Všetky vaše údaje zostanú zachované.";
 
+/* Error message when creating a new passkey. */
+"[Database/FormatVersion/PasskeysNotSupported]" = "Súčasný formát databázy nepodporuje prihlasovacie kľúče.";
+
 /* Info message when the app needs to change database file format. [oldFormat, newFormat: String] */
 "[Database/FormatVersion/Upgrade/text]" = "KeePassium potrebuje aktualizovať formát súboru databázy (z %1$@ na %2$@). Možno budete musieť aktualizovať ďalšie aplikácie, ktoré používajú túto databázu.";
 
@@ -210,6 +255,12 @@
 
 /* Notification when user tries to copy data from KDBX to older KDB database. */
 "[Database/LesserTargetFormat/warning]" = "Toto je starší formát databázy, niektoré údaje sa môžu stratiť.";
+
+/* Placeholder shown when there are no database files available */
+"[Database/List/empty]" = "Žiadne databázové súbory";
+
+/* Call to action. 'Open' here is used as 'launch'. */
+"[Database/List/LocalMissing/callToAction]" = "Otvoriť aplikáciu";
 
 /* Recommendation for solving a problem with a list of files. */
 "[Database/List/LocalMissing/message]" = "Ak niektoré miestne súbory nie sú uvedené, spustite najprv hlavnú aplikáciu KeePassium.";
@@ -289,6 +340,9 @@
 /* Title of a list with database-related actions (e.g. lock database, change master key, etc) */
 "[Database/Operations/title]" = "Operácie Databázy";
 
+/* Error message about creation of a new passkey. */
+"[Database/Passkey/Error/UnsupportedAlgorithm/description]" = "Nepodporovaný algoritmus prihlasovacieho kľúča";
+
 /* Status message: preparing database print preview. */
 "[Database/Print/preparingPreview]" = "Pripravuje sa ukážka…";
 
@@ -339,6 +393,9 @@
 
 /* Status message: saving a database */
 "[Database/Saving/Status] Saving..." = "Ukladanie...";
+
+/* File access parameter. Will be shown as 'Consider File Unreachable: Immediately' */
+"[Database/Settings/ConsiderFileUnreachable/Immediately]" = "Okamžite";
 
 /* File settings parameter: time after which file will be considered unreachable. Example: `Consider File Unreachable: in 10 seconds`.) */
 "[Database/Settings/ConsiderFileUnreachable/title]" = "Považujte súbor za nedostupný";
@@ -417,6 +474,36 @@
 
 /* Message shown when user enters an invalid database password */
 "[Database/Unlock/wrongPassword/question]" = "Zabudli ste heslo?";
+
+/* Notification message */
+"[Database/UnsavedChanges/autoFillCrashed]" = "Funkcia automatického vypĺňania nemohla uložiť niektoré zmeny z dôvodu technického obmedzenia.";
+
+/* Notification message */
+"[Database/UnsavedChanges/cannotModifyYet]" = "Funkcia automatického vypĺňania zatiaľ nedokáže upravovať veľké databázy. Pracujeme na vyriešení tohto problému.";
+
+/* Notification message */
+"[Database/UnsavedChanges/couldNotApply]" = "Niektoré čakajúce zmeny nemohli byť automaticky aplikované. Nedávne úpravy môžu chýbať.";
+
+/* Call to action shown in AutoFill module. */
+"[Database/UnsavedChanges/OpenAppCallToAction]" = "Ak chcete uložte zmeny, otvorte hlavnú aplikáciu KeePassium.";
+
+/* Notification message about a problem with unsaved/pending changes. */
+"[Database/UnsavedChanges/Problematic/info]" = "Niektoré čakajúce zmeny sa týkajú chýbajúcich položiek alebo skupín. KeePassium vytvorí tieto položky v samostatnej skupine a tam uplatní zmeny.";
+
+/* Title of a group where problematic pending changes are saved. %@ is the date of recovery. */
+"[Database/UnsavedChanges/RecoveredEntriesGroup/name]" = "Obnovené zmeny (%@)";
+
+/* Action/button to save accummulated modifications */
+"[Database/UnsavedChanges/saveAction]" = "Uložiť zmeny";
+
+/* Notification message */
+"[Database/UnsavedChanges/someDatabases]" = "Jedna alebo viaceré databázy obsahujú neuložené zmeny vykonané v automatickom vyplňovaní.";
+
+/* Notification message */
+"[Database/UnsavedChanges/thisDatabase]" = "Táto databáza obsahuje neuložené zmeny vykonané v automatickom vyplňovaní.";
+
+/* Title: there are temporary changes to be saved */
+"[Database/UnsavedChanges/title]" = "Neuložené Zmeny";
 
 /* Error message */
 "[Database1/FormatError] Database file is corrupted." = "Databáza je poškodená.";
@@ -607,11 +694,20 @@
 /* Default name of a newly created entry field */
 "[Entry/Edit/CreateField/defaultName] Field Name" = "Názov poľa";
 
+/* Action/button to add a new field to the entry */
+"[Entry/Field/Add/action]" = "Pridať pole";
+
+/* On/off state: whether to show full-size or compact menu */
+"[Entry/Field/CompactMenu/title]" = "Kompaktné zobrazenie";
+
 /* Notification: a reference to an entry field has been copied to clipboard */
 "[Entry/Field/CopyReference/acknowledgement]" = "Odkaz na pole bol skopírovaný do schránky";
 
 /* Action: copy a reference to the selected entry field to clipboard */
 "[Entry/Field/CopyReference/action]" = "Kopírovať odkaz na pole";
+
+/* Title for a generic user-defined entry field. */
+"[Entry/Field/Custom/title]" = "Vlastné pole";
 
 /* Action: display text using large font */
 "[Entry/Field/LargeType/action]" = "Zobraziť vo veľkom písme";
@@ -621,6 +717,9 @@
 
 /* Name of an entry field */
 "[Entry/Field/name] Notes" = "Poznámky";
+
+/* Title of an entry field */
+"[Entry/Field/name] Passkey" = "Prihlasovací kľúč";
 
 /* Name of an entry field */
 "[Entry/Field/name] Password" = "Heslo";
@@ -637,11 +736,20 @@
 /* Title of a setting: whether the entry's field is protected (shown as asterisks). */
 "[Entry/Field/Protected/title]" = "Chránené pole";
 
+/* Action: display text using QR code */
+"[Entry/Field/QRCode/action]" = "Zobraziť ako QR kód";
+
 /* Name of an entry field */
 "[Entry/Field/tags] Tags" = "Štítky";
 
+/* Title of an alternative URL, with a number [number: String] */
+"[Entry/Field/URL/Extra/title]" = "URL (%d)";
+
 /* Status message: loading file to be attached to an entry */
 "[Entry/Files/Add] Loading attachment file" = "Nahrávam prílohu";
+
+/* Title of a list with frequently used entry fields. */
+"[Entry/FrequentlyUsedFields/title]" = "Často používané";
 
 /* Title of a field with entry creation date and time */
 "[Entry/History] Creation Date" = "Dátum vytvorenia";
@@ -883,6 +991,9 @@
 /* Placeholder for folders without files */
 "[General/FileList/Empty/title]" = "Priečinok je prázdny";
 
+/* Info message for keyboard-assisted selection */
+"[General/MultiSelectionKeys/hint]" = "Ak chcete vybrať viacero položiek, stlačte a podržte kláves Cmd alebo Shift.";
+
 /* Action/button to cancel whatever is going on */
 "[Generic] Cancel" = "Zrušiť";
 
@@ -924,6 +1035,9 @@
 
 /* Action/button shown below error messages. Tapping the button will start the fixing/repairing workflow described in the error message. */
 "[Generic] Fix this" = "Opraviť";
+
+/* Action/button to import an item to another app */
+"[Generic] Import" = "Importovať";
 
 /* Action/button to view more help/info about some topic */
 "[Generic] Learn more" = "Zistiť viac…";
@@ -982,6 +1096,9 @@
 /* Action/button to select some items in a list. */
 "[Generic/Action/SelectItems]" = "Vybrať";
 
+/* Number of entries found in an incoming file. For example: 'Found entries: 42' [itemCount: Int] */
+"[Generic/Count/ImportedEntries]" = "Nájdené záznamy: %d";
+
 /* Name of the Recently Deleted (Recycle Bin) directory, as shown in the Files app */
 "[Generic/Directory/Recently Deleted/name]" = "Nedávno vymazaný";
 
@@ -994,6 +1111,12 @@
 /* Action/button to remove a file from the app (the file remains, but the app forgets about it) */
 "[Generic/File] Remove" = "Odobrať";
 
+/* Title of a generic file export screen. */
+"[Generic/File/Export/title]" = "Export súboru";
+
+/* Action to save data, when we ignore minor problems in the process. */
+"[Generic/File/ForceSave]" = "Vynútené uloženie";
+
 /* Action/button to save data to a different file */
 "[Generic/File/Save as]" = "Uložiť ako…";
 
@@ -1005,6 +1128,9 @@
 
 /* Title of an error message about file import */
 "[Generic/File/title] Import Error" = "Chyba importu";
+
+/* Action to proceed after a warning, basically 'I understand the risk' */
+"[Generic/GotIt/action]" = "Rozumiem";
 
 /* Title of a list with predefined quick-choice values (for example: 'Presets: 1 week, 1 months, 1 year') */
 "[Generic/Presets]" = "Prednastavené";
@@ -1087,6 +1213,9 @@
 /* Title of a list: entries with one-time passwords (OTP) */
 "[Group/Smart/Preset/otpEntries]" = "Záznamy s OTP";
 
+/* Title of a list: entries that contain passkeys */
+"[Group/Smart/Preset/passkeyEntries]" = "Záznamy s prihlasovacími kľúčmi";
+
 /* Title for the Smart Group search conditions in group editor */
 "[Group/Smart/Query/title]" = "Filter chytrej skupiny";
 
@@ -1120,6 +1249,15 @@
 /* Title of a list with possible hardware key connections */
 "[HardwareKey/Picker/title]" = "Hardvérové ​​kľúče";
 
+/* Title of a slot of a hardware key. For example: `YubiKey Slot 1`. */
+"[HardwareKey/Slot/title]" = "%1$@ slot %2$d";
+
+/* Hardware key slot number. [slotNumber: Int] */
+"[HardwareKey/SlotN]" = "Slot %d";
+
+/* Title for hardware key slot selection menu. */
+"[HardwareKey/SlotTitle]" = "Slot";
+
 /* Information notice. 'Challenge-response' is a glossary term. */
 "[HardwareKey/USB/chalRespNotSupported]" = "Toto zariadenie nepodporuje reakciu na výzvu cez pripojenie USB.";
 
@@ -1140,6 +1278,9 @@
 
 /* Notification that an archived/historical item (e.g entry) has been successfully restored */
 "[Item/History/Restored]" = "Predchádzajúca verzia obnovená";
+
+/* Title of a list with advanced/expert-level properties of a database item (e.g. entry) */
+"[Item/Properties/Advanced/title]" = "Pokročilé";
 
 /* Possible value of the `Password AutoFill` setting. For example: 'Password AutoFill: Allowed' */
 "[Item/Properties/AutoFill/allowed]" = "Povolené";
@@ -1195,6 +1336,9 @@
 /* Error message about system keychain. */
 "[KeychainError/unexpectedFormat] Keychain error: unexpected data format" = "Chyba kľúčenky: neočakávaný formát dát";
 
+/* Action: add a key file into the app, by importing or creating one. `Key file` is a glossary term. */
+"[KeyFile/Add/action]" = "Pridať súbor s kľúčom";
+
 /* Action: create new key file. */
 "[KeyFile/Create/action]" = "Vytvoriť súbor s kľúčom";
 
@@ -1204,6 +1348,9 @@
 /* Message to confirm deletion of a key file. */
 "[KeyFile/Delete/Confirm/text] Delete key file?\n Make sure you have a backup." = "Skutočne chcete odstrániť súbor s kľúčom?\n Uistite sa, že ho máte zálohovaný.";
 
+/* Error message related to key file. [errorDetails: String] */
+"[KeyFile/error]" = "Chyba súboru s kľúčom: %@";
+
 /* Name of an input field which shows selected key file */
 "[KeyFile/Field/title]" = "Súbor s kľúčom";
 
@@ -1212,6 +1359,15 @@
 
 /* Description of the `Import Key File` action. */
 "[KeyFile/Import/actionDescription]" = "Pridať súbor do aplikácie";
+
+/* Placeholder shown when there are no key files available */
+"[KeyFile/List/empty]" = "Žiadne súbory s kľúčom";
+
+/* Title of the list with key files. */
+"[KeyFile/List/title]" = "Súbory s kľúčom";
+
+/* Description of the 'No Key File' option. */
+"[KeyFile/None/description]" = "Používať len heslo";
 
 /* Title: don't use key file */
 "[KeyFile/None/title]" = "Žiadny súbor s kľúčom";
@@ -1233,6 +1389,15 @@
 
 /* Menu item: show information about file (name, size, dates) */
 "[Menu/FileInfo/title]" = "Informácie o súbore";
+
+/* Menu title: app settings */
+"[Menu/Settings/title]" = "Nastavenie…";
+
+/* Title of a menu: sort order of files in a list */
+"[Menu/Sort] Sort Files By" = "Zoradiť súbory podľa";
+
+/* Title of a menu: sort order of groups and entries in a list */
+"[Menu/Sort] Sort Items By" = "Zoradiť položky podľa";
 
 /* Suggestion/hint on how to fix an accompanying error. */
 "[Org/ContactYourAdmin]" = "Prosím kontaktujte svojho správcu IT.";
@@ -1263,6 +1428,24 @@
 
 /* Button/action: proceed with QR code based OTP setup */
 "[OTP/Setup/ScanQRCode]" = "Naskenovať QR kód";
+
+/* Action: pick an image (from files) to scan as QR code */
+"[OTP/Setup/ScanQRImageFile]" = "Naskenovať QR kód zo súboru";
+
+/* Action: pick a photo (from gallery) to scan as QR code */
+"[OTP/Setup/ScanQRPhoto]" = "Naskenovať QR kód z fotografie";
+
+/* Call to action/instruction during setup of OTP codes. */
+"[OTP/Setup/SelectDatabase/message]" = "Vyberte databázu pre nastavenie overovacieho kódu (jednorazového hesla).";
+
+/* Call to action/instruction during setup of OTP codes. */
+"[OTP/Setup/SelectEntry/message]" = "Vyberte záznam pre nastavenie overovacieho kódu (jednorazového hesla).";
+
+/* Confirmation message after successful OTP setup */
+"[OTP/Setup/Success]" = "Nastavenie OTP dokončené";
+
+/* Title of a dialog related to setup of one-time passwords (OTP) */
+"[OTP/Setup/Title]" = "Nastavenie overovacieho kódu";
 
 /* Description of an OTP code; sentence case. */
 "[OTP/Title/sentenceCase]" = "Jednorazové heslo";
@@ -1383,6 +1566,9 @@
 
 /* Title of a premium feature */
 "[Premium/Benefits/BusinessClouds/title]" = "Synchronizácia s firemným úložiskom";
+
+/* Call to action / Title of a premium feature */
+"[Premium/Benefits/CreativeAutoFill/title]" = "Rýchlejšie vytváranie účtov";
 
 /* Explanation of the premium feature */
 "[Premium/Benefits/HardwareKeys/details]" = "Chráňte svoje heslá pomocou hardvérového kľúča, ako je napríklad YubiKey.";
@@ -1534,6 +1720,12 @@
 /* Title of a premium feature: access to company's cloud accounts like 'OneDrive for Business' */
 "[PremiumFeature/BusinessClouds/title]" = "Firemné cloudové úložisko";
 
+/* Description/advertisement for the `Faster Sign-Ups` premium feature */
+"[PremiumFeature/CreativeAutoFill/description]" = "Vytvorte nové záznamy v automatickom vyplňovaní s predvyplnenými hlavnými poľami.";
+
+/* Title of a premium feature: easier registration of new accounts, directly in AutoFill dialog */
+"[PremiumFeature/CreativeAutoFill/title]" = "Rýchlejšie registrácie";
+
 /* A generic description of a premium feature */
 "[PremiumFeature/Generic/description]" = "Prejdite na Premium a užite si KeePassium so všetkými funkciami.";
 
@@ -1603,11 +1795,20 @@
 /* Description of the `Direct connection` sync method. */
 "[RemoteConnection/Direct/description]" = "KeePassium bude komunikovať priamo s vaším online úložiskom. Tým sa zabezpečí spoľahlivý prenos súborov.";
 
+/* Title of a list with online storage services like OneDrive, Dropbox, etc. */
+"[RemoteConnection/Direct/title]" = "Online služby";
+
+/* Action: change properties of a remote network connection */
+"[RemoteConnection/Edit/action]" = "Upraviť pripojenie…";
+
 /* Error message: user credentials rejected by the server */
 "[RemoteConnection/Error/AuthenticationFailed/title]" = "Overenie zlyhalo";
 
 /* Network address of a file */
 "[RemoteConnection/FileURL]" = "Adresa URL súboru";
+
+/* Complete WebDAV URL including path prefix */
+"[RemoteConnection/FullURL]" = "Úplná adresa URL";
 
 /* Name of a predefined Google Drive folder which contains user's own files */
 "[RemoteConnection/GoogleDrive/Folder/myDrive]" = "Môj disk";
@@ -1654,11 +1855,23 @@
 /* Description of the `Integration via Files app` sync method. */
 "[RemoteConnection/ViaFilesApp/description]" = "KeePassium priradí synchronizáciu súborov aplikácii poskytovateľa úložiska. Niektoré aplikácie fungujú lepšie ako iné.";
 
+/* Link to a help page for an online storage service. The parameter is the service name in fixed neutral form. Example: 'Nextcloud Setup Guide' or 'Synology NAS Setup Guide'. */
+"[RemoteConnection/WebDAVService/SetupGuide]" = "Sprievodca nastavením %@";
+
 /* Name of an input field for entering the password again */
 "[Repeat Password/Field/title]" = "Zopakujte heslo";
 
+/* Description of the auto-download favicons feature */
+"[Settings/AutoDownloadFavicons/description]" = "Po úpravách záznamu automaticky stiahnuť ikonu webovej stránky.";
+
+/* Settings option: automatically download website icons/favicons */
+"[Settings/AutoDownloadFavicons/title]" = "Automatické sťahovanie Favicons";
+
 /* Title of AutoFill settings screen */
 "[Settings/AutoFill/title]" = "Automatické vyplňovanie hesiel";
+
+/* Title of a yes/no setting: whether to include backup copies in the file list */
+"[Settings/DatabaseBackup/ShowBackupFiles/title]" = "Zobraziť záložné súbory";
 
 /* Settings section: protection of databases, their keys and data inside them */
 "[Settings/DataProtection/title]" = "Ochrana dát";
@@ -1672,6 +1885,9 @@
 /* Title of a settings section: sort order of groups and entries in a list */
 "[Settings/GroupViewer] Sort Order" = "Zoradiť podľa";
 
+/* Title of a yes/no setting */
+"[Settings/KeyFiles/Remember/title]" = "Pamätať si súbory s kľúčom";
+
 /* Title of list view configuration screen */
 "[Settings/ListSettings/title]" = "Nastavenia zoznamu";
 
@@ -1680,6 +1896,12 @@
 
 /* Notification when corporate user tries to change an app setting controlled by organization's IT department. */
 "[Settings/Managed/notification]" = "Toto nastavenie spravuje vaša organizácia.";
+
+/* Setting: preserve (cache) calculated database keys */
+"[Settings/MasterKeys/CacheDerived/title]" = "Šifrovacie kľúče odvodené z vyrovnávacej pamäte";
+
+/* Title of a yes/no setting */
+"[Settings/MasterKeys/Remember/title]" = "Zapamätať si hlavný kľúč";
 
 /* Confirmation dialog message */
 "[Settings/NetworkAccess/Confirmation/text]" = "Povoliť aplikácii KeePassium vytvárať sieťové pripojenia k externým službám?";
@@ -1702,8 +1924,32 @@
 /* Action/button which resets some settings to their default state. */
 "[Settings/RestoreDefaults/action]" = "Obnoviť Predvolené";
 
+/* Call to action (explains why a setting is disabled) */
+"[Settings/ShakeGestureAction/LockApp/disabledTitle]" = "Najskôr aktivovať zabezpečenia aplikácie";
+
+/* An option in Settings. Will be shown as 'When Shaken: Lock App' */
+"[Settings/ShakeGestureAction/LockApp/shortTitle]" = "Zamknúť aplikáciu";
+
+/* An option in Settings. Will be shown as 'When Shaken: Lock All Databases' */
+"[Settings/ShakeGestureAction/LockDatabases/shortTitle]" = "Zamknúť všetky databázy";
+
+/* An option in Settings. Will be shown as 'When Shaken: Do Nothing' */
+"[Settings/ShakeGestureAction/Nothing/shortTitle]" = "Žiadna akcia";
+
+/* An option in Settings. Will be shown as 'When Shaken: Quit App' */
+"[Settings/ShakeGestureAction/QuitApp/shortTitle]" = "Ukončiť aplikáciu";
+
 /* Title of the app settings screen */
 "[Settings/title]" = "Nastavenie";
+
+/* Title of a settings value. For example: `Remember Master Keys: No` */
+"[Settings/Value/No/title]" = "Nie";
+
+/* Title of a settings value, when it is not customized and we default to app's global settings. For example: `Remember Master Keys: Use App Settings (No)` */
+"[Settings/Value/UseAppSettings/title]" = "Použi nastavenia aplikácie (%@)";
+
+/* Title of a settings value. For example: `Remember Master Keys: Yes` */
+"[Settings/Value/Yes/title]" = "Áno";
 
 /* List sorting option (for file names). Example: 'Sort by: Name' */
 "[SortBy/FileName]" = "Názov";
@@ -1713,6 +1959,9 @@
 
 /* List sorting option, when items are manually ordered by the user. Example: 'Sort order: Custom' */
 "[SortOrder/Custom]" = "Vlastné";
+
+/* Subtitle for a storage service: the app will have access only to its own dedicated folder. */
+"[StorageService/DedicatedAppFolder/title]" = "Iba priečinok aplikácie";
 
 /* Name of a cloud storage service */
 "[StorageService/DropboxBusiness/title]" = "Dropbox Business";
@@ -1776,6 +2025,9 @@
 
 /* Human-readable file location. Example: 'File Location: Remote server' */
 "[URLReference/Location/RemoteServer]" = "Vzdialený server";
+
+/* Error shown when user selects a file path instead of folder path in WebDAV. */
+"[WebDAV/Export/NeedsFolder]" = "Vyberte cestu k priečinku";
 
 /* Call for action: insert YubiKey 5Ci to the Lightning port */
 "[YubiKey] Insert the key" = "Vložte kľúč";

@@ -1,14 +1,23 @@
 /* Menu item that shows info about KeePassium app */
-"[About/altTitle]" = "KeePassium Hakkında";
+"[About/altTitle]" = "KeePassium hakkında";
 
 /* Section in settings: icon for the app */
 "[Appearance/AppIcon/title]" = "Uygulama Simgesi";
 
 /* Section in settings: icons for database */
-"[Appearance/DatabaseIcons/title]" = "Veritabanı simgeleri";
+"[Appearance/DatabaseIcons/title]" = "Veri Tabanı Simgeleri";
+
+/* Short name of the default/system font. For example: `Font: Default` */
+"[Appearance/DefaultFont/shortTitle]" = "Varsayılan";
+
+/* Title of a setting: whether the Entry Viewer should open on the same tab/page when switching between entries, or switch to the first tab instead. */
+"[Appearance/EntryViewer/OpenLastUsedTab/title]" = "Son Kullanılan Sekmesini aç";
 
 /* Section in settings: parameters related to entry viewer component */
 "[Appearance/EntryViewer/title]" = "Metin Boyutu";
+
+/* Title of a setting option: font */
+"[Appearance/Font/title]" = "Yazı Tipi";
 
 /* Action: set text size to standard size */
 "[Appearance/TextSize/reset]" = "Metin boyutunu varsayılana sıfırla";
@@ -22,26 +31,134 @@
 /* Title of the app history (changelog) screen */
 "[AppHistory/title]" = "Neler Değişti?";
 
+/* Notification when user tries to set up too weak an app protection passcode. */
+"[AppLock/weakPasscodeWarning]" = "Bu şifre kodunun tahmin edilmesi çok kolay. Daha güçlü bir şifre kodu girmeyi deneyin.";
+
 /* Subtitle for `Contact Us`. Keep it short. */
-"[ContactUs/subtitle]" = "Öneriler? Problemler? Bize haber verin!";
+"[ContactUs/subtitle]" = "Önerileriniz ya da sorunlarınız mı var? Bizimle paylaşın!";
+
+/* Item in the credits list */
+"[Credits/Item/aexml]" = "Marko Tadić'ten AEXML";
+
+/* Item in the credits list */
+"[Credits/Item/argon2]" = "Daniel Dinu, Dmitry Khovratovich, Jean-Philippe Aumasson ve Samuel Neves'ten Argon2";
+
+/* Item in the credits list */
+"[Credits/Item/base32]" = "Norio Nomura'dan Base32 for Swift";
+
+/* Item in the credits list */
+"[Credits/Item/chaCha20]" = "D. J. Bernstein'den ChaCha20 ve Salsa20 uygulaması";
+
+/* Item in the credits list */
+"[Credits/Item/fancyDebossPattern]" = "Daniel Beaton'dan özel pütürlü desen";
+
+/* Item in the credits list */
+"[Credits/Item/featherIcons]" = "Cole Bemis'ten tüy simgeleri";
+
+/* Item in the credits list */
+"[Credits/Item/gzipSwift]" = "1024jp'den GzipSwift";
+
+/* Item in the credits list */
+"[Credits/Item/icons8]" = "Icon8'ten simgeler";
+
+/* Item in the credits list */
+"[Credits/Item/ionIcons]" = "Ionic'ten Ionicons";
+
+/* Item in the credits list */
+"[Credits/Item/keePass]" = "Dominik Reichl'dan KeePass";
+
+/* Item in the credits list */
+"[Credits/Item/keePassXCIcons]" = "KeePassXC ekibinden simgeler";
+
+/* Item in the credits list */
+"[Credits/Item/lineIcons]" = "Andrian Valeanu'dan Linecons";
+
+/* Item in the credits list */
+"[Credits/Item/nuvolaIcons]" = "David Vignoni'den Nuvola simgeleri";
+
+/* Item in the credits list */
+"[Credits/Item/rijndael]" = "Szymon Stefanek'ten Rijndael uygulaması";
+
+/* Item in the credits list */
+"[Credits/Item/swiftDomainParser]" = "Dashlane'den SwiftDomainParser";
+
+/* Item in the credits list */
+"[Credits/Item/systemSettingsIcon]" = "Vicons Design'dan sistem ayarları simgesi";
+
+/* Item in the credits list */
+"[Credits/Item/toastSwift]" = "Charles Scalesse'den Toast-Swift";
+
+/* Item in the credits list */
+"[Credits/Item/tpInappReceipt]" = "Pavel Tikhonenko'dan TPInAppReceipt";
+
+/* Item in the credits list */
+"[Credits/Item/translations]" = "KeePassium'a katkıda bulunanların çevirileri";
+
+/* Item in the credits list */
+"[Credits/Item/twoFish]" = "Niels Ferguson'dan Twofish uygulaması";
+
+/* Item in the credits list */
+"[Credits/Item/whatsNewKit]" = "Sven Tiigi'den WhatsNewKit";
+
+/* Item in the credits list */
+"[Credits/Item/wordlists]" = "EFF'den geçiş ifadesi kelime listeleri";
+
+/* Item in the credits list */
+"[Credits/Item/yubico]" = "Yubico AB'den Yubico Mobile iOS SDK";
+
+/* Item in the credits list */
+"[Credits/Item/zxcvbn]" = "Dropbox'tan zxcvbn-ios";
+
+/* License name for credits */
+"[Credits/License/apache2]" = "Apache 2.0 lisansı";
+
+/* License name for credits */
+"[Credits/License/cc0]" = "CC0 lisansı";
+
+/* License name for credits */
+"[Credits/License/ccBy3]" = "CC BY 3.0";
+
+/* License name for credits */
+"[Credits/License/ccByNd]" = "CC BY-ND 3.0";
+
+/* License name for credits */
+"[Credits/License/customPermissiveLicense]" = "Özel izin lisansı";
+
+/* License name for credits */
+"[Credits/License/gpl]" = "GPL lisansı";
+
+/* License name for credits */
+"[Credits/License/lgpl]" = "LGPL lisansı";
+
+/* License name for credits */
+"[Credits/License/mit]" = "MIT lisansı";
+
+/* License name for credits */
+"[Credits/License/proprietary]" = "Kişisel lisans";
+
+/* License name for credits */
+"[Credits/License/publicDomain]" = "Herkese Açık Etki Alanı";
 
 /* Hint shown when both password and key file are empty. */
-"[Database/Create] Please enter a password or choose a key file." = "Lütfen bir şifre girin ya da anahtar dosya seçin.";
+"[Database/Create] Please enter a password or choose a key file." = "Lütfen bir şifre girin ya da anahtar dosyası seçin.";
+
+/* Notification for business users when they set up too weak database password. */
+"[Database/Create/orgRequiresStronger]" = "Kuruluşunuz daha karmaşık bir veri tabanı şifresi gerektiriyor.";
 
 /* Note for a sample entry */
-"[Database/Create/TemplateEntry/notes] You can also store some notes, if you like." = "İsterseniz buraya birkaç not da alabilirsiniz.";
+"[Database/Create/TemplateEntry/notes] You can also store some notes, if you like." = "İsterseniz not da saklayabilirsiniz.";
 
 /* Password for a sample entry. Translation is optional. */
-"[Database/Create/TemplateEntry/password] pa$$word" = "Şifre $word";
+"[Database/Create/TemplateEntry/password] pa$$word" = "pa$$word";
 
 /* Title for a sample entry */
 "[Database/Create/TemplateEntry/title] Sample Entry" = "Örnek Girdi";
 
 /* User name for a sample entry. Set it to a typical person name for your language ( https://en.wikipedia.org/wiki/List_of_placeholder_names_by_language). */
-"[Database/Create/TemplateEntry/userName] john.smith" = "mehmet.yildiz";
+"[Database/Create/TemplateEntry/userName] john.smith" = "john.smith";
 
 /* Predefined group in a new database */
-"[Database/Create/TemplateGroup/title] Email" = "e-mail";
+"[Database/Create/TemplateGroup/title] Email" = "E-posta";
 
 /* Predefined group in a new database */
 "[Database/Create/TemplateGroup/title] Finance" = "Finans";
@@ -58,20 +175,38 @@
 /* Predefined `Operating system` group in a new database */
 "[Database/Create/TemplateGroup/title] OS" = "İşletim Sistemi";
 
+/* Notification when user sets up too weak a database password. */
+"[Database/Create/weakPasswordWarning]" = "Bu şifreyi tahmin etmesi kolay. Daha güçlü bir şifre girmeyi deneyin.";
+
+/* Description of favicon downloader feature. */
+"[Database/DownloadFavicons/intro]" = "KeePassium, her girdi ile ilişkili web siteleriyle iletişime geçecek.";
+
+/* Description of favicon downloader feature. 'Doing this' refers to downloading favicons. */
+"[Database/DownloadFavicons/warning]" = "Bunu herkese açık veya izlenen bir ağda yapmak, hesabınız olan web sitelerinin listesini açığa çıkarabilir.";
+
 /* Placeholder text in an empty group */
 "[Database/Group/empty]" = "Bu grup boş";
 
+/* Warning that one key derivation function (KDF) should be preferred to another. Example: 'AES-KDF is considered weak. Use Argon2id instead.' */
+"[Database/KDF/consideredWeak]" = "%1$@ zayıf kabul ediliyor. Bunun yerine %2$@ kullanın.";
+
+/* Notification message about encryption settings. */
+"[Database/KDF/tooSlow]" = "Bu ayarlar bazı cihazlar için çok yavaş olabilir.";
+
+/* Call to action when encryption settings are too weak. */
+"[Database/KDF/tooWeak]" = "Veri korumasını en iyi hâle getirmek için ayarları artırın.";
+
 /* Subtitle for `Diagnostic Log`. Keep it short. */
-"[DiagLog/subtitle]" = "İleri düzey kullanıcılar için..";
+"[DiagLog/subtitle]" = "Uzman hata giderme için";
 
 /* Confirmation message to replace an existing entry attachment with a new one. */
-"[Entry/Files/Add] Replace existing attachment?" = "Mevcut dosyanın yerine yapıştırılsın mı?";
+"[Entry/Files/Add] Replace existing attachment?" = "Mevcut ek değiştirilsin mi?";
 
 /* Explanation for replacing the only attachment of KeePass1 entry */
-"[Entry/Files/Add] This database supports only one attachment per entry, and there is already one." = "Bu veritabanı girdi başına sadece bir dosya eklemeye izin veriyor, daha fazla eklenemez.";
+"[Entry/Files/Add] This database supports only one attachment per entry, and there is already one." = "Bu veri tabanı, girdi başına sadece bir eki destekler ve zaten bir tane var.";
 
 /* Title of a dialog for renaming an attached file */
-"[Entry/Files/Rename/title] Rename File" = "Yeniden Adlandır";
+"[Entry/Files/Rename/title] Rename File" = "Dosyayı yeniden adlandırın";
 
 /* Title of entry viewer's tab with files attached to the entry */
 "[Entry/Tab/Files/title]" = "Dosyalar";
@@ -80,61 +215,211 @@
 "[Entry/Tab/General/title]" = "Genel";
 
 /* Title of entry viewer's tab with previous revisions of the entry */
-"[Entry/Tab/History/title]" = "Tarihçe";
+"[Entry/Tab/History/title]" = "Geçmiş";
+
+/* Title of entry viewer's tab with advanced/secondary properties */
+"[Entry/Tab/More/title]" = "Daha fazla";
+
+/* Name of Apple Passwords' CSV file format */
+"[Format/ApplePasswordsCSV]" = "Apple Şifreleri (.csv)";
 
 /* Name of Enpass' JSON file format */
 "[Format/EnpassJSON]" = "Enpass (.json)";
 
+/* Error message when CSV parsing fails [lineNumber: Int] */
+"[Import/CSV/Error/InvalidFormat]" = "%d. satırda geçersiz CSV formatı.";
+
+/* Error message when CSV parsing fails [lineNumber: Int, colNumber: Int] */
+"[Import/CSV/Error/InvalidFormat/withColumn]" = "%1$d. satır, %2$d. sütunda geçersiz CSV formatı.";
+
+/* Error message when Enpass import fails due to corrupted attachment data [attachmentName: String, itemName: String] */
+"[Import/Enpass/Error/CorruptedAttachment]" = "\"%2$@\" ögesinde \"%1$@\" eki için bozulmuş veriler.";
+
+/* Error shown when trying to import from an empty file */
+"[Import/Error/EmptyFile]" = "Gelen dosya boş.";
+
+/* Error message when JSON parsing fails */
+"[Import/JSON/ParsingError]" = "JSON dosyası ayrıştırılamadı.";
+
 /* Action/button */
-"[Onboarding/AddExistingDatabase/action]" = "Varolan Bir Veritabanını Ekle";
+"[Onboarding/AddExistingDatabase/action]" = "Mevcut Veri Tabanı ekle";
 
 /* Action/button to set up the App Protection feature. Not a call to action. */
-"[Onboarding/AppProtection/activate]" = "Uygulama kilidini etkinleştir";
+"[Onboarding/AppProtection/activate]" = "Uygulama Korumasını etkinleştir";
+
+/* Text in the App Protection onboarding screen. */
+"[Onboarding/AppProtection/text1]" = "KeePassium kasa odanızda. Uygulama koruması, yalnızca sizin açabilmenizi sağlar.";
+
+/* Title of the App Protection onboarding screen */
+"[Onboarding/AppProtection/title]" = "Yalnızca Size Özel";
+
+/* Action/button to set up the Password AutoFill feature. Not a call to action. */
+"[Onboarding/AutoFill/activate]" = "Otomatik Doldurma'yı etkinleştir";
+
+/* Text in the Password AutoFill onboarding screen. */
+"[Onboarding/AutoFill/text1]" = "Otomatik Doldurma ile tek bir tuşa basarak giriş sayfalarında hızlıca işlem yapabilirsiniz.";
+
+/* Text in the Password AutoFill onboarding screen. */
+"[Onboarding/AutoFill/text2]" = "Başlamak için sistem ayarlarında Otomatik Şifre Doldurma'yı etkinleştirin.";
+
+/* Title of the Password AutoFill onboarding screen */
+"[Onboarding/AutoFill/title]" = "Otomatik Şifre Doldurma";
 
 /* Action/button */
-"[Onboarding/CreateNewDatabase/action]" = "Yeni Bir Veritabanı Oluşturun";
+"[Onboarding/CreateNewDatabase/action]" = "Yeni Veri Tabanı oluştur";
+
+/* Text in the Data Encryption intro screen */
+"[Onboarding/DataEncryption/text1]" = "Kasanız şifrelenmiş bir veri tabanıdır.";
+
+/* Text in the Data Encryption intro screen */
+"[Onboarding/DataEncryption/text2]" = "Veri tabanlarını en sevdiğiniz bulutta ya da cihazda saklayabilirsiniz.";
+
+/* Title of the Data Encryption intro screen */
+"[Onboarding/DataEncryption/title]" = "Veri Şifreleme";
+
+/* Text in the introductory onboarding screen. */
+"[Onboarding/Intro/text1]" = "KeePassium, şifrelerinizi ve diğer hassas bilgilerinizi güvenli bir şekilde şifrelenmiş hâlde tutar.";
+
+/* Text in the introductory onboarding screen. */
+"[Onboarding/Intro/text2]" = "Reklam veya takip yok.";
+
+/* Text in the introductory onboarding screen. */
+"[Onboarding/Intro/text3]" = "Hakkınızda hiçbir şey bilmiyoruz.";
+
+/* Text in the introductory onboarding screen. */
+"[Onboarding/Intro/text4]" = "Verileriniz size aittir.";
+
+/* Title of the introductory onboarding screen. */
+"[Onboarding/Intro/title]" = "Hoş geldiniz";
+
+/* Text in the Security intro screen */
+"[Onboarding/Security/text1]" = "Verileriniz bir kasada (veri tabanı) şifrelenir. Kasalar, kasa odasında (KeePassium) saklanır.";
+
+/* Text in the Security intro screen */
+"[Onboarding/Security/text2]" = "Kasa odası ve kasaların farklı anahtarları vardır ve bunları yalnızca siz bilirsiniz.";
+
+/* Title of the Security intro screen */
+"[Onboarding/Security/title]" = "Maksimum Güvenlik";
+
+/* Action to skip selected item/items in future password audits. */
+"[PasswordAudit/Action/Exclude]" = "Denetimden Hariç Tut";
+
+/* Status message: password audit in progress */
+"[PasswordAudit/Auditing/status]" = "Şifre denetleme";
+
+/* Error message after a failed password audit request [message: String]. */
+"[PasswordAudit/Error/text]" = "HIBP hizmetiyle iletişim sırasında bir hata oluştu. %@";
+
+/* Description of the password audit results, where a number appears next to each password. */
+"[PasswordAudit/ExposureCount/description]" = "Sayı, şifrenin bilinen veri sızıntılarında kaç kez bulunduğunu gösterir.";
+
+/* Description of the Password Audit function. */
+"[PasswordAudit/Intro/text]" = "Şifre denetimi, şifrelerinizi güvenli ve gizli bir şekilde çevrimiçi sızdırılmış şifreler veri tabanında kontrol eder.\n\nKeePassium, şifrelerinizden hesaplanan bilgileri (bir tür kısmi sağlama toplamı) [Have I Been Pwned](https://haveibeenpwned.com) hizmetine gönderir. Hizmet, benzer sağlama toplamlarına sahip tehlikeye giren şifreler hakkında ayrıntılı bilgi döndürür. Uygulama ardından ayrıntılı sağlama toplamlarını cihazınızda yerel olarak karşılaştırır ve hangi şifrelerinizin risk altında olduğunu tespit eder.\n\nGerçek şifreleriniz çevrimiçi hizmetle asla paylaşılmaz.\n[Daha fazla bilgi…](%@)";
+
+/* Result of a password audit. */
+"[PasswordAudit/Results/allGood]" = "İyi haber! Şifrelerinizin hiçbiri bilinen veri sızıntılarında görünmedi.";
+
+/* Title of a list with passwords that are known to have been exposed in online breaches. */
+"[PasswordAudit/Results/title]" = "Ele Geçirilmiş Şifreler";
+
+/* Action/button: intiate password audit */
+"[PasswordAudit/Start/action]" = "Denetimi başlat";
+
+/* Title of a screen to check which passwords are known to be compromised. */
+"[PasswordAudit/title]" = "Şifre Denetimi";
+
+/* Menu action to add a user-provided word list file to the app. */
+"[PasswordGenerator/Wordlist/Import/menuAction]" = "Kelime Listesini içe aktar…";
+
+/* Password quality description. For example: `Password quality: Weak`. [level: String] */
+"[PasswordQuality/description]" = "Şifre kalitesi: %@";
+
+/* Good password quality */
+"[PasswordQuality/Level] Good" = "İyi";
+
+/* Very good password quality */
+"[PasswordQuality/Level] Very good" = "Çok iyi";
+
+/* Very weak password quality */
+"[PasswordQuality/Level] Very weak" = "Çok zayıf";
+
+/* Weak password quality */
+"[PasswordQuality/Level] Weak" = "Zayıf";
+
+/* Password quality description. Note the tilda that refers to an estimated/approximate value. For example: `Very good (~123 bits of entropy)`. [level: String, formattedBitCount: String] */
+"[PasswordQuality/LevelWithApproximateEntropy/description]" = "%1$@ (~%2$@ entropi)";
+
+/* Password quality description. For example: `Very good (234 bits of entropy)`. [level: String, formattedBitCount: String] */
+"[PasswordQuality/LevelWithEntropy/description]" = "%1$@ (%2$@ entropi)";
 
 /* Status: special premium for beta-testing environment is active */
 "[Premium/Status/BetaTesting/title]" = "Beta testi";
 
 /* Status: current version of the app. For example: `Current version: 1.23`. Should be similar to the `Licensed version` string. [version: String] */
-"[Premium/Status/currentVersion]" = "Mevcut versiyon: %@";
+"[Premium/Status/currentVersion]" = "Mevcut sürüm: %@";
 
 /* Status: premium subscription has expired. For example: `Expired 1 day ago`. [timeFormatted: String, includes the time unit (day, hour, minute)] */
 "[Premium/Status/expiredAgo]" = "%@ önce süresi doldu. Lütfen yenileyin.";
 
 /* Status: licensed premium version of the app. For example: `Licensed version: 1.23`. [version: String] */
-"[Premium/Status/licensedVersion]" = "Lisanslı versiyon: %@";
+"[Premium/Status/licensedVersion]" = "Lisanslı sürüm: %@";
 
 /* Status: scheduled renewal date of a premium subscription. For example: `Next renewal on 1 Jan 2050`. [expiryDateString: String] */
-"[Premium/Status/nextRenewal]" = "Bir sonraki yenileme %@ tarihinde";
+"[Premium/Status/nextRenewal]" = "Sonraki yenileme tarihi: %@";
 
 /* Status when the user has a premium version */
 "[Premium/Status/title]" = "Premium Sürüm";
 
 /* Status: validity period of once-and-forever premium */
-"[Premium/Status/ValidForever/title]" = "Sonsuza dek geçerlidir";
+"[Premium/Status/ValidForever/title]" = "Sonsuza dek geçerli";
 
 /* Status: how long the app has been used during some time period. For example: `App being useful: 1hr/month, about 12hr/year`. [monthlyUsage: String, annualUsage: String — already include the time unit (hours, minutes)] */
 "[Premium/usage] App being useful: %@/month, that is around %@/year." = "Uygulamanın kullanışlı olması: %1$@/ay, yani yaklaşık %2$@/yıl.";
 
 /* Action/button to make password visible as plain-text */
-"[ProtectedTextField] Show Password" = "Şifreyi Göster";
+"[ProtectedTextField] Show Password" = "Şifreyi göster";
+
+/* Explanation why the app needs camera access permission. */
+"[QRCodeScanner/CameraPermission/description]" = "Kare kodları taramak için KeePassium'un kameraya erişmesi gerekiyor.";
+
+/* Error message when the app cannot use the camera. */
+"[QRCodeScanner/Error/CameraBusy]" = "Kamera zaten kullanımda.";
+
+/* Error message */
+"[QRCodeScanner/Error/ImageCorrupted]" = "Seçilen görüntü bozuk.";
+
+/* Error message with a suggested action. */
+"[QRCodeScanner/Error/Internal]" = "QR kodu okuyucusunda dâhilî hata. Ayrıntılar için tanı günlüğünü kontrol edin.";
+
+/* Notification message */
+"[QRCodeScanner/Error/NoQRCodeFound]" = "O görüntüde QR kodu yok gibi görünüyor.";
+
+/* Error message when camera/gallery/etc is either missing or forbidden. */
+"[QRCodeScanner/Error/SourceNoAvailable]" = "Görüntü kaynağı kullanılamıyor.";
+
+/* Call to action/instruction for QR code scanner. */
+"[QRCodeScanner/Info/callToAction]" = "Kamerayı bir QR koduna yöneltin.";
 
 /* Description of the Quick AutoFill feature. */
-"[QuickAutoFill/description]" = "Hızlı Otomatik Doldurma, KeePassium'u açmadan, parola alanının hemen yanında ilgili girdileri gösterir.";
+"[QuickAutoFill/description]" = "Hızlı Otomatik Doldurma, KeePassium'u açmadan, şifre alanının hemen yanında ilgili girdileri gösterir.";
 
 /* Placeholder text for empty search results */
 "[Search/EmptyResult/title]" = "Uygun bir şey bulunamadı";
+
+/* Title of the confirmation dialog for `Delete` action for several items */
+"[Selection/Delete/confirmation]" = "Seçim silinsin mi?";
+
+/* Title of the confirmation dialog for `Exclude from audit` action for several items */
+"[Selection/ExcludeFromAudit/confirmation]" = "Seçim, şifre denetiminden hariç tutulsun mu?";
 
 /* Title of a section in settings: parameters that protect access to data */
 "[Settings/AccessControl/title]" = "Erişim Kontrolleri";
 
 /* Call to action (protect the app from unauthorized access) */
-"[Settings/AppLoc/Activate/callToAction]" = "Uygulama kilidini etkinleştir";
+"[Settings/AppLoc/Activate/callToAction]" = "Uygulama Korumasını etkinleştir";
 
 /* Description of `Activate app protection` call to action. */
-"[Settings/AppLock/Activate/description]" = "KeePassium'u yetkisiz girişlerden koruyun.";
+"[Settings/AppLock/Activate/description]" = "KeePassium'u izinsiz erişimden koruyun.";
 
 /* Description of biometric unlock settings */
 "[Settings/AppLock/Biometric/description]" = "Uygulama Kilidi şifresi yerine hızlı (ama daha güvensiz) bir alternatif olan biyometrik yetkilendirmeye izin verir.";
@@ -143,19 +428,37 @@
 "[Settings/AppLock/Biometric/title] Use %@" = "%@ kullan";
 
 /* Explanation for the `Lock on App Launch` setting */
-"[Settings/AppLock/LockOnLaunch/description]" = "Uygulamayı yukarı attığınızda ya da cihazı aç-kapa yaptığınızda KeePassium'un kilitlendiğinden emin olun.";
+"[Settings/AppLock/LockOnLaunch/description]" = "Uygulamayı zorla kapattıktan veya cihazı tekrar başlattıktan sonra KeePassium'un kilitlenmesini sağlar.";
 
 /* Setting switch: whether to lock the app after it was terminated and relaunched. */
-"[Settings/AppLock/LockOnLaunch/title]" = "Başlangıçta Kilitle";
+"[Settings/AppLock/LockOnLaunch/title]" = "Uygulama Başlatıldığında kilitle";
+
+/* Explanation for the `Lock on macOS Screen Lock` setting */
+"[Settings/AppLock/LockOnScreenLock/description]" = "Mac'inizi kilitlediğinizde KeePassium'un kilitli kalmasını sağlar.";
+
+/* Title of a yes/no setting: whether to lock app when computer screen is locked (see https://support.apple.com/en-gb/guide/mac-help/mchl8e8b6a34/mac) */
+"[Settings/AppLock/LockOnScreenLock/title]" = "macOS Ekran Kilidi açık olduğunda kilitle";
 
 /* Description of the `Lock on Wrong Passcode` setting */
-"[Settings/AppLock/LockOnWrongPasscode/description]" = "Eğer yanlış bir AppLock şifresi girerseniz, KeePassium tüm veritabanlarını kapatacak ve tüm ana şifreleri unutacak.";
+"[Settings/AppLock/LockOnWrongPasscode/description]" = "Yanlış bir uygulama koruma şifre kodu girerseniz KeePassium tüm veri tabanlarını kapatır ve tüm ana anahtarları anahtar zincirinden temizler.";
+
+/* Title in the settings: whether to lock databases when user enters a wrong app protection passcode. */
+"[Settings/AppLock/LockOnWrongPasscode/title]" = "Yanlış Şifre Kodu girildiğinde kilitle";
+
+/* Description of the `Passcode Attempts Until App Reset` setting */
+"[Settings/AppLock/PasscodeAttemptsUntilAppReset/description]" = "Uygulama sıfırlaması, saklanan tüm anahtarları, ayarları, veri tabanı yedeklemelerini, içe aktarılan dosyaları ve harici dosyalara bağlantıları siler. Ancak uygulama sıfırlaması Otomatik Doldurmadan tetiklenirse içe aktarılan dosyalar, teknik kısıtlamalar nedeniyle kalabilir.";
+
+/* An option in Settings. Will be shown as 'Passcode Attempts Until App Reset: Do not reset' */
+"[Settings/AppLock/PasscodeAttemptsUntilAppReset/Never/title]" = "Sıfırlama";
+
+/* Title in the settings: number of failed passcode attempts that will reset the app into 'just installed' state. */
+"[Settings/AppLock/PasscodeAttemptsUntilAppReset/title]" = "Uygulama Sıfırlanana Kadar Denemeler";
 
 /* Settings: subtitle of the `App Protection` section. biometryTypeName will be either 'Touch ID' or 'Face ID'. [biometryTypeName: String] */
 "[Settings/AppLock/subtitle] App Lock, %@, timeout" = "Uygulama Kilidi, %@, zaman aşımı";
 
 /* Settings: subtitle of the `App Protection` section when biometric auth is not available. */
-"[Settings/AppLock/subtitle] App Lock, passcode, timeout" = "Uygulama Kilidi, pin kodu, zaman aşımı";
+"[Settings/AppLock/subtitle] App Lock, passcode, timeout" = "Uygulama Kilidi, şifre kodu, zaman aşımı";
 
 /* Description of the App Lock Timeout setting */
 "[Settings/AppLock/Timeout/description]" = "Uygulama bu süre geçtikten sonra kendiliğinden kilitlenecektir.";
@@ -164,7 +467,7 @@
 "[Settings/AppLock/Timeout/title]" = "Zaman Aşımı";
 
 /* Settings section: protection of the app from unauthorized access */
-"[Settings/AppLock/title]" = "Uygulama Güvenliği";
+"[Settings/AppLock/title]" = "Uygulama Koruması";
 
 /* Settings section: what happens if user enters incorrect App Protection passcode. */
 "[Settings/AppLock/WrongPasscode/title]" = "Yanlış Şifre";
@@ -181,20 +484,38 @@
 /* An option in Settings. Will be shown as 'App Lock: Timeout: Never' */
 "[Settings/AppLockTimeout/Never/title]" = "Asla";
 
+/* Action that opens system settings or instructions */
+"[Settings/AutoFill/Activate/action]" = "Otomatik Doldurma'yı etkinleştir";
+
+/* Description for the AutoFill setup instructions */
+"[Settings/AutoFill/Activate/description]" = "İlk kullanımdan önce, sistem ayarlarında Otomatik Doldurma'yı etkinleştirmeniz gerekiyor.";
+
 /* Description of the 'Copy OTP to Clipboard' setting */
 "[Settings/AutoFill/CopyOTP/Description]" = "Otomatik Doldur işlevi kullanıcı adı ve şifreyi yazdıktan sonra şifreyi de senin için kopyalayabilir.";
 
 /* Title of a yes/no setting: copy one-time password to clipboard when using AutoFill */
-"[Settings/AutoFill/CopyOTP/title]" = "Tek Kullanımlık Şifreyi kopyala";
+"[Settings/AutoFill/CopyOTP/title]" = "Tek Kullanımlık Şifreyi Panoya kopyala";
+
+/* Description of the 'Remember Selected Entries' setting. */
+"[Settings/AutoFill/RememberContext/description]" = "KeePassium her bir web sitesi için seçtiğiniz girdiyi hatırlar ve otomatik olarak önerir.";
+
+/* Title of a yes/no setting: remember which entry was used for AutoFill on which website. */
+"[Settings/AutoFill/RememberContext/title]" = "Seçilen Girdileri hatırla";
+
+/* Title of a help article on how to activate AutoFill. */
+"[Settings/AutoFill/Setup Guide/title]" = "Otomatik Doldurma Kurulum Rehberi";
+
+/* No comment provided by engineer. */
+"[Settings/AutoFill/UnavailableInIntune/description]" = "Otomatik Doldurma, Intune için KeePassium'da kullanılamıyor.";
 
 /* Description of the 'Fill-In Perfect Result Automatically' setting */
 "[Settings/AutoFill/UsePerfectMatch/description]" = "Otomatik Doldurma, birebir eşleşen bir girdi bulduğunda; otomatik olarak bu girdi kopyalanır.";
 
 /* Title of a yes/no setting: automatically use the single best match found by AutoFill search */
-"[Settings/AutoFill/UsePerfectMatch/title]" = "En iyi sonucu otomatik olarak getir";
+"[Settings/AutoFill/UsePerfectMatch/title]" = "En İyi Sonucu Otomatik Olarak Doldurun";
 
 /* Option in settings: whether to open the last used database automatically on start. */
-"[Settings/AutoOpenPreviousDatabase/title]" = "Önceki Veritabanını Otomatik Olarak Aç";
+"[Settings/AutoOpenPreviousDatabase/title]" = "Önceki Veri Tabanını Otomatik Olarak Aç";
 
 /* Title of a section in settings */
 "[Settings/AutoSearch/title]" = "Otomatik arama";
@@ -221,10 +542,10 @@
 "[Settings/ClipboardTimeout/Never/title]" = "Asla";
 
 /* Description of the 'Make Backup Copies' setting */
-"[Settings/DatabaseBackup/Active/description]" = "Ne olur ne olmaz, KeePassium değişiklikleri kaydetmeden önce otomatik olarak bir yedek alır.";
+"[Settings/DatabaseBackup/Active/description]" = "Her ihtimale karşı bir veri tabanını kaydetmeden önce KeePassium otomatik olarak bir kopya çıkarır.";
 
 /* Title of a yes/no setting: whether to back up databases before saving them */
-"[Settings/DatabaseBackup/Active/title]" = "Yedek Dosyaları Oluştur";
+"[Settings/DatabaseBackup/Active/title]" = "Yedek Kopyaları Hazırlayın";
 
 /* Confirmation dialog message to delete all backup files */
 "[Settings/DatabaseBackup/DeleteAll/confirm]" = "Tüm yedekleme dosyalarını silinsin mi?";
@@ -278,13 +599,19 @@
 "[Settings/DatabaseTimeout/Never/title]" = "Asla";
 
 /* Section title: advanced/expert settings */
-"[Settings/DataProtection/Advanced/title]" = "İleri düzey";
+"[Settings/DataProtection/Advanced/title]" = "Gelişmiş";
 
 /* Title of a section in settings */
 "[Settings/DataProtection/AutomaticLock/title]" = "Otomatik Kilitleme";
 
+/* Setting switch: whether to lock databases after device reboot. */
+"[Settings/DataProtection/LockOnReboot/title]" = "Cihaz Yeniden Başlatıldığında Kilitle";
+
+/* Title of a yes/no setting: whether to lock databases when computer screen is locked (see https://support.apple.com/en-gb/guide/mac-help/mchl8e8b6a34/mac) */
+"[Settings/DataProtection/LockOnScreenLock/title]" = "macOS Ekran Kilidi açık olduğunda kilitle";
+
 /* Subtitle for `Data Protection` section in settings */
-"[Settings/DataProtection/subtitle]" = "Ana şifreler, şifre dosyaları";
+"[Settings/DataProtection/subtitle]" = "Ana anahtarlar, anahtar dosyaları";
 
 /* Description of the 'Hide Passwords' setting. */
 "[Settings/HidePasswords/description]" = "Şifreleri ve diğer korunan alanları yıldızlı (****) göster (Tavsiye edilir.).";
@@ -325,6 +652,9 @@
 /* Title of a setting: whether search looks in field names */
 "[Settings/Search/InFieldNames/title]" = "Girdilerde Ara";
 
+/* Title of a setting: whether search looks in passwords */
+"[Settings/Search/InPasswords/title]" = "Şifrelerde ara";
+
 /* Title of a setting: whether search looks in values of protected fields */
 "[Settings/Search/InProtectValues/title]" = "Korunan Değerlerde Ara";
 
@@ -340,6 +670,15 @@
 /* Section title in settings */
 "[Settings/Search/title]" = "Arama";
 
+/* Description of the 'Ask for Confirmation' setting. */
+"[Settings/ShakeGestureAction/Confirm/description]" = "Uygulama kilitliyse onaysız hareket eder.";
+
+/* Title for a setting: whether the app should show an 'Are you sure?' before continuing */
+"[Settings/ShakeGestureAction/Confirm/title]" = "Onay iste";
+
+/* Title for a setting: what the app should do when the user shakes the device */
+"[Settings/ShakeGestureAction/title]" = "Sallandığında";
+
 /* Title of a section in settings: parameters that control what happens when the app is started. */
 "[Settings/Start/title]" = "Başlangıçta";
 
@@ -352,6 +691,78 @@
 /* Apple's term: https://support.apple.com/102430 */
 "[Settings/UniversalClipboard/title]" = "Aygıtın tüm panolarında kopyalama";
 
+/* Action/button to create a new item tag */
+"[Tags/Create/action]" = "Etiket oluştur";
+
+/* Call to action/hint inside a text input */
+"[Tags/Create/placeholder]" = "Etiket adı girin";
+
+/* Title of the tag creation dialog */
+"[Tags/Create/title]" = "Yeni Etiket";
+
+/* Question to confirm global deletion */
+"[Tags/Delete/Confirm/message]" = "Bu etiket tüm grup ve girdilerden silinsin mi?";
+
+/* Title of a dialog for editing a tag */
+"[Tags/Edit/title]" = "Etiketi düzenle";
+
+/* Status message with a call to action */
+"[Tags/None/placeholder]" = "Veri tabanında herhangi bir etiket yok, birkaç etiket ekleyin.";
+
+/* Status message: tag search result is empty */
+"[Tags/Search/emptyResult]" = "Uygun etiket bulunamadı.";
+
+/* Title of a list with all the tags existing in the database. */
+"[Tags/Section/All]" = "Tüm Etiketler";
+
+/* Title of a list with tags used by parent groups. */
+"[Tags/Section/Inherited]" = "Kalıtsal Etiketler";
+
+/* Title of a list with tags chosen by the user for a specific entry or group. */
+"[Tags/Section/Selected]" = "Seçili Etiketler";
+
+/* Title: the number of times a tag is encountered in the database. */
+"[Tags/UsageCount/title]" = "Kullanım sayısı";
+
+/* Call to action in What's New announcement */
+"[WhatsNew/Announcement/body]" = "KeePassium'daki yeni özellik ve iyileştirmeleri keşfedin.";
+
 /* Button which opens the What's New screen. */
 "[WhatsNew/Announcement/button]" = "Neler Değişti?";
+
+/* Description of a feature highlight, a call to action. */
+"[WhatsNew/Feature/AppScopedConnections/description]" = "Bulut verilerinizi sadece uygulama klasörü izinlerini kullanarak koruyun.";
+
+/* Title of a feature highlight, a noun phrase. */
+"[WhatsNew/Feature/AppScopedConnections/title]" = "Daha Güvenli Bulut Erişimi";
+
+/* Description of a feature highlight, a call to action. */
+"[WhatsNew/Feature/AutoFillWithMemory/description]" = "KeePassium, her bir web sitesinde seçtiğiniz girdiyi hatırlar.";
+
+/* Title of a feature highlight, a noun phrase. */
+"[WhatsNew/Feature/AutoFillWithMemory/title]" = "Daha Akıllı Otomatik Doldurma";
+
+/* Description of a feature highlight, a call to action. */
+"[WhatsNew/Feature/AutoType/description]" = "Hızlıca herhangi bir uygulamaya veya web tarayıcısına giriş yapın. Şifre girişi için tuş simülasyonu kullanılır.";
+
+/* Title of a feature highlight, a noun phrase. */
+"[WhatsNew/Feature/AutoType/title]" = "Otomatik Şifre Yazma";
+
+/* Description of a feature highlight, a call to action. */
+"[WhatsNew/Feature/CreativeAutoFill/description]" = "Otomatik Doldurma'da ana alanların otomatik olarak önceden doldurulduğu yeni girdiler oluşturun.";
+
+/* Title of a feature highlight, a noun phrase. */
+"[WhatsNew/Feature/CreativeAutoFill/title]" = "Daha Hızlı Kaydolma";
+
+/* Description of a feature highlight, a call to action. `Browse alphabetically` refers to a phonebook-like index with letters. */
+"[WhatsNew/Feature/MoreInteractions/description]" = "Kaydırın ve bırakın, birden çok öge seçin ve alfabetik olarak göz atın.";
+
+/* Title of a feature highlight, a noun phrase. */
+"[WhatsNew/Feature/MoreInteractions/title]" = "Daha Fazla Etkileşim Kurma Yolu";
+
+/* Title of the detailed history of app changes over time. */
+"[WhatsNew/FullChangelog/title]" = "Ayrıntılı Değişiklik Günlüğü";
+
+/* Full title for release highlights */
+"[WhatsNew/fullTitle]" = "KeePassium'daki Yenilikler";
 

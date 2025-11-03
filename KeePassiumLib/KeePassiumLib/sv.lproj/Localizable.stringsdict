@@ -65,9 +65,9 @@
 			<key>NSStringFormatValueTypeKey</key>
 			<string>d</string>
 			<key>one</key>
-			<string>%d item</string>
+			<string>%d objekt</string>
 			<key>other</key>
-			<string>%d items</string>
+			<string>%d objekt</string>
 			<key>zero</key>
 			<string>%d items</string>
 		</dict>

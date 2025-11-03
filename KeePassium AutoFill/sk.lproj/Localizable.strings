@@ -1,11 +1,32 @@
 /* Notification when user tries to set up too weak an app protection passcode. */
 "[AppLock/weakPasscodeWarning]" = "Tento kód aplikácie sa dá ľahko uhádnuť. Skúste zadať silnejší kód.";
 
+/* Action in AutoFill: choose the entry and remember it for future use on this website. */
+"[AutoFill/AcceptAndRemember/action]" = "Prijať a zapamätať si";
+
 /* Title of a list */
 "[AutoFill/AllEntries/title]" = "Všetky záznamy";
 
+/* Title of AutoFill context when no context is available. Usage: `Context: Unknown` */
+"[AutoFill/Context/Empty/title]" = "Neznáme";
+
+/* Title of a list with search results */
+"[AutoFill/FoundEntries/title]" = "Najlepšie zhody";
+
 /* Call for action to select an entry field for filling out. */
 "[AutoFill/InsertText/select]" = "Vyberte pole";
+
+/* Section title for the recently used entry in AutoFill */
+"[AutoFill/RecentlyUsed/title]" = "Naposledy použité";
+
+/* Not an action, but a button to activate the same-named setting */
+"[AutoFill/RememberContext/action]" = "Pamätať vybrané záznamy";
+
+/* Call to action */
+"[AutoFill/RememberContext/callToAction]" = "Vylepšite návrhy automatického vyplňovania";
+
+/* Description of the 'Remember Selected Entries` feature */
+"[AutoFill/RememberContext/description]" = "KeePassium si zapamätá, ktorý záznam ste vybrali pre každú webovú stránku, a potom ho automaticky navrhne.";
 
 /* Title for referring to the app or webpage that launched AutoFill. For example: `Context: google.com` */
 "[AutoFill/Search/Context/title]" = "Kontext";
@@ -24,6 +45,30 @@
 
 /* Must match Apple's translation, as found in iOS 17 Settings → Passwords → Password Options. If unsure, leave untranslated. */
 "[AutoFill/Setup/UncheckKeychain/usePasswordsAndPasskeysFrom]" = "Použiť heslá a prihlasovacie kľúče z:";
+
+/* Field title: name of the group that contains the entry */
+"[Database/Entry/Location/title]" = "Poloha";
+
+/* Title of a list with randomly generated usernames */
+"[Database/Entry/RandomUsernames/title]" = "Náhodné používateľské mená";
+
+/* Action/button that shows a list of usernames to pick from */
+"[Database/Entry/SelectUsername/action]" = "Vyberte používateľské meno";
+
+/* Action: select item from a list/menu, with item name in quotes. For example: `Select "Sample Group"` */
+"[Database/Item/SelectNamed/action]" = "Vyberte „%@“";
+
+/* Action: create a passkey and add it to existing entry */
+"[Database/Passkey/AddToExisting/action]" = "Pridajte prihlasovací kľúč do existujúceho záznamu";
+
+/* Call to action: select an existing entry to add a new passkey to */
+"[Database/Passkey/AddToExisting/callToAction]" = "Vyberte záznam pre nový prihlasovací kľúč";
+
+/* Confirmation message before replacing an existing passkey. */
+"[Database/Passkey/AddToExisting/confirm]" = "Tento záznam už má prihlasovací kľúč. Chcete ho nahradiť?";
+
+/* Title of an optional dialog for creating new passkeys */
+"[Database/Passkey/Create/title]" = "Vytvoriť prihlasovací kľúč?";
 
 /* Name of the Apple Passwords application, see https://support.apple.com/120758 */
 "[Generic/ApplePasswordsApp/title]" = "Heslá";
@@ -60,4 +105,7 @@
 
 /* Call to action, invites the user to enable the Quick AutoFill feature */
 "[QuickAutoFill/Activate/callToAction]" = "Aktivovať rýchle automatické dopĺňanie";
+
+/* Placeholder text for empty search results */
+"[Search/EmptyResult/title]" = "Nenašli sa žiadne výsledky";
 

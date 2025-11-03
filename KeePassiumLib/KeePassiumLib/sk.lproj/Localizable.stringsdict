@@ -77,13 +77,13 @@
 			<key>NSStringFormatValueTypeKey</key>
 			<string>d</string>
 			<key>few</key>
-			<string>%d items</string>
+			<string>%d položky</string>
 			<key>many</key>
-			<string>%d items</string>
+			<string>%d položky</string>
 			<key>one</key>
-			<string>%d item</string>
+			<string>%d položka</string>
 			<key>other</key>
-			<string>%d items</string>
+			<string>%d položiek</string>
 			<key>zero</key>
 			<string>%d items</string>
 		</dict>

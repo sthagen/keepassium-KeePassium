@@ -486,12 +486,11 @@ extension EntryViewerCoordinator {
         in viewController: UIViewController
     ) {
         assert(expiryDateEditorModalRouter == nil)
-        let modalRouter = NavigationRouter.createModal(style: .popover)
+        let modalRouter = NavigationRouter.createModal(style: .popover, at: popoverAnchor)
         let expiryDateEditor = ExpiryDateEditorVC.instantiateFromStoryboard()
         expiryDateEditor.delegate = self
         expiryDateEditor.canExpire = entry.canExpire
         expiryDateEditor.expiryDate = entry.expiryTime
-        popoverAnchor.apply(to: modalRouter.navigationController.popoverPresentationController)
         modalRouter.push(expiryDateEditor, animated: false, onPop: { [weak self] in
             self?.expiryDateEditorModalRouter = nil
         })

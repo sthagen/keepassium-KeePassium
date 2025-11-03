@@ -1,17 +1,104 @@
+/* Notification when user tries to set up too weak an app protection passcode. */
+"[AppLock/weakPasscodeWarning]" = "此應用解鎖密碼容易被猜出來。請嘗試輸入一個强度更高的密碼。";
+
+/* Action in AutoFill: choose the entry and remember it for future use on this website. */
+"[AutoFill/AcceptAndRemember/action]" = "接受並記住";
+
+/* Title of a list */
+"[AutoFill/AllEntries/title]" = "所有項目";
+
+/* Title of AutoFill context when no context is available. Usage: `Context: Unknown` */
+"[AutoFill/Context/Empty/title]" = "未知";
+
+/* Title of a list with search results */
+"[AutoFill/FoundEntries/title]" = "最佳配對";
+
+/* Call for action to select an entry field for filling out. */
+"[AutoFill/InsertText/select]" = "選擇欄位";
+
+/* Section title for the recently used entry in AutoFill */
+"[AutoFill/RecentlyUsed/title]" = "最近使用";
+
+/* Not an action, but a button to activate the same-named setting */
+"[AutoFill/RememberContext/action]" = "記住所選項目";
+
+/* Call to action */
+"[AutoFill/RememberContext/callToAction]" = "改善自動填寫建議";
+
+/* Description of the 'Remember Selected Entries` feature */
+"[AutoFill/RememberContext/description]" = "KeePassium 會記住您為每個網站選擇的項目，然後自動建議該項目。";
+
+/* Title for referring to the app or webpage that launched AutoFill. For example: `Context: google.com` */
+"[AutoFill/Search/Context/title]" = "上下文";
+
 /* No comment provided by engineer. */
 "[AutoFill/Setup/footer]" = "自動填充功能無法自動訪問主KeePassium應用程式中已有的資料庫。\n\n為什麼？ 在系統後台，系統將自動填充視為一個獨立的應用程式，獨立於主要的KeePassium處理程式。 出於安全原因，應用程式無法簡單地訪問任何外部文件 - 除非您明確將這些檔案添加到該應用程式。系統安全特性保證應用程式只能訪問您允許的少數文件。\n\n因此，需要為自動填充和KeePassium應用程式賦予所需的資料庫檔案以及金鑰檔案權限。 幸運的是，這只要設置一次。";
 
 /* Must match Apple's translation, as found in iOS 18 Settings → General → AutoFill & Passwords. If unsure, leave untranslated. */
 "[AutoFill/Setup/UncheckKeychain/autofillFrom]" = "自動填寫來源：";
 
+/* Call to action: deselect the `Keychain` option. Keychain is a glossary term. */
+"[AutoFill/Setup/UncheckKeychain/callToAction]" = "取消勾選鑰匙圈";
+
+/* Instruction to deselect another app in the settings [appName: String] */
+"[AutoFill/Setup/UncheckKeychain/message]" = "要將 KeePassium 設為您的預設密碼管理器，請取消選取「%@」。";
+
 /* Must match Apple's translation, as found in iOS 17 Settings → Passwords → Password Options. If unsure, leave untranslated. */
 "[AutoFill/Setup/UncheckKeychain/usePasswordsAndPasskeysFrom]" = "使用以下來源的密碼和通行密鑰";
+
+/* Field title: name of the group that contains the entry */
+"[Database/Entry/Location/title]" = "位置";
+
+/* Title of a list with randomly generated usernames */
+"[Database/Entry/RandomUsernames/title]" = "隨機使用者名稱";
+
+/* Action/button that shows a list of usernames to pick from */
+"[Database/Entry/SelectUsername/action]" = "選擇使用者名稱";
+
+/* Action: select item from a list/menu, with item name in quotes. For example: `Select "Sample Group"` */
+"[Database/Item/SelectNamed/action]" = "選擇「%@」";
+
+/* Action: create a passkey and add it to existing entry */
+"[Database/Passkey/AddToExisting/action]" = "將通行密鑰新增至既有項目";
+
+/* Call to action: select an existing entry to add a new passkey to */
+"[Database/Passkey/AddToExisting/callToAction]" = "為新通行密鑰選擇一個項目";
+
+/* Confirmation message before replacing an existing passkey. */
+"[Database/Passkey/AddToExisting/confirm]" = "此項目已有一個通行密鑰。是否要更換？";
+
+/* Title of an optional dialog for creating new passkeys */
+"[Database/Passkey/Create/title]" = "是否要建立通行密鑰？";
 
 /* Name of the Apple Passwords application, see https://support.apple.com/120758 */
 "[Generic/ApplePasswordsApp/title]" = "密碼";
 
 /* Apple Keychain software; is a glossary term. */
 "[Generic/Keychain/title]" = "鑰匙圈";
+
+/* Menu action to add a user-provided word list file to the app. */
+"[PasswordGenerator/Wordlist/Import/menuAction]" = "匯入字詞表…";
+
+/* Password quality description. For example: `Password quality: Weak`. [level: String] */
+"[PasswordQuality/description]" = "密碼強度：%@";
+
+/* Good password quality */
+"[PasswordQuality/Level] Good" = "好";
+
+/* Very good password quality */
+"[PasswordQuality/Level] Very good" = "非常好";
+
+/* Very weak password quality */
+"[PasswordQuality/Level] Very weak" = "非常弱";
+
+/* Weak password quality */
+"[PasswordQuality/Level] Weak" = "弱";
+
+/* Password quality description. Note the tilda that refers to an estimated/approximate value. For example: `Very good (~123 bits of entropy)`. [level: String, formattedBitCount: String] */
+"[PasswordQuality/LevelWithApproximateEntropy/description]" = "%1$@（熵值約為 %2$@）";
+
+/* Password quality description. For example: `Very good (234 bits of entropy)`. [level: String, formattedBitCount: String] */
+"[PasswordQuality/LevelWithEntropy/description]" = "%1$@（熵值為 %2$@）";
 
 /* Action/button to make password visible as plain-text */
 "[ProtectedTextField] Show Password" = "顯示密碼";

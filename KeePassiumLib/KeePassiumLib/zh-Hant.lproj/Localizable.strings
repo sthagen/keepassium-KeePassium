@@ -4,6 +4,27 @@
 /* Suggestion/hint for available user action */
 "[Accessibility] Double tap to copy to clipboard" = "點兩下複製至剪貼板";
 
+/* Call to action: perform accessibilty `activate` action to listen to text/content. */
+"[Accessibility/activateToListen]" = "啟動此功能收聽內容。";
+
+/* Accessibility notification for entries with attached files. */
+"[Accessibility/containsAttachments]" = "包含附件。";
+
+/* Accessibility notification for entries with a problematic passkey */
+"[Accessibility/containsIncompatiblePasskey]" = "包含和此裝置不相容的通行密鑰。";
+
+/* Accessibility notification for entries with OTP codes. */
+"[Accessibility/containsOTP]" = "包含一次性密碼。";
+
+/* Accessibility notification for entries with a passkey */
+"[Accessibility/containsPasskey]" = "包含通行密鑰。";
+
+/* Action which resets the app as if it was just installed. */
+"[App/ResetEverything/action]" = "重設";
+
+/* Confirmation message before resetting the app to just-installed state. */
+"[App/ResetEverything/title]" = "是否重設應用程式？";
+
 /* Action/button to unlock the App Lock with passcode */
 "[AppLock] Unlock" = "解鎖";
 
@@ -31,6 +52,12 @@
 /* Type of keyboard to show for App Lock passcode: digits only (PIN code). */
 "[AppLock/Passcode/KeyboardType/title] Numeric" = "數字";
 
+/* Notification for business users when they set up too weak app protection passcode. */
+"[AppLock/Passcode/orgRequiresStonger]" = "您的組織需要更複雜的應用解鎖密碼。";
+
+/* Hint/call to action about keyboard shortcut */
+"[AppLock/Passcode/pressEscForTouchID]" = "按 Esc 鍵使用 Touch ID";
+
 /* Notification that the modified AppLock passcode has been saved. */
 "[AppLock/passcodeUpdated/title]" = "更改應用解鎖密碼成功。";
 
@@ -45,6 +72,24 @@
 
 /* Title of a message related to upgrading to the premium version */
 "[AutoFill/Premium/Upgrade/Manual/title] Premium Upgrade" = "升級進階版";
+
+/* Call to action / instruction on how to enable accessibility permission */
+"[AutoType/AccessibilityPrompt/callToAction]" = "開啟系統設定 → 隱私及安全 → 輔助功能，然後啟用 KeePassium。";
+
+/* Message explaining why accessibility permission is needed */
+"[AutoType/AccessibilityPrompt/message]" = "KeePassium 需要您的授權才能將按下鍵傳送到其他應用程式。";
+
+/* Title of a dialog asking user to provide a security permission */
+"[AutoType/AccessibilityPrompt/title]" = "KeePassium 需要您的授權";
+
+/* Action: send key presses to 'type in' entry data into another app */
+"[AutoType/action]" = "執行自動輸入";
+
+/* Button to open system settings (accessibility, permissions, etc) */
+"[AutoType/Action/OpenSettings]" = "開啟設定";
+
+/* Title for error when auto-type fails */
+"[AutoType/Error/Title]" = "自動輸入失敗";
 
 /* Name of biometric authentication method. Trademarked, do not translate unless Apple traslated it to your language. */
 "[BiometricAuthType] Face ID" = "Face ID";
@@ -115,20 +160,110 @@
 /* Action: add/import an image as a custom icon */
 "[Database/CustomIcon/add]" = "添加自定義圖示";
 
+/* Notification when some custom icons are about to be deleted [iconCount: Int] */
+"[Database/CustomIcon/All/count]" = "所有自定義圖示：%d";
+
 /* Action: delete all custom icons */
 "[Database/CustomIcon/deleteAll]" = "刪除所有";
+
+/* Action: delete unused icons */
+"[Database/CustomIcon/deleteUnused]" = "刪除未使用的圖示";
+
+/* Action: download icon of a website */
+"[Database/CustomIcon/DownloadFavicon/action]" = "下載 Favicon";
+
+/* Action/button to download favicons of websites mentioned in selected entries. */
+"[Database/CustomIcon/DownloadFavicons/action]" = "下載 Favicon";
+
+/* Report of favicon download results. */
+"[Database/CustomIcon/DownloadFavicons/stats]" = "已處理的項目：%1$d\n已更新的圖示：%2$d";
+
+/* Status message: multiple website favicons are being downloaded */
+"[Database/CustomIcon/DownloadFavicons/status]" = "正在下載 Favicon";
+
+/* Status message: a website favicon is being downloaded */
+"[Database/CustomIcon/DownloadOneFavicon/status]" = "正在下載 Favicon";
+
+/* Notification when some custom icons are not used by any group or entry [iconCount: Int] */
+"[Database/CustomIcon/Unused/count]" = "找到未使用的圖示：%d";
 
 /* Message to confirm deletion of a database file. (This deletes the file itself) */
 "[Database/Delete/Confirm/text] Delete database file?\n Make sure you have a backup." = "刪除資料庫文件?\n 請確保您有備份檔案!";
 
+/* Action to modify database encryption settings. */
+"[Database/EncryptionSettings/Change/action]" = "變更加密設定";
+
+/* Parameter name in database encryption settings. Example: 'Encryption Algorithm: AES-256' */
+"[Database/EncryptionSettings/dataCipher]" = "加密演算法";
+
+/* Parameter name in database encryption settings. Defines the number of times/iterations a calculation (transform) should be executed. Example: 'Transform Rounds: 100' */
+"[Database/EncryptionSettings/iterations]" = "轉換次數";
+
 /* Parameter name in database encryption settings. This is a term, see https://en.wikipedia.org/wiki/Key_derivation_function. Example: 'Key Derivation Function: Argon2' */
 "[Database/EncryptionSettings/kdf]" = "金鑰演算函數";
+
+/* Parameter name in database encryption settings. Defines the amount of memory that should be used by an algorithm. Example: 'Memory Usage: 16 MB' */
+"[Database/EncryptionSettings/memory]" = "記憶體使用情形";
+
+/* Warning for too high value of the `Memory usage` parameter in database encryption settings. */
+"[Database/EncryptionSettings/memoryAutoFillWarning]" = "高記憶體空間需求可能造成此資料庫與密碼自動填寫不相容。";
+
+/* Action/button button in database encryption settings. Resets the settings to recommended values. */
+"[Database/EncryptionSettings/reset]" = "重設為建議設定";
+
+/* Parameter name in database encryption settings. Defines the number of computations to run in parallel/simultaneously. Example: 'Parallelism: 2 threads' */
+"[Database/EncryptionSettings/threads]" = "平行";
+
+/* Title: database encryption settings. */
+"[Database/EncryptionSettings/title]" = "加密設定";
+
+/* Info message for entries that contain information for opening a different database. */
+"[Database/Entry/LinkedDatabase/message]" = "此項目指向其他資料庫。";
+
+/* Notification message before database export. */
+"[Database/Export/PlainText/warning]" = "匯出的檔案中會包含您的資料，以純文字格式顯示且無任何保護。";
+
+/* Notification message about external changes to the loaded file. */
+"[Database/ExternalChange/notification]" = "資料庫檔案已變更。是否重新載入？";
+
+/* Status message: checking if currently loaded database is the latest version */
+"[Database/ExternalChange/Status/checkInProgress]" = "正在檢查變更…";
+
+/* Status message: failed to check if currently loaded database is the latest version */
+"[Database/ExternalChange/Status/failed]" = "重新整理失敗";
+
+/* Status message: currently loaded database is the latest version */
+"[Database/ExternalChange/Status/upToDate]" = "最新版";
+
+/* Info message when changing database file format. */
+"[Database/FormatVersion/Conversion/allDataPreserved]" = "將保留您所有資料。";
+
+/* Error message when creating a new passkey. */
+"[Database/FormatVersion/PasskeysNotSupported]" = "目前資料庫格式不支援通行密鑰。";
+
+/* Info message when the app needs to change database file format. [oldFormat, newFormat: String] */
+"[Database/FormatVersion/Upgrade/text]" = "KeePassium 需升級您的資料庫檔案格式（從 %1$@ 到 %2$@）。您可能會需要更新其他使用此資料庫的應用程式。";
+
+/* Title of an info message when the app needs to change database file format. */
+"[Database/FormatVersion/Upgrade/title]" = "在繼續之前";
+
+/* Title of an icon collection: icons provided by the system */
+"[Database/IconSet/System/title]" = "系統";
+
+/* Status of a database item (entry or group) after it was edited. */
+"[Database/Item/Edited/state]" = "已編輯";
 
 /* Notification when user tries to copy data from KDBX to older KDB database. */
 "[Database/LesserTargetFormat/warning]" = "這是舊版的資料庫格式，有些資料也許會遺失";
 
 /* Placeholder shown when there are no database files available */
 "[Database/List/empty]" = "沒有資料庫檔案";
+
+/* Call to action. 'Open' here is used as 'launch'. */
+"[Database/List/LocalMissing/callToAction]" = "開啟應用程式";
+
+/* Recommendation for solving a problem with a list of files. */
+"[Database/List/LocalMissing/message]" = "如果未列出某些本機檔案，請先啟動主要 KeePassium 應用程式。";
 
 /* Title of the database picker list */
 "[Database/List/title]" = "資料庫";
@@ -145,11 +280,17 @@
 /* Error message */
 "[Database/Load/Error] Cannot open key file" = "無法打開金鑰檔案";
 
+/* Error message, when the real file format is recognized. For example: 'Incorrect database format: JPEG.' */
+"[Database/Load/Error] Incorrect database format" = "資料庫格式不正確：%@。";
+
 /* Error shown when both master password and key file are empty */
 "[Database/Load/Error] Please provide at least a password or a key file" = "請至少輸入一個密碼或者選擇一個金鑰檔案";
 
 /* Error message */
 "[Database/Load/Error] Unrecognized database format" = "未知的資料庫格式";
+
+/* Error message */
+"[Database/Load/Error/encryptedByIntune]" = "此資料庫受您的企業 IT 政策及 Microsoft Intune 保護。";
 
 /* Message shown after we show a cached local database instead of the (unavailable) original database. */
 "[Database/Loading/FromCache/text]" = "無法取得資料庫，此處顯示最新的本地暫存檔";
@@ -175,6 +316,9 @@
 /* Glossary term: noun, a master key for encrypting the database */
 "[Database/MasterKey/title]" = "主密碼";
 
+/* Title of database creation dialog */
+"[Database/New/title]" = "新增資料庫";
+
 /* Action/button */
 "[Database/Open/action] Open Database" = "打開資料庫";
 
@@ -193,11 +337,23 @@
 /* Title of a warning message, shown after opening a problematic database */
 "[Database/Opened/Warning/title] Your database is ready, but there was an issue." = "您的資料庫已經準備就緒, 但還有點問題。";
 
+/* Title of a list with database-related actions (e.g. lock database, change master key, etc) */
+"[Database/Operations/title]" = "資料庫操作";
+
+/* Error message about creation of a new passkey. */
+"[Database/Passkey/Error/UnsupportedAlgorithm/description]" = "不支援的通行密鑰演算法";
+
+/* Status message: preparing database print preview. */
+"[Database/Print/preparingPreview]" = "正在準備預覽…";
+
 /* Progress status: finished loading database */
 "[Database/Progress] Done" = "完成";
 
 /* Progress status */
 "[Database/Progress] Loading key file..." = "載入金鑰檔案中...";
+
+/* Database loading/saving status: checking whether our database was modified from another device. */
+"[Database/Progress/checkingDatabaseForModifications]" = "正在檢查資料庫有否修改…";
 
 /* Database loading status: fetching the database file from disk/cloud */
 "[Database/Progress/downloading]" = "下載資料庫檔案...";
@@ -211,11 +367,26 @@
 /* Database loading/saving status: replacing field references with their values */
 "[Database/Progress/resolvingFieldReferences]" = "解析字段引用…";
 
+/* Database saving status: deciding how to handle conflicting changes. */
+"[Database/Progress/resolvingSyncConflict]" = "正在解決同步衝突…";
+
+/* Database saving status */
+"[Database/Progress/writingDatabaseFile]" = "正在寫入資料庫檔案…";
+
+/* Suggested solution/call to action when intermediate sync app fails. */
+"[Database/RecommendRemote/callToAction]" = "嘗試直接從 KeePassium 連接到您的遠端儲存空間。";
+
+/* Action/button */
+"[Database/Reload/action]" = "重新載入資料庫";
+
 /* Message to confirm removal of database file from the app. (This keeps the file, but removes its reference from the app.) */
 "[Database/Remove/Confirm/text] Remove database from the list?\n The file will remain intact and you can add it again later." = "從列表中刪除資料庫?\n 不會對檔案進行更改或刪除, 您可以在稍後添加回來。";
 
 /* Action/button to save the current database. */
 "[Database/Save/action] Save Database" = "儲存資料庫";
+
+/* Action/button to save file to a remote server. */
+"[Database/SaveToServer/action]" = "儲存到伺服器";
 
 /* Status message: finished saving a database */
 "[Database/Saving/Status] Done" = "完成";
@@ -228,6 +399,21 @@
 
 /* File settings parameter: time after which file will be considered unreachable. Example: `Consider File Unreachable: in 10 seconds`.) */
 "[Database/Settings/ConsiderFileUnreachable/title]" = "檔案視為無法取得";
+
+/* File settings parameter: what to do when file was changed by another app/device. (For example: `Database Modified Externally: Don't check`) */
+"[Database/Settings/ExternalChanges/dontCheck]" = "不檢查";
+
+/* File settings parameter: what to do when file was changed by another app/device. (For example: `Database Modified Externally: Notify`) */
+"[Database/Settings/ExternalChanges/notify]" = "通知";
+
+/* File settings parameter: what to do when file was changed by another app/device. (For example: `Database Modified Externally: Reload Automatically`) */
+"[Database/Settings/ExternalChanges/reload]" = "自動重新載入";
+
+/* File settings parameter: what to do when file was changed by another app/device. (For example: `Database Modified Externally: Notify`) */
+"[Database/Settings/ExternalChanges/title]" = "外部修改的資料庫";
+
+/* Title: what to do when a cloud-stored file cannot be loaded. (For example: `If File is Unreachable: Re-add File`.) */
+"[Database/Settings/FallbackStrategy/ReAddFile/title]" = "重新新增檔案";
 
 /* Title: what to do when (remote) file cannot be loaded. (For example: `If File is Unreachable: Show Error`.) */
 "[Database/Settings/FallbackStrategy/ShowError/title]" = "顯示錯誤";
@@ -288,6 +474,36 @@
 
 /* Message shown when user enters an invalid database password */
 "[Database/Unlock/wrongPassword/question]" = "忘記了您的密碼？";
+
+/* Notification message */
+"[Database/UnsavedChanges/autoFillCrashed]" = "由於技術限制，自動填寫無法儲存某些變更。";
+
+/* Notification message */
+"[Database/UnsavedChanges/cannotModifyYet]" = "很抱歉，目前自動填寫還不能修改大型資料庫。我們正在努力解決此問題。";
+
+/* Notification message */
+"[Database/UnsavedChanges/couldNotApply]" = "無法自動套用某些待處理的變更，可能遺失最近所做的修改。";
+
+/* Call to action shown in AutoFill module. */
+"[Database/UnsavedChanges/OpenAppCallToAction]" = "若要儲存變更，請開啟主要 KeePassium 應用程式。";
+
+/* Notification message about a problem with unsaved/pending changes. */
+"[Database/UnsavedChanges/Problematic/info]" = "某些待處理的變更中存在遺失的項目或群組。 KeePassium 將在個別群組中建立這些項目，並在該處套用變更。";
+
+/* Title of a group where problematic pending changes are saved. %@ is the date of recovery. */
+"[Database/UnsavedChanges/RecoveredEntriesGroup/name]" = "已復原的變更 (%@)";
+
+/* Action/button to save accummulated modifications */
+"[Database/UnsavedChanges/saveAction]" = "儲存變更";
+
+/* Notification message */
+"[Database/UnsavedChanges/someDatabases]" = "一個或多個資料庫在自動填寫中存在未儲存的變更。";
+
+/* Notification message */
+"[Database/UnsavedChanges/thisDatabase]" = "此資料庫在自動填寫中存在未儲存的變更。";
+
+/* Title: there are temporary changes to be saved */
+"[Database/UnsavedChanges/title]" = "未儲存的變更";
 
 /* Error message */
 "[Database1/FormatError] Database file is corrupted." = "資料庫檔案損毀。";
@@ -478,8 +694,32 @@
 /* Default name of a newly created entry field */
 "[Entry/Edit/CreateField/defaultName] Field Name" = "字段名稱";
 
+/* Action/button to add a new field to the entry */
+"[Entry/Field/Add/action]" = "新增欄位";
+
+/* On/off state: whether to show full-size or compact menu */
+"[Entry/Field/CompactMenu/title]" = "精簡模式";
+
+/* Notification: a reference to an entry field has been copied to clipboard */
+"[Entry/Field/CopyReference/acknowledgement]" = "欄位參考已複製到剪貼簿";
+
+/* Action: copy a reference to the selected entry field to clipboard */
+"[Entry/Field/CopyReference/action]" = "複製欄位參考";
+
+/* Title for a generic user-defined entry field. */
+"[Entry/Field/Custom/title]" = "自定義欄位";
+
+/* Action: display text using large font */
+"[Entry/Field/LargeType/action]" = "以放大字型顯示";
+
+/* Name of an entry field */
+"[Entry/Field/name] Icon" = "圖示";
+
 /* Name of an entry field */
 "[Entry/Field/name] Notes" = "備註";
+
+/* Title of an entry field */
+"[Entry/Field/name] Passkey" = "通行密鑰";
 
 /* Name of an entry field */
 "[Entry/Field/name] Password" = "密碼";
@@ -493,8 +733,23 @@
 /* Name of an entry field */
 "[Entry/Field/name] User Name" = "用戶名稱";
 
+/* Title of a setting: whether the entry's field is protected (shown as asterisks). */
+"[Entry/Field/Protected/title]" = "受保護的欄位";
+
+/* Action: display text using QR code */
+"[Entry/Field/QRCode/action]" = "顯示為行動條碼";
+
+/* Name of an entry field */
+"[Entry/Field/tags] Tags" = "標籤";
+
+/* Title of an alternative URL, with a number [number: String] */
+"[Entry/Field/URL/Extra/title]" = "URL (%d)";
+
 /* Status message: loading file to be attached to an entry */
 "[Entry/Files/Add] Loading attachment file" = "載入附件";
+
+/* Title of a list with frequently used entry fields. */
+"[Entry/FrequentlyUsedFields/title]" = "常用";
 
 /* Title of a field with entry creation date and time */
 "[Entry/History] Creation Date" = "建立時間";
@@ -507,6 +762,9 @@
 
 /* Title of a field with entry's last modification date and time */
 "[Entry/History] Last Modification Date" = "最後修改日期";
+
+/* Title of a field with entry's modification date and time */
+"[Entry/History] Modification Date" = "修改日期";
 
 /* Title of a list with previous versions/revisions of an entry. */
 "[Entry/History] Previous Versions" = "之前的版本";
@@ -547,6 +805,12 @@
 /* Error message shown when there's internal inconsistency in KeePassium. */
 "[FileAccessError/internalError]" = "KeePassium 內部錯誤，請告知我們。";
 
+/* Error message: organization's IT administrator has forbidden access to a data storage location. */
+"[FileAccessError/ManagedAccessDenied/title]" = "此儲存空間的存取權已由您的組織停用。";
+
+/* Error message: network access is forbidden by system or app settings. */
+"[FileAccessError/NetworkAccessDenied/generic]" = "系統設定已封鎖網路存取權。";
+
 /* Error message: storage provider app (e.g. Google Drive) does not respond to requests. */
 "[FileAccessError/NoResponse/genericFileProvider]" = "儲存空間提供商沒有回應。";
 
@@ -562,11 +826,26 @@
 /* Suggestion for error recovery */
 "[FileAccessError/OneDriveReadOnly/recoverySuggestion]" = "使用 匯出 按鈕將檔案儲存到其他地方。";
 
+/* Error message for file with an expired access permission [fileName: String]. */
+"[FileAccessError/PermissionRequired/reason]" = "KeePassium 需要您的授權才能存取 「%@」。";
+
+/* Action/button for error recovery */
+"[FileAccessError/PermissionRequired/recoveryAction]" = "再次選擇檔案以允許存取";
+
 /* Error message: storage provider app (e.g. Google Drive) does not respond to requests (quickly enough). */
 "[FileAccessError/Timeout/genericFileProvider]" = "儲存空間提供商沒有回應。";
 
 /* Error message: file provider does not respond to requests (quickly enough). For example: `Google Drive does not respond` */
 "[FileAccessError/Timeout/knownFileProvider]" = "%@ 沒有回應。";
+
+/* Section header for attributes of a file (e.g. hidden, excluded from backup, etc) */
+"[FileInfo/Attributes/header]" = "檔案屬性";
+
+/* Title of a setting: is the file hidden */
+"[FileInfo/Attributes/Hidden/title]" = "隱藏";
+
+/* Warning message for 'hidden' files. */
+"[FileInfo/Attributes/Hidden/warning]" = "隱藏檔案較不會向一般使用者顯示，但不會提高資料安全性。";
 
 /* Section header: file backup settings */
 "[FileInfo/Backup/header]" = "備份";
@@ -634,6 +913,9 @@
 /* Localized name of the storage service iCloud Drive (https://icloud.com/iclouddrive) */
 "[FileProvider/iCloud Drive/name]" = "iCloud Drive";
 
+/* Localized name of the storage service: MagentaCLOUD (https://www.telekom.de/zubuchoptionen/magenta-cloud) */
+"[FileProvider/MagentaCloud/name]" = "MagentaCLOUD";
+
 /* Localized name of the storage service: MEGA (https://mega.nz) */
 "[FileProvider/Mega.nz/name]" = "MEGA.nz";
 
@@ -670,6 +952,9 @@
 /* Localized name of the storage app: Seafile Pro (https://apps.apple.com/us/app/seafile-pro/id639202512) */
 "[FileProvider/Seafile Pro/name]" = "Seafile Pro";
 
+/* Localized name of the storage app: Secure ShellFish (https://apps.apple.com/app/ssh-files-secure-shellfish/id1336634154) */
+"[FileProvider/Secure ShellFish/name]" = "Secure ShellFish";
+
 /* Localized name of the storage service: SMB server (network share) via native iOS integration. */
 "[FileProvider/SMB/name]" = "SMB 伺服器";
 
@@ -696,6 +981,18 @@
 
 /* Title of the dialog for picking the destination group for move/copy operations */
 "[General/DestinationGroup/title] Choose a Destination" = "選擇目的地";
+
+/* Feature status: disabled/inactive. Keep it short, possibly abbreviated. */
+"[General/Feature/Off]" = "關閉";
+
+/* Feature status: enabled/active. Keep it short, possibly abbreviated. */
+"[General/Feature/On]" = "開啟";
+
+/* Placeholder for folders without files */
+"[General/FileList/Empty/title]" = "資料夾是空的";
+
+/* Info message for keyboard-assisted selection */
+"[General/MultiSelectionKeys/hint]" = "長按 Cmd 或 Shift 鍵以選擇多個項目。";
 
 /* Action/button to cancel whatever is going on */
 "[Generic] Cancel" = "取消";
@@ -736,6 +1033,12 @@
 /* Action/button to export an item to another app */
 "[Generic] Export" = "匯出";
 
+/* Action/button shown below error messages. Tapping the button will start the fixing/repairing workflow described in the error message. */
+"[Generic] Fix this" = "修復錯誤";
+
+/* Action/button to import an item to another app */
+"[Generic] Import" = "匯入";
+
 /* Action/button to view more help/info about some topic */
 "[Generic] Learn more" = "詳細資訊…";
 
@@ -754,6 +1057,9 @@
 /* Action/button to replace/overwrite an item */
 "[Generic] Overwrite" = "覆寫";
 
+/* Action/button to print a document */
+"[Generic] Print" = "列印";
+
 /* Action/button to rename an item */
 "[Generic] Rename" = "重新命名";
 
@@ -762,6 +1068,9 @@
 
 /* Action/button to restore a backup/archived item in its original place */
 "[Generic] Restore" = "還原";
+
+/* Action: repeat the previous (failed) action */
+"[Generic] Retry" = "重試";
 
 /* Action/button to open Finder (macOS file manager) and highlight a given file */
 "[Generic] Reveal in Finder" = "在 Finder 中顯示";
@@ -781,6 +1090,15 @@
 /* Action/button to skip the current step and proceed with the next one */
 "[Generic] Skip" = "略過";
 
+/* Action/button to change the order of items in a list (move them higher/lower). */
+"[Generic/Action/ReorderItems]" = "重新排序";
+
+/* Action/button to select some items in a list. */
+"[Generic/Action/SelectItems]" = "選擇";
+
+/* Number of entries found in an incoming file. For example: 'Found entries: 42' [itemCount: Int] */
+"[Generic/Count/ImportedEntries]" = "找到的項目：%d";
+
 /* Name of the Recently Deleted (Recycle Bin) directory, as shown in the Files app */
 "[Generic/Directory/Recently Deleted/name]" = "最近刪除";
 
@@ -792,6 +1110,12 @@
 
 /* Action/button to remove a file from the app (the file remains, but the app forgets about it) */
 "[Generic/File] Remove" = "移除";
+
+/* Title of a generic file export screen. */
+"[Generic/File/Export/title]" = "檔案匯出";
+
+/* Action to save data, when we ignore minor problems in the process. */
+"[Generic/File/ForceSave]" = "強制儲存";
 
 /* Action/button to save data to a different file */
 "[Generic/File/Save as]" = "另存新檔…";
@@ -805,8 +1129,14 @@
 /* Title of an error message about file import */
 "[Generic/File/title] Import Error" = "匯入錯誤";
 
+/* Action to proceed after a warning, basically 'I understand the risk' */
+"[Generic/GotIt/action]" = "了解";
+
 /* Title of a list with predefined quick-choice values (for example: 'Presets: 1 week, 1 months, 1 year') */
 "[Generic/Presets]" = "預設值";
+
+/* Action: refresh list of items, usually files */
+"[Generic/RefreshList/action]" = "重新整理清單";
 
 /* Title of a search field (a noun, not verb) */
 "[Generic/Search/title]" = "搜尋";
@@ -819,6 +1149,12 @@
 
 /* Title of an warning message */
 "[Generic/title] Warning" = "警告";
+
+/* Title of a menu with various utilities */
+"[Generic/Tools/title]" = "工具";
+
+/* Action/button to open an online support article (about a specific error) */
+"[Generic/ViewHelpArticle/action]" = "查看幫助文章";
 
 /* Title of a screen/list view configuration: sort order, visible items, etc */
 "[Generic/ViewOptions/title]" = "顯示方式選項";
@@ -835,11 +1171,56 @@
 /* Title of a form for editing a group */
 "[Group/Edit/title] Edit Group" = "編輯群組";
 
+/* VoiceOver description of a menu with group-related actions */
+"[Group/Menu/a11y/title]" = "群組選單";
+
 /* Default name of a new group */
 "[Group/New/defaultName] New Group" = "新建群組";
 
 /* Title for the Notes field in group editor */
 "[Group/Notes/title]" = "備註";
+
+/* Action/button to delete everything inside the Recycle Bin */
+"[Group/RecycleBin/Empty/action]" = "清空資源回收筒";
+
+/* Title of the confirmation dialog for `Empty Recycle Bin` action */
+"[Group/RecycleBin/Empty/confirmTitle]" = "是否永久刪除資源回收筒中的項目？";
+
+/* Title of the Entries section visible while editing */
+"[Group/Section/Entries/title]" = "項目";
+
+/* Title of the Groups section visible while editing */
+"[Group/Section/Groups/title]" = "群組";
+
+/* VoiceOver description of a smart group [groupTitle: String] */
+"[Group/Smart/a11y/description]" = "%@，智慧群組";
+
+/* Action/button to show a help article */
+"[Group/Smart/about]" = "關於智慧群組";
+
+/* Action/button to create a new Smart Group */
+"[Group/Smart/Create/action]" = "建立智慧群組";
+
+/* Default name of a new smart group */
+"[Group/Smart/New/defaultName]" = "新建智慧群組";
+
+/* Title of a list: all entries in the database */
+"[Group/Smart/Preset/allEntries]" = "所有項目";
+
+/* Title of a list: entries that are beyond their expiration date. */
+"[Group/Smart/Preset/expiredEntries]" = "過期項目";
+
+/* Title of a list: entries with one-time passwords (OTP) */
+"[Group/Smart/Preset/otpEntries]" = "包含 OTP 的項目";
+
+/* Title of a list: entries that contain passkeys */
+"[Group/Smart/Preset/passkeyEntries]" = "包含通行密鑰的項目";
+
+/* Title for the Smart Group search conditions in group editor */
+"[Group/Smart/Query/title]" = "智慧群組篩選器";
+
+/* Glossary term: noun, a smart group in database. */
+"[Group/Smart/title]" = "智慧群組";
 
 /* Glossary term: noun, a group in database. */
 "[Group/title]" = "群組";
@@ -850,14 +1231,38 @@
 /* A notification that hardware keys (e.g. YubiKey) cannot be used in AutoFill (the OS does not allow the AutoFill to use NFC/MFI). */
 "[HardwareKey/AutoFill/NotAvailable] Hardware keys are not available in AutoFill." = "硬體金鑰不支持自動填充。";
 
+/* Information notice for a list of hardware keys. */
+"[HardwareKey/AutoFill/TheseNotAvailable]" = "這些硬體金鑰不支援自動填寫。";
+
 /* Name of an input field which shows selected hardware key */
 "[HardwareKey/Field/title]" = "硬體金鑰";
+
+/* Connector type for older Apple devices, used through a USB adapter. https://en.wikipedia.org/wiki/Lightning_(connector) */
+"[HardwareKey/Interface/LightningViaUSBAdapter]" = "Lightning（透過 USB 轉接器）";
+
+/* A notice for hardware keys that need an adapter for physical connection to device. */
+"[HardwareKey/LightningOverUSB/RequiresAdapter]" = "需要 Apple USB-C 對 Lightning 轉接器";
 
 /* Master key/unlock option: don't use hardware keys */
 "[HardwareKey/None] No Hardware Key" = "沒有硬體金鑰";
 
 /* Title of a list with possible hardware key connections */
 "[HardwareKey/Picker/title]" = "硬體金鑰";
+
+/* Title of a slot of a hardware key. For example: `YubiKey Slot 1`. */
+"[HardwareKey/Slot/title]" = "%1$@ 插槽 %2$d";
+
+/* Hardware key slot number. [slotNumber: Int] */
+"[HardwareKey/SlotN]" = "插槽 %d";
+
+/* Title for hardware key slot selection menu. */
+"[HardwareKey/SlotTitle]" = "插槽";
+
+/* Information notice. 'Challenge-response' is a glossary term. */
+"[HardwareKey/USB/chalRespNotSupported]" = "此裝置不支援經由 USB 連接的質詢-回應驗證。";
+
+/* Information notice */
+"[HardwareKey/USB/iPadAppOnMac]" = "無法使用 USB，因為這是在 macOS 上執行的 iPad 應用程式。請使用原生 Mac 應用程式。";
 
 /* Generic title of in-app help article */
 "[Help Viewer/title]" = "幫助";
@@ -868,14 +1273,50 @@
 /* Info message for enterprise users */
 "[Intune/OrgNeedsToManage]" = "貴組織為了保護其資料，需要管理此應用程式。若要完成此動作，請使用您的工作或學校帳戶登入。";
 
+/* Info message for users who accidentally installed the enterprise version. */
+"[Intune/PersonalVersionElsewhere]" = "個人使用的 KeePassium 版本可在 App Store 取得。";
+
 /* Notification that an archived/historical item (e.g entry) has been successfully restored */
 "[Item/History/Restored]" = "先前的版本已經還原";
 
 /* Title of a list with advanced/expert-level properties of a database item (e.g. entry) */
 "[Item/Properties/Advanced/title]" = "進階設定";
 
+/* Possible value of the `Password AutoFill` setting. For example: 'Password AutoFill: Allowed' */
+"[Item/Properties/AutoFill/allowed]" = "已允許";
+
+/* Possible value of the `Password AutoFill` setting. For example: 'Password AutoFill: Disabled' */
+"[Item/Properties/AutoFill/disabled]" = "已停用";
+
+/* Title of a setting: whether the item (e.g. entry) should be used in AutoFill feature. App-specific setting for KeePassXC. */
+"[Item/Properties/AutoFill/KeePassXC/title]" = "密碼自動填寫 (KeePassXC)";
+
+/* Title of a setting: whether the item (e.g. entry) should be used in AutoFill feature */
+"[Item/Properties/AutoFill/title]" = "密碼自動填寫";
+
+/* Default value of an item property. For example: 'Password Audit: Inherit from parent group (Allowed)'. [inheritedValue: String] */
+"[Item/Properties/inheritedValue]" = "從父群組繼承 (%@)";
+
+/* Possible value of the `Password Audit` setting. For example: 'Password Audit: Allowed' */
+"[Item/Properties/PasswordAudit/allowed]" = "已允許";
+
+/* Possible value of the `Password Audit` setting. For example: 'Password Audit: Disabled' */
+"[Item/Properties/PasswordAudit/disabled]" = "已停用";
+
+/* Title of a setting: whether the item (e.g. entry) should be included in password audit */
+"[Item/Properties/PasswordAudit/title]" = "密碼檢查";
+
+/* Possible value of the `Search` setting. Example: 'Search: Allowed' */
+"[Item/Properties/Search/allowed]" = "已允許";
+
+/* Possible value of the `Search` setting, when the item should be excluded from search results. Example: 'Search: Disabled' */
+"[Item/Properties/Search/disabled]" = "已停用";
+
 /* Title of a setting: whether the item (e.g. entry) should be considered during search. Example: 'Search: Allowed' */
 "[Item/Properties/Search/title] Search" = "搜尋";
+
+/* Title of a list with item (e.g. entry) properties/settings, such as searchability, auto-typing, etc */
+"[Item/Properties/title]" = "屬性";
 
 /* Name of an entry/group category (visual style): default one, like in KeePass */
 "[ItemCategory] Default (KeePass)" = "默認(KeePass)";
@@ -898,6 +1339,12 @@
 /* Action: add a key file into the app, by importing or creating one. `Key file` is a glossary term. */
 "[KeyFile/Add/action]" = "添加金鑰檔案";
 
+/* Action: create new key file. */
+"[KeyFile/Create/action]" = "建立金鑰檔案";
+
+/* Default name for new key files. Should match the `key file` term in the glossary. */
+"[KeyFile/Create/defaultName]" = "keyfile.dat";
+
 /* Message to confirm deletion of a key file. */
 "[KeyFile/Delete/Confirm/text] Delete key file?\n Make sure you have a backup." = "刪除金鑰文件?\n 請確保您有備份檔案!";
 
@@ -906,6 +1353,15 @@
 
 /* Name of an input field which shows selected key file */
 "[KeyFile/Field/title]" = "金鑰檔案";
+
+/* Action: import/add a key file into the app. `Key file` is a glossary term. */
+"[KeyFile/Import/action]" = "匯入金鑰檔案";
+
+/* Description of the `Import Key File` action. */
+"[KeyFile/Import/actionDescription]" = "新增檔案到此應用程式";
+
+/* Placeholder shown when there are no key files available */
+"[KeyFile/List/empty]" = "無金鑰檔案";
 
 /* Title of the list with key files. */
 "[KeyFile/List/title]" = "金鑰檔案";
@@ -919,6 +1375,12 @@
 /* Message to confirm removal of a key file from the app. (This keeps the file, but removes its reference from the app.) */
 "[KeyFile/Remove/Confirm/text] Remove key file from the list?\n The file will remain intact and you can add it again later." = "從列表中刪除金要檔案?\n 不會對檔案進行更改或刪除，您可以稍後添加回來。";
 
+/* Action: use a key file at its storage location, without importing to the app. */
+"[KeyFile/Use/action]" = "選擇金鑰檔案";
+
+/* Description of the `Select Key File` action. */
+"[KeyFile/Use/actionDescription]" = "不新增就使用";
+
 /* Error message when the key file is misformatted or damaged */
 "[KeyFileError/Corrupted/title]" = "金鑰檔案已損壞";
 
@@ -931,8 +1393,17 @@
 /* Menu title: app settings */
 "[Menu/Settings/title]" = "設置";
 
+/* Title of a menu: sort order of files in a list */
+"[Menu/Sort] Sort Files By" = "檔案排序條件";
+
+/* Title of a menu: sort order of groups and entries in a list */
+"[Menu/Sort] Sort Items By" = "項目排序條件";
+
 /* Suggestion/hint on how to fix an accompanying error. */
 "[Org/ContactYourAdmin]" = "請連絡您的 IT 系統管理員。";
+
+/* Error message, euphemism for missing corporate license */
+"[Org/LicenseMissing]" = "KeePassium 找不到您組織的企業帳戶。";
 
 /* Name of an entry field */
 "[OTP/FieldName]" = "一次性密碼";
@@ -940,17 +1411,176 @@
 /* Error shown when scanned QR code cannot be used for OTP */
 "[OTP/Scan/InvalidData]" = "此 QR code 無法用於 OTP 設定。";
 
+/* Error shown when a manually entered OTP secret is misformatted. */
+"[OTP/Scan/InvalidSecretCode]" = "輸入的金鑰不適用於 OTP 設定。";
+
 /* Message to confirm user intentions */
 "[OTP/Scan/OverwriteWarning]" = "此項目已經設定了一次性密碼，您要覆蓋它嗎？";
 
 /* Call for action. Acronym `OTP` should not be translated. */
 "[OTP/Setup]" = "一次性密碼 (OTP)";
 
+/* Button/action: proceed with manual OTP setup */
+"[OTP/Setup/EnterManually]" = "手動輸入";
+
+/* Call to action: type in the secret key for OTP setup. */
+"[OTP/Setup/EnterSecretCode/callToAction]" = "輸入金鑰";
+
+/* Button/action: proceed with QR code based OTP setup */
+"[OTP/Setup/ScanQRCode]" = "掃描行動條碼";
+
+/* Action: pick an image (from files) to scan as QR code */
+"[OTP/Setup/ScanQRImageFile]" = "從檔案掃描行動條碼";
+
+/* Action: pick a photo (from gallery) to scan as QR code */
+"[OTP/Setup/ScanQRPhoto]" = "從照片掃描行動條碼";
+
+/* Call to action/instruction during setup of OTP codes. */
+"[OTP/Setup/SelectDatabase/message]" = "選擇資料庫以設定驗證碼（一次性密碼）。";
+
+/* Call to action/instruction during setup of OTP codes. */
+"[OTP/Setup/SelectEntry/message]" = "選擇項目以設定驗證碼（一次性密碼）。";
+
+/* Confirmation message after successful OTP setup */
+"[OTP/Setup/Success]" = "OTP 設定完成";
+
+/* Title of a dialog related to setup of one-time passwords (OTP) */
+"[OTP/Setup/Title]" = "驗證碼設定";
+
+/* Description of an OTP code; sentence case. */
+"[OTP/Title/sentenceCase]" = "一次性密碼";
+
+/* Action/button: accept/use the generated password */
+"[PasswordGenerator/Accept/action]" = "接受";
+
+/* Error message from the random text generator. */
+"[PasswordGenerator/CannotGenerateText/title]" = "無法生成文字";
+
+/* Description of an empty character set for password generator. 'Empty' as 'there are no characters'. */
+"[PasswordGenerator/CustomSet/Empty/title]" = "空白";
+
+/* User-defined set of characters for password generator. */
+"[PasswordGenerator/CustomSet/title]" = "自定義字元";
+
+/* Error message/call to action from the random text generator. */
+"[PasswordGenerator/DesiredLengthTooShort/title]" = "增加長度參數至少到 %d。";
+
+/* Action/button: generate random text/password/phrase */
+"[PasswordGenerator/Generate/action]" = "生成";
+
+/* Description of randomly generated text/password/phrase */
+"[PasswordGenerator/GeneratedText/title]" = "生成的文字";
+
+/* Inclusion criterion for a password generator. For example: `Digits: Allowed` */
+"[PasswordGenerator/InclusionCondition/allowed]" = "已允許";
+
+/* Inclusion criterion for a password generator. For example: `Uppercase Letters: Excluded` */
+"[PasswordGenerator/InclusionCondition/excluded]" = "已排除";
+
+/* Inclusion criterion for a password generator — a disabled/inactive one that won't be taken into account. For example: `Uppercase Letters: Inactive` */
+"[PasswordGenerator/InclusionCondition/inactive]" = "未啟用";
+
+/* Inclusion criterion for a password generator. For example: `Special Symbols: Required` */
+"[PasswordGenerator/InclusionCondition/required]" = "必填";
+
+/* Length (number of characters) of the random text to generate */
+"[PasswordGenerator/Length/title]" = "長度";
+
+/* Description of a password generator parameter. For example, the digit in 'abc222def'. */
+"[PasswordGenerator/MaxConsecutive/description]" = "連續重複的相同字元數上限。";
+
+/* Error message/call to action from the random text generator. */
+"[PasswordGenerator/MaxConsecutiveNotSatisfiable/title]" = "增加連續重複的相同字元數上限。";
+
+/* One of the operation modes of the random text generator */
+"[PasswordGenerator/Mode/Basic/title]" = "基本";
+
+/* One of the operation modes of the random text generator */
+"[PasswordGenerator/Mode/Expert/title]" = "進階";
+
+/* One of the operation modes of the random text generator, where it generates random phrases. */
+"[PasswordGenerator/Mode/Passphrase/title]" = "密碼片語";
+
+/* Operation mode of the random text generator (for example, `Basic`, `Expert`, `Passphrase`) */
+"[PasswordGenerator/Mode/title]" = "模式";
+
+/* Error message from the random text generator. */
+"[PasswordGenerator/NotEnoughElementsToSample/title]" = "需要更多元素以選擇。";
+
+/* Length (number of characters) of the password to generate */
+"[PasswordGenerator/PasswordLength/title]" = "密碼長度";
+
+/* Error message from the random text generator. `required` and `excluded` are as in [PasswordGenerator/InclusionCondition/required] and [PasswordGenerator/InclusionCondition/excluded] */
+"[PasswordGenerator/RequiredSetCompletelyExcluded/title]" = "其中一個字元集既是必要同時被排除。";
+
+/* Title for digits (like '123') */
+"[PasswordGenerator/Set/Digits/title]" = "數字";
+
+/* Title for look-alike symbols (like '1lI', that is: digit `1`, small `L`, capital `i`). */
+"[PasswordGenerator/Set/Lookalikes/title]" = "相似字元";
+
+/* Title for lowercase letters (like 'abc') */
+"[PasswordGenerator/Set/Lowercase/title]" = "小寫字母";
+
+/* Title for special symbols (like '@#$') */
+"[PasswordGenerator/Set/Specials/title]" = "特殊符號";
+
+/* Title for uppercase letters (like 'ABC') */
+"[PasswordGenerator/Set/Uppercase/title]" = "大寫字母";
+
+/* Name of the space character. https://en.wikipedia.org/wiki/Space_(punctuation) */
+"[PasswordGenerator/SpaceCharacter/name]" = "空格";
+
+/* Title of the random text/password/username generator dialog. */
+"[PasswordGenerator/title]" = "隨機生成器";
+
+/* Character to be inserted between words of a passphrase. */
+"[PasswordGenerator/Word Separtor/title]" = "分隔符";
+
+/* Word capitalization style. Written in that style, if possible. */
+"[PasswordGenerator/WordCase/lowerCase]" = "小寫";
+
+/* Case of letters in a word (e.g. UPPER, lower, Title Case) */
+"[PasswordGenerator/WordCase/title]" = "大小寫";
+
+/* Word capitalization style: first letters of significant words capitalized. Written in that style, if possible. */
+"[PasswordGenerator/WordCase/titleCase]" = "標題大小寫";
+
+/* Word capitalization style. Written in that style, if possible. */
+"[PasswordGenerator/WordCase/upperCase]" = "大寫";
+
+/* Number of words in a generated passphrase. In context: 'Words: 5' */
+"[PasswordGenerator/WordCount/title]" = "字數";
+
+/* Name of a wordlist for passphrase generator. `EFF` is an organization name. */
+"[PasswordGenerator/Wordlist/EFFLarge/title]" = "EFF 大詞彙表（7776 字）";
+
+/* Name of a wordlist for passphrase generator. `EFF` is an organization name. */
+"[PasswordGenerator/Wordlist/EFFShort/title]" = "EFF 短\\詞彙表 #%d（1296 字）";
+
+/* Error message when importing a text file [lineNumber: Int, problemDescription: String] */
+"[PasswordGenerator/Wordlist/ImportError/reason]" = "無法匯入檔案，因為第 %1$d 行出現問題 (%2$@)";
+
+/* List of words to be used for a passphrase. */
+"[PasswordGenerator/Wordlist/title]" = "字詞表";
+
+/* Title of a premium feature */
+"[Premium/Benefits/BusinessClouds/title]" = "與企業儲存空間同步";
+
+/* Call to action / Title of a premium feature */
+"[Premium/Benefits/CreativeAutoFill/title]" = "更快速建立帳號";
+
 /* Explanation of the premium feature */
 "[Premium/Benefits/HardwareKeys/details]" = "使用硬體金鑰來保護你的資料，比如 YubiKey 。";
 
 /* Title of a premium feature */
 "[Premium/Benefits/HardwareKeys/title]" = "使用硬體金鑰";
+
+/* Explanation of the premium feature */
+"[Premium/Benefits/LinkedDatabases/details]" = "使用儲存在項目中的驗證資料，一個步驟就能開啟其他資料庫。";
+
+/* Title of a premium feature */
+"[Premium/Benefits/LinkedDatabases/title]" = "開啟連接的資料庫";
 
 /* Explanation of the premium feature */
 "[Premium/Benefits/MultiDB/details]" = "添加多個資料庫並快速切換它們。";
@@ -960,6 +1590,9 @@
 
 /* List of premium benefits/advantages */
 "[Premium/Benefits/Negative/header] " = "缺少了什麼功能";
+
+/* Title of a premium feature */
+"[Premium/Benefits/PasswordAudit/title]" = "檢查您的密碼";
 
 /* List of premium benefits/advantages */
 "[Premium/Benefits/Positive/header] " = "擁有了什麼功能";
@@ -1081,6 +1714,18 @@
 /* Message shown after buying or subscribing. */
 "[Premium/Upgrade/Success/thankYou]" = "感謝您的購買！";
 
+/* Description/call to action for the `Business Cloud Storage` premium feature. */
+"[PremiumFeature/BusinessClouds/description]" = "直接連接到企業儲存空間帳號，如 OneDrive for Business。";
+
+/* Title of a premium feature: access to company's cloud accounts like 'OneDrive for Business' */
+"[PremiumFeature/BusinessClouds/title]" = "企業雲端儲存空間";
+
+/* Description/advertisement for the `Faster Sign-Ups` premium feature */
+"[PremiumFeature/CreativeAutoFill/description]" = "在自動填寫中建立新項目，同時預先填寫主要欄位。";
+
+/* Title of a premium feature: easier registration of new accounts, directly in AutoFill dialog */
+"[PremiumFeature/CreativeAutoFill/title]" = "註冊更快速";
+
 /* A generic description of a premium feature */
 "[PremiumFeature/Generic/description]" = "立即訂閱進階版並享受更好的KeePassium 。";
 
@@ -1093,11 +1738,23 @@
 /* Title of a premium feature: ability use hardware keys (e.g. YubiKey) for encryption (In Title Case) */
 "[PremiumFeature/HardwareKeys/title] Hardware Keys" = "硬體金鑰";
 
+/* Description/advertisement for the `Linked Databases` premium feature */
+"[PremiumFeature/LinkedDatabases/description]" = "升級到進階版，一步開啟連接的資料庫。";
+
+/* Title of a premium feature: ability to open databases referenced in another database (In Title Case) */
+"[PremiumFeature/LinkedDatabases/title]" = "連接的資料庫";
+
 /* Description/advertisement for the `Multiple Databases` premium feature */
 "[PremiumFeature/MultiDB/description] Easily switch between databases in the premium version." = "在進階版本中快速切換多個資料庫。";
 
 /* Title of a premium feature: ability to use multiple databases (In Title Case) */
 "[PremiumFeature/MultiDB/title] Multiple Databases" = "多個資料庫";
+
+/* Description/call to action for the `Password Audit` premium feature. */
+"[PremiumFeature/PasswordAudit/description]" = "檢查您的密碼是否在已知的資料洩露中暴露。";
+
+/* Title of a premium feature: discover which passwords are known to be compromized */
+"[PremiumFeature/PasswordAudit/title]" = "密碼檢查";
 
 /* Description/call to action for the `Quick AutoFill` premium feature. */
 "[PremiumFeature/QuickAutoFill/description]" = "一鍵填寫登入表單，無需開啟 KeePassium。";
@@ -1107,6 +1764,9 @@
 
 /* A brief summary of the privacy policy (for offline mode) */
 "[PrivacyPolicy/Offline/text]" = "KeePassium不會對任何個人資料收集或分析，也不會與任何人分享。";
+
+/* A brief summary of the privacy policy (for online mode) */
+"[PrivacyPolicy/Online/text]" = "KeePassium 不會收集任何個人資料或分析資料。\n若要使用某些功能可能需要和外部服務交換資料（應您的要求執行，且目的僅為向您提供這些服務）。這類資料交換各由對應服務的隱私權政策管理。";
 
 /* Section: privacy policy */
 "[PrivacyPolicy/title]" = "隱私權政策";
@@ -1120,11 +1780,92 @@
 /* Name of a feature that shows relevant entries directly next to the login/password forms. */
 "[QuickAutoFill/title]" = "快速自動填寫密碼";
 
+/* Network security setting */
+"[RemoteConnection/AllowUntrusted/title]" = "允許不受信任的證書";
+
+/* Network connection. For example `Connection: WebDAV` or `Connection: MyCloud`. */
+"[RemoteConnection/Connection/title]" = "連線";
+
+/* Action: connect to a network server */
+"[RemoteConnection/connectToServer]" = "連接到伺服器";
+
+/* Title of a section: username, password, etc */
+"[RemoteConnection/Credentials]" = "憑證";
+
+/* Description of the `Direct connection` sync method. */
+"[RemoteConnection/Direct/description]" = "KeePassium 會直接和您的線上儲存空間通訊。這能確保檔案傳輸安全可靠。";
+
+/* Title of a list with online storage services like OneDrive, Dropbox, etc. */
+"[RemoteConnection/Direct/title]" = "線上服務";
+
+/* Action: change properties of a remote network connection */
+"[RemoteConnection/Edit/action]" = "編輯連線…";
+
+/* Error message: user credentials rejected by the server */
+"[RemoteConnection/Error/AuthenticationFailed/title]" = "身份驗證失敗";
+
+/* Network address of a file */
+"[RemoteConnection/FileURL]" = "檔案 URL";
+
+/* Complete WebDAV URL including path prefix */
+"[RemoteConnection/FullURL]" = "完整 URL";
+
+/* Name of a predefined Google Drive folder which contains user's own files */
+"[RemoteConnection/GoogleDrive/Folder/myDrive]" = "我的雲端硬碟";
+
+/* Name of a predefined GoogleDrive folder which contains files shared with this user */
+"[RemoteConnection/GoogleDrive/Folder/sharedWithMe]" = "和我共享";
+
 /* Name of a predefined OneDrive folder which contains user's own files */
 "[RemoteConnection/OneDrive/Folder/files]" = "檔案";
 
+/* Name of a predefined OneDrive folder which contains files shared with this user */
+"[RemoteConnection/OneDrive/Folder/sharedWithMe]" = "共享";
+
+/* Network address of a WebDAV server */
+"[RemoteConnection/ServerURL]" = "伺服器 URL";
+
+/* Action: authenticate to Dropbox account */
+"[RemoteConnection/SignIn/Dropbox/action]" = "登入 Dropbox";
+
+/* Error description: the user should manually sign in to their Dropbox account */
+"[RemoteConnection/SignIn/Dropbox/authorizationRequried]" = "Dropbox 需請您重新登入。";
+
+/* Action: authenticate to Google Drive account */
+"[RemoteConnection/SignIn/GoogleDrive/action]" = "登入 Google 雲端硬碟";
+
+/* Error description: the user should manually sign in to their Google Drive account */
+"[RemoteConnection/SignIn/GoogleDrive/authorizationRequried]" = "Google 雲端硬碟需請您重新登入。";
+
+/* Action: authenticate to OneDrive account */
+"[RemoteConnection/SignIn/OneDrive/action]" = "登入 OneDrive";
+
+/* Error description: the user should manually sign in to their OneDrive account */
+"[RemoteConnection/SignIn/OneDrive/authorizationRequried]" = "OneDrive 需請您重新登入。";
+
+/* No comment provided by engineer. */
+"[RemoteConnection/SignIn/PrivateMode/description]" = "在私密瀏覽網頁模式中開啟登入頁面";
+
+/* No comment provided by engineer. */
+"[RemoteConnection/SignIn/PrivateMode/title]" = "私密模式";
+
+/* Title: connection to a network storage */
+"[RemoteConnection/title]" = "遠端連線";
+
+/* Description of the `Integration via Files app` sync method. */
+"[RemoteConnection/ViaFilesApp/description]" = "KeePassium 會將檔案同步指派給您的儲存空間提供商的應用程式。有些應用程式運作較佳。";
+
+/* Link to a help page for an online storage service. The parameter is the service name in fixed neutral form. Example: 'Nextcloud Setup Guide' or 'Synology NAS Setup Guide'. */
+"[RemoteConnection/WebDAVService/SetupGuide]" = "%@ 設定指南";
+
 /* Name of an input field for entering the password again */
 "[Repeat Password/Field/title]" = "請重複輸入密碼";
+
+/* Description of the auto-download favicons feature */
+"[Settings/AutoDownloadFavicons/description]" = "編輯項目後自動下載網站圖示。";
+
+/* Settings option: automatically download website icons/favicons */
+"[Settings/AutoDownloadFavicons/title]" = "自動下載 Favicon";
 
 /* Title of AutoFill settings screen */
 "[Settings/AutoFill/title]" = "自動填寫密碼";
@@ -1150,14 +1891,65 @@
 /* Title of list view configuration screen */
 "[Settings/ListSettings/title]" = "列表設置";
 
+/* Notification when corporate user tries to use a feature forbidden by organization's IT department. */
+"[Settings/Managed/BlockedFeature/notification]" = "此功能已被您的組織封鎖。";
+
+/* Notification when corporate user tries to change an app setting controlled by organization's IT department. */
+"[Settings/Managed/notification]" = "此設定由您的組織管理。";
+
 /* Setting: preserve (cache) calculated database keys */
 "[Settings/MasterKeys/CacheDerived/title]" = "快取加密金鑰";
 
 /* Title of a yes/no setting */
 "[Settings/MasterKeys/Remember/title]" = "記住主金鑰";
 
+/* Confirmation dialog message */
+"[Settings/NetworkAccess/Confirmation/text]" = "是否允許 KeePassium 與外部服務進行網路連線？";
+
+/* Settings section: how/whether the app is allowed to use networks/Internet */
+"[Settings/NetworkAccess/title]" = "網路存取";
+
+/* Description of the `Stay Offline` mode. */
+"[Settings/NetworkAccessMode/Offline/description]" = "最高隱私保護";
+
+/* Setting option: the app should work offline */
+"[Settings/NetworkAccessMode/Offline/title]" = "保持離線";
+
+/* Description of the `Allow Network Access` mode. */
+"[Settings/NetworkAccessMode/Online/description]" = "最高功能性";
+
+/* Setting option: the app is permitted to use online features */
+"[Settings/NetworkAccessMode/Online/title]" = "允許網路存取";
+
+/* Action/button which resets some settings to their default state. */
+"[Settings/RestoreDefaults/action]" = "還原預設";
+
+/* Call to action (explains why a setting is disabled) */
+"[Settings/ShakeGestureAction/LockApp/disabledTitle]" = "先啟用應用程式保護";
+
+/* An option in Settings. Will be shown as 'When Shaken: Lock App' */
+"[Settings/ShakeGestureAction/LockApp/shortTitle]" = "鎖定應用程式";
+
+/* An option in Settings. Will be shown as 'When Shaken: Lock All Databases' */
+"[Settings/ShakeGestureAction/LockDatabases/shortTitle]" = "鎖定所有資料庫";
+
+/* An option in Settings. Will be shown as 'When Shaken: Do Nothing' */
+"[Settings/ShakeGestureAction/Nothing/shortTitle]" = "無操作";
+
+/* An option in Settings. Will be shown as 'When Shaken: Quit App' */
+"[Settings/ShakeGestureAction/QuitApp/shortTitle]" = "退出應用程式";
+
 /* Title of the app settings screen */
 "[Settings/title]" = "設置";
+
+/* Title of a settings value. For example: `Remember Master Keys: No` */
+"[Settings/Value/No/title]" = "否";
+
+/* Title of a settings value, when it is not customized and we default to app's global settings. For example: `Remember Master Keys: Use App Settings (No)` */
+"[Settings/Value/UseAppSettings/title]" = "使用應用程式設定（%@）";
+
+/* Title of a settings value. For example: `Remember Master Keys: Yes` */
+"[Settings/Value/Yes/title]" = "是";
 
 /* List sorting option (for file names). Example: 'Sort by: Name' */
 "[SortBy/FileName]" = "按檔名";
@@ -1165,11 +1957,26 @@
 /* List sorting option, when no sorting is selected. Example: 'Sort by: None' */
 "[SortBy/None]" = "無";
 
+/* List sorting option, when items are manually ordered by the user. Example: 'Sort order: Custom' */
+"[SortOrder/Custom]" = "自定義";
+
+/* Subtitle for a storage service: the app will have access only to its own dedicated folder. */
+"[StorageService/DedicatedAppFolder/title]" = "僅限應用程式資料夾";
+
 /* Name of a cloud storage service */
 "[StorageService/DropboxBusiness/title]" = "Dropbox Business";
 
 /* Name of a cloud storage service */
 "[StorageService/DropboxPro/title]" = "Dropbox Pro";
+
+/* Name of a cloud storage service */
+"[StorageService/GoogleWorkspace/title]" = "Google Workspace";
+
+/* Name of a cloud storage service. Must match Microsoft's translation, see  https://partner.microsoft.com/solutions/onedrive-for-business */
+"[StorageService/OneDriveForBusiness/title]" = "商務用 OneDrive";
+
+/* Title of a file storage service option (for example: Dropbox, OneDrive, Other Services) */
+"[StorageService/OtherServices/title]" = "其他服務";
 
 /* Template text of a bug report email */
 "[Support/template] (Please describe the problem here)" = "(請在此處描述問題)";
@@ -1215,6 +2022,12 @@
 
 /* Human-readable file location: the file is on device, inside the app sandbox. Example: 'File Location: Local copy' */
 "[URLReference/Location] Local copy" = "本地副本";
+
+/* Human-readable file location. Example: 'File Location: Remote server' */
+"[URLReference/Location/RemoteServer]" = "遠端伺服器";
+
+/* Error shown when user selects a file path instead of folder path in WebDAV. */
+"[WebDAV/Export/NeedsFolder]" = "請選擇資料夾路徑";
 
 /* Call for action: insert YubiKey 5Ci to the Lightning port */
 "[YubiKey] Insert the key" = "插入金鑰";

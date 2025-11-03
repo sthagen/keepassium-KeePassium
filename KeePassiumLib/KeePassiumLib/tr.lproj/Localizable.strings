@@ -2,22 +2,43 @@
 "[About/CopyrightAuthor]" = "©Andrei Popleteev";
 
 /* Suggestion/hint for available user action */
-"[Accessibility] Double tap to copy to clipboard" = "Kopyalamak için çift tıkla";
+"[Accessibility] Double tap to copy to clipboard" = "Panoya kopyalamak için çift dokunun";
+
+/* Call to action: perform accessibilty `activate` action to listen to text/content. */
+"[Accessibility/activateToListen]" = "Dinlemek için etkinleştirin.";
+
+/* Accessibility notification for entries with attached files. */
+"[Accessibility/containsAttachments]" = "Ek içeriyor.";
+
+/* Accessibility notification for entries with a problematic passkey */
+"[Accessibility/containsIncompatiblePasskey]" = "Bu cihazla uyumsuz bir geçiş kodu içeriyor.";
+
+/* Accessibility notification for entries with OTP codes. */
+"[Accessibility/containsOTP]" = "Tek kullanımlık şifre içeriyor.";
+
+/* Accessibility notification for entries with a passkey */
+"[Accessibility/containsPasskey]" = "Geçiş kodu içeriyor.";
+
+/* Action which resets the app as if it was just installed. */
+"[App/ResetEverything/action]" = "Sıfırla";
+
+/* Confirmation message before resetting the app to just-installed state. */
+"[App/ResetEverything/title]" = "Uygulama sıfırlansın mı?";
 
 /* Action/button to unlock the App Lock with passcode */
 "[AppLock] Unlock" = "Kilidi aç";
 
 /* Hint/Description why the user is asked to provide their fingerprint. Shown in the standard Touch ID prompt. */
-"[AppLock/Biometric/Hint] Unlock KeePassium" = "KeePassium'un Kilidini Aç";
+"[AppLock/Biometric/Hint] Unlock KeePassium" = "KeePassium'un kilidini açın";
 
 /* Action/button to switch from TouchID/FaceID prompt to manual input of the AppLock passcode. */
-"[AppLock/cancelBiometricAuth] Use Passcode" = "Pin Kodu Kullan";
+"[AppLock/cancelBiometricAuth] Use Passcode" = "Şifre Kodu kullan";
 
 /* Action/button to modify the existing AppLock passcode. */
-"[AppLock/changePasscode]" = "Şifreyi Değiştir";
+"[AppLock/changePasscode]" = "Şifre Kodunu değiştir";
 
 /* Call to action in the passcode input dialog. */
-"[AppLock/EnterPasscode/callToAction]" = "KeePassium'un Kilidini Aç";
+"[AppLock/EnterPasscode/callToAction]" = "KeePassium'un kilidini aç";
 
 /* Action: change keyboard type to enter alphanumeric passphrases */
 "[AppLock/Passcode/KeyboardType/switchAction] 123→ABC" = "123→ABC";
@@ -31,20 +52,44 @@
 /* Type of keyboard to show for App Lock passcode: digits only (PIN code). */
 "[AppLock/Passcode/KeyboardType/title] Numeric" = "Nümerik";
 
+/* Notification for business users when they set up too weak app protection passcode. */
+"[AppLock/Passcode/orgRequiresStonger]" = "Kuruluşunuz daha karmaşık bir şifre kodu gerektiriyor.";
+
+/* Hint/call to action about keyboard shortcut */
+"[AppLock/Passcode/pressEscForTouchID]" = "Touch ID için Esc tuşuna basın";
+
 /* Notification that the modified AppLock passcode has been saved. */
-"[AppLock/passcodeUpdated/title]" = "Şifre güncelleme başarılı.";
+"[AppLock/passcodeUpdated/title]" = "Şifre kodu başarıyla güncellendi.";
 
 /* Action/button to save new or edited AppLock passcode. */
-"[AppLock/savePasscode]" = "Şifreyi Kaydet";
+"[AppLock/savePasscode]" = "Şifre Kodunu kaydet";
 
 /* Call to action in the passcode input dialog. */
-"[AppLock/SetupPasscode/callToAction]" = "KeePassium'u yetkisiz girişlerden koruyun";
+"[AppLock/SetupPasscode/callToAction]" = "KeePassium'u izinsiz erişimden koruyun";
 
 /* Message shown when AutoFill cannot automatically open the main app for upgrading to a premium version. */
-"[AutoFill/Premium/Upgrade/Manual/text] To upgrade, please manually open KeePassium from your home screen." = "Yükseltme işlemi için lütfen KeePassium'u ana ekrandan manuel olarak açın.";
+"[AutoFill/Premium/Upgrade/Manual/text] To upgrade, please manually open KeePassium from your home screen." = "Yükseltmek için lütfen KeePassium'u ana ekranınızdan manuel olarak açın.";
 
 /* Title of a message related to upgrading to the premium version */
-"[AutoFill/Premium/Upgrade/Manual/title] Premium Upgrade" = "Piremiuma Yükselt";
+"[AutoFill/Premium/Upgrade/Manual/title] Premium Upgrade" = "Premium'a Yükseltme";
+
+/* Call to action / instruction on how to enable accessibility permission */
+"[AutoType/AccessibilityPrompt/callToAction]" = "Sistem ayarları → Gizlilik ve Güvenlik → Erişilebilirlik adımlarını izleyip buradan KeePassium'u etkinleştirin.";
+
+/* Message explaining why accessibility permission is needed */
+"[AutoType/AccessibilityPrompt/message]" = "KeePassium'un diğer uygulamalara tuş vuruşları göndermek için izninize ihtiyacı var.";
+
+/* Title of a dialog asking user to provide a security permission */
+"[AutoType/AccessibilityPrompt/title]" = "KeePassium'un izninize ihtiyacı var";
+
+/* Action: send key presses to 'type in' entry data into another app */
+"[AutoType/action]" = "Otomatik Yazma gerçekleştir";
+
+/* Button to open system settings (accessibility, permissions, etc) */
+"[AutoType/Action/OpenSettings]" = "Ayarlar'ı aç";
+
+/* Title for error when auto-type fails */
+"[AutoType/Error/Title]" = "Otomatik Yazma Başarısız";
 
 /* Name of biometric authentication method. Trademarked, do not translate unless Apple traslated it to your language. */
 "[BiometricAuthType] Face ID" = "Face ID";
@@ -56,16 +101,16 @@
 "[ChallengeResponseError] cancelled" = "Kullanıcı tarafından iptal edildi.";
 
 /* Error message when the hardware key is not plugged in. */
-"[ChallengeResponseError] keyNotConnected" = "Donanım anahtarı bulunamadı.";
+"[ChallengeResponseError] keyNotConnected" = "Donanım anahtarı bağlı değil.";
 
 /* Error message when trying to use challenge-response hardware in AutoFill. */
-"[ChallengeResponseError] notAvailableInAutoFill" = "Donanım anahtarı, otomatik doldurmada kullanılamaz.";
+"[ChallengeResponseError] notAvailableInAutoFill" = "Donanım anahtarları, Otomatik Doldurmada kullanılamıyor.";
 
 /* Error message when trying to use challenge-response with a kdb database. */
-"[ChallengeResponseError] notSupportedByDatabaseFormat" = "Donanım anahtarları bu veritabanı formatında desteklenmemektedir.";
+"[ChallengeResponseError] notSupportedByDatabaseFormat" = "Donanım anahtarları bu veri tabanı formatında desteklenmiyor.";
 
 /* Error message when trying to use a hardware challenge-response key on unsupported device/iOS version. %@ will be the name of the hardware interface, such as `NFC` or `Lightning`. */
-"[ChallengeResponseError] notSupportedByDeviceOrSystem" = "Bu cihaz ya da mevcut iOS sürümünüz donanım anahtarını desteklememektedir (%@)";
+"[ChallengeResponseError] notSupportedByDeviceOrSystem" = "Bu cihaz ya da iOS sürümü, donanım anahtarlarını (%@) desteklemiyor";
 
 /* Error message: the hardware key (or its slot) was not configured for challenge-response operations. */
 "[ChallengeResponseError] slotNotConfigured" = "Donanım anahtarı, sorgulama-yanıt için yapılandırılmamış.";
@@ -77,7 +122,7 @@
 "[Cipher/Progress] Encrypting" = "Şifreleniyor";
 
 /* Action copy some named value to clipboard. For example: `Copy Password`. [valueName: String] */
-"[Clipboard/Copy/namedValue]" = "%@'yı kopyala";
+"[Clipboard/Copy/namedValue]" = "%@ ögesini kopyala";
 
 /* Notification: an item has been copied to clipboard */
 "[Clipboard/Copy/notification]" = "Kopyalandı";
@@ -92,10 +137,10 @@
 "[CryptoError] AES initialization error (code %d)" = "AES başlatma hatası (%d kodu)";
 
 /* Error message about Argon2 hashing function. [errorCode: Int] */
-"[CryptoError] Argon2 hashing error (code %d)" = "Argon2 şifre yaratma hatası (%d kodu)";
+"[CryptoError] Argon2 hashing error (code %d)" = "Argon2 karma hatası (%d kodu)";
 
 /* Error message about PKCS7 padding. [errorCode: Int] */
-"[CryptoError] Invalid data padding (code %d). File corrupt?" = "Geçersiz veri izi (%d kodu). Dosya bozuk olabilir mi?";
+"[CryptoError] Invalid data padding (code %d). File corrupt?" = "Geçersiz veri dolgusu (%d kodu). Dosya bozuk olabilir mi?";
 
 /* Error message about key derivation function (KDF) parameters. [kdfName: String, paramName: String] */
 "[CryptoError] Invalid KDF parameter: %@ - %@. File corrupt?" = "Geçersiz KDF parametresi: %1$@ - %2$@. Dosya bozuk olabilir mi?";
@@ -104,115 +149,247 @@
 "[CryptoError] Random number generator error (code %d)" = "Rastgele sayı üretme hatası (%d kodu)";
 
 /* Error message about Twofish cipher. [errorCode: Int] */
-"[CryptoError] Twofish cipher error (code %d)" = "Twofish şifre hatası (%d kodu)";
+"[CryptoError] Twofish cipher error (code %d)" = "Twofish şifreleme hatası (%d kodu)";
 
 /* Warning when trying to add a random file as a database. [fileName: String] */
-"[Database/Add] Selected file \"%@\" does not look like a database." = "Seçili dosya \"%@\" veritabanına benzemiyor.";
+"[Database/Add] Selected file \"%@\" does not look like a database." = "Seçili dosya \"%@\" veri tabanına benzemiyor.";
 
 /* Action/button to create a new database */
-"[Database/Create/action] Create Database" = "Veritabanı Oluştur";
+"[Database/Create/action] Create Database" = "Veri Tabanı oluştur";
 
 /* Action: add/import an image as a custom icon */
-"[Database/CustomIcon/add]" = "Özel Simge Ekle";
+"[Database/CustomIcon/add]" = "Özel Simge ekle";
+
+/* Notification when some custom icons are about to be deleted [iconCount: Int] */
+"[Database/CustomIcon/All/count]" = "Tüm özel simgeler: %d";
 
 /* Action: delete all custom icons */
 "[Database/CustomIcon/deleteAll]" = "Tümünü Sil";
 
+/* Action: delete unused icons */
+"[Database/CustomIcon/deleteUnused]" = "Kullanılmayan Simgeleri sil";
+
+/* Action: download icon of a website */
+"[Database/CustomIcon/DownloadFavicon/action]" = "Favicon'u indir";
+
+/* Action/button to download favicons of websites mentioned in selected entries. */
+"[Database/CustomIcon/DownloadFavicons/action]" = "Favicon indir";
+
+/* Report of favicon download results. */
+"[Database/CustomIcon/DownloadFavicons/stats]" = "İşlenen girdiler: %1$d\nGüncellenen simgeler: %2$d";
+
+/* Status message: multiple website favicons are being downloaded */
+"[Database/CustomIcon/DownloadFavicons/status]" = "Favicon'lar indiriliyor";
+
+/* Status message: a website favicon is being downloaded */
+"[Database/CustomIcon/DownloadOneFavicon/status]" = "Favicon indiriliyor";
+
+/* Notification when some custom icons are not used by any group or entry [iconCount: Int] */
+"[Database/CustomIcon/Unused/count]" = "Kullanılmayan simgeler bulundu: %d";
+
 /* Message to confirm deletion of a database file. (This deletes the file itself) */
-"[Database/Delete/Confirm/text] Delete database file?\n Make sure you have a backup." = "Veritabanı dosyasını sil?\n  Bir yedeğiniz olduğundan emin olun.";
+"[Database/Delete/Confirm/text] Delete database file?\n Make sure you have a backup." = "Veri tabanı dosyası silinsin mi?\n  Yedeklemeniz olduğundan emin olun.";
+
+/* Action to modify database encryption settings. */
+"[Database/EncryptionSettings/Change/action]" = "Şifreleme Ayarlarını değiştir";
+
+/* Parameter name in database encryption settings. Example: 'Encryption Algorithm: AES-256' */
+"[Database/EncryptionSettings/dataCipher]" = "Şifreleme Algoritması";
+
+/* Parameter name in database encryption settings. Defines the number of times/iterations a calculation (transform) should be executed. Example: 'Transform Rounds: 100' */
+"[Database/EncryptionSettings/iterations]" = "Dönüştürme Turları";
 
 /* Parameter name in database encryption settings. This is a term, see https://en.wikipedia.org/wiki/Key_derivation_function. Example: 'Key Derivation Function: Argon2' */
 "[Database/EncryptionSettings/kdf]" = "Anahtar Türetme İşlevi";
 
+/* Parameter name in database encryption settings. Defines the amount of memory that should be used by an algorithm. Example: 'Memory Usage: 16 MB' */
+"[Database/EncryptionSettings/memory]" = "Bellek Kullanımı";
+
+/* Warning for too high value of the `Memory usage` parameter in database encryption settings. */
+"[Database/EncryptionSettings/memoryAutoFillWarning]" = "Yüksek bellek gereklilikleri, bu veri tabanının Şifre Otomatik Doldurma ile uyumsuz hâle gelmesine neden olabilir.";
+
+/* Action/button button in database encryption settings. Resets the settings to recommended values. */
+"[Database/EncryptionSettings/reset]" = "Önerilen Ayarlara sıfırla";
+
+/* Parameter name in database encryption settings. Defines the number of computations to run in parallel/simultaneously. Example: 'Parallelism: 2 threads' */
+"[Database/EncryptionSettings/threads]" = "Paralellik";
+
+/* Title: database encryption settings. */
+"[Database/EncryptionSettings/title]" = "Şifreleme Ayarları";
+
+/* Info message for entries that contain information for opening a different database. */
+"[Database/Entry/LinkedDatabase/message]" = "Bu girdi, başka bir veri tabanına işaret ediyor.";
+
+/* Notification message before database export. */
+"[Database/Export/PlainText/warning]" = "Dışa aktarılan dosya, verilerinizi korunmasız bir şekilde düz metin olarak içerecek.";
+
+/* Notification message about external changes to the loaded file. */
+"[Database/ExternalChange/notification]" = "Veri tabanı dosyası değişti. Yeniden yüklensin mi?";
+
+/* Status message: checking if currently loaded database is the latest version */
+"[Database/ExternalChange/Status/checkInProgress]" = "Değişiklikler kontrol ediliyor…";
+
+/* Status message: failed to check if currently loaded database is the latest version */
+"[Database/ExternalChange/Status/failed]" = "Yenileme başarısız oldu";
+
+/* Status message: currently loaded database is the latest version */
+"[Database/ExternalChange/Status/upToDate]" = "Güncel";
+
+/* Info message when changing database file format. */
+"[Database/FormatVersion/Conversion/allDataPreserved]" = "Tüm verileriniz korunacak.";
+
+/* Error message when creating a new passkey. */
+"[Database/FormatVersion/PasskeysNotSupported]" = "Mevcut veri tabanı formatı, geçiş kodlarını desteklemiyor.";
+
+/* Info message when the app needs to change database file format. [oldFormat, newFormat: String] */
+"[Database/FormatVersion/Upgrade/text]" = "KeePassium'un veri tabanı dosya formatınızı yükseltmesi gerekiyor ( %1$@ > %2$@). Bu veri tabanını kullanan diğer uygulamaları güncellemeniz gerekebilir.";
+
+/* Title of an info message when the app needs to change database file format. */
+"[Database/FormatVersion/Upgrade/title]" = "Devam etmeden önce";
+
+/* Title of an icon collection: icons provided by the system */
+"[Database/IconSet/System/title]" = "Sistem";
+
+/* Status of a database item (entry or group) after it was edited. */
+"[Database/Item/Edited/state]" = "Düzenlendi";
+
+/* Notification when user tries to copy data from KDBX to older KDB database. */
+"[Database/LesserTargetFormat/warning]" = "Bu, eski bir veri tabanı formatıdır, bazı veriler kaybedilebilir.";
+
 /* Placeholder shown when there are no database files available */
 "[Database/List/empty]" = "Veritabanı dosyası yok";
 
+/* Call to action. 'Open' here is used as 'launch'. */
+"[Database/List/LocalMissing/callToAction]" = "Uygulamayı aç";
+
+/* Recommendation for solving a problem with a list of files. */
+"[Database/List/LocalMissing/message]" = "Bazı yerel dosyalar listelenmiyorsa önce ana KeePassium uygulamasını başlatın.";
+
 /* Title of the database picker list */
-"[Database/List/title]" = "Veritabanları";
+"[Database/List/title]" = "Veri Tabanları";
 
 /* Error message */
-"[Database/Load/Error] Cannot find database file" = "Veritabanı dosyası bulunamadı";
+"[Database/Load/Error] Cannot find database file" = "Veri tabanı dosyası bulunamadı";
 
 /* Error message */
-"[Database/Load/Error] Cannot find key file" = "Anahtar dosya bulunamadı";
+"[Database/Load/Error] Cannot find key file" = "Anahtar dosyası bulunamadı";
 
 /* Error message */
-"[Database/Load/Error] Cannot open database file" = "Veritabanı dosyası bulunamadı";
+"[Database/Load/Error] Cannot open database file" = "Veri tabanı dosyası açılamadı";
 
 /* Error message */
-"[Database/Load/Error] Cannot open key file" = "Anahtar dosya açılamadı";
+"[Database/Load/Error] Cannot open key file" = "Anahtar dosyası açılamadı";
+
+/* Error message, when the real file format is recognized. For example: 'Incorrect database format: JPEG.' */
+"[Database/Load/Error] Incorrect database format" = "Hatalı veri tabanı formatı: %@.";
 
 /* Error shown when both master password and key file are empty */
-"[Database/Load/Error] Please provide at least a password or a key file" = "Lütfen en az bir şifre veya anahtar dosyası ayarlayın";
+"[Database/Load/Error] Please provide at least a password or a key file" = "Lütfen en az bir şifre veya anahtar dosyası sağlayın";
 
 /* Error message */
-"[Database/Load/Error] Unrecognized database format" = "Bilinmeyen veri tabanı biçimi";
+"[Database/Load/Error] Unrecognized database format" = "Tanınmayan veri tabanı formatı";
+
+/* Error message */
+"[Database/Load/Error/encryptedByIntune]" = "Bu veri tabanı, kurumsal BT politikalarınız ve Microsoft Intune tarafından korunmaktadır.";
+
+/* Message shown after we show a cached local database instead of the (unavailable) original database. */
+"[Database/Loading/FromCache/text]" = "Veri tabanına ulaşılamıyor.\nBu, en son yerel kopyası.";
 
 /* Message shown if current database cannot be edited */
-"[Database/Loading/ReadOnly/text]" = "Bu veritabanı salt okunur";
+"[Database/Loading/ReadOnly/text]" = "Bu veri tabanı salt okunur";
 
 /* Status message: loading a database */
 "[Database/Loading/Status] Loading..." = "Yükleniyor...";
 
 /* Action/button: change master key of a database. */
-"[Database/MasterKey/Change/action]" = "Ana Anahtarı Değiştir";
+"[Database/MasterKey/Change/action]" = "Ana Anahtarı değiştir";
 
 /* Notification after changing database master key */
 "[Database/MasterKey/changed] Master key successfully changed" = "Ana anahtar başarıyla değiştirildi";
 
 /* A warning shown when changing database password. Is preceded with `Remember your database password`. */
-"[Database/MasterKey/RememberYourPassword/text]" = "Eğer olur da unutursanız; verilerinize bir daha erişemeyeceksiniz. Şifre sıfırlama gibi bir imkanın olmadığını aklınızda bulundurun.";
+"[Database/MasterKey/RememberYourPassword/text]" = "Olur da unutursanız verilerinize bir daha erişemezsiniz. Şifre sıfırlama seçeneği yoktur.";
 
 /* Imperative/recommendation: title of a warning when changing database password. */
-"[Database/MasterKey/RememberYourPassword/title]" = "Veritabanı şifrenizi unutmayın";
+"[Database/MasterKey/RememberYourPassword/title]" = "Veri tabanı şifrenizi unutmayın";
 
 /* Glossary term: noun, a master key for encrypting the database */
 "[Database/MasterKey/title]" = "Ana Anahtar";
 
+/* Title of database creation dialog */
+"[Database/New/title]" = "Yeni Veri Tabanı";
+
 /* Action/button */
-"[Database/Open/action] Open Database" = "Veritabanını Aç";
+"[Database/Open/action] Open Database" = "Veri Tabanını aç";
 
 /* Action/button to lock current database (the next time, it will ask for the master key). */
-"[Database/Opened/action] Lock Database" = "Veritabanını Kilitle";
+"[Database/Opened/action] Lock Database" = "Veri Tabanını kilitle";
 
 /* Action: lock database */
-"[Database/Opened/Warning/action] Close Database" = "Veritabanını Kapat";
+"[Database/Opened/Warning/action] Close Database" = "Veri Tabanını kapat";
 
 /* Action: ignore warnings and proceed to work with the database */
 "[Database/Opened/Warning/action] Ignore and Continue" = "Yoksay ve Devam Et";
 
 /* Status message: name of the app that was last to write/create the database file. [lastUsedAppName: String] */
-"[Database/Opened/Warning/lastEdited] Database was last edited by: %@" = "Veritabanı en son %@ tarafından değiştirildi.";
+"[Database/Opened/Warning/lastEdited] Database was last edited by: %@" = "Veri tabanını en son düzenleyen: %@";
 
 /* Title of a warning message, shown after opening a problematic database */
-"[Database/Opened/Warning/title] Your database is ready, but there was an issue." = "Veritabanınız hazır, ancak bir sorun oldu.";
+"[Database/Opened/Warning/title] Your database is ready, but there was an issue." = "Veri tabanınız hazır ancak bir sorun oluştu.";
+
+/* Title of a list with database-related actions (e.g. lock database, change master key, etc) */
+"[Database/Operations/title]" = "Veri Tabanı İşlemleri";
+
+/* Error message about creation of a new passkey. */
+"[Database/Passkey/Error/UnsupportedAlgorithm/description]" = "Desteklenmeyen geçiş kodu algoritması";
+
+/* Status message: preparing database print preview. */
+"[Database/Print/preparingPreview]" = "Ön izleme hazırlanıyor…";
 
 /* Progress status: finished loading database */
-"[Database/Progress] Done" = "Bitti!";
+"[Database/Progress] Done" = "Bitti";
 
 /* Progress status */
-"[Database/Progress] Loading key file..." = "Anahtar dosya yükleniyor...";
+"[Database/Progress] Loading key file..." = "Anahtar dosyası yükleniyor...";
+
+/* Database loading/saving status: checking whether our database was modified from another device. */
+"[Database/Progress/checkingDatabaseForModifications]" = "Veri tabanı, değişiklikler için kontrol ediliyor…";
 
 /* Database loading status: fetching the database file from disk/cloud */
-"[Database/Progress/downloading]" = "Veritabanı dosyası indiriliyor...";
+"[Database/Progress/downloading]" = "Veri tabanı dosyası indiriliyor...";
 
 /* Database saving status: making a local backup copy of the database */
-"[Database/Progress/makingDatabaseBackup]" = "Yedek dosyası yaratılıyor...";
+"[Database/Progress/makingDatabaseBackup]" = "Yedek kopyası hazırlanıyor...";
 
 /* Progress status */
-"[Database/Progress/resolving]" = "Yer sağlayıcınızla irtibata geçiliyor...";
+"[Database/Progress/resolving]" = "Yer sağlayıcınızla iletişime geçiliyor...";
 
 /* Database loading/saving status: replacing field references with their values */
-"[Database/Progress/resolvingFieldReferences]" = "Alan referansları çözümleniyor…";
+"[Database/Progress/resolvingFieldReferences]" = "Alan referansları çözülüyor…";
+
+/* Database saving status: deciding how to handle conflicting changes. */
+"[Database/Progress/resolvingSyncConflict]" = "Senkronizasyon çakışması çözülüyor…";
+
+/* Database saving status */
+"[Database/Progress/writingDatabaseFile]" = "Veri tabanı dosyası yazılıyor…";
+
+/* Suggested solution/call to action when intermediate sync app fails. */
+"[Database/RecommendRemote/callToAction]" = "Uzaktan erişim alanınıza doğrudan KeePassium üzerinden bağlanmayı deneyin.";
+
+/* Action/button */
+"[Database/Reload/action]" = "Veri Tabanını Yeniden Yükle";
 
 /* Message to confirm removal of database file from the app. (This keeps the file, but removes its reference from the app.) */
-"[Database/Remove/Confirm/text] Remove database from the list?\n The file will remain intact and you can add it again later." = "Veritabanı listeden silinsin mi?\n Dosya sağlam kalır ve daha sonra tekrar ekleyebilirsiniz.";
+"[Database/Remove/Confirm/text] Remove database from the list?\n The file will remain intact and you can add it again later." = "Veri tabanı listeden kaldırılsın mı?\n Dosya sağlam kalır ve daha sonra tekrar ekleyebilirsiniz.";
 
 /* Action/button to save the current database. */
-"[Database/Save/action] Save Database" = "Veritabanını Kaydet";
+"[Database/Save/action] Save Database" = "Veri Tabanını kaydet";
+
+/* Action/button to save file to a remote server. */
+"[Database/SaveToServer/action]" = "Sunucuya Kaydet";
 
 /* Status message: finished saving a database */
-"[Database/Saving/Status] Done" = "Bitti!";
+"[Database/Saving/Status] Done" = "Bitti";
 
 /* Status message: saving a database */
 "[Database/Saving/Status] Saving..." = "Kaydediliyor...";
@@ -220,62 +397,158 @@
 /* File access parameter. Will be shown as 'Consider File Unreachable: Immediately' */
 "[Database/Settings/ConsiderFileUnreachable/Immediately]" = "Hemen";
 
+/* File settings parameter: time after which file will be considered unreachable. Example: `Consider File Unreachable: in 10 seconds`.) */
+"[Database/Settings/ConsiderFileUnreachable/title]" = "Dosyayı Ulaşılamaz Olarak Kabul Et";
+
+/* File settings parameter: what to do when file was changed by another app/device. (For example: `Database Modified Externally: Don't check`) */
+"[Database/Settings/ExternalChanges/dontCheck]" = "Kontrol etme";
+
+/* File settings parameter: what to do when file was changed by another app/device. (For example: `Database Modified Externally: Notify`) */
+"[Database/Settings/ExternalChanges/notify]" = "Bildir";
+
+/* File settings parameter: what to do when file was changed by another app/device. (For example: `Database Modified Externally: Reload Automatically`) */
+"[Database/Settings/ExternalChanges/reload]" = "Otomatik Yeniden Yükle";
+
+/* File settings parameter: what to do when file was changed by another app/device. (For example: `Database Modified Externally: Notify`) */
+"[Database/Settings/ExternalChanges/title]" = "Veri Tabanı Harici Olarak Değiştirildi";
+
+/* Title: what to do when a cloud-stored file cannot be loaded. (For example: `If File is Unreachable: Re-add File`.) */
+"[Database/Settings/FallbackStrategy/ReAddFile/title]" = "Dosyayı Yeniden Ekle";
+
+/* Title: what to do when (remote) file cannot be loaded. (For example: `If File is Unreachable: Show Error`.) */
+"[Database/Settings/FallbackStrategy/ShowError/title]" = "Hata Göster";
+
+/* File settings parameter: what to do when (remote) file cannot be loaded. (For example: `If File is Unreachable: Use Local Copy`.) */
+"[Database/Settings/FallbackStrategy/title]" = "Dosya Ulaşılamazsa";
+
+/* Title: what to do when (remote) file cannot be loaded. (For example: `If File is Unreachable: Use Local Copy`.) */
+"[Database/Settings/FallbackStrategy/UseCache/title]" = "Yerel Kopya Kullan";
+
+/* Title of settings section (read-only, backup-able, etc) */
+"[Database/Settings/FileAccess/title]" = "Dosya Erişimi";
+
+/* File setting title, whether the file can be modified (yes/no). */
+"[Database/Settings/ReadOnly/title]" = "Salt Okunur";
+
+/* Title of database-related settings screen */
+"[Database/Settings/title]" = "Veri Tabanı Ayarları";
+
 /* Action/button to switch from current to some other database. */
-"[Database/Switch/action]" = "Veritabanını Değiştir";
+"[Database/Switch/action]" = "Veri Tabanını değiştir";
+
+/* Explanation of the database sync conflict `Cancel` option. */
+"[Database/SyncConflict/Cancel/description]" = "Kaydetmeyi iptal et, hedef dosyaya dokunma.";
+
+/* Title: the current (on-server) database version in case of sync conflict. */
+"[Database/SyncConflict/currentVersion]" = "Mevcut sürüm";
+
+/* Message shown in case of database sync conflict. */
+"[Database/SyncConflict/description]" = "Veri tabanı KeePassium'da yüklendiğinden beri değişti.";
+
+/* Title: the loaded (on-device) database version in case of sync conflict. */
+"[Database/SyncConflict/loadedVersion]" = "Yüklenen sürüm";
+
+/* Action: combine changes in two conflicting databases. */
+"[Database/SyncConflict/Merge/action]" = "Birleştir";
+
+/* Explanation of the database sync conflict `Merge` option. */
+"[Database/SyncConflict/Merge/description]" = "Kaydetmeden önce değişiklikleri birleştirin.";
+
+/* Explanation of the database sync conflict `Overwrite` option. */
+"[Database/SyncConflict/Overwrite/description]" = "Hedef dosyanın üzerine yerel sürümü yazın.";
+
+/* Explanation of the database sync conflict `Save as` option. */
+"[Database/SyncConflict/SaveAs/description]" = "Değişiklikleri başka bir dosyaya kaydedin.";
+
+/* Title of a message shown when saving to a database that has already been modified elsewhere. */
+"[Database/SyncConflict/title]" = "Senkronizasyon Çakışması";
 
 /* Error message */
 "[Database/Unlock/Error] Failed to open key file" = "Anahtar dosyası açılamadı";
 
 /* Error message */
-"[Database/Unlock/Error] Password and key file are both empty." = "Şifre ve anahtar dosyasından her ikisi de boş.";
+"[Database/Unlock/Error] Password and key file are both empty." = "Şifre ve anahtar dosyasının ikisi de boş.";
+
+/* Action: load a local (on-device) copy of a remote database */
+"[Database/Unlock/UseFallback/action]" = "Yerel Kopya Kullan";
 
 /* Message shown when user enters an invalid database password */
-"[Database/Unlock/wrongPassword/question]" = "Parolanızı mı unuttunuz?";
+"[Database/Unlock/wrongPassword/question]" = "Şifrenizi mi unuttunuz?";
+
+/* Notification message */
+"[Database/UnsavedChanges/autoFillCrashed]" = "Teknik bir sınırlama nedeniyle Otomatik Doldurma bazı değişiklikleri kaydedemedi.";
+
+/* Notification message */
+"[Database/UnsavedChanges/cannotModifyYet]" = "Ne yazık ki, Otomatik Doldurma henüz büyük veri tabanlarını değiştiremiyor. Bu sorunu çözmeye çalışıyoruz.";
+
+/* Notification message */
+"[Database/UnsavedChanges/couldNotApply]" = "Bazı bekleyen değişiklikler otomatik olarak uygulanamadı; yakın zamanda yapılan değişiklikler eksik olabilir.";
+
+/* Call to action shown in AutoFill module. */
+"[Database/UnsavedChanges/OpenAppCallToAction]" = "Değişiklikleri kaydetmek için ana KeePassium uygulamasını açın.";
+
+/* Notification message about a problem with unsaved/pending changes. */
+"[Database/UnsavedChanges/Problematic/info]" = "Bazı bekleyen değişiklikler, eksik girdi veya grupları ifade eder. KeePassium, bu ögeleri ayrı bir grupta oluşturur ve değişiklikleri orada uygular.";
+
+/* Title of a group where problematic pending changes are saved. %@ is the date of recovery. */
+"[Database/UnsavedChanges/RecoveredEntriesGroup/name]" = "Kurtarılan Değişiklikler (%@)";
+
+/* Action/button to save accummulated modifications */
+"[Database/UnsavedChanges/saveAction]" = "Değişiklikleri Kaydet";
+
+/* Notification message */
+"[Database/UnsavedChanges/someDatabases]" = "Bir veya daha fazla veri tabanında Otomatik Doldurma ile yapılmış kaydedilmemiş değişiklikler var.";
+
+/* Notification message */
+"[Database/UnsavedChanges/thisDatabase]" = "Bu veri tabanında Otomatik Doldurma'da yapılan kaydedilmemiş değişiklikler var.";
+
+/* Title: there are temporary changes to be saved */
+"[Database/UnsavedChanges/title]" = "Kaydedilmemiş Değişiklikler";
 
 /* Error message */
-"[Database1/FormatError] Database file is corrupted." = "Veritabanı dosyası bozuk.";
+"[Database1/FormatError] Database file is corrupted." = "Veri tabanı dosyası bozuk.";
 
 /* Error message [fieldName: String] */
-"[Database1/FormatError] Error parsing field %@. Corrupted database file?" = "%@ alanı ayrıştırılırken hata oluştu. Veritabanı dosyası bozuk olabilir mi?";
+"[Database1/FormatError] Error parsing field %@. Corrupted database file?" = "%@ alanı ayrıştırılırken hata oluştu. Veri tabanı dosyası bozuk olabilir mi?";
 
 /* Error message */
-"[Database1/FormatError] Found an entry outside any group. Corrupted DB file?" = "Herhangi bir grubun dışında bir girdi bulundu. Veritabanı dosyası bozuk olabilir mi?";
+"[Database1/FormatError] Found an entry outside any group. Corrupted DB file?" = "Herhangi bir grubun dışında bir girdi bulundu. VT dosyası bozuk olabilir mi?";
 
 /* Error message */
-"[Database1/FormatError] Unexpected end of file. Corrupted database file?" = "Beklenmedik dosya uzantısı. Veritabanı dosyası bozuk olabilir mi?";
+"[Database1/FormatError] Unexpected end of file. Corrupted database file?" = "Beklenmeyen dosya sonu. Veri tabanı dosyası bozuk olabilir mi?";
 
 /* Error message when reading database header */
-"[Database1/Header1/Error] Header reading error. DB file corrupt?" = "Başlık okuma hatası. Veritabanı dosyası bozuk olabilir mi?";
+"[Database1/Header1/Error] Header reading error. DB file corrupt?" = "Başlık okuma hatası. VT dosyası bozuk olabilir mi?";
 
 /* Error message. [flagsHexString: String] */
-"[Database1/Header1/Error] Unsupported cipher. (Code: %@)" = "Desteklenmeyen şifre. (%@ kodu)";
+"[Database1/Header1/Error] Unsupported cipher. (Code: %@)" = "Desteklenmeyen şifreleme. (Kod: %@)";
 
 /* Error message when opening a database. [version: String] */
-"[Database1/Header1/Error] Unsupported database format version: %@." = "Desteklenmeyen veritabanı biçimi sürümü: %@.";
+"[Database1/Header1/Error] Unsupported database format version: %@." = "Desteklenmeyen veri tabanı formatı sürümü: %@.";
 
 /* Error message when opening a database */
-"[Database1/Header1/Error] Wrong file signature. Not a KeePass database?" = "Yanlış dosya imzası. KeePass veritabanı değil mi?";
+"[Database1/Header1/Error] Wrong file signature. Not a KeePass database?" = "Yanlış dosya imzası. KeePass veri tabanı değil mi?";
 
 /* Status message: collecting database items into a single package */
 "[Database1/Progress] Packing the content" = "İçerik paketleniyor";
 
 /* Status message: processing the content of a database */
-"[Database1/Progress] Parsing content" = "İçerik analiz ediliyor";
+"[Database1/Progress] Parsing content" = "İçerik ayrıştırılıyor";
 
 /* Name of a group which contains deleted entries */
-"[Database2/backupGroupName] Recycle Bin" = "Çöp Kutusu";
+"[Database2/backupGroupName] Recycle Bin" = "Geri Dönüşüm Kutusu";
 
 /* Error message. Parsing refers to the analysis/understanding of file content. [reason: String] */
-"[Database2/FormatError] Cannot parse database. %@" = "Veritabanı çözümlenemiyor. %@";
+"[Database2/FormatError] Cannot parse database. %@" = "Veri tabanı ayrıştırılamıyor. %@";
 
 /* Error message [blockIndex: Int] */
-"[Database2/FormatError] Corrupted database file (block %d has negative size)" = "Bozuk veritabanı dosyası (%d bloğunun boyutu sıfırın altında)";
+"[Database2/FormatError] Corrupted database file (block %d has negative size)" = "Bozuk veri tabanı dosyası (%d blokunun boyutu negatif)";
 
 /* Error message: hash(checksum) of a data block is wrong. [blockIndex: Int] */
-"[Database2/FormatError] Corrupted database file (hash mismatch in block %d)" = "Bozuk veritabanı dosyası (%d bloğundaki şifre yaratma uyuşmazlığı)";
+"[Database2/FormatError] Corrupted database file (hash mismatch in block %d)" = "Bozuk veri tabanı dosyası (%d blokunda karma uyuşmazlığı)";
 
 /* Error message: HMAC value (kind of checksum) of a data block is wrong. [blockIndex: Int] */
-"[Database2/FormatError] Corrupted database file (HMAC mismatch in block %d)" = "Bozuk veritabanı dosyası (%d bloğunda HMAC uyuşmazlığı)";
+"[Database2/FormatError] Corrupted database file (HMAC mismatch in block %d)" = "Bozuk veri tabanı dosyası (%d blokunda HMAC uyuşmazlığı)";
 
 /* Error message about Gzip compression algorithm. [reason: String] */
 "[Database2/FormatError] Gzip error: %@" = "Gzip hatası: %@";
@@ -284,73 +557,73 @@
 "[Database2/FormatError] Unexpected block ID." = "Beklenmeyen blok kimliği.";
 
 /* Error message */
-"[Database2/FormatError] Unexpected end of file. Corrupted file?" = "Beklenmedik dosya uzantısı. Veritabanı dosyası bozuk olabilir mi?";
+"[Database2/FormatError] Unexpected end of file. Corrupted file?" = "Beklenmeyen dosya sonu. Dosya bozuk olabilir mi?";
 
 /* Error message when saving a database. [reason: String] */
-"[Database2/Header2/Error] Failed to uncompress attachment data: %@" = "Bağlı dosyalar açılamadı: %@";
+"[Database2/Header2/Error] Failed to uncompress attachment data: %@" = "Ek verilerinin sıkıştırması açılamadı: %@";
 
 /* Error message, with the name of problematic field. [fieldName: String] */
-"[Database2/Header2/Error] Header field %@ is corrupted." = "%@ üstbilgi alanı bozuk.";
+"[Database2/Header2/Error] Header field %@ is corrupted." = "%@ başlık alanı bozuk.";
 
 /* Error message */
-"[Database2/Header2/Error] Header hash mismatch. DB file corrupt?" = "Başlık şifre yaratma uyumsuzluğu. Veritabanı dosyası bozuk olabilir mi?";
+"[Database2/Header2/Error] Header hash mismatch. DB file corrupt?" = "Başlık karma uyumsuzluğu. VT dosyası bozuk olabilir mi?";
 
 /* Error message. HMAC = https://en.wikipedia.org/wiki/HMAC */
-"[Database2/Header2/Error] Header HMAC mismatch. DB file corrupt?" = "Başlık HMAC uyuşmazlığı. Veritabanı dosyası bozuk olabilir mi?";
+"[Database2/Header2/Error] Header HMAC mismatch. DB file corrupt?" = "Başlık HMAC uyuşmazlığı. VT dosyası bozuk olabilir mi?";
 
 /* Error message when reading database header */
-"[Database2/Header2/Error] Header reading error. DB file corrupt?" = "Başlık okuma hatası. Veritabanı dosyası bozuk olabilir mi?";
+"[Database2/Header2/Error] Header reading error. DB file corrupt?" = "Başlık okuma hatası. VT dosyası bozuk olabilir mi?";
 
 /* Error message when opening a database */
 "[Database2/Header2/Error] Unknown compression algorithm." = "Bilinmeyen sıkıştırma algoritması.";
 
 /* Error message. [uuidHexString: String] */
-"[Database2/Header2/Error] Unsupported data cipher: %@" = "Desteklenmeyen veri şifresi: %@";
+"[Database2/Header2/Error] Unsupported data cipher: %@" = "Desteklenmeyen veri şifrelemesi: %@";
 
 /* Error message when opening a database. [version: String] */
-"[Database2/Header2/Error] Unsupported database format version: %@." = "Desteklenmeyen veritabanı biçimi sürümü: %@.";
+"[Database2/Header2/Error] Unsupported database format version: %@." = "Desteklenmeyen veri tabanı formatı sürümü: %@.";
 
 /* Error message when opening a database. [id: UInt32] */
-"[Database2/Header2/Error] Unsupported inner stream cipher (ID %d)" = "Desteklenmeyen iç akış şifresi (ID %d)";
+"[Database2/Header2/Error] Unsupported inner stream cipher (ID %d)" = "Desteklenmeyen dâhilî akış şifrelemesi (Kimlik: %d)";
 
 /* Error message about Key Derivation Function. [uuidString: String] */
-"[Database2/Header2/Error] Unsupported KDF: %@" = "Desteklenmeyen KDF: %@";
+"[Database2/Header2/Error] Unsupported KDF: %@" = "Desteklenmeyen ATİ: %@";
 
 /* Error message when opening a database */
-"[Database2/Header2/Error] Wrong file signature. Not a KeePass database?" = "Yanlış dosya imzası. KeePass veritabanı değil mi?";
+"[Database2/Header2/Error] Wrong file signature. Not a KeePass database?" = "Yanlış dosya imzası. KeePass veri tabanı değil mi?";
 
 /* Error message about Gzip compression algorithm. [errorMessage: String] */
-"[Database2/Loading/Error] Error unpacking database: %@" = "Veritabanını açarken hata oluştu: %@";
+"[Database2/Loading/Error] Error unpacking database: %@" = "Veri tabanı açılırken hata oluştu: %@";
 
 /* A warning about missing attachments after loading the database. [lastUsedAppName: String, attachmentNames: String] */
-"[Database2/Loading/Warning/missingBinaries]" = "Bazı girdilerin eklerinde dosya eksiği var gibi görünüyor. Bu büyük olasılıkla son kullanılan uygulama tarafından (%1$@) veritabanınızın bozulduğunun bir işaretidir. KeePassium veritabanını bu haliyle korur, ama kayıp verileri geri alamaz. Eksik dosyalara ulaşmak için veritabanınızı önceki bir yedek kopyadan geri yüklemelisiniz.\n\nEksik dosya: %2$@";
+"[Database2/Loading/Warning/missingBinaries]" = "Bazı girdilerin eklerinde veriler eksik. Bu büyük olasılıkla son kullanılan uygulama (%1$@) tarafından veri tabanının bozulduğunun bir işaretidir. KeePassium boş ekleri korur ama bunları kurtaramaz. Yedek kopyadan veri tabanınızı kurtarabilirsiniz. \n\nEksik ekler: %2$@";
 
 /* A warning about nameless attachments, shown after loading the database. [listOfEntryNames: String] */
-"[Database2/Loading/Warning/namelessAttachments]" = "Bazı girdilerin içinde isimsiz ekler bulundu. Bu veritabanınızın daha önceden tahribata uğramış olduğunu gösterir.\n\n Lütfen aşağıdaki girdilerin eklerine (ve geçmişlerine) göz atın: %@";
+"[Database2/Loading/Warning/namelessAttachments]" = "Bazı girdiler adsız eklere sahip. Bu, önceki veri tabanı bozulmasının bir işaretidir.\n\n Lütfen aşağıdaki girdilerde ekli dosyaları (ve geçmişlerini) inceleyin:\n%@";
 
 /* A warning about misformatted custom fields after loading the database. [entryPaths: String] */
-"[Database2/Loading/Warning/namelessCustomFields]" = "Bazı girdilerin içinde isimsiz alan(lar) tespit edildi. Bu verilerinizin tahribata uğramış olabileceği anlamına gelir. Lütfen bu girdileri kontrol edin:\n\n%@";
+"[Database2/Loading/Warning/namelessCustomFields]" = "Bazı girdilerde boş adlı özel alanlar bulunuyor. Bu, veri bozulmasının bir işareti olabilir. Lütfen şu girdileri kontrol edin:\n\n%@";
 
 /* A warning about unused attachments after loading the database. [lastUsedAppName: String] */
-"[Database2/Loading/Warning/unusedAttachments]" = "Bu veritabanının içinde, hiçbir girdide gözükmeyen bazı ekler bulunuyor. Büyük ihtimalle daha önce kullanılan uygulama tarafından silinememişler (%@). Ama bu verilerinizin tahribata uğradığı anlamına da gelebilir. Lütfen herhangi bir değişiklik yapmadan önce veritabanınızın yedeğini alın.";
+"[Database2/Loading/Warning/unusedAttachments]" = "Veri tabanı, herhangi bir girdide kullanılmayan bazı ekler içeriyor. Büyük olasılıkla, son kullanılan uygulama (%@) tarafından unutuldular. Ancak bu, veri bozulmasının da bir işareti olabilir. \nLütfen değişiklik yapmadan önce veri tabanınızın yedeğini aldığınızdan emin olun.";
 
 /* Progress bar status */
-"[Database2/Progress] Loading database" = "Veritabanı yükleniyor";
+"[Database2/Progress] Loading database" = "Veri tabanı yükleniyor";
 
 /* Progress bar status */
-"[Database2/Progress] Reading database content" = "Veritabanı içeriği okunuyor";
+"[Database2/Progress] Reading database content" = "Veri tabanı içeriği okunuyor";
 
 /* Progress bar status */
 "[Database2/Progress] Writing encrypted blocks" = "Şifreli bloklar yazılıyor";
 
 /* Progress bar status: un-zipping the database content */
-"[Database2/Progress/decompressing]" = "Sıkıştırılmış veritabanı açılıyor";
+"[Database2/Progress/decompressing]" = "Sıkıştırılmış veri tabanı açılıyor";
 
 /* Progress bar status */
-"[Database2/Progress/integrityCheck]" = "Dosya bütünlüğü denetleniyor";
+"[Database2/Progress/integrityCheck]" = "Bütünlük kontrol ediliyor";
 
 /* Progress bar status: parsing decrypted XML content */
-"[Database2/Progress/parsingXML]" = "Veritabanı analiz ediliyor";
+"[Database2/Progress/parsingXML]" = "Veri tabanı ayrıştırılıyor";
 
 /* Error message while saving a database. [errorDescription: String] */
 "[Database2/Saving/Error] Data compression error: %@" = "Veri sıkıştırma hatası: %@";
@@ -359,70 +632,94 @@
 "[Database2/Saving/Error] Encryption error: %@" = "Şifreleme hatası: %@";
 
 /* Error message about XML parsing. [value: String, tag: String] */
-"[Database2/Xml2/ParsingError] Malformed value '%@' in %@" = "%2$@'de %1$@ hatalı değer";
+"[Database2/Xml2/ParsingError] Malformed value '%@' in %@" = "%2$@ üzerinde \"%1$@\" hatalı değeri";
 
 /* Error message about XML parsing. [tag: String] */
-"[Database2/Xml2/ParsingError] Nil value in %@" = "%@'de geçersiz değer";
+"[Database2/Xml2/ParsingError] Nil value in %@" = "%@ üzerinde boş değer";
 
 /* Error message about XML parsing. [actualTag: String] */
-"[Database2/Xml2/ParsingError] Unexpected tag '%@'" = "'%@' Beklenmeyen bir etiket";
+"[Database2/Xml2/ParsingError] Unexpected tag '%@'" = "Beklenmeyen etiket \"%@\"";
 
 /* Error message about XML parsing. [actualTag: String, expectedTag: String] */
-"[Database2/Xml2/ParsingError] Unexpected tag '%@' (instead of '%@')" = "('%2$@' 'nin yerine) '%1$@' 'de beklenmeyen etiket";
+"[Database2/Xml2/ParsingError] Unexpected tag '%@' (instead of '%@')" = "Beklenmeyen etiket \"%1$@\" (\"%2$@\" yerine)";
 
 /* Generic error while parsing XML. [errorDetails: String] */
 "[Database2/Xml2/ParsingError] XML error: %@" = "XML hatası: %@";
 
 /* Error message while opening a database */
-"[DatabaseError] Cannot open database" = "Veritabanı açılamadı";
+"[DatabaseError] Cannot open database" = "Veri tabanı açılamıyor";
 
 /* Error message while saving a database */
-"[DatabaseError] Cannot save database" = "Veritabanı kaydedilemedi";
+"[DatabaseError] Cannot save database" = "Veri tabanı kaydedilemiyor";
 
 /* Error message: user provided a wrong master key for decryption. */
-"[DatabaseError] Invalid password or key file" = "Hatalı şifre ya da anahtar dosya";
+"[DatabaseError] Invalid password or key file" = "Geçersiz şifre ya da anahtar dosyası";
 
 /* Title of the diagnostic info screen */
-"[DiagLog/title]" = "Tanılama Günlüğünü Göster";
+"[DiagLog/title]" = "Tanılama Günlüğü";
 
 /* Notification/confirmation message */
 "[Diagnostics] Diagnostic log has been copied to clipboard." = "Tanılama günlüğü panoya kopyalandı.";
 
 /* Action: select a different icon for an item */
-"[EditEntry/Icon/change]" = "Simge Değiştir";
+"[EditEntry/Icon/change]" = "Simge değiştir";
 
 /* Action: choose a username from a list */
 "[EditEntry/UserName/choose]" = "Seç";
 
 /* Action/button to add a file to entry attachments */
-"[Entry/Attachment/add]" = "Dosya Ekle";
+"[Entry/Attachment/add]" = "Dosya ekle";
 
 /* Action/button to pick a file from a list */
-"[Entry/Attachment/chooseFile]" = "Dosya Seç";
+"[Entry/Attachment/chooseFile]" = "Dosya seç";
 
 /* Action/button to select an (existing) photo from Photo Library */
-"[Entry/Attachment/choosePhoto]" = "Fotoğraf Seç";
+"[Entry/Attachment/choosePhoto]" = "Fotoğraf seç";
 
 /* Default name for a photo attachment */
 "[Entry/Attachment/Photo/defaultName]" = "Fotoğraf";
 
 /* Action/button to take a new photo from camera */
-"[Entry/Attachment/takePhoto]" = "Kamera";
+"[Entry/Attachment/takePhoto]" = "Fotoğraf çek";
 
 /* Action to preview one or several attached documents or images */
-"[Entry/Attachments/preview]" = "Önizleme";
+"[Entry/Attachments/preview]" = "Ön izleme";
 
 /* Action/button to create a new entry in the current group */
-"[Entry/Create/action] Create Entry" = "Kayıt Oluştur";
+"[Entry/Create/action] Create Entry" = "Girdi oluştur";
 
 /* Action/button to modify an entry */
-"[Entry/Edit/action]" = "Kayıt Düzenle";
+"[Entry/Edit/action]" = "Girdi düzenle";
 
 /* Default name of a newly created entry field */
 "[Entry/Edit/CreateField/defaultName] Field Name" = "Alan Adı";
 
+/* Action/button to add a new field to the entry */
+"[Entry/Field/Add/action]" = "Alan ekle";
+
+/* On/off state: whether to show full-size or compact menu */
+"[Entry/Field/CompactMenu/title]" = "Kompakt Görünüm";
+
+/* Notification: a reference to an entry field has been copied to clipboard */
+"[Entry/Field/CopyReference/acknowledgement]" = "Alan referansı panoya kopyalandı";
+
+/* Action: copy a reference to the selected entry field to clipboard */
+"[Entry/Field/CopyReference/action]" = "Alan Referansını kopyala";
+
+/* Title for a generic user-defined entry field. */
+"[Entry/Field/Custom/title]" = "Özel Alan";
+
+/* Action: display text using large font */
+"[Entry/Field/LargeType/action]" = "Büyük Yazı Tipinde göster";
+
+/* Name of an entry field */
+"[Entry/Field/name] Icon" = "Simge";
+
 /* Name of an entry field */
 "[Entry/Field/name] Notes" = "Notlar";
+
+/* Title of an entry field */
+"[Entry/Field/name] Passkey" = "Geçiş kodu";
 
 /* Name of an entry field */
 "[Entry/Field/name] Password" = "Şifre";
@@ -437,25 +734,37 @@
 "[Entry/Field/name] User Name" = "Kullanıcı Adı";
 
 /* Title of a setting: whether the entry's field is protected (shown as asterisks). */
-"[Entry/Field/Protected/title]" = "Korunmuş alan";
+"[Entry/Field/Protected/title]" = "Korunan Alan";
+
+/* Action: display text using QR code */
+"[Entry/Field/QRCode/action]" = "QR Kodu olarak göster";
+
+/* Name of an entry field */
+"[Entry/Field/tags] Tags" = "Etiketler";
 
 /* Title of an alternative URL, with a number [number: String] */
 "[Entry/Field/URL/Extra/title]" = "URL (%d)";
 
 /* Status message: loading file to be attached to an entry */
-"[Entry/Files/Add] Loading attachment file" = "Dosya yükleniyor...";
+"[Entry/Files/Add] Loading attachment file" = "Ek dosyası yükleniyor";
+
+/* Title of a list with frequently used entry fields. */
+"[Entry/FrequentlyUsedFields/title]" = "Sık Kullanılanlar";
 
 /* Title of a field with entry creation date and time */
 "[Entry/History] Creation Date" = "Oluşturma Tarihi";
 
 /* Title of a field with date and time when the entry will no longer be valid. 'Never' is also a possible value */
-"[Entry/History] Expiry Date" = "Son Kullanım Tarihi";
+"[Entry/History] Expiry Date" = "Son Kullanma Tarihi";
 
 /* Title of a field with date and time when the entry was last accessed/viewed */
 "[Entry/History] Last Access Date" = "Son Erişim Tarihi";
 
 /* Title of a field with entry's last modification date and time */
 "[Entry/History] Last Modification Date" = "Son Değişiklik Tarihi";
+
+/* Title of a field with entry's modification date and time */
+"[Entry/History] Modification Date" = "Değiştirilme Tarihi";
 
 /* Title of a list with previous versions/revisions of an entry. */
 "[Entry/History] Previous Versions" = "Önceki Versiyonlar";
@@ -464,64 +773,85 @@
 "[Entry/History/ExpiryDate] Never" = "Asla";
 
 /* Default title of a new entry */
-"[Entry/New/defaultTitle] New Entry" = "Yeni Kayıt";
+"[Entry/New/defaultTitle] New Entry" = "Yeni Girdi";
 
 /* Glossary term: noun, an entry in database. */
 "[Entry/title]" = "Girdi";
 
 /* Warning shown when opening files from Recycle Bin location. Translation of 'Recently Deleted' should match that in the Files app. [fileName: String] */
-"[File/In Trash/warning]" = "'%@' isimli dosya, yakın zamanda silinenler arasında ve buradan da yakında silinebilir. Verinizi tutmak için çöp kutusundan başka bir yere taşıyın.";
+"[File/In Trash/warning]" = "\"%@\" Son Silinenler'de yer alıyor ve yakında silinebilir. Verilerinizi korumak için dosyayı daha kalıcı bir konuma taşıyın.";
 
 /* A suggestion shown after specific file errors (either databases or key files). */
-"[File/PermissionDenied] Try to remove the file from the app, then add it again." = "Dosyayı uygulamadan silmeyi ve sonra geri eklemeyi deneyin.";
+"[File/PermissionDenied] Try to remove the file from the app, then add it again." = "Dosyayı uygulamadan kaldırmayı, ardından tekrar eklemeyi deneyin.";
 
 /* Action: re-add (a broken) database or key file to the app. */
 "[File/Re-add/title]" = "Dosyayı tekrar ekleyin";
 
 /* Notification when user opens an in-app backup database. */
-"[File/TemporaryBackup/warning]" = "Bu geçici yedekleme veritabanıdır. Herhangi bir uyarı vermeden kendiliğinden silinebilir. Bunu ana veritabanınız olarak kullanmayın.";
+"[File/TemporaryBackup/warning]" = "Bu, geçici bir yedekleme veri tabanıdır. Herhangi bir uyarı olmadan otomatik olarak silinebilir. Bunu ana veri tabanınız olarak kullanmayın.";
 
 /* Error message: storage provider app was logged out or uninstalled. */
-"[FileAccessError/FileProvider/NotFound/generic]" = "Yer sağlayıcınıza ulaşılamıyor. Yer sağlayıcınızın programının yüklü olup olmadığını, yüklüyor programa giriş yapıp yapmadığınızı kontrol edin.";
+"[FileAccessError/FileProvider/NotFound/generic]" = "Yer sağlayıcısı kullanılamıyor. Lütfen yüklü olup olmadığını veya hesabınıza giriş yapılıp yapılmadığını kontrol edin.";
 
 /* Error message: storage provider app was logged out or uninstalled [fileProviderName: String]. */
-"[FileAccessError/FileProvider/NotFound/other]" = "%@'a ulaşılamıyor. Lütfen programın yüklü olup olmadığını, yüklüyse giriş yapıp yapmadığınızı kontrol edin.";
+"[FileAccessError/FileProvider/NotFound/other]" = "%@ kullanılamıyor. Lütfen yüklü olup olmadığını veya hesabınıza giriş yapılıp yapılmadığını kontrol edin.";
 
 /* Error message: the required network drive is not connected. */
-"[FileAccessError/FileProvider/NotFound/smbShare]" = "Ağ üzerinde veri sağlama hizmeti şu an bağlı değil.";
+"[FileAccessError/FileProvider/NotFound/smbShare]" = "Ağ depolama alanı bağlı değil.";
 
 /* Error message: there is no USB drive connected to the device. */
-"[FileAccessError/FileProvider/NotFound/usbDrive]" = "USB bellek şu an bağlı değil.";
+"[FileAccessError/FileProvider/NotFound/usbDrive]" = "USB bellek bağlı değil.";
 
 /* Error message shown when there's internal inconsistency in KeePassium. */
-"[FileAccessError/internalError]" = "KeePassium bir hatayla karşılaştı, lütfen bunun hakkında bize bilgi verin.";
+"[FileAccessError/internalError]" = "Dâhilî KeePassium hatası, lütfen bunu bizimle paylaşın.";
+
+/* Error message: organization's IT administrator has forbidden access to a data storage location. */
+"[FileAccessError/ManagedAccessDenied/title]" = "Bu depolamaya erişim kuruluşunuz tarafından devre dışı bırakılmıştır.";
+
+/* Error message: network access is forbidden by system or app settings. */
+"[FileAccessError/NetworkAccessDenied/generic]" = "Ağ erişimi, ayarlar tarafından engellendi.";
 
 /* Error message: storage provider app (e.g. Google Drive) does not respond to requests. */
-"[FileAccessError/NoResponse/genericFileProvider]" = "Yer sağlayıcısı cevap vermiyor.";
+"[FileAccessError/NoResponse/genericFileProvider]" = "Yer sağlayıcı yanıt vermiyor.";
 
 /* Error message: file provider does not respond to requests. For example: `Google Drive does not respond.` */
-"[FileAccessError/NoResponse/knownFileProvider]" = "%@ cevap vermiyor.";
+"[FileAccessError/NoResponse/knownFileProvider]" = "%@ yanıt vermiyor.";
 
 /* Error message: file provider does not support write operations. For example: `Cannot save file (OneDrive)` */
-"[FileAccessError/NoWritePermission/title]" = "(%@) dosyası kaydedilemiyor.";
+"[FileAccessError/NoWritePermission/title]" = "Dosya (%@) kaydedilemiyor";
 
 /* Explanation of a file writing error */
-"[FileAccessError/OneDriveReadOnly/reason]" = "Microsoft yaptığı son değişiklikle OneDrive'ın iOS entegrasyonunu sadece salt okunur olarak değiştirdiğini duyurdu. Bu durumun geçici olacağını söylüyorlar.";
+"[FileAccessError/OneDriveReadOnly/reason]" = "Microsoft kısa süre önce OneDrive'ın iOS entegrasyonunu salt okunur olarak değiştirdi. Bu durumun geçici olduğunu söylüyorlar.";
 
 /* Suggestion for error recovery */
-"[FileAccessError/OneDriveReadOnly/recoverySuggestion]" = "Dosyayı farklı bir konuma kaydetmek istiyorsanız \"Dışa Aktar\" seçeneğini kullanın.";
+"[FileAccessError/OneDriveReadOnly/recoverySuggestion]" = "Dosyayı farklı bir konuma kaydetmek için Dışa Aktar seçeneğini kullanın.";
+
+/* Error message for file with an expired access permission [fileName: String]. */
+"[FileAccessError/PermissionRequired/reason]" = "KeePassium'un \"%@'\"erişimi için izninize ihtiyacı var.";
+
+/* Action/button for error recovery */
+"[FileAccessError/PermissionRequired/recoveryAction]" = "Erişim izni vermek için dosyayı tekrar seçin";
 
 /* Error message: storage provider app (e.g. Google Drive) does not respond to requests (quickly enough). */
-"[FileAccessError/Timeout/genericFileProvider]" = "Yer sağlayıcısı cevap vermiyor.";
+"[FileAccessError/Timeout/genericFileProvider]" = "Yer sağlayıcı yanıt vermiyor.";
 
 /* Error message: file provider does not respond to requests (quickly enough). For example: `Google Drive does not respond` */
-"[FileAccessError/Timeout/knownFileProvider]" = "%@ cevap vermiyor.";
+"[FileAccessError/Timeout/knownFileProvider]" = "%@ yanıt vermiyor.";
+
+/* Section header for attributes of a file (e.g. hidden, excluded from backup, etc) */
+"[FileInfo/Attributes/header]" = "Dosya Özellikleri";
+
+/* Title of a setting: is the file hidden */
+"[FileInfo/Attributes/Hidden/title]" = "Gizli";
+
+/* Warning message for 'hidden' files. */
+"[FileInfo/Attributes/Hidden/warning]" = "Gizli dosyalar sıradan kullanıcılar tarafından daha az görülür ancak veri güvenliğini artırmaz.";
 
 /* Section header: file backup settings */
 "[FileInfo/Backup/header]" = "Yedekle";
 
 /* Error message shown when the user tries to change file attributes (such as creation/modification date, backup flag, etc) */
-"[FileInfo/Error/failed to change attributes]" = "Öznitelikler güncellenemedi.";
+"[FileInfo/Error/failed to change attributes]" = "Dosya öznitelikleri güncellenemedi.";
 
 /* Field title */
 "[FileInfo/Field/title] Creation Date" = "Oluşturma Tarihi";
@@ -542,22 +872,22 @@
 "[FileInfo/Field/valueError] Error" = "Hata";
 
 /* Title of a setting: is the file exluded from iCloud/iTunes backup. For example: `Exclude From Backup: <Yes>` */
-"[FileInfo/isExcludedFromBackup/title]" = "iCloud / iTunes Yedeklemesine Dahil Etme";
+"[FileInfo/isExcludedFromBackup/title]" = "iCloud/iTunes Yedeklemesine Dâhil Etme";
 
 /* Title of a dialog with file details (name, size, dates) */
-"[FileInfo/title]" = "Dosya Bilgisi";
+"[FileInfo/title]" = "Dosya Bilgileri";
 
 /* Error message [reason: String] */
-"[FileKeeper] Failed to delete file. Reason: %@" = "%@'ten dolayı dosya silinemedi.";
+"[FileKeeper] Failed to delete file. Reason: %@" = "Dosya silinemedi. Sebep: %@";
 
 /* Error message [reason: String] */
-"[FileKeeper] Failed to import file. Reason: %@" = "%@'ten dolayı dosya içe aktarılamadı.";
+"[FileKeeper] Failed to import file. Reason: %@" = "Dosya içe aktarılamadı. Sebep: %@";
 
 /* Error message [reason: String] */
-"[FileKeeper] Failed to open file. Reason: %@" = "%@'ten dolayı dosya açılamadı.";
+"[FileKeeper] Failed to open file. Reason: %@" = "Dosya açılamadı. Sebep: %@";
 
 /* Error message: tried to import URL which does not point to a file */
-"[FileKeeper] Not a file URL" = "Bir dosya URL'si değil";
+"[FileKeeper] Not a file URL" = "Dosya URL'si değil";
 
 /* Localized name of the storage service: Amerigo (https://www.amerigo-app.com) */
 "[FileProvider/Amerigo/name]" = "Amerigo";
@@ -581,7 +911,10 @@
 "[FileProvider/Google Drive/name]" = "Google Drive";
 
 /* Localized name of the storage service iCloud Drive (https://icloud.com/iclouddrive) */
-"[FileProvider/iCloud Drive/name]" = "iCloud";
+"[FileProvider/iCloud Drive/name]" = "iCloud Drive";
+
+/* Localized name of the storage service: MagentaCLOUD (https://www.telekom.de/zubuchoptionen/magenta-cloud) */
+"[FileProvider/MagentaCloud/name]" = "MagentaCLOUD";
 
 /* Localized name of the storage service: MEGA (https://mega.nz) */
 "[FileProvider/Mega.nz/name]" = "MEGA.nz";
@@ -590,10 +923,10 @@
 "[FileProvider/Nextcloud/name]" = "Nextcloud";
 
 /* Localized name of the local on-device storage, as shown in the Files app. */
-"[FileProvider/On My iPad/name]" = "iPad";
+"[FileProvider/On My iPad/name]" = "iPad'imde";
 
 /* Localized name of the local on-device storage, as shown in the Files app. */
-"[FileProvider/On My iPhone/name]" = "iPhone";
+"[FileProvider/On My iPhone/name]" = "iPhone'umda";
 
 /* Localized name of the storage service: OneDrive (https://onedrive.com) */
 "[FileProvider/OneDrive/name]" = "OneDrive";
@@ -611,7 +944,7 @@
 "[FileProvider/qnapQFile/name]" = "Qfile";
 
 /* Localized name of the storage service: Documents by Readdle (https://apps.apple.com/app/id364901807) */
-"[FileProvider/Readdle Documents/name]" = "Readdle Dökümanları";
+"[FileProvider/Readdle Documents/name]" = "Readdle Dokümanları";
 
 /* Localized name of the storage service: Resilio Sync (https://https://apps.apple.com/us/app/id1126282325) */
 "[FileProvider/Resilio Sync/name]" = "Resilio Sync";
@@ -619,8 +952,11 @@
 /* Localized name of the storage app: Seafile Pro (https://apps.apple.com/us/app/seafile-pro/id639202512) */
 "[FileProvider/Seafile Pro/name]" = "Seafile Pro";
 
+/* Localized name of the storage app: Secure ShellFish (https://apps.apple.com/app/ssh-files-secure-shellfish/id1336634154) */
+"[FileProvider/Secure ShellFish/name]" = "Secure ShellFish";
+
 /* Localized name of the storage service: SMB server (network share) via native iOS integration. */
-"[FileProvider/SMB/name]" = "SMB server";
+"[FileProvider/SMB/name]" = "SMB sunucusu";
 
 /* Localized name of the storage service: Stratospherix FileBrowser (https://apps.apple.com/us/app/filebrowser-document-manager/id364738545) */
 "[FileProvider/Stratospherix FileBrowser/name]" = "FileBrowser";
@@ -638,22 +974,34 @@
 "[FileProvider/Tresorit/name]" = "Tresorit";
 
 /* Localized name of the storage service: local USB drive (native iOS integration) */
-"[FileProvider/USB drive/name]" = "USB Bellek";
+"[FileProvider/USB drive/name]" = "USB bellek";
 
 /* Localized name of the storage service: Yandex.Disk (https://disk.yandex.com) */
 "[FileProvider/Yandex.Disk/name]" = "Yandex.Disk";
 
 /* Title of the dialog for picking the destination group for move/copy operations */
-"[General/DestinationGroup/title] Choose a Destination" = "Bir Klasör Seçin";
+"[General/DestinationGroup/title] Choose a Destination" = "Konum seçin";
+
+/* Feature status: disabled/inactive. Keep it short, possibly abbreviated. */
+"[General/Feature/Off]" = "Kapalı";
+
+/* Feature status: enabled/active. Keep it short, possibly abbreviated. */
+"[General/Feature/On]" = "Açık";
+
+/* Placeholder for folders without files */
+"[General/FileList/Empty/title]" = "Klasör boş";
+
+/* Info message for keyboard-assisted selection */
+"[General/MultiSelectionKeys/hint]" = "Cmd veya Shift tuşuna basılı tutarak birden fazla öge seçin.";
 
 /* Action/button to cancel whatever is going on */
-"[Generic] Cancel" = "İptal";
+"[Generic] Cancel" = "İptal et";
 
 /* Action/button to write an email to support */
-"[Generic] Contact Support" = "Destekle İletişim";
+"[Generic] Contact Support" = "Destekle İletişime Geçin";
 
 /* Action/button to write an email to support */
-"[Generic] Contact Us" = "İletişime Geçin";
+"[Generic] Contact Us" = "Bizimle İletişime Geçin";
 
 /* Action/button to proceed with the action */
 "[Generic] Continue" = "Devam Et";
@@ -674,10 +1022,10 @@
 "[Generic] Discard" = "Kaldır";
 
 /* Action/button to close an error message. */
-"[Generic] Dismiss" = "Reddet";
+"[Generic] Dismiss" = "Kapat";
 
 /* Action/button to finish (editing) and keep changes */
-"[Generic] Done" = "Bitti!";
+"[Generic] Done" = "Bitti";
 
 /* Action/button to edit an item */
 "[Generic] Edit" = "Düzenle";
@@ -685,11 +1033,17 @@
 /* Action/button to export an item to another app */
 "[Generic] Export" = "Dışa Aktar";
 
+/* Action/button shown below error messages. Tapping the button will start the fixing/repairing workflow described in the error message. */
+"[Generic] Fix this" = "Bunu onar";
+
+/* Action/button to import an item to another app */
+"[Generic] Import" = "İçeri aktar";
+
 /* Action/button to view more help/info about some topic */
-"[Generic] Learn more" = "Daha fazla bilgi için…";
+"[Generic] Learn more" = "Daha fazla bilgi edinin…";
 
 /* Checkbox/Button to show additional actions */
-"[Generic] More Actions" = "Diğer İşlemler";
+"[Generic] More Actions" = "Daha Fazla Eylem";
 
 /* Action/button to move an item (to another group/folder/etc) */
 "[Generic] Move" = "Taşı";
@@ -701,37 +1055,52 @@
 "[Generic] Open URL" = "URL'yi aç";
 
 /* Action/button to replace/overwrite an item */
-"[Generic] Overwrite" = "Üzerine Yaz";
+"[Generic] Overwrite" = "Üzerine yaz";
+
+/* Action/button to print a document */
+"[Generic] Print" = "Yazdır";
 
 /* Action/button to rename an item */
-"[Generic] Rename" = "Yeniden Adlandır";
+"[Generic] Rename" = "Yeniden adlandır";
 
 /* Action/button to replace an item with another one */
 "[Generic] Replace" = "Değiştir";
 
 /* Action/button to restore a backup/archived item in its original place */
-"[Generic] Restore" = "Geri Yükle";
+"[Generic] Restore" = "Geri yükle";
+
+/* Action: repeat the previous (failed) action */
+"[Generic] Retry" = "Tekrar dene";
 
 /* Action/button to open Finder (macOS file manager) and highlight a given file */
-"[Generic] Reveal in Finder" = "Finder’da Göster";
+"[Generic] Reveal in Finder" = "Finder’da göster";
 
 /* Action/button to share an item with another app (AirDrop, send an email, etc) */
 "[Generic] Share" = "Paylaş";
 
 /* Action/button to show additional information about an error or item */
-"[Generic] Show Details" = "Ayrıntıları Göster";
+"[Generic] Show Details" = "Ayrıntıları göster";
 
 /* Action/button to show sensitive info as it is, in plain text (as opposed to asterisks) */
-"[Generic] Show In Plain Text" = "Metin Olarak Göster";
+"[Generic] Show In Plain Text" = "Düz Metin Olarak Göster";
 
 /* Checkbox/Button to show a text field in its full size */
-"[Generic] Show more" = "Daha fazla göster";
+"[Generic] Show more" = "Daha fazlasını göster";
 
 /* Action/button to skip the current step and proceed with the next one */
-"[Generic] Skip" = "Geç";
+"[Generic] Skip" = "Atla";
+
+/* Action/button to change the order of items in a list (move them higher/lower). */
+"[Generic/Action/ReorderItems]" = "Yeniden sırala";
+
+/* Action/button to select some items in a list. */
+"[Generic/Action/SelectItems]" = "Seç";
+
+/* Number of entries found in an incoming file. For example: 'Found entries: 42' [itemCount: Int] */
+"[Generic/Count/ImportedEntries]" = "Bulunan girdiler: %d";
 
 /* Name of the Recently Deleted (Recycle Bin) directory, as shown in the Files app */
-"[Generic/Directory/Recently Deleted/name]" = "Çöp Kutusu";
+"[Generic/Directory/Recently Deleted/name]" = "Son Silinenler";
 
 /* Title of a notification when the user tries to close a document with unsaved changes */
 "[Generic/Edit/Aborting/title] There are unsaved changes" = "Kaydedilmemiş değişiklikler var";
@@ -742,20 +1111,32 @@
 /* Action/button to remove a file from the app (the file remains, but the app forgets about it) */
 "[Generic/File] Remove" = "Kaldır";
 
+/* Title of a generic file export screen. */
+"[Generic/File/Export/title]" = "Dosya Dışa Aktarma";
+
+/* Action to save data, when we ignore minor problems in the process. */
+"[Generic/File/ForceSave]" = "Zorla Kaydet";
+
 /* Action/button to save data to a different file */
-"[Generic/File/Save as]" = "Farklı Kaydet…";
+"[Generic/File/Save as]" = "Farklı kaydet…";
 
 /* Title of an error message about file export */
-"[Generic/File/title] Export Error" = "Dışa Aktarım Hatası";
+"[Generic/File/title] Export Error" = "Dışa Aktarma Hatası";
 
 /* Message shown when trying to copy into an existing file. */
 "[Generic/File/title] File already exists" = "Dosya zaten mevcut";
 
 /* Title of an error message about file import */
-"[Generic/File/title] Import Error" = "İçe Aktarım Hatası";
+"[Generic/File/title] Import Error" = "İçe Aktarma Hatası";
+
+/* Action to proceed after a warning, basically 'I understand the risk' */
+"[Generic/GotIt/action]" = "Anladım";
 
 /* Title of a list with predefined quick-choice values (for example: 'Presets: 1 week, 1 months, 1 year') */
-"[Generic/Presets]" = "Hazır ayarlar";
+"[Generic/Presets]" = "Ön Ayarlar";
+
+/* Action: refresh list of items, usually files */
+"[Generic/RefreshList/action]" = "Listeyi Yenile";
 
 /* Title of a search field (a noun, not verb) */
 "[Generic/Search/title]" = "Arama";
@@ -764,13 +1145,19 @@
 "[Generic/title] Error" = "Hata";
 
 /* Title of an error message about iOS system keychain */
-"[Generic/title] Keychain Error" = "Anahtar Dizilim Hatası";
+"[Generic/title] Keychain Error" = "Anahtar Zinciri Hatası";
 
 /* Title of an warning message */
-"[Generic/title] Warning" = "Dikkat";
+"[Generic/title] Warning" = "Uyarı";
+
+/* Title of a menu with various utilities */
+"[Generic/Tools/title]" = "Araçlar";
+
+/* Action/button to open an online support article (about a specific error) */
+"[Generic/ViewHelpArticle/action]" = "Yardım makalesini görüntüle";
 
 /* Title of a screen/list view configuration: sort order, visible items, etc */
-"[Generic/ViewOptions/title]" = "Görüntü Seçenekleri";
+"[Generic/ViewOptions/title]" = "Görüntüleme Seçenekleri";
 
 /* Warning message template. Swap the icon and message for right-to-left languages. */
 "[Generic/WarningWithIcon/template]" = "⚠️ %@";
@@ -779,10 +1166,13 @@
 "[Group/a11y/description]" = "%@, Grup";
 
 /* Action/button to create a new sub-group in the current group */
-"[Group/Create/action] Create Group" = "Grup Oluştur";
+"[Group/Create/action] Create Group" = "Grup oluştur";
 
 /* Title of a form for editing a group */
-"[Group/Edit/title] Edit Group" = "Grubu Düzenle";
+"[Group/Edit/title] Edit Group" = "Grubu düzenle";
+
+/* VoiceOver description of a menu with group-related actions */
+"[Group/Menu/a11y/title]" = "Grup Menüsü";
 
 /* Default name of a new group */
 "[Group/New/defaultName] New Group" = "Yeni Grup";
@@ -790,11 +1180,47 @@
 /* Title for the Notes field in group editor */
 "[Group/Notes/title]" = "Notlar";
 
+/* Action/button to delete everything inside the Recycle Bin */
+"[Group/RecycleBin/Empty/action]" = "Geri Dönüşüm Kutusunu boşalt";
+
+/* Title of the confirmation dialog for `Empty Recycle Bin` action */
+"[Group/RecycleBin/Empty/confirmTitle]" = "Geri Dönüşüm Kutusundaki her şey kalıcı olarak silinsin mi?";
+
 /* Title of the Entries section visible while editing */
 "[Group/Section/Entries/title]" = "Girdiler";
 
 /* Title of the Groups section visible while editing */
 "[Group/Section/Groups/title]" = "Gruplar";
+
+/* VoiceOver description of a smart group [groupTitle: String] */
+"[Group/Smart/a11y/description]" = "%@, Akıllı grup";
+
+/* Action/button to show a help article */
+"[Group/Smart/about]" = "Akıllı gruplar hakkında…";
+
+/* Action/button to create a new Smart Group */
+"[Group/Smart/Create/action]" = "Akıllı Grup oluştur";
+
+/* Default name of a new smart group */
+"[Group/Smart/New/defaultName]" = "Yeni Akıllı Grup";
+
+/* Title of a list: all entries in the database */
+"[Group/Smart/Preset/allEntries]" = "Tüm Girdiler";
+
+/* Title of a list: entries that are beyond their expiration date. */
+"[Group/Smart/Preset/expiredEntries]" = "Süresi Dolmuş Girdiler";
+
+/* Title of a list: entries with one-time passwords (OTP) */
+"[Group/Smart/Preset/otpEntries]" = "OTP'li Girdiler";
+
+/* Title of a list: entries that contain passkeys */
+"[Group/Smart/Preset/passkeyEntries]" = "Geçiş Kodlu Girdiler";
+
+/* Title for the Smart Group search conditions in group editor */
+"[Group/Smart/Query/title]" = "Akıllı Grup Filtresi";
+
+/* Glossary term: noun, a smart group in database. */
+"[Group/Smart/title]" = "Akıllı Grup";
 
 /* Glossary term: noun, a group in database. */
 "[Group/title]" = "Grup";
@@ -803,10 +1229,19 @@
 "[GroupEditor/Name/placeholder]" = "Grup Adı";
 
 /* A notification that hardware keys (e.g. YubiKey) cannot be used in AutoFill (the OS does not allow the AutoFill to use NFC/MFI). */
-"[HardwareKey/AutoFill/NotAvailable] Hardware keys are not available in AutoFill." = "Donanım anahtarı, otomatik doldurmada kullanılamaz.";
+"[HardwareKey/AutoFill/NotAvailable] Hardware keys are not available in AutoFill." = "Donanım anahtarları, Otomatik Doldurmada kullanılamıyor.";
+
+/* Information notice for a list of hardware keys. */
+"[HardwareKey/AutoFill/TheseNotAvailable]" = "Bu donanım anahtarları, Otomatik Doldurma'da kullanılamıyor.";
 
 /* Name of an input field which shows selected hardware key */
 "[HardwareKey/Field/title]" = "Donanım Anahtarı";
+
+/* Connector type for older Apple devices, used through a USB adapter. https://en.wikipedia.org/wiki/Lightning_(connector) */
+"[HardwareKey/Interface/LightningViaUSBAdapter]" = "Lightning (USB adaptörü yoluyla)";
+
+/* A notice for hardware keys that need an adapter for physical connection to device. */
+"[HardwareKey/LightningOverUSB/RequiresAdapter]" = "Apple USB-C'den Lightning'e adaptör gerektirir";
 
 /* Master key/unlock option: don't use hardware keys */
 "[HardwareKey/None] No Hardware Key" = "Donanım Anahtarı Yok";
@@ -814,23 +1249,74 @@
 /* Title of a list with possible hardware key connections */
 "[HardwareKey/Picker/title]" = "Donanım Anahtarları";
 
+/* Title of a slot of a hardware key. For example: `YubiKey Slot 1`. */
+"[HardwareKey/Slot/title]" = "%1$@ Yuvası %2$d";
+
+/* Hardware key slot number. [slotNumber: Int] */
+"[HardwareKey/SlotN]" = "Yuva %d";
+
+/* Title for hardware key slot selection menu. */
+"[HardwareKey/SlotTitle]" = "Yuva";
+
+/* Information notice. 'Challenge-response' is a glossary term. */
+"[HardwareKey/USB/chalRespNotSupported]" = "Bu cihaz, USB bağlantısı yoluyla sorgu-yanıt işlemini desteklemiyor.";
+
+/* Information notice */
+"[HardwareKey/USB/iPadAppOnMac]" = "Bu, macOS üzerinde çalışan bir iPad uygulaması olduğundan USB kullanılamıyor. Bunun yerine yerel Mac uygulamasını kullanın.";
+
 /* Generic title of in-app help article */
 "[Help Viewer/title]" = "Yardım";
 
 /* Name of an entry field. Acronym `HOTP` should not be translated. */
-"[HOTP/FieldName]" = "Tek seferlik parola (HOTP)";
+"[HOTP/FieldName]" = "Tek Seferlik Şifre (HOTP)";
 
 /* Info message for enterprise users */
 "[Intune/OrgNeedsToManage]" = "Verilerini korumak için kuruluşunuzun bu uygulamayı yönetmesi gerekiyor. Bu eylemi tamamlamak için iş veya okul hesabınız ile oturum açın.";
+
+/* Info message for users who accidentally installed the enterprise version. */
+"[Intune/PersonalVersionElsewhere]" = "Kişisel kullanım için KeePassium sürümü App Store'da mevcuttur.";
 
 /* Notification that an archived/historical item (e.g entry) has been successfully restored */
 "[Item/History/Restored]" = "Önceki sürüm geri yüklendi";
 
 /* Title of a list with advanced/expert-level properties of a database item (e.g. entry) */
-"[Item/Properties/Advanced/title]" = "İleri düzey";
+"[Item/Properties/Advanced/title]" = "Gelişmiş";
+
+/* Possible value of the `Password AutoFill` setting. For example: 'Password AutoFill: Allowed' */
+"[Item/Properties/AutoFill/allowed]" = "İzin Verildi";
+
+/* Possible value of the `Password AutoFill` setting. For example: 'Password AutoFill: Disabled' */
+"[Item/Properties/AutoFill/disabled]" = "Devre Dışı";
+
+/* Title of a setting: whether the item (e.g. entry) should be used in AutoFill feature. App-specific setting for KeePassXC. */
+"[Item/Properties/AutoFill/KeePassXC/title]" = "Otomatik Şifre Doldurma (KeePassXC)";
+
+/* Title of a setting: whether the item (e.g. entry) should be used in AutoFill feature */
+"[Item/Properties/AutoFill/title]" = "Otomatik Şifre Doldurma";
+
+/* Default value of an item property. For example: 'Password Audit: Inherit from parent group (Allowed)'. [inheritedValue: String] */
+"[Item/Properties/inheritedValue]" = "Üst grup üzerinden devral (%@)";
+
+/* Possible value of the `Password Audit` setting. For example: 'Password Audit: Allowed' */
+"[Item/Properties/PasswordAudit/allowed]" = "İzin Verildi";
+
+/* Possible value of the `Password Audit` setting. For example: 'Password Audit: Disabled' */
+"[Item/Properties/PasswordAudit/disabled]" = "Devre Dışı";
+
+/* Title of a setting: whether the item (e.g. entry) should be included in password audit */
+"[Item/Properties/PasswordAudit/title]" = "Şifre Denetimi";
+
+/* Possible value of the `Search` setting. Example: 'Search: Allowed' */
+"[Item/Properties/Search/allowed]" = "İzin Verildi";
+
+/* Possible value of the `Search` setting, when the item should be excluded from search results. Example: 'Search: Disabled' */
+"[Item/Properties/Search/disabled]" = "Devre Dışı";
 
 /* Title of a setting: whether the item (e.g. entry) should be considered during search. Example: 'Search: Allowed' */
 "[Item/Properties/Search/title] Search" = "Arama";
+
+/* Title of a list with item (e.g. entry) properties/settings, such as searchability, auto-typing, etc */
+"[Item/Properties/title]" = "Özellikler";
 
 /* Name of an entry/group category (visual style): default one, like in KeePass */
 "[ItemCategory] Default (KeePass)" = "Varsayılan (KeePass)";
@@ -842,7 +1328,10 @@
 "[ItemIconPicker/StandardIcons]" = "Standart Simgeler";
 
 /* Status message: processing of the master key is in progress */
-"[KDF/Progress] Processing the master key" = "Ana şifre işleniyor";
+"[KDF/Progress] Processing the master key" = "Ana anahtar işleniyor";
+
+/* Generic error message about system keychain. [errorCode: Int] */
+"[KeychainError/generic] Keychain error (code %d) " = "Anahtar zinciri hatası (%d kodu) ";
 
 /* Error message about system keychain. */
 "[KeychainError/unexpectedFormat] Keychain error: unexpected data format" = "Anahtar zinciri hatası: beklenmeyen veri formatı";
@@ -850,14 +1339,29 @@
 /* Action: add a key file into the app, by importing or creating one. `Key file` is a glossary term. */
 "[KeyFile/Add/action]" = "Anahtar Dosyası Ekle";
 
+/* Action: create new key file. */
+"[KeyFile/Create/action]" = "Anahtar Dosyası oluştur";
+
+/* Default name for new key files. Should match the `key file` term in the glossary. */
+"[KeyFile/Create/defaultName]" = "anahtardosyası.dat";
+
 /* Message to confirm deletion of a key file. */
-"[KeyFile/Delete/Confirm/text] Delete key file?\n Make sure you have a backup." = "Anahtar dosya silinsin mi? \n Yedeğini aldığınızdan emin olun.";
+"[KeyFile/Delete/Confirm/text] Delete key file?\n Make sure you have a backup." = "Anahtar dosyası silinsin mi? \n Yedeğinin olduğundan emin olun.";
 
 /* Error message related to key file. [errorDetails: String] */
 "[KeyFile/error]" = "Anahtar Dosya Hatası: %@";
 
 /* Name of an input field which shows selected key file */
 "[KeyFile/Field/title]" = "Anahtar Dosyası";
+
+/* Action: import/add a key file into the app. `Key file` is a glossary term. */
+"[KeyFile/Import/action]" = "Anahtar Dosyası içe aktar";
+
+/* Description of the `Import Key File` action. */
+"[KeyFile/Import/actionDescription]" = "Dosyayı uygulamaya ekle";
+
+/* Placeholder shown when there are no key files available */
+"[KeyFile/List/empty]" = "Anahtar dosyası yok";
 
 /* Title of the list with key files. */
 "[KeyFile/List/title]" = "Anahtar Dosyalar";
@@ -869,22 +1373,37 @@
 "[KeyFile/None/title]" = "Anahtar Dosyası Yok";
 
 /* Message to confirm removal of a key file from the app. (This keeps the file, but removes its reference from the app.) */
-"[KeyFile/Remove/Confirm/text] Remove key file from the list?\n The file will remain intact and you can add it again later." = "Veritabanı listeden silinsin mi?\n\n(Sadece gördüğünüz listeden silinir. Bulut hizmetinizden veya cihazınızdan silinmez.) Daha sonra tekrar ekleyebilirsiniz.";
+"[KeyFile/Remove/Confirm/text] Remove key file from the list?\n The file will remain intact and you can add it again later." = "Veri tabanı listeden silinsin mi?\n Dosya aynı kalır ve daha sonra tekrar ekleyebilirsiniz.";
+
+/* Action: use a key file at its storage location, without importing to the app. */
+"[KeyFile/Use/action]" = "Anahtar Dosyası seç";
+
+/* Description of the `Select Key File` action. */
+"[KeyFile/Use/actionDescription]" = "Eklemeden kullan";
 
 /* Error message when the key file is misformatted or damaged */
-"[KeyFileError/Corrupted/title]" = "Anahtar dosya bozuk";
+"[KeyFileError/Corrupted/title]" = "Anahtar dosyası bozuk";
 
 /* Error message: unsupported/unknown format of a key file */
-"[KeyFileError/UnsupportedFormat/title]" = "Desteklenmeyen anahtar dosya formatı";
+"[KeyFileError/UnsupportedFormat/title]" = "Desteklenmeyen anahtar dosyası formatı";
 
 /* Menu item: show information about file (name, size, dates) */
-"[Menu/FileInfo/title]" = "Dosya Bilgisi";
+"[Menu/FileInfo/title]" = "Dosya Bilgileri";
 
 /* Menu title: app settings */
 "[Menu/Settings/title]" = "Ayarlar…";
 
+/* Title of a menu: sort order of files in a list */
+"[Menu/Sort] Sort Files By" = "Dosyaları Şuna Göre Sırala";
+
+/* Title of a menu: sort order of groups and entries in a list */
+"[Menu/Sort] Sort Items By" = "Ögeleri Sıralama Ölçütü";
+
 /* Suggestion/hint on how to fix an accompanying error. */
-"[Org/ContactYourAdmin]" = "Lütfen BT yöneticinize başvurun.";
+"[Org/ContactYourAdmin]" = "Lütfen BT yöneticinizle iletişime geçin.";
+
+/* Error message, euphemism for missing corporate license */
+"[Org/LicenseMissing]" = "KeePassium, kuruluşunuzun kurumsal hesabını bulamadı.";
 
 /* Name of an entry field */
 "[OTP/FieldName]" = "Tek Kullanımlık Şifre";
@@ -892,125 +1411,287 @@
 /* Error shown when scanned QR code cannot be used for OTP */
 "[OTP/Scan/InvalidData]" = "Bu QR kod, OTP kurulumu için uygun değil.";
 
+/* Error shown when a manually entered OTP secret is misformatted. */
+"[OTP/Scan/InvalidSecretCode]" = "Girilen gizli kod, OTP kurulumu için uygun değil.";
+
 /* Message to confirm user intentions */
-"[OTP/Scan/OverwriteWarning]" = "Bu girdi için tek kullanımlık parola oluşturulmuştu. Üzerine yazılsın mı?";
+"[OTP/Scan/OverwriteWarning]" = "Bu girdi için tek kullanımlık şifre zaten oluşturulmuştu. Üzerine yazmak ister misiniz?";
 
 /* Call for action. Acronym `OTP` should not be translated. */
-"[OTP/Setup]" = "Tek kullanımlık parola oluştur (OTP)";
+"[OTP/Setup]" = "Tek kullanımlık şifre oluştur (OTP)";
 
-/* Explanation of the premium feature */
-"[Premium/Benefits/HardwareKeys/details]" = "Bilgilerinizi YubiKey gibi bir donanım anahtarıyla koruyun.";
+/* Button/action: proceed with manual OTP setup */
+"[OTP/Setup/EnterManually]" = "Elle gir";
+
+/* Call to action: type in the secret key for OTP setup. */
+"[OTP/Setup/EnterSecretCode/callToAction]" = "Gizli Kod girin";
+
+/* Button/action: proceed with QR code based OTP setup */
+"[OTP/Setup/ScanQRCode]" = "QR Kodu tara";
+
+/* Action: pick an image (from files) to scan as QR code */
+"[OTP/Setup/ScanQRImageFile]" = "Dosyadan QR tara";
+
+/* Action: pick a photo (from gallery) to scan as QR code */
+"[OTP/Setup/ScanQRPhoto]" = "Fotoğraftan QR tara";
+
+/* Call to action/instruction during setup of OTP codes. */
+"[OTP/Setup/SelectDatabase/message]" = "Doğrulama kodu (tek kullanımlık şifre) kurulumu için veri tabanı seçin.";
+
+/* Call to action/instruction during setup of OTP codes. */
+"[OTP/Setup/SelectEntry/message]" = "Doğrulama kodu (tek kullanımlık şifre) kurulumu için girdi seçin.";
+
+/* Confirmation message after successful OTP setup */
+"[OTP/Setup/Success]" = "OTP kurulumu tamamlandı";
+
+/* Title of a dialog related to setup of one-time passwords (OTP) */
+"[OTP/Setup/Title]" = "Doğrulama Kodu Kurulumu";
+
+/* Description of an OTP code; sentence case. */
+"[OTP/Title/sentenceCase]" = "Tek kullanımlık şifre";
+
+/* Action/button: accept/use the generated password */
+"[PasswordGenerator/Accept/action]" = "Kabul Et";
+
+/* Error message from the random text generator. */
+"[PasswordGenerator/CannotGenerateText/title]" = "Metin oluşturulamıyor";
+
+/* Description of an empty character set for password generator. 'Empty' as 'there are no characters'. */
+"[PasswordGenerator/CustomSet/Empty/title]" = "Boş";
+
+/* User-defined set of characters for password generator. */
+"[PasswordGenerator/CustomSet/title]" = "Özel karakterler";
+
+/* Error message/call to action from the random text generator. */
+"[PasswordGenerator/DesiredLengthTooShort/title]" = "Uzunluk parametresini en az %d olacak şekilde artırın.";
+
+/* Action/button: generate random text/password/phrase */
+"[PasswordGenerator/Generate/action]" = "Oluştur";
+
+/* Description of randomly generated text/password/phrase */
+"[PasswordGenerator/GeneratedText/title]" = "Oluşturulan metin";
+
+/* Inclusion criterion for a password generator. For example: `Digits: Allowed` */
+"[PasswordGenerator/InclusionCondition/allowed]" = "İzin verildi";
+
+/* Inclusion criterion for a password generator. For example: `Uppercase Letters: Excluded` */
+"[PasswordGenerator/InclusionCondition/excluded]" = "Hariç tutuldu";
+
+/* Inclusion criterion for a password generator — a disabled/inactive one that won't be taken into account. For example: `Uppercase Letters: Inactive` */
+"[PasswordGenerator/InclusionCondition/inactive]" = "Etkin değil";
+
+/* Inclusion criterion for a password generator. For example: `Special Symbols: Required` */
+"[PasswordGenerator/InclusionCondition/required]" = "Gerekli";
+
+/* Length (number of characters) of the random text to generate */
+"[PasswordGenerator/Length/title]" = "Uzunluk";
+
+/* Description of a password generator parameter. For example, the digit in 'abc222def'. */
+"[PasswordGenerator/MaxConsecutive/description]" = "Ardışık olarak tekrarlanan aynı karakterlerin maksimum sayısı.";
+
+/* Error message/call to action from the random text generator. */
+"[PasswordGenerator/MaxConsecutiveNotSatisfiable/title]" = "Art arda tekrarlanan aynı öge sayısının limitini artırın.";
+
+/* One of the operation modes of the random text generator */
+"[PasswordGenerator/Mode/Basic/title]" = "Temel";
+
+/* One of the operation modes of the random text generator */
+"[PasswordGenerator/Mode/Expert/title]" = "Uzman";
+
+/* One of the operation modes of the random text generator, where it generates random phrases. */
+"[PasswordGenerator/Mode/Passphrase/title]" = "Şifre ifadesi";
+
+/* Operation mode of the random text generator (for example, `Basic`, `Expert`, `Passphrase`) */
+"[PasswordGenerator/Mode/title]" = "Mod";
+
+/* Error message from the random text generator. */
+"[PasswordGenerator/NotEnoughElementsToSample/title]" = "Arasından seçim yapılacak daha fazla öge gerekiyor.";
+
+/* Length (number of characters) of the password to generate */
+"[PasswordGenerator/PasswordLength/title]" = "Şifre Uzunluğu";
+
+/* Error message from the random text generator. `required` and `excluded` are as in [PasswordGenerator/InclusionCondition/required] and [PasswordGenerator/InclusionCondition/excluded] */
+"[PasswordGenerator/RequiredSetCompletelyExcluded/title]" = "Karakter kümelerinden biri hem gerekli hem de hariç tutulmuş.";
+
+/* Title for digits (like '123') */
+"[PasswordGenerator/Set/Digits/title]" = "Rakamlar";
+
+/* Title for look-alike symbols (like '1lI', that is: digit `1`, small `L`, capital `i`). */
+"[PasswordGenerator/Set/Lookalikes/title]" = "Benzer karakterler";
+
+/* Title for lowercase letters (like 'abc') */
+"[PasswordGenerator/Set/Lowercase/title]" = "Küçük harfler";
+
+/* Title for special symbols (like '@#$') */
+"[PasswordGenerator/Set/Specials/title]" = "Özel semboller";
+
+/* Title for uppercase letters (like 'ABC') */
+"[PasswordGenerator/Set/Uppercase/title]" = "Büyük harfler";
+
+/* Name of the space character. https://en.wikipedia.org/wiki/Space_(punctuation) */
+"[PasswordGenerator/SpaceCharacter/name]" = "Boşluk";
+
+/* Title of the random text/password/username generator dialog. */
+"[PasswordGenerator/title]" = "Rastgele Üretici";
+
+/* Character to be inserted between words of a passphrase. */
+"[PasswordGenerator/Word Separtor/title]" = "Seperatör";
+
+/* Word capitalization style. Written in that style, if possible. */
+"[PasswordGenerator/WordCase/lowerCase]" = "küçük harf";
+
+/* Case of letters in a word (e.g. UPPER, lower, Title Case) */
+"[PasswordGenerator/WordCase/title]" = "Büyük/Küçük Harf";
+
+/* Word capitalization style: first letters of significant words capitalized. Written in that style, if possible. */
+"[PasswordGenerator/WordCase/titleCase]" = "Başlık Biçimi";
+
+/* Word capitalization style. Written in that style, if possible. */
+"[PasswordGenerator/WordCase/upperCase]" = "BÜYÜK HARF";
+
+/* Number of words in a generated passphrase. In context: 'Words: 5' */
+"[PasswordGenerator/WordCount/title]" = "Kelimeler";
+
+/* Name of a wordlist for passphrase generator. `EFF` is an organization name. */
+"[PasswordGenerator/Wordlist/EFFLarge/title]" = "EFF Büyük Kelime Listesi (7776 kelime)";
+
+/* Name of a wordlist for passphrase generator. `EFF` is an organization name. */
+"[PasswordGenerator/Wordlist/EFFShort/title]" = "EFF Kısa Kelime Listesi #%d (1296 kelime)";
+
+/* Error message when importing a text file [lineNumber: Int, problemDescription: String] */
+"[PasswordGenerator/Wordlist/ImportError/reason]" = "Dosya, %1$d. satırda (%2$@) bir sorun olduğu için içe aktarılamadı";
+
+/* List of words to be used for a passphrase. */
+"[PasswordGenerator/Wordlist/title]" = "Kelime listesi";
 
 /* Title of a premium feature */
-"[Premium/Benefits/HardwareKeys/title]" = "Donanım Anahtarı Kullanın";
+"[Premium/Benefits/BusinessClouds/title]" = "Kurumsal depolama ile senkronize edin";
+
+/* Call to action / Title of a premium feature */
+"[Premium/Benefits/CreativeAutoFill/title]" = "Daha hızlı hesap oluşturun";
 
 /* Explanation of the premium feature */
-"[Premium/Benefits/MultiDB/details]" = "Birden fazla veritabanı ekleyin ve aralarında kolayca geçiş yapın.";
+"[Premium/Benefits/HardwareKeys/details]" = "Sırlarınızı YubiKey gibi bir donanım anahtarıyla koruyun.";
 
 /* Title of a premium feature */
-"[Premium/Benefits/MultiDB/title]" = "Organize Olun";
+"[Premium/Benefits/HardwareKeys/title]" = "Donanım anahtarları kullanın";
+
+/* Explanation of the premium feature */
+"[Premium/Benefits/LinkedDatabases/details]" = "Bir girdide saklanan giriş bilgileriyle başka bir veri tabanını tek bir adımda açın.";
+
+/* Title of a premium feature */
+"[Premium/Benefits/LinkedDatabases/title]" = "Bağlantılı veri tabanlarını açın";
+
+/* Explanation of the premium feature */
+"[Premium/Benefits/MultiDB/details]" = "Birden fazla veri tabanı ekleyin ve aralarında kolayca geçiş yapın.";
+
+/* Title of a premium feature */
+"[Premium/Benefits/MultiDB/title]" = "Ekibinizle senkronize olun";
 
 /* List of premium benefits/advantages */
-"[Premium/Benefits/Negative/header] " = "Neleri kaçırıyorsunuz";
+"[Premium/Benefits/Negative/header] " = "Kaçırdıklarınız";
+
+/* Title of a premium feature */
+"[Premium/Benefits/PasswordAudit/title]" = "Şifrelerinizi kontrol edin";
 
 /* List of premium benefits/advantages */
-"[Premium/Benefits/Positive/header] " = "Avantajlarınız";
+"[Premium/Benefits/Positive/header] " = "Edinecekleriniz";
 
 /* Call to action */
-"[Premium/CallToAction/buyNow]" = "Hemen Satın Alın";
+"[Premium/CallToAction/buyNow]" = "Hemen Satın Al";
 
 /* Call to action: continue using the free version */
-"[Premium/CallToAction/free]" = "Ücretsiz Devam Et";
+"[Premium/CallToAction/free]" = "Test Etmeye Devam Et";
 
 /* Call to action: start free trial */
-"[Premium/CallToAction/startTrial]" = "Premium Denemeyi Başlat";
+"[Premium/CallToAction/startTrial]" = "Ücretsiz dene";
 
 /* Call to action: upgrade to premium */
-"[Premium/CallToAction/upgradeNow]" = "Şimdi Premium'a Geç";
+"[Premium/CallToAction/upgradeNow]" = "Hemen Yükselt";
 
 /* Action: open AppStore subscription management page */
-"[Premium/ManageSubscriptions/action]" = "Aboneliğini Yönet";
+"[Premium/ManageSubscriptions/action]" = "Abonelikleri yönet";
 
 /* Name of the permanent/never-ending license. */
-"[Premium/perpetualLicense]" = "Ömür Boyu Lisans";
+"[Premium/perpetualLicense]" = "Süresiz lisans";
 
 /* [formattedDate: String] */
-"[Premium/PerpetualLicense/status]" = "%@'ten önceki tüm versiyonlar için \"Ömür Boyu Lisans\"ınız var.";
+"[Premium/PerpetualLicense/status]" = "%@ tarihinden önceki tüm sürümler için süresiz lisansınız bulunuyor.";
 
 /* What's included in a price plan: 1 year of support via email */
-"[Premium/Price Plan/Conditions/1 year email support]" = "1 Yıl Boyunca e-mail Desteği";
+"[Premium/Price Plan/Conditions/1 year email support]" = "Bir yıl e-posta desteği";
 
 /* What's included in a price plan */
-"[Premium/Price Plan/Conditions/all premium features]" = "Tüm Premium Özellikler";
+"[Premium/Price Plan/Conditions/all premium features]" = "Tüm premium özellikler";
 
 /* What's included in a free plan: support via forums (as opposed to email support) */
-"[Premium/Price Plan/Conditions/community support]" = "Müşteri hizmetleri: Online Forumlar";
+"[Premium/Price Plan/Conditions/community support]" = "Müşteri desteği: Çevrimiçi forumlar";
 
 /* What's included in a price plan: existing premium features only (as opposed to `current + future`) */
-"[Premium/Price Plan/Conditions/current premium features]" = "Mevcut Premium Özellikler";
+"[Premium/Price Plan/Conditions/current premium features]" = "Mevcut premium özellikler";
 
 /* What's included in a price plan: support via email */
-"[Premium/Price Plan/Conditions/email support]" = "Müşteri hizmetleri: e-mail";
+"[Premium/Price Plan/Conditions/email support]" = "Müşteri hizmetleri: E-posta";
 
 /* Family Sharing programme. Translation must match Apple's: https://www.apple.com/family-sharing/ */
 "[Premium/Price Plan/Conditions/family sharing]" = "Aile Paylaşımı";
 
 /* What's included in a free plan: reminders that the version is free */
-"[Premium/Price Plan/Conditions/freemium reminders]" = "Ücretsiz Kullanıma Dair Hatırlatma";
+"[Premium/Price Plan/Conditions/freemium reminders]" = "Freemium hatırlatıcıları";
 
 /* Upgrade conditions for current-version premium purchase. */
-"[Premium/Price Plan/Conditions/full price upgrade]" = "Gelecekte eklenecek tüm Premium özellikler; her defasında tekrar tekrar satın almayı gerektirecek.";
+"[Premium/Price Plan/Conditions/full price upgrade]" = "Gelecekte eklenecek Premium özellikler tam fiyat üzerinden yeni bir satın alma işlemi gerektirir.";
 
 /* What's included in a price plan: upcoming premium features (as opposed to `current only`) */
-"[Premium/Price Plan/Conditions/future premium features]" = "Gelecekteki Premium Özellikler";
+"[Premium/Price Plan/Conditions/future premium features]" = "Gelecekteki premium özellikler";
 
 /* What's included in a price plan. Please leave `perpetual fallback license` in English. */
-"[Premium/Price Plan/Conditions/perpetual fallback]" = "Kiralama lisansı (Perpetual fallback license)";
+"[Premium/Price Plan/Conditions/perpetual fallback]" = "Kiralama yoluyla sahip olma lisansı (Süresiz yedek lisans)";
 
 /* What's included in a subscription plan. By subscribing for a certain period, the user receives a permanent license for a version of the app. More info: https://keepassium.com/articles/perpetual-fallback-license/ */
-"[Premium/Price Plan/Conditions/subscription as purchase]" = "Satın alma aboneliği";
+"[Premium/Price Plan/Conditions/subscription as purchase]" = "Satın alım olarak abonelik";
 
 /* What's included in a price plan */
-"[Premium/Price Plan/Conditions/updates and bug fixes]" = "Güncellemeler ve Hata Düzeltmeleri";
+"[Premium/Price Plan/Conditions/updates and bug fixes]" = "Güncellemeler ve hata düzeltmeleri";
 
 /* Price of the free pricing plan */
-"[Premium/Price Plan/Free/price]" = "Bedava";
+"[Premium/Price Plan/Free/price]" = "Ücretsiz";
 
 /* Name of the free pricing plan */
-"[Premium/Price Plan/Free/title]" = "Bedava";
+"[Premium/Price Plan/Free/title]" = "Ücretsiz";
 
 /* Marks the default pricing plan */
-"[Premium/Price Plan/popular]" = "En Popüler";
+"[Premium/Price Plan/popular]" = "Popüler";
 
 /* Subscription conditions */
-"[Premium/Subscription/Legal/text]" = "Satın alma onaylandığında Apple Kimliğinden ödeme tahsil edilecektir. Geçerli abonelik dönemi bitmeden en az 24 saat önceden otomatik yenileme özelliği kapatılmazsa abonelik otomatik olarak yenilenir. Mevcut abonelik döneminin bitmesine 24 saat kala hesabından yenileme ücreti tahsil edilir. Satın almadan sonra App Store’da hesap ayarlarına giderek aboneliklerini yönetebilir ve iptal edebilirsin.";
+"[Premium/Subscription/Legal/text]" = "Satın alma işlemi onaylanırken ödeme, Apple kimliği hesabınızdan alınır.\n\nAbonelik, mevcut dönem sona ermeden en az 24 saat önce iptal edilmezse otomatik olarak yenilenir. Mevcut dönem sona ermeden önceki 24 saat içinde hesabınızdan yenileme için ücret alınır.\n\nSatın alma işleminden sonra App Store'da hesap ayarlarınıza giderek aboneliklerinizi yönetebilir ve iptal edebilirsiniz.";
 
 /* Trial conditions. For example `30 days free, then $1 per month` */
-"[Premium/Trial/trial then price]" = "%1$@ ücretsiz, sonrasında %2$@";
+"[Premium/Trial/trial then price]" = "%1$@ ücretsiz, ardından %2$@";
 
 /* Error message: AppStore returned no available in-app purchase options */
-"[Premium/Upgrade] Hmm, there are no upgrades available. This should not happen, please contact support." = "Hmm, yükseltme hazır değil. Bu olmamalıydı, lütfen desteğe başvurun.";
+"[Premium/Upgrade] Hmm, there are no upgrades available. This should not happen, please contact support." = "Hmm, kullanılabilir yükseltme yok. Bu olmamalıydı, lütfen destekle iletişime geçin.";
 
 /* Action/button to start choosing premium versions and possibly buying one */
-"[Premium/Upgrade/action] Upgrade to Premium" = "Premium'a Yükselt";
+"[Premium/Upgrade/action] Upgrade to Premium" = "Premium'a yükselt";
 
 /* Message shown after buying a lifetime version. */
-"[Premium/Upgrade/cancelOngoingSubscription]" = "Lütfen eski aboneliğinizi iptal etmeniz gerekiyor mu kontrol edin.";
+"[Premium/Upgrade/cancelOngoingSubscription]" = "Eski aboneliğinizi iptal etmenizin gerekip gerekmediğini lütfen kontrol edin.";
 
 /* Message shown when in-app purchase is deferred until approval (parental or corporate). */
-"[Premium/Upgrade/Deferred/text] Thank you! You can use KeePassium while purchase is awaiting approval." = "Teşekkürler! Biz ödeme onayını beklerken, siz KeePassium'un Premium özellikleri keşfetmeye başlayabilirsiniz.";
+"[Premium/Upgrade/Deferred/text] Thank you! You can use KeePassium while purchase is awaiting approval." = "Teşekkürler! Satın alma onayı beklenirken KeePassium'u kullanabilirsiniz.";
 
 /* Product price for monthly premium subscription. [localizedPrice: String] */
-"[Premium/Upgrade/price] %@ / month" = "Ayda %@";
+"[Premium/Upgrade/price] %@ / month" = "%@ / ay";
 
 /* Product price for annual premium subscription. [localizedPrice: String] */
-"[Premium/Upgrade/price] %@ / year" = "Yılda %@";
+"[Premium/Upgrade/price] %@ / year" = "%@ / yıl";
 
 /* Product price for once-and-forever premium. [localizedPrice: String] */
 "[Premium/Upgrade/price] %@ once" = "Tek seferlik %@";
 
 /* Equivalent monthly price for an annual subscription. For example: `$12/year ≈ $1 / month` */
-"[Premium/Upgrade/price] around %@ / month" = "≈ Ayda %@";
+"[Premium/Upgrade/price] around %@ / month" = "≈ %@ / ay";
 
 /* Status message when downloading available in-app purchases */
 "[Premium/Upgrade/Progress] Contacting AppStore..." = "AppStore'a bağlanılıyor...";
@@ -1019,40 +1700,73 @@
 "[Premium/Upgrade/Progress] Purchasing..." = "Satın alınıyor...";
 
 /* Text of the message shown after in-app purchase was successfully restored */
-"[Premium/Upgrade/Restored/text] Upgrade successful, enjoy the app!" = "Tüm ödemeler geri yüklendi, uygulamanın tadını çıkarın!";
+"[Premium/Upgrade/Restored/text] Upgrade successful, enjoy the app!" = "Yükseltme başarılı, uygulamanın keyfini çıkarın!";
 
 /* Title of the message shown after in-app purchase was successfully restored */
-"[Premium/Upgrade/Restored/title] Purchase Restored" = "Satın alma geri yüklendi";
+"[Premium/Upgrade/Restored/title] Purchase Restored" = "Satın Alma İşlemi Geri Yüklendi";
 
 /* Text of an error message: there were no in-app purchases that can be restored */
-"[Premium/Upgrade/RestoreFailed/text] No previous purchase could be restored." = "Tüm önceki ödemeler geri yüklendi. Fakat bu uygulamayı daha önce satın almamışsınız.";
+"[Premium/Upgrade/RestoreFailed/text] No previous purchase could be restored." = "Önceki satın alma işlemi geri yüklenemedi.";
 
 /* Title of an error message: there were no in-app purchases that can be restored */
 "[Premium/Upgrade/RestoreFailed/title] Sorry" = "Üzgünüz";
 
 /* Message shown after buying or subscribing. */
-"[Premium/Upgrade/Success/thankYou]" = "Ödemeniz için çok teşekkürler!";
+"[Premium/Upgrade/Success/thankYou]" = "Satın alma işleminiz için teşekkürler!";
+
+/* Description/call to action for the `Business Cloud Storage` premium feature. */
+"[PremiumFeature/BusinessClouds/description]" = "Kurumsal depolama hesaplarına, örneğin İş için OneDrive'a doğrudan bağlanın.";
+
+/* Title of a premium feature: access to company's cloud accounts like 'OneDrive for Business' */
+"[PremiumFeature/BusinessClouds/title]" = "Kurumsal bulut depolama";
+
+/* Description/advertisement for the `Faster Sign-Ups` premium feature */
+"[PremiumFeature/CreativeAutoFill/description]" = "Otomatik Doldurma'da ana alanların önceden doldurulduğu yeni girdiler oluşturun.";
+
+/* Title of a premium feature: easier registration of new accounts, directly in AutoFill dialog */
+"[PremiumFeature/CreativeAutoFill/title]" = "Daha Hızlı Kaydolma";
 
 /* A generic description of a premium feature */
-"[PremiumFeature/Generic/description]" = "Premium'a geçin ve KeePassium'un tüm avantajlarından yararlanın.";
+"[PremiumFeature/Generic/description]" = "Premium'a yükseltin ve KeePassium'dan en iyi şekilde yararlanın.";
 
 /* A generic title of a premium feature */
 "[PremiumFeature/Generic/title]" = "Premium Özellik";
 
 /* Description/advertisement for the `Hardware Keys` premium feature */
-"[PremiumFeature/HardwareKeys/description]" = "Premium versiyonda; güvenliğinizi donanım anahtarları (YubiKey) kullanarak artırın.";
+"[PremiumFeature/HardwareKeys/description]" = "Premium sürümde güvenliğinizi donanım anahtarları (YubiKey) ile güçlendirin.";
 
 /* Title of a premium feature: ability use hardware keys (e.g. YubiKey) for encryption (In Title Case) */
 "[PremiumFeature/HardwareKeys/title] Hardware Keys" = "Donanım Anahtarları";
 
+/* Description/advertisement for the `Linked Databases` premium feature */
+"[PremiumFeature/LinkedDatabases/description]" = "Premium'a yükseltin ve bağlantılı veri tabanlarını tek bir adımda açın.";
+
+/* Title of a premium feature: ability to open databases referenced in another database (In Title Case) */
+"[PremiumFeature/LinkedDatabases/title]" = "Bağlantılı Veri Tabanları";
+
 /* Description/advertisement for the `Multiple Databases` premium feature */
-"[PremiumFeature/MultiDB/description] Easily switch between databases in the premium version." = "Premium versiyonda veritabanları arasında kolayca geçiş yapın.";
+"[PremiumFeature/MultiDB/description] Easily switch between databases in the premium version." = "Premium sürümde veri tabanları arasında kolayca geçiş yapın.";
 
 /* Title of a premium feature: ability to use multiple databases (In Title Case) */
-"[PremiumFeature/MultiDB/title] Multiple Databases" = "Çoklu Veritabanı";
+"[PremiumFeature/MultiDB/title] Multiple Databases" = "Birden Fazla Veri Tabanı";
+
+/* Description/call to action for the `Password Audit` premium feature. */
+"[PremiumFeature/PasswordAudit/description]" = "Bilinen bir veri ihlalinde şifrelerinizden herhangi birinin ifşa edilip edilmediğini öğrenin.";
+
+/* Title of a premium feature: discover which passwords are known to be compromized */
+"[PremiumFeature/PasswordAudit/title]" = "Şifre denetimi";
+
+/* Description/call to action for the `Quick AutoFill` premium feature. */
+"[PremiumFeature/QuickAutoFill/description]" = "KeePassium'u açmadan, giriş formlarını tek bir dokunuşla doldurun.";
+
+/* Title of a premium feature: show relevant AutoFill entries right under the input field */
+"[PremiumFeature/QuickAutoFill/title]" = "Hızlı Otomatik Doldurma";
 
 /* A brief summary of the privacy policy (for offline mode) */
-"[PrivacyPolicy/Offline/text]" = "KeePassium herhangi bir kişisel veya analitik veri toplamaz ve kimseyle paylaşmaz.";
+"[PrivacyPolicy/Offline/text]" = "KeePassium herhangi bir kişisel veri veya analiz verisi toplamaz ve bunları kimseyle paylaşmaz.";
+
+/* A brief summary of the privacy policy (for online mode) */
+"[PrivacyPolicy/Online/text]" = "KeePassium, herhangi bir kişisel veya analitik veri toplamaz.\nBazı özellikler, harici hizmetlerle veri alışverişi gerektirebilir (talebinize göre ve yalnızca bu hizmetleri size sunmak amacıyla).\nBu tür bir alışveriş, ilgili hizmetin gizlilik politikası ile yönetilir.";
 
 /* Section: privacy policy */
 "[PrivacyPolicy/title]" = "Gizlilik Politikası";
@@ -1061,49 +1775,193 @@
 "[Progress/CancellationReason] Cancelled by user" = "Kullanıcı tarafından iptal edildi";
 
 /* Error message when a long-running operation was cancelled due to the lack of free memory (RAM). */
-"[Progress/CancellationReason/lowMemory]" = "Devam etmek için yeterli hafıza yok. Ya veritabanınız çok büyük ya da veritabanı ayarlarınız çok komplike (Argon2 bellek parametresi).";
+"[Progress/CancellationReason/lowMemory]" = "Devam etmek için yeterli bellek yok.\nBu, büyük veri tabanları veya fazla komplike veri tabanı ayarları (Argon2 bellek parametresi) nedeniyle gerçekleşebilir.";
+
+/* Name of a feature that shows relevant entries directly next to the login/password forms. */
+"[QuickAutoFill/title]" = "Hızlı Otomatik Doldurma";
+
+/* Network security setting */
+"[RemoteConnection/AllowUntrusted/title]" = "Güvenilmeyen Sertifikaya İzin Ver";
+
+/* Network connection. For example `Connection: WebDAV` or `Connection: MyCloud`. */
+"[RemoteConnection/Connection/title]" = "Bağlantı";
+
+/* Action: connect to a network server */
+"[RemoteConnection/connectToServer]" = "Sunucuya Bağlan";
+
+/* Title of a section: username, password, etc */
+"[RemoteConnection/Credentials]" = "Giriş Bilgileri";
+
+/* Description of the `Direct connection` sync method. */
+"[RemoteConnection/Direct/description]" = "KeePassium çevrimiçi depolamanız ile doğrudan iletişim kuracak. Bu, dosya aktarımının güvenilir olmasını sağlar.";
+
+/* Title of a list with online storage services like OneDrive, Dropbox, etc. */
+"[RemoteConnection/Direct/title]" = "Çevrimiçi Hizmetler";
+
+/* Action: change properties of a remote network connection */
+"[RemoteConnection/Edit/action]" = "Bağlantı düzenle…";
+
+/* Error message: user credentials rejected by the server */
+"[RemoteConnection/Error/AuthenticationFailed/title]" = "Kimlik doğrulama başarısız oldu";
+
+/* Network address of a file */
+"[RemoteConnection/FileURL]" = "Dosya URL'si";
+
+/* Complete WebDAV URL including path prefix */
+"[RemoteConnection/FullURL]" = "Tam URL";
+
+/* Name of a predefined Google Drive folder which contains user's own files */
+"[RemoteConnection/GoogleDrive/Folder/myDrive]" = "Drive'ım";
+
+/* Name of a predefined GoogleDrive folder which contains files shared with this user */
+"[RemoteConnection/GoogleDrive/Folder/sharedWithMe]" = "Benimle Paylaşılanlar";
 
 /* Name of a predefined OneDrive folder which contains user's own files */
 "[RemoteConnection/OneDrive/Folder/files]" = "Dosyalar";
 
+/* Name of a predefined OneDrive folder which contains files shared with this user */
+"[RemoteConnection/OneDrive/Folder/sharedWithMe]" = "Paylaşılan";
+
+/* Network address of a WebDAV server */
+"[RemoteConnection/ServerURL]" = "Sunucu URL'si";
+
+/* Action: authenticate to Dropbox account */
+"[RemoteConnection/SignIn/Dropbox/action]" = "Dropbox'a giriş yap";
+
+/* Error description: the user should manually sign in to their Dropbox account */
+"[RemoteConnection/SignIn/Dropbox/authorizationRequried]" = "Dropbox'a yeniden giriş yapmanız gerekiyor.";
+
+/* Action: authenticate to Google Drive account */
+"[RemoteConnection/SignIn/GoogleDrive/action]" = "Google Drive'a giriş yap";
+
+/* Error description: the user should manually sign in to their Google Drive account */
+"[RemoteConnection/SignIn/GoogleDrive/authorizationRequried]" = "Google Drive'a yeniden giriş yapmanız gerekiyor.";
+
+/* Action: authenticate to OneDrive account */
+"[RemoteConnection/SignIn/OneDrive/action]" = "OneDrive'a giriş yap";
+
+/* Error description: the user should manually sign in to their OneDrive account */
+"[RemoteConnection/SignIn/OneDrive/authorizationRequried]" = "OneDrive'a yeniden giriş yapmanız gerekiyor.";
+
+/* No comment provided by engineer. */
+"[RemoteConnection/SignIn/PrivateMode/description]" = "Giriş sayfasını gizli tarayıcı modunda aç";
+
+/* No comment provided by engineer. */
+"[RemoteConnection/SignIn/PrivateMode/title]" = "Özel mod";
+
+/* Title: connection to a network storage */
+"[RemoteConnection/title]" = "Uzak Bağlantı";
+
+/* Description of the `Integration via Files app` sync method. */
+"[RemoteConnection/ViaFilesApp/description]" = "KeePassium, dosya senkronizasyonunu yer sağlayıcınızın uygulamasına atayacak. Bazı uygulamalar diğerlerinden daha iyi çalışır.";
+
+/* Link to a help page for an online storage service. The parameter is the service name in fixed neutral form. Example: 'Nextcloud Setup Guide' or 'Synology NAS Setup Guide'. */
+"[RemoteConnection/WebDAVService/SetupGuide]" = "%@ Kurulum Kılavuzu";
+
 /* Name of an input field for entering the password again */
 "[Repeat Password/Field/title]" = "Şifreyi Tekrarla";
 
+/* Description of the auto-download favicons feature */
+"[Settings/AutoDownloadFavicons/description]" = "Bir girdiyi düzenledikten sonra web sitesi simgesini otomatik olarak indirin.";
+
+/* Settings option: automatically download website icons/favicons */
+"[Settings/AutoDownloadFavicons/title]" = "Otomatik Favicon İndirme";
+
 /* Title of AutoFill settings screen */
-"[Settings/AutoFill/title]" = "Şifreleri Otomatik Doldurma";
+"[Settings/AutoFill/title]" = "Şifreleri Otomatik Doldurun";
 
 /* Title of a yes/no setting: whether to include backup copies in the file list */
-"[Settings/DatabaseBackup/ShowBackupFiles/title]" = "Yedek Dosyaları Göster";
+"[Settings/DatabaseBackup/ShowBackupFiles/title]" = "Yedek Dosyaları göster";
 
 /* Settings section: protection of databases, their keys and data inside them */
 "[Settings/DataProtection/title]" = "Veri Koruma";
 
 /* An option in Group Viewer settings. Will be shown as 'Entry Subtitle: None', meanining that no entry details will be shown in any lists. */
-"[Settings/EntryListDetail/longTitle] None" = "Hiç biri";
+"[Settings/EntryListDetail/longTitle] None" = "Yok";
 
 /* Title of a settings section: which entry field to show along with entry title */
-"[Settings/GroupViewer] Entry Subtitle" = "Kayıt Altbaşlığı";
+"[Settings/GroupViewer] Entry Subtitle" = "Girdi Alt Başlığı";
 
 /* Title of a settings section: sort order of groups and entries in a list */
 "[Settings/GroupViewer] Sort Order" = "Sıralama Düzeni";
 
 /* Title of a yes/no setting */
-"[Settings/KeyFiles/Remember/title]" = "Anahtar Dosyaları Hatırla";
+"[Settings/KeyFiles/Remember/title]" = "Anahtar Dosyalarını hatırla";
 
 /* Title of list view configuration screen */
-"[Settings/ListSettings/title]" = "Ayar Listesi";
+"[Settings/ListSettings/title]" = "Liste Ayarları";
+
+/* Notification when corporate user tries to use a feature forbidden by organization's IT department. */
+"[Settings/Managed/BlockedFeature/notification]" = "Bu özellik, kuruluşunuz tarafından engellendi.";
+
+/* Notification when corporate user tries to change an app setting controlled by organization's IT department. */
+"[Settings/Managed/notification]" = "Bu ayar, kuruluşunuz tarafından yönetilmektedir.";
 
 /* Setting: preserve (cache) calculated database keys */
 "[Settings/MasterKeys/CacheDerived/title]" = "Önbellekten Türetilmiş Şifreleme Anahtarları";
 
 /* Title of a yes/no setting */
-"[Settings/MasterKeys/Remember/title]" = "Ana Şifreyi Hatırla";
+"[Settings/MasterKeys/Remember/title]" = "Ana Şifreleri hatırla";
+
+/* Confirmation dialog message */
+"[Settings/NetworkAccess/Confirmation/text]" = "KeePassium'un harici hizmetlere ağ bağlantısı kurmasına izin verilsin mi?";
+
+/* Settings section: how/whether the app is allowed to use networks/Internet */
+"[Settings/NetworkAccess/title]" = "Ağ Erişimi";
+
+/* Description of the `Stay Offline` mode. */
+"[Settings/NetworkAccessMode/Offline/description]" = "Maksimum gizlilik";
+
+/* Setting option: the app should work offline */
+"[Settings/NetworkAccessMode/Offline/title]" = "Çevrimdışı Kal";
+
+/* Description of the `Allow Network Access` mode. */
+"[Settings/NetworkAccessMode/Online/description]" = "Maksimum işlevsellik";
+
+/* Setting option: the app is permitted to use online features */
+"[Settings/NetworkAccessMode/Online/title]" = "Ağ Erişimine izin ver";
+
+/* Action/button which resets some settings to their default state. */
+"[Settings/RestoreDefaults/action]" = "Varsayılanları geri yükle";
+
+/* Call to action (explains why a setting is disabled) */
+"[Settings/ShakeGestureAction/LockApp/disabledTitle]" = "Önce uygulama korumasını etkinleştir";
+
+/* An option in Settings. Will be shown as 'When Shaken: Lock App' */
+"[Settings/ShakeGestureAction/LockApp/shortTitle]" = "Uygulamayı kilitle";
+
+/* An option in Settings. Will be shown as 'When Shaken: Lock All Databases' */
+"[Settings/ShakeGestureAction/LockDatabases/shortTitle]" = "Tüm Veri Tabanlarını kilitle";
+
+/* An option in Settings. Will be shown as 'When Shaken: Do Nothing' */
+"[Settings/ShakeGestureAction/Nothing/shortTitle]" = "Hiçbir Şey Yapma";
+
+/* An option in Settings. Will be shown as 'When Shaken: Quit App' */
+"[Settings/ShakeGestureAction/QuitApp/shortTitle]" = "Uygulamadan Çık";
 
 /* Title of the app settings screen */
 "[Settings/title]" = "Ayarlar";
 
+/* Title of a settings value. For example: `Remember Master Keys: No` */
+"[Settings/Value/No/title]" = "Hayır";
+
+/* Title of a settings value, when it is not customized and we default to app's global settings. For example: `Remember Master Keys: Use App Settings (No)` */
+"[Settings/Value/UseAppSettings/title]" = "Uygulama Ayarlarını Kullan (%@)";
+
+/* Title of a settings value. For example: `Remember Master Keys: Yes` */
+"[Settings/Value/Yes/title]" = "Evet";
+
+/* List sorting option (for file names). Example: 'Sort by: Name' */
+"[SortBy/FileName]" = "Ad";
+
 /* List sorting option, when no sorting is selected. Example: 'Sort by: None' */
-"[SortBy/None]" = "Hiç biri";
+"[SortBy/None]" = "Yok";
+
+/* List sorting option, when items are manually ordered by the user. Example: 'Sort order: Custom' */
+"[SortOrder/Custom]" = "Özel";
+
+/* Subtitle for a storage service: the app will have access only to its own dedicated folder. */
+"[StorageService/DedicatedAppFolder/title]" = "Yalnızca Uygulama Klasörü";
 
 /* Name of a cloud storage service */
 "[StorageService/DropboxBusiness/title]" = "Dropbox Business";
@@ -1111,23 +1969,35 @@
 /* Name of a cloud storage service */
 "[StorageService/DropboxPro/title]" = "Dropbox Pro";
 
+/* Name of a cloud storage service */
+"[StorageService/GoogleWorkspace/title]" = "Google Workspace";
+
+/* Name of a cloud storage service. Must match Microsoft's translation, see  https://partner.microsoft.com/solutions/onedrive-for-business */
+"[StorageService/OneDriveForBusiness/title]" = "İş için OneDrive";
+
+/* Title of a file storage service option (for example: Dropbox, OneDrive, Other Services) */
+"[StorageService/OtherServices/title]" = "Diğer Hizmetler";
+
 /* Template text of a bug report email */
 "[Support/template] (Please describe the problem here)" = "(Lütfen sorunu burada açıklayın)";
 
 /* Call to action in the Donations screen. */
-"[TipBox/callToAction/1]" = "KeePassium'u daha iyi hale getirebilmemiz için bize yardım et!";
+"[TipBox/callToAction/1]" = "KeePassium'u daha iyi hâle getirmemize yardım edin!";
+
+/* Call to action in the Donations screen. */
+"[TipBox/callToAction/2]" = "KeePassium'un ışıl ışıl kalmasını sağlamamıza yardım edin!";
 
 /* Call to action in the Donations screen. (free = gratis) */
-"[TipBox/callToAction/3]" = "KeePassium'un ücretsiz kalmasını sağlayabilmemiz için bize yardım et!";
+"[TipBox/callToAction/3]" = "KeePassium'un ücretsiz kalmasını sağlamamıza yardım edin!";
 
 /* Text in the Donations screen. */
-"[TipBox/description/1]" = "KeePassium'u sevdin mi?";
+"[TipBox/description/1]" = "KeePassium'u sevdiniz mi?";
 
 /* Text in the Donations screen. */
-"[TipBox/description/2]" = "KeePassium ücretsiz açık kaynaklı bir uygulamadır. En hassas bilgileriniz için güvenle kullanabilirsiniz. Reklam yok, sinsi sinsi gözetleme yok, saçmalık yok. - Size saygı duyuyoruz.";
+"[TipBox/description/2]" = "KeePassium ücretsiz bir açık kaynaklı uygulamadır. En hassas bilgileriniz konusunda KeePassium'a güvenebilirsiniz. Reklam yok, gözetleme yok, saçmalık yok; size saygı duyuyoruz.";
 
 /* Text in the Donations screen. */
-"[TipBox/description/3]" = "KeePassium'u seviyorsunuz ama ücretli özelliklere ihtiyacınız yok mu?";
+"[TipBox/description/3]" = "KeePassium'u sevdiniz ama premium özelliklere ihtiyacınız yok mu?";
 
 /* Notification after a successful donation. */
 "[TipBox/thankYou]" = "Teşekkür ederiz!";
@@ -1136,32 +2006,38 @@
 "[TipBox/title/2]" = "Bağışlar";
 
 /* Call to action, title of the tip box/donation screen. */
-"[TipBox/title/3]" = "KeePassium'u Destekleyin";
+"[TipBox/title/3]" = "KeePassium'u destekleyin";
 
 /* Name of an entry field. Acronym `TOTP` should not be translated. */
-"[TOTP/FieldName]" = "Tek seferlik parola (TOTP)";
+"[TOTP/FieldName]" = "Tek Kullanımlık Şifre (TOTP)";
 
 /* Human-readable file location. The file is situated either online / in cloud storage, or on the same device, but in some other app. Example: 'File Location: Cloud storage / Another app' */
-"[URLReference/Location] Cloud storage / Another app" = "Bulut Depolama / Başka bir uygulama";
+"[URLReference/Location] Cloud storage / Another app" = "Bulut depolama / Başka bir uygulama";
 
 /* Human-readable file location: the file is on device, inside the app sandbox. 'Backup' is a dedicated directory for database backup files. Example: 'File Location: Internal backup' */
-"[URLReference/Location] Internal backup" = "Sistem içi yedek";
+"[URLReference/Location] Internal backup" = "Dâhilî yedek";
 
 /* Human-readable file location: the file is on device, inside the app sandbox. 'Inbox' is a special directory for files that are being imported. Can be also 'Internal import'. Example: 'File Location: Internal inbox' */
-"[URLReference/Location] Internal inbox" = "Sistem içi gelenler";
+"[URLReference/Location] Internal inbox" = "Dâhilî gelen kutusu";
 
 /* Human-readable file location: the file is on device, inside the app sandbox. Example: 'File Location: Local copy' */
 "[URLReference/Location] Local copy" = "Yerel kopya";
 
+/* Human-readable file location. Example: 'File Location: Remote server' */
+"[URLReference/Location/RemoteServer]" = "Uzak sunucu";
+
+/* Error shown when user selects a file path instead of folder path in WebDAV. */
+"[WebDAV/Export/NeedsFolder]" = "Lütfen bir klasör yolu seçin";
+
 /* Call for action: insert YubiKey 5Ci to the Lightning port */
-"[YubiKey] Insert the key" = "Anahtarı Yerleştirin";
+"[YubiKey] Insert the key" = "Anahtarı tak";
 
 /* Call for action: touch the sides of YubiKey 5Ci to continue */
-"[YubiKey] Touch the key" = "Anahtara Dokunun";
+"[YubiKey] Touch the key" = "Anahtara dokun";
 
 /* Action/button to add database to the app */
-"Add Database" = "Veritabanı Ekle";
+"Add Database" = "Veri Tabanı ekle";
 
 /* Warning message when the user tries to use a database as a key file */
-"KeePass database should not be used as key file. Please pick a different file." = "KeePass veritabanı anahtar dosya olarak kullanılmamalıdır. Lütfen farklı bir dosya seçin.";
+"KeePass database should not be used as key file. Please pick a different file." = "KeePass veri tabanı, anahtar dosyası olarak kullanılmamalıdır. Lütfen farklı bir dosya seçin.";
 

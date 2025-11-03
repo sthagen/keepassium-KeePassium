@@ -1,18 +1,21 @@
 /* (No Comment) */
-"KeePass Database (kdb)" = "KeePass Veritabanı (kdb)";
+"KeePass Database (kdb)" = "KeePass Veri Tabanı (kdb)";
 
 /* (No Comment) */
-"KeePass Database (kdbx)" = "KeePass Veritabanı (kdb)";
+"KeePass Database (kdbx)" = "KeePass Veri Tabanı (kdbx)";
 
 /* Privacy - NFC Scan Usage Description */
-"NFCReaderUsageDescription" = "YubiKey'le iletişime geçebilmek için KeePassium'un NFC erişimine ihtiyacı vardır.";
+"NFCReaderUsageDescription" = "YubiKey'inizle iletişime geçmek için KeePassium'un NFC erişimine ihtiyacı var.";
 
 /* Privacy - Camera Usage Description */
-"NSCameraUsageDescription" = "Kare kodları tarama için KeePassium'un kameraya erişmeye ihtiyacı vardır.";
+"NSCameraUsageDescription" = "QR kodları taramak için KeePassium'un kameraya ihtiyacı var.";
 
 /* Privacy - Face ID Usage Description */
-"NSFaceIDUsageDescription" = "KeePassium'un kilidini açmak için FaceID kullan";
+"NSFaceIDUsageDescription" = "KeePassium'un kilidini açmak için FaceID'yi kullanın";
 
 /* Privacy - Photo Library Additions Usage Description */
-"NSPhotoLibraryAddUsageDescription" = "Dosyaları dışa aktarmak için KeePassium'un Fotoğraf Kütüphanesine erişmeye ihtiyacı vardır.";
+"NSPhotoLibraryAddUsageDescription" = "Dosyaları Fotoğraf Kitaplığınıza aktarmak için KeePassium'un izne ihtiyacı var.";
+
+/* Privacy - Photo Library Usage Description */
+"NSPhotoLibraryUsageDescription" = "KeePassium'un özel simgelere görüntü seçmek ve OTP kurulumu için QR kodu taramak için erişime ihtiyacı var.";
 

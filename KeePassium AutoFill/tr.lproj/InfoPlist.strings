@@ -5,5 +5,5 @@
 "CFBundleName" = "KeePassium Otomatik Doldurma";
 
 /* Privacy - Face ID Usage Description */
-"NSFaceIDUsageDescription" = "KeePassium'un kilidini açmak için FaceID kullan";
+"NSFaceIDUsageDescription" = "KeePassium'un kilidini açmak için FaceID'yi kullanın";
 

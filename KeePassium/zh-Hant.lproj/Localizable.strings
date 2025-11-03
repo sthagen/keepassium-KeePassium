@@ -7,8 +7,17 @@
 /* Section in settings: icons for database */
 "[Appearance/DatabaseIcons/title]" = "資料庫圖示";
 
+/* Short name of the default/system font. For example: `Font: Default` */
+"[Appearance/DefaultFont/shortTitle]" = "預設";
+
+/* Title of a setting: whether the Entry Viewer should open on the same tab/page when switching between entries, or switch to the first tab instead. */
+"[Appearance/EntryViewer/OpenLastUsedTab/title]" = "開啟上次使用的標籤頁";
+
 /* Section in settings: parameters related to entry viewer component */
 "[Appearance/EntryViewer/title]" = "項目檢視";
+
+/* Title of a setting option: font */
+"[Appearance/Font/title]" = "字體";
 
 /* Action: set text size to standard size */
 "[Appearance/TextSize/reset]" = "重置文字大小為預設值";
@@ -22,11 +31,119 @@
 /* Title of the app history (changelog) screen */
 "[AppHistory/title]" = "更新了什麼";
 
+/* Notification when user tries to set up too weak an app protection passcode. */
+"[AppLock/weakPasscodeWarning]" = "此應用解鎖密碼容易被猜出來。請嘗試輸入一個强度更高的密碼。";
+
 /* Subtitle for `Contact Us`. Keep it short. */
 "[ContactUs/subtitle]" = "建議? 問題? 讓我們知道!";
 
+/* Item in the credits list */
+"[Credits/Item/aexml]" = "AEXML：Marko Tadić";
+
+/* Item in the credits list */
+"[Credits/Item/argon2]" = "Argon2：Daniel Dinu、Dmitry Khovratovich、Jean-Philippe Aumasson 和 Samuel Neves";
+
+/* Item in the credits list */
+"[Credits/Item/base32]" = "Base32 for Swift：Norio Nomura";
+
+/* Item in the credits list */
+"[Credits/Item/chaCha20]" = "ChaCha20 & Salsa20：由 D. J. Bernstein 實作";
+
+/* Item in the credits list */
+"[Credits/Item/fancyDebossPattern]" = "Fancy deboss pattern：Daniel Beaton";
+
+/* Item in the credits list */
+"[Credits/Item/featherIcons]" = "Feather icons：Cole Bemis";
+
+/* Item in the credits list */
+"[Credits/Item/gzipSwift]" = "GzipSwift：1024jp";
+
+/* Item in the credits list */
+"[Credits/Item/icons8]" = "圖示：Icons8";
+
+/* Item in the credits list */
+"[Credits/Item/ionIcons]" = "Ionicons：Ionic";
+
+/* Item in the credits list */
+"[Credits/Item/keePass]" = "KeePass：Dominik Reichl";
+
+/* Item in the credits list */
+"[Credits/Item/keePassXCIcons]" = "圖示：KeePassXC team";
+
+/* Item in the credits list */
+"[Credits/Item/lineIcons]" = "Linecons：Andrian Valeanu";
+
+/* Item in the credits list */
+"[Credits/Item/nuvolaIcons]" = "Nuvola icons：David Vignoni";
+
+/* Item in the credits list */
+"[Credits/Item/rijndael]" = "Rijndael：由 Szymon Stefanek 實作";
+
+/* Item in the credits list */
+"[Credits/Item/swiftDomainParser]" = "SwiftDomainParser：Dashlane";
+
+/* Item in the credits list */
+"[Credits/Item/systemSettingsIcon]" = "系統設定圖示：Vicons Design";
+
+/* Item in the credits list */
+"[Credits/Item/toastSwift]" = "Toast-Swift：Charles Scalesse";
+
+/* Item in the credits list */
+"[Credits/Item/tpInappReceipt]" = "TPInAppReceipt：Pavel Tikhonenko";
+
+/* Item in the credits list */
+"[Credits/Item/translations]" = "翻譯：KeePassium 貢獻者";
+
+/* Item in the credits list */
+"[Credits/Item/twoFish]" = "Twofish：由 Niels Ferguson 實作";
+
+/* Item in the credits list */
+"[Credits/Item/whatsNewKit]" = "WhatsNewKit：Sven Tiigi";
+
+/* Item in the credits list */
+"[Credits/Item/wordlists]" = "助記詞字詞表：EFF";
+
+/* Item in the credits list */
+"[Credits/Item/yubico]" = "Yubico Mobile iOS SDK：Yubico AB";
+
+/* Item in the credits list */
+"[Credits/Item/zxcvbn]" = "zxcvbn-ios：Dropbox";
+
+/* License name for credits */
+"[Credits/License/apache2]" = "Apache 2.0 授權";
+
+/* License name for credits */
+"[Credits/License/cc0]" = "CC0 授權";
+
+/* License name for credits */
+"[Credits/License/ccBy3]" = "CC BY 3.0";
+
+/* License name for credits */
+"[Credits/License/ccByNd]" = "CC BY-ND 3.0";
+
+/* License name for credits */
+"[Credits/License/customPermissiveLicense]" = "自定義授權";
+
+/* License name for credits */
+"[Credits/License/gpl]" = "GPL 授權";
+
+/* License name for credits */
+"[Credits/License/lgpl]" = "LGPL 授權";
+
+/* License name for credits */
+"[Credits/License/mit]" = "MIT 授權";
+
+/* License name for credits */
+"[Credits/License/proprietary]" = "專有授權";
+
+/* License name for credits */
+"[Credits/License/publicDomain]" = "公有領域";
+
 /* Hint shown when both password and key file are empty. */
 "[Database/Create] Please enter a password or choose a key file." = "請輸入一個密碼或者選擇一個金鑰檔案。";
+
+/* Notification for business users when they set up too weak database password. */
+"[Database/Create/orgRequiresStronger]" = "您的組織需要更複雜的資料庫密碼。";
 
 /* Note for a sample entry */
 "[Database/Create/TemplateEntry/notes] You can also store some notes, if you like." = "如果您願意, 您也可以填寫一些備註。";
@@ -58,8 +175,26 @@
 /* Predefined `Operating system` group in a new database */
 "[Database/Create/TemplateGroup/title] OS" = "作業系統";
 
+/* Notification when user sets up too weak a database password. */
+"[Database/Create/weakPasswordWarning]" = "此密碼很容易被猜到。請嘗試輸入強度較高的密碼。";
+
+/* Description of favicon downloader feature. */
+"[Database/DownloadFavicons/intro]" = "KeePassium 會聯絡與每個項目相連的網站。";
+
+/* Description of favicon downloader feature. 'Doing this' refers to downloading favicons. */
+"[Database/DownloadFavicons/warning]" = "在公共或受監控的網路上執行此操作，可能會暴露您擁有帳戶的網站的清單。";
+
 /* Placeholder text in an empty group */
 "[Database/Group/empty]" = "這個群組是空的";
+
+/* Warning that one key derivation function (KDF) should be preferred to another. Example: 'AES-KDF is considered weak. Use Argon2id instead.' */
+"[Database/KDF/consideredWeak]" = "%1$@ 強度不夠。請改為使用 %2$@。";
+
+/* Notification message about encryption settings. */
+"[Database/KDF/tooSlow]" = "對於某些裝置而言，這些設定可能導致速度過於緩慢。";
+
+/* Call to action when encryption settings are too weak. */
+"[Database/KDF/tooWeak]" = "提高設定以達到最佳的資料保護。";
 
 /* Subtitle for `Diagnostic Log`. Keep it short. */
 "[DiagLog/subtitle]" = "用於給作者排除故障";
@@ -82,8 +217,29 @@
 /* Title of entry viewer's tab with previous revisions of the entry */
 "[Entry/Tab/History/title]" = "歷史";
 
+/* Title of entry viewer's tab with advanced/secondary properties */
+"[Entry/Tab/More/title]" = "更多";
+
+/* Name of Apple Passwords' CSV file format */
+"[Format/ApplePasswordsCSV]" = "Apple 密碼 (.csv)";
+
 /* Name of Enpass' JSON file format */
 "[Format/EnpassJSON]" = "Enpass (.json)";
+
+/* Error message when CSV parsing fails [lineNumber: Int] */
+"[Import/CSV/Error/InvalidFormat]" = "第 %d 行的 CSV 格式無效。";
+
+/* Error message when CSV parsing fails [lineNumber: Int, colNumber: Int] */
+"[Import/CSV/Error/InvalidFormat/withColumn]" = "第 %1$d 行、第 %2$d 列的 CSV 格式無效。";
+
+/* Error message when Enpass import fails due to corrupted attachment data [attachmentName: String, itemName: String] */
+"[Import/Enpass/Error/CorruptedAttachment]" = "項目「%2$@」中的附件「%1$@」資料已損毀。";
+
+/* Error shown when trying to import from an empty file */
+"[Import/Error/EmptyFile]" = "傳入檔案為空。";
+
+/* Error message when JSON parsing fails */
+"[Import/JSON/ParsingError]" = "無法解析 JSON 檔案。";
 
 /* Action/button */
 "[Onboarding/AddExistingDatabase/action]" = "添加現有資料庫";
@@ -91,11 +247,110 @@
 /* Action/button to set up the App Protection feature. Not a call to action. */
 "[Onboarding/AppProtection/activate]" = "啟用應用解鎖密碼";
 
+/* Text in the App Protection onboarding screen. */
+"[Onboarding/AppProtection/text1]" = "KeePassium 是您的保險庫。應用程式防護功能可確保只有您能開啟它。";
+
+/* Title of the App Protection onboarding screen */
+"[Onboarding/AppProtection/title]" = "只有您可以查看";
+
 /* Action/button to set up the Password AutoFill feature. Not a call to action. */
 "[Onboarding/AutoFill/activate]" = "啟用自動填寫密碼";
 
+/* Text in the Password AutoFill onboarding screen. */
+"[Onboarding/AutoFill/text1]" = "有了自動填寫功能，您只要按一個按鈕就能輕鬆登入頁面。";
+
+/* Text in the Password AutoFill onboarding screen. */
+"[Onboarding/AutoFill/text2]" = "開始使用前，請在系統設定中啟用密碼自動填寫。";
+
+/* Title of the Password AutoFill onboarding screen */
+"[Onboarding/AutoFill/title]" = "密碼自動填寫";
+
 /* Action/button */
 "[Onboarding/CreateNewDatabase/action]" = "新建資料庫";
+
+/* Text in the Data Encryption intro screen */
+"[Onboarding/DataEncryption/text1]" = "您的保險箱是一個加密的資料庫。";
+
+/* Text in the Data Encryption intro screen */
+"[Onboarding/DataEncryption/text2]" = "您可以將資料庫存放在您最愛的雲端或是本機裝置中。";
+
+/* Title of the Data Encryption intro screen */
+"[Onboarding/DataEncryption/title]" = "資料加密";
+
+/* Text in the introductory onboarding screen. */
+"[Onboarding/Intro/text1]" = "KeePassium 會安全地加密儲存您的密碼及其他敏感資訊。";
+
+/* Text in the introductory onboarding screen. */
+"[Onboarding/Intro/text2]" = "無廣告，也無追蹤行為。";
+
+/* Text in the introductory onboarding screen. */
+"[Onboarding/Intro/text3]" = "我們絕不掌握您的資料。";
+
+/* Text in the introductory onboarding screen. */
+"[Onboarding/Intro/text4]" = "您的資料只為您所有。";
+
+/* Title of the introductory onboarding screen. */
+"[Onboarding/Intro/title]" = "歡迎使用";
+
+/* Text in the Security intro screen */
+"[Onboarding/Security/text1]" = "您的資訊在保險箱（資料庫）中被加密。保險箱則儲存在保險庫中（KeePassium）。";
+
+/* Text in the Security intro screen */
+"[Onboarding/Security/text2]" = "保險庫和保險箱有不同金鑰，只有您知道。";
+
+/* Title of the Security intro screen */
+"[Onboarding/Security/title]" = "最高安全性";
+
+/* Action to skip selected item/items in future password audits. */
+"[PasswordAudit/Action/Exclude]" = "從檢查中排除";
+
+/* Status message: password audit in progress */
+"[PasswordAudit/Auditing/status]" = "正在檢查密碼";
+
+/* Error message after a failed password audit request [message: String]. */
+"[PasswordAudit/Error/text]" = "與 HIBP 服務通訊時發生錯誤。%@";
+
+/* Description of the password audit results, where a number appears next to each password. */
+"[PasswordAudit/ExposureCount/description]" = "該數字顯示密碼在已知資料洩漏中被發現的次數。";
+
+/* Description of the Password Audit function. */
+"[PasswordAudit/Intro/text]" = "密碼檢查根據線上密碼洩漏資料庫，以安全並私密的方式檢查您的密碼。\n\nKeePassium 會將從您的密碼計算出來的資訊（類似部分核對和）傳送給 [Have I Been Pwned](https://haveibeenpwned.com) 服務。該服務會回傳具有類似核對和的遭洩密碼的詳細資訊。然後應用程式會在本地裝置上比對詳細的核對和，並偵測出哪些密碼存在風險。\n\n您的實際密碼決不會和線上服務共享。\n[深入了解…](%@)";
+
+/* Result of a password audit. */
+"[PasswordAudit/Results/allGood]" = "好消息！您的所有密碼都沒出現在已知的資料洩漏中。";
+
+/* Title of a list with passwords that are known to have been exposed in online breaches. */
+"[PasswordAudit/Results/title]" = "洩漏的密碼";
+
+/* Action/button: intiate password audit */
+"[PasswordAudit/Start/action]" = "開始檢查";
+
+/* Title of a screen to check which passwords are known to be compromised. */
+"[PasswordAudit/title]" = "密碼檢查";
+
+/* Menu action to add a user-provided word list file to the app. */
+"[PasswordGenerator/Wordlist/Import/menuAction]" = "匯入字詞表…";
+
+/* Password quality description. For example: `Password quality: Weak`. [level: String] */
+"[PasswordQuality/description]" = "密碼強度：%@";
+
+/* Good password quality */
+"[PasswordQuality/Level] Good" = "好";
+
+/* Very good password quality */
+"[PasswordQuality/Level] Very good" = "非常好";
+
+/* Very weak password quality */
+"[PasswordQuality/Level] Very weak" = "非常弱";
+
+/* Weak password quality */
+"[PasswordQuality/Level] Weak" = "弱";
+
+/* Password quality description. Note the tilda that refers to an estimated/approximate value. For example: `Very good (~123 bits of entropy)`. [level: String, formattedBitCount: String] */
+"[PasswordQuality/LevelWithApproximateEntropy/description]" = "%1$@（熵值約為 %2$@）";
+
+/* Password quality description. For example: `Very good (234 bits of entropy)`. [level: String, formattedBitCount: String] */
+"[PasswordQuality/LevelWithEntropy/description]" = "%1$@（熵值為 %2$@）";
 
 /* Status: special premium for beta-testing environment is active */
 "[Premium/Status/BetaTesting/title]" = "測試版本";
@@ -124,11 +379,38 @@
 /* Action/button to make password visible as plain-text */
 "[ProtectedTextField] Show Password" = "顯示密碼";
 
+/* Explanation why the app needs camera access permission. */
+"[QRCodeScanner/CameraPermission/description]" = "KeePassium 需要相機存取權才能掃描行動條碼。";
+
+/* Error message when the app cannot use the camera. */
+"[QRCodeScanner/Error/CameraBusy]" = "相機已使用中。";
+
+/* Error message */
+"[QRCodeScanner/Error/ImageCorrupted]" = "所選圖片已損毀。";
+
+/* Error message with a suggested action. */
+"[QRCodeScanner/Error/Internal]" = "行動條碼讀取器發生內部錯誤。查看診斷日誌了解詳情。";
+
+/* Notification message */
+"[QRCodeScanner/Error/NoQRCodeFound]" = "這張圖片裡似乎沒有行動條碼。";
+
+/* Error message when camera/gallery/etc is either missing or forbidden. */
+"[QRCodeScanner/Error/SourceNoAvailable]" = "無法使用圖片來源。";
+
+/* Call to action/instruction for QR code scanner. */
+"[QRCodeScanner/Info/callToAction]" = "將相機對準行動條碼。";
+
 /* Description of the Quick AutoFill feature. */
 "[QuickAutoFill/description]" = "快速自動填寫密碼可在密碼欄位旁顯示相關項目，無需開啟 KeePassium。";
 
 /* Placeholder text for empty search results */
 "[Search/EmptyResult/title]" = "沒有找到適合的東西";
+
+/* Title of the confirmation dialog for `Delete` action for several items */
+"[Selection/Delete/confirmation]" = "是否刪除所選項目？";
+
+/* Title of the confirmation dialog for `Exclude from audit` action for several items */
+"[Selection/ExcludeFromAudit/confirmation]" = "是否從密碼檢查中排除所選項目?";
 
 /* Title of a section in settings: parameters that protect access to data */
 "[Settings/AccessControl/title]" = "存取控制";
@@ -151,8 +433,26 @@
 /* Setting switch: whether to lock the app after it was terminated and relaunched. */
 "[Settings/AppLock/LockOnLaunch/title]" = "應用程式啟動鎖定";
 
+/* Explanation for the `Lock on macOS Screen Lock` setting */
+"[Settings/AppLock/LockOnScreenLock/description]" = "確保您鎖定 Mac 時，KeePassium 也會鎖定。";
+
+/* Title of a yes/no setting: whether to lock app when computer screen is locked (see https://support.apple.com/en-gb/guide/mac-help/mchl8e8b6a34/mac) */
+"[Settings/AppLock/LockOnScreenLock/title]" = "在 macOS 鎖定螢幕時鎖定";
+
 /* Description of the `Lock on Wrong Passcode` setting */
 "[Settings/AppLock/LockOnWrongPasscode/description]" = "如果您使用了錯誤的應用解鎖密碼, KeePassium 將會關閉所有的資料庫並從系統鑰匙圈中清除所有的主金鑰。";
+
+/* Title in the settings: whether to lock databases when user enters a wrong app protection passcode. */
+"[Settings/AppLock/LockOnWrongPasscode/title]" = "應用解鎖密碼錯誤時鎖定";
+
+/* Description of the `Passcode Attempts Until App Reset` setting */
+"[Settings/AppLock/PasscodeAttemptsUntilAppReset/description]" = "應用程式重設將會刪除所有儲存的金鑰、設定、資料庫備份、匯入的檔案，以及外部檔案的連結。然而，若從自動填寫觸發應用程式重設，可能會因技術限制而保留匯入的檔案。";
+
+/* An option in Settings. Will be shown as 'Passcode Attempts Until App Reset: Do not reset' */
+"[Settings/AppLock/PasscodeAttemptsUntilAppReset/Never/title]" = "不要重設";
+
+/* Title in the settings: number of failed passcode attempts that will reset the app into 'just installed' state. */
+"[Settings/AppLock/PasscodeAttemptsUntilAppReset/title]" = "應用程式重設前的嘗試次數";
 
 /* Settings: subtitle of the `App Protection` section. biometryTypeName will be either 'Touch ID' or 'Face ID'. [biometryTypeName: String] */
 "[Settings/AppLock/subtitle] App Lock, %@, timeout" = "應用鎖定,%@, 逾時";
@@ -196,8 +496,17 @@
 /* Title of a yes/no setting: copy one-time password to clipboard when using AutoFill */
 "[Settings/AutoFill/CopyOTP/title]" = "複製 一次性密碼OTP 到剪貼板";
 
+/* Description of the 'Remember Selected Entries' setting. */
+"[Settings/AutoFill/RememberContext/description]" = "KeePassium 會記住您為每個網站選擇的項目，然後自動建議該項目。";
+
+/* Title of a yes/no setting: remember which entry was used for AutoFill on which website. */
+"[Settings/AutoFill/RememberContext/title]" = "記住所選項目";
+
 /* Title of a help article on how to activate AutoFill. */
 "[Settings/AutoFill/Setup Guide/title]" = "自動填寫密碼設定教學";
+
+/* No comment provided by engineer. */
+"[Settings/AutoFill/UnavailableInIntune/description]" = "在 KeePassium for Intune 中無法使用自動填寫。";
 
 /* Description of the 'Fill-In Perfect Result Automatically' setting */
 "[Settings/AutoFill/UsePerfectMatch/description]" = "當自動填入只找到一個並且完整匹配的項目時 - 該項目將會被自動貼上。";
@@ -295,6 +604,12 @@
 /* Title of a section in settings */
 "[Settings/DataProtection/AutomaticLock/title]" = "自動鎖定";
 
+/* Setting switch: whether to lock databases after device reboot. */
+"[Settings/DataProtection/LockOnReboot/title]" = "裝置重新啟動時鎖定";
+
+/* Title of a yes/no setting: whether to lock databases when computer screen is locked (see https://support.apple.com/en-gb/guide/mac-help/mchl8e8b6a34/mac) */
+"[Settings/DataProtection/LockOnScreenLock/title]" = "在 macOS 鎖定螢幕時鎖定";
+
 /* Subtitle for `Data Protection` section in settings */
 "[Settings/DataProtection/subtitle]" = "主金鑰, 金鑰文件";
 
@@ -337,6 +652,9 @@
 /* Title of a setting: whether search looks in field names */
 "[Settings/Search/InFieldNames/title]" = "搜索字段名稱";
 
+/* Title of a setting: whether search looks in passwords */
+"[Settings/Search/InPasswords/title]" = "在密碼中搜尋";
+
 /* Title of a setting: whether search looks in values of protected fields */
 "[Settings/Search/InProtectValues/title]" = "搜尋受保護的值";
 
@@ -352,6 +670,15 @@
 /* Section title in settings */
 "[Settings/Search/title]" = "搜尋";
 
+/* Description of the 'Ask for Confirmation' setting. */
+"[Settings/ShakeGestureAction/Confirm/description]" = "若應用程式已鎖定，則不確認就會執行。";
+
+/* Title for a setting: whether the app should show an 'Are you sure?' before continuing */
+"[Settings/ShakeGestureAction/Confirm/title]" = "要求確認";
+
+/* Title for a setting: what the app should do when the user shakes the device */
+"[Settings/ShakeGestureAction/title]" = "搖動時";
+
 /* Title of a section in settings: parameters that control what happens when the app is started. */
 "[Settings/Start/title]" = "啟動時";
 
@@ -364,6 +691,78 @@
 /* Apple's term: https://support.apple.com/102430 */
 "[Settings/UniversalClipboard/title]" = "通用剪貼板";
 
+/* Action/button to create a new item tag */
+"[Tags/Create/action]" = "建立標籤";
+
+/* Call to action/hint inside a text input */
+"[Tags/Create/placeholder]" = "輸入標籤名稱";
+
+/* Title of the tag creation dialog */
+"[Tags/Create/title]" = "新增標籤";
+
+/* Question to confirm global deletion */
+"[Tags/Delete/Confirm/message]" = "是否從所有群組和項目中刪除此標籤？";
+
+/* Title of a dialog for editing a tag */
+"[Tags/Edit/title]" = "編輯標籤";
+
+/* Status message with a call to action */
+"[Tags/None/placeholder]" = "資料庫中沒有標籤，請新增一些標籤。";
+
+/* Status message: tag search result is empty */
+"[Tags/Search/emptyResult]" = "找不到合適的標籤。";
+
+/* Title of a list with all the tags existing in the database. */
+"[Tags/Section/All]" = "所有標籤";
+
+/* Title of a list with tags used by parent groups. */
+"[Tags/Section/Inherited]" = "繼承的標籤";
+
+/* Title of a list with tags chosen by the user for a specific entry or group. */
+"[Tags/Section/Selected]" = "選擇的標籤";
+
+/* Title: the number of times a tag is encountered in the database. */
+"[Tags/UsageCount/title]" = "使用次數";
+
+/* Call to action in What's New announcement */
+"[WhatsNew/Announcement/body]" = "探索 KeePassium 中的新功能和改善的項目。";
+
 /* Button which opens the What's New screen. */
 "[WhatsNew/Announcement/button]" = "更新了什麼";
+
+/* Description of a feature highlight, a call to action. */
+"[WhatsNew/Feature/AppScopedConnections/description]" = "使用「僅限應用程式資料夾」授權來保護您的雲端資料。";
+
+/* Title of a feature highlight, a noun phrase. */
+"[WhatsNew/Feature/AppScopedConnections/title]" = "更安全的雲端存取";
+
+/* Description of a feature highlight, a call to action. */
+"[WhatsNew/Feature/AutoFillWithMemory/description]" = "KeePassium 會記住您在每個網站選擇的項目。";
+
+/* Title of a feature highlight, a noun phrase. */
+"[WhatsNew/Feature/AutoFillWithMemory/title]" = "更智慧的自動填寫";
+
+/* Description of a feature highlight, a call to action. */
+"[WhatsNew/Feature/AutoType/description]" = "使用按鍵模擬快速登入任何應用程式或網頁瀏覽器。";
+
+/* Title of a feature highlight, a noun phrase. */
+"[WhatsNew/Feature/AutoType/title]" = "密碼自動輸入";
+
+/* Description of a feature highlight, a call to action. */
+"[WhatsNew/Feature/CreativeAutoFill/description]" = "在自動填寫中建立新項目，同時自動預先填寫主要欄位。";
+
+/* Title of a feature highlight, a noun phrase. */
+"[WhatsNew/Feature/CreativeAutoFill/title]" = "註冊更快速";
+
+/* Description of a feature highlight, a call to action. `Browse alphabetically` refers to a phonebook-like index with letters. */
+"[WhatsNew/Feature/MoreInteractions/description]" = "拖放、選擇多個項目，並依字母順序瀏覽。";
+
+/* Title of a feature highlight, a noun phrase. */
+"[WhatsNew/Feature/MoreInteractions/title]" = "更多互動方式";
+
+/* Title of the detailed history of app changes over time. */
+"[WhatsNew/FullChangelog/title]" = "詳細變更紀錄";
+
+/* Full title for release highlights */
+"[WhatsNew/fullTitle]" = "KeePassium 全新功能";
 

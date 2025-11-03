@@ -18,6 +18,7 @@ protocol DatabaseViewerCoordinatorDelegate: AnyObject {
     func didPressReloadDatabase(
         _ databaseFile: DatabaseFile,
         currentGroupUUID: UUID?,
+        currentEntryUUID: UUID?,
         in coordinator: DatabaseViewerCoordinator
     )
 
@@ -47,6 +48,7 @@ final class DatabaseViewerCoordinator: BaseCoordinator {
     internal var _entryViewerRouter: NavigationRouter?
 
     internal var _initialGroupUUID: UUID?
+    internal var _initialEntryUUID: UUID?
     internal weak var _currentGroup: Group?
     internal weak var _currentEntry: Entry?
 
@@ -111,6 +113,7 @@ final class DatabaseViewerCoordinator: BaseCoordinator {
         self._loadingWarnings = loadingWarnings
         self._autoTypeHelper = autoTypeHelper
         self._initialGroupUUID = context?.groupUUID
+        self._initialEntryUUID = context?.entryUUID
         super.init(router: primaryRouter)
 
         actionsManager = ActionsManager(coordinator: self)
@@ -120,9 +123,14 @@ final class DatabaseViewerCoordinator: BaseCoordinator {
         super.start()
 
         _pushInitialGroupViewers(replacingTopVC: _splitViewController.isCollapsed)
-        _showEntry(nil)
         if _splitViewController.isExpanded {
             _splitViewController.show(.primary)
+
+            DispatchQueue.main.async { [self] in
+                _selectEntry(_getDefaultEntryForSelection(in: _currentGroup))
+            }
+        } else {
+            _showEntry(nil)
         }
 
         Settings.current.startupDatabase = _databaseFile.originalReference
@@ -274,6 +282,11 @@ extension DatabaseViewerCoordinator {
     }
 
     internal func _reloadDatabase() {
-        delegate?.didPressReloadDatabase(_databaseFile, currentGroupUUID: _currentGroup?.uuid, in: self)
+        delegate?.didPressReloadDatabase(
+            _databaseFile,
+            currentGroupUUID: _currentGroup?.uuid,
+            currentEntryUUID: _currentEntry?.uuid,
+            in: self
+        )
     }
 }

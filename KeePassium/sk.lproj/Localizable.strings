@@ -10,8 +10,17 @@
 /* Short name of the default/system font. For example: `Font: Default` */
 "[Appearance/DefaultFont/shortTitle]" = "Predvolený";
 
+/* Title of a setting: whether the Entry Viewer should open on the same tab/page when switching between entries, or switch to the first tab instead. */
+"[Appearance/EntryViewer/OpenLastUsedTab/title]" = "Otvoriť poslednú použitú záložku";
+
+/* Section in settings: parameters related to entry viewer component */
+"[Appearance/EntryViewer/title]" = "Prehliadač záznamov";
+
 /* Title of a setting option: font */
 "[Appearance/Font/title]" = "Písmo";
+
+/* Action: set text size to standard size */
+"[Appearance/TextSize/reset]" = "Obnoviť veľkosť písma na predvolené";
 
 /* Title of a setting option: font size */
 "[Appearance/TextSize/title]" = "Veľkosť písma";
@@ -27,6 +36,108 @@
 
 /* Subtitle for `Contact Us`. Keep it short. */
 "[ContactUs/subtitle]" = "Návrhy? Problémy? Dajte nám vedieť!";
+
+/* Item in the credits list */
+"[Credits/Item/aexml]" = "AEXML by Marko Tadić";
+
+/* Item in the credits list */
+"[Credits/Item/argon2]" = "Argon2 by Daniel Dinu, Dmitry Khovratovich, Jean-Philippe Aumasson, and Samuel Neves";
+
+/* Item in the credits list */
+"[Credits/Item/base32]" = "Base32 for Swift by Norio Nomura";
+
+/* Item in the credits list */
+"[Credits/Item/chaCha20]" = "ChaCha20 & Salsa20 implementation by D. J. Bernstein";
+
+/* Item in the credits list */
+"[Credits/Item/fancyDebossPattern]" = "Fancy deboss pattern by Daniel Beaton";
+
+/* Item in the credits list */
+"[Credits/Item/featherIcons]" = "Feather icons by Cole Bemis";
+
+/* Item in the credits list */
+"[Credits/Item/gzipSwift]" = "GzipSwift by 1024jp";
+
+/* Item in the credits list */
+"[Credits/Item/icons8]" = "Icons by Icons8";
+
+/* Item in the credits list */
+"[Credits/Item/ionIcons]" = "Ionicons by Ionic";
+
+/* Item in the credits list */
+"[Credits/Item/keePass]" = "KeePass by Dominik Reichl";
+
+/* Item in the credits list */
+"[Credits/Item/keePassXCIcons]" = "Icons by KeePassXC team";
+
+/* Item in the credits list */
+"[Credits/Item/lineIcons]" = "Linecons by Andrian Valeanu";
+
+/* Item in the credits list */
+"[Credits/Item/nuvolaIcons]" = "Nuvola icons by David Vignoni";
+
+/* Item in the credits list */
+"[Credits/Item/rijndael]" = "Rijndael implementation by Szymon Stefanek";
+
+/* Item in the credits list */
+"[Credits/Item/swiftDomainParser]" = "SwiftDomainParser by Dashlane";
+
+/* Item in the credits list */
+"[Credits/Item/systemSettingsIcon]" = "System settings icon by Vicons Design";
+
+/* Item in the credits list */
+"[Credits/Item/toastSwift]" = "Toast-Swift by Charles Scalesse";
+
+/* Item in the credits list */
+"[Credits/Item/tpInappReceipt]" = "TPInAppReceipt by Pavel Tikhonenko";
+
+/* Item in the credits list */
+"[Credits/Item/translations]" = "Slovenský preklad KeePassium";
+
+/* Item in the credits list */
+"[Credits/Item/twoFish]" = "Twofish implementation by Niels Ferguson";
+
+/* Item in the credits list */
+"[Credits/Item/whatsNewKit]" = "WhatsNewKit by Sven Tiigi";
+
+/* Item in the credits list */
+"[Credits/Item/wordlists]" = "Zoznamy prístupových fráz EFF";
+
+/* Item in the credits list */
+"[Credits/Item/yubico]" = "Yubico Mobile iOS SDK by Yubico AB";
+
+/* Item in the credits list */
+"[Credits/Item/zxcvbn]" = "zxcvbn-ios by Dropbox";
+
+/* License name for credits */
+"[Credits/License/apache2]" = "Apache 2.0 licencia";
+
+/* License name for credits */
+"[Credits/License/cc0]" = "CC0 licencia";
+
+/* License name for credits */
+"[Credits/License/ccBy3]" = "CC BY 3.0";
+
+/* License name for credits */
+"[Credits/License/ccByNd]" = "CC BY-ND 3.0";
+
+/* License name for credits */
+"[Credits/License/customPermissiveLicense]" = "Custom permissive license";
+
+/* License name for credits */
+"[Credits/License/gpl]" = "GPL licencia";
+
+/* License name for credits */
+"[Credits/License/lgpl]" = "LGPL licencia";
+
+/* License name for credits */
+"[Credits/License/mit]" = "MIT Licencia";
+
+/* License name for credits */
+"[Credits/License/proprietary]" = "Vlastnícka licencia";
+
+/* License name for credits */
+"[Credits/License/publicDomain]" = "Verejná doména";
 
 /* Hint shown when both password and key file are empty. */
 "[Database/Create] Please enter a password or choose a key file." = "Prosím, zadajte heslo alebo vyberte súbor s kľúčom.";
@@ -67,8 +178,14 @@
 /* Notification when user sets up too weak a database password. */
 "[Database/Create/weakPasswordWarning]" = "Toto heslo sa dá ľahko uhádnuť. Skúste zadať silnejšie heslo.";
 
+/* Description of favicon downloader feature. */
+"[Database/DownloadFavicons/intro]" = "KeePassium bude kontaktovať webové stránky spojené s každým záznamom.";
+
 /* Description of favicon downloader feature. 'Doing this' refers to downloading favicons. */
 "[Database/DownloadFavicons/warning]" = "Ak to urobíte vo verejnej alebo monitorovanej sieti, môžete odhaliť zoznam webových lokalít, na ktorých máte vytvorený účet.";
+
+/* Placeholder text in an empty group */
+"[Database/Group/empty]" = "Skupina je prázdna";
 
 /* Warning that one key derivation function (KDF) should be preferred to another. Example: 'AES-KDF is considered weak. Use Argon2id instead.' */
 "[Database/KDF/consideredWeak]" = "%1$@ je slabý. Použite radšej %2$@.";
@@ -102,6 +219,27 @@
 
 /* Title of entry viewer's tab with advanced/secondary properties */
 "[Entry/Tab/More/title]" = "Viac";
+
+/* Name of Apple Passwords' CSV file format */
+"[Format/ApplePasswordsCSV]" = "Heslá Apple (.csv)";
+
+/* Name of Enpass' JSON file format */
+"[Format/EnpassJSON]" = "Enpass (.json)";
+
+/* Error message when CSV parsing fails [lineNumber: Int] */
+"[Import/CSV/Error/InvalidFormat]" = "Neplatný formát CSV v riadku %d.";
+
+/* Error message when CSV parsing fails [lineNumber: Int, colNumber: Int] */
+"[Import/CSV/Error/InvalidFormat/withColumn]" = "Neplatný formát CSV v riadku %1$d, stĺpci %2$d.";
+
+/* Error message when Enpass import fails due to corrupted attachment data [attachmentName: String, itemName: String] */
+"[Import/Enpass/Error/CorruptedAttachment]" = "Poškodené údaje pre prílohu „%1$@“ v položke „%2$@“.";
+
+/* Error shown when trying to import from an empty file */
+"[Import/Error/EmptyFile]" = "Prichádzajúci súbor je prázdny.";
+
+/* Error message when JSON parsing fails */
+"[Import/JSON/ParsingError]" = "Nepodarilo sa analyzovať súbor JSON.";
 
 /* Action/button */
 "[Onboarding/AddExistingDatabase/action]" = "Pridať existujúcu databázu";
@@ -241,8 +379,32 @@
 /* Action/button to make password visible as plain-text */
 "[ProtectedTextField] Show Password" = "Zobraziť heslo";
 
+/* Explanation why the app needs camera access permission. */
+"[QRCodeScanner/CameraPermission/description]" = "Na skenovanie QR kódov potrebuje aplikácia KeePassium prístup ku kamere.";
+
+/* Error message when the app cannot use the camera. */
+"[QRCodeScanner/Error/CameraBusy]" = "Kamera sa už používa.";
+
+/* Error message */
+"[QRCodeScanner/Error/ImageCorrupted]" = "Vybraný obrázok je poškodený.";
+
+/* Error message with a suggested action. */
+"[QRCodeScanner/Error/Internal]" = "Interná chyba v čítačke QR kódov. Podrobnosti nájdete v diagnostickom protokole.";
+
+/* Notification message */
+"[QRCodeScanner/Error/NoQRCodeFound]" = "Vyzerá to, že na tomto obrázku nie je žiadny QR kód.";
+
+/* Error message when camera/gallery/etc is either missing or forbidden. */
+"[QRCodeScanner/Error/SourceNoAvailable]" = "Zdroj obrázku nie je k dispozícii.";
+
+/* Call to action/instruction for QR code scanner. */
+"[QRCodeScanner/Info/callToAction]" = "Nasmerujte fotoaparát na QR kód.";
+
 /* Description of the Quick AutoFill feature. */
 "[QuickAutoFill/description]" = "Rýchle automatické dopĺňanie zobrazuje relevantné položky hneď vedľa poľa hesla bez otvárania KeePassium.";
+
+/* Placeholder text for empty search results */
+"[Search/EmptyResult/title]" = "Nenašli sa žiadne výsledky";
 
 /* Title of the confirmation dialog for `Delete` action for several items */
 "[Selection/Delete/confirmation]" = "Odstrániť výber?";
@@ -250,8 +412,17 @@
 /* Title of the confirmation dialog for `Exclude from audit` action for several items */
 "[Selection/ExcludeFromAudit/confirmation]" = "Vylúčiť výber z auditu hesiel?";
 
+/* Title of a section in settings: parameters that protect access to data */
+"[Settings/AccessControl/title]" = "Správa prístupu";
+
 /* Call to action (protect the app from unauthorized access) */
 "[Settings/AppLoc/Activate/callToAction]" = "Zapnúť zámok";
+
+/* Description of `Activate app protection` call to action. */
+"[Settings/AppLock/Activate/description]" = "Chráňte KeePassium pred neoprávneným prístupom.";
+
+/* Description of biometric unlock settings */
+"[Settings/AppLock/Biometric/description]" = "Umožňuje biometrickú autentifikáciu ako rýchlu (ale menej bezpečnú) alternatívu ku kódu aplikácie.";
 
 /* Settings switch: whether App Protection is allowed to use Touch ID/Face ID. Example: 'Use Touch ID'. [biometryTypeName: String] */
 "[Settings/AppLock/Biometric/title] Use %@" = "Používať %@";
@@ -262,20 +433,53 @@
 /* Setting switch: whether to lock the app after it was terminated and relaunched. */
 "[Settings/AppLock/LockOnLaunch/title]" = "Zamknúť pri spustení aplikácie";
 
+/* Explanation for the `Lock on macOS Screen Lock` setting */
+"[Settings/AppLock/LockOnScreenLock/description]" = "Zabezpečuje, že KeePassium sa uzamkne, keď uzamknete svoj Mac.";
+
+/* Title of a yes/no setting: whether to lock app when computer screen is locked (see https://support.apple.com/en-gb/guide/mac-help/mchl8e8b6a34/mac) */
+"[Settings/AppLock/LockOnScreenLock/title]" = "Zamknúť pri uzamknutí obrazovky na macOS";
+
+/* Description of the `Lock on Wrong Passcode` setting */
+"[Settings/AppLock/LockOnWrongPasscode/description]" = "Ak zadáte nesprávny ochranný kód aplikácie, KeePassium uzavrie všetky databázy a vymaže všetky hlavné kľúče z kľúčenky.";
+
+/* Title in the settings: whether to lock databases when user enters a wrong app protection passcode. */
+"[Settings/AppLock/LockOnWrongPasscode/title]" = "Uzamknúť pri nesprávnom kóde aplikácie";
+
+/* Description of the `Passcode Attempts Until App Reset` setting */
+"[Settings/AppLock/PasscodeAttemptsUntilAppReset/description]" = "Resetovanie aplikácie vymaže všetky uložené kľúče, nastavenia, zálohy databázy, importované súbory a odkazy na externé súbory. Ak sa však resetovanie aplikácie spustí z funkcie automatického vyplňovania, importované súbory môžu zostať zachované z dôvodu technických obmedzení.";
+
+/* An option in Settings. Will be shown as 'Passcode Attempts Until App Reset: Do not reset' */
+"[Settings/AppLock/PasscodeAttemptsUntilAppReset/Never/title]" = "Neobnovovať";
+
+/* Title in the settings: number of failed passcode attempts that will reset the app into 'just installed' state. */
+"[Settings/AppLock/PasscodeAttemptsUntilAppReset/title]" = "Pokusy do resetovania aplikácie";
+
 /* Settings: subtitle of the `App Protection` section. biometryTypeName will be either 'Touch ID' or 'Face ID'. [biometryTypeName: String] */
 "[Settings/AppLock/subtitle] App Lock, %@, timeout" = "Zámok aplikácie, %@, časový limit";
 
 /* Settings: subtitle of the `App Protection` section when biometric auth is not available. */
 "[Settings/AppLock/subtitle] App Lock, passcode, timeout" = "Zámok aplikácie, kód aplikácie, časový limit";
 
+/* Description of the App Lock Timeout setting */
+"[Settings/AppLock/Timeout/description]" = "Aplikácia sa automaticky uzamkne po tejto dobe.";
+
+/* Title for App Lock Timeout setting */
+"[Settings/AppLock/Timeout/title]" = "Časový limit";
+
 /* Settings section: protection of the app from unauthorized access */
 "[Settings/AppLock/title]" = "Ochrana aplikácie";
+
+/* Settings section: what happens if user enters incorrect App Protection passcode. */
+"[Settings/AppLock/WrongPasscode/title]" = "Nesprávny kód aplikácie";
 
 /* Description of those 'App Protection Timeout' options that trigger when the app is minimized. For example: 'Timeout: 3 seconds (After leaving the app) */
 "[Settings/AppLockTimeout/AfterLeavingApp/description]" = "Po odchode z tejto aplikácie";
 
 /* Description of those 'App Protection Timeout' options that trigger when the user has been idle for a while. For example: 'Timeout: 3 seconds (After last interaction) */
 "[Settings/AppLockTimeout/description] After last interaction" = "Po poslednej interakcii";
+
+/* An option in Settings. Will be shown as 'App Lock: Timeout: Immediately' */
+"[Settings/AppLockTimeout/Immediately/title] " = "Okamžite";
 
 /* An option in Settings. Will be shown as 'App Lock: Timeout: Never' */
 "[Settings/AppLockTimeout/Never/title]" = "Nikdy";
@@ -286,8 +490,17 @@
 /* Description for the AutoFill setup instructions */
 "[Settings/AutoFill/Activate/description]" = "Pred prvým použitím je potrebné aktivovať automatické dopĺňanie v systémových nastaveniach.";
 
+/* Description of the 'Copy OTP to Clipboard' setting */
+"[Settings/AutoFill/CopyOTP/Description]" = "Akonáhle aplikácia automaticky vyplní používateľské meno a heslo, môže tiež pre vás skopírovať aj jednorazové heslo (OTP).";
+
 /* Title of a yes/no setting: copy one-time password to clipboard when using AutoFill */
 "[Settings/AutoFill/CopyOTP/title]" = "Kopírovať jednorazové heslo";
+
+/* Description of the 'Remember Selected Entries' setting. */
+"[Settings/AutoFill/RememberContext/description]" = "KeePassium si zapamätá, ktorý záznam ste vybrali pre každú webovú stránku, a potom ho automaticky navrhne.";
+
+/* Title of a yes/no setting: remember which entry was used for AutoFill on which website. */
+"[Settings/AutoFill/RememberContext/title]" = "Pamätať vybrané záznamy";
 
 /* Title of a help article on how to activate AutoFill. */
 "[Settings/AutoFill/Setup Guide/title]" = "Sprievodca nastavením automatického dopĺňania";
@@ -295,11 +508,20 @@
 /* No comment provided by engineer. */
 "[Settings/AutoFill/UnavailableInIntune/description]" = "Automatické doplňovanie nie je dostupné v KeePassium pre Intune.";
 
+/* Description of the 'Fill-In Perfect Result Automatically' setting */
+"[Settings/AutoFill/UsePerfectMatch/description]" = "Keď bude nájdený iba jeden, presne zodpovedajúci záznam, tak sa tento záznam vloží automaticky.";
+
 /* Title of a yes/no setting: automatically use the single best match found by AutoFill search */
 "[Settings/AutoFill/UsePerfectMatch/title]" = "Vyplniť presné výsledky automaticky";
 
 /* Option in settings: whether to open the last used database automatically on start. */
 "[Settings/AutoOpenPreviousDatabase/title]" = "Automaticky načítať naposledy otvorenú databázu";
+
+/* Title of a section in settings */
+"[Settings/AutoSearch/title]" = "Automatické vyhľadávanie";
+
+/* Action to clear/erase info about which database uses which key file */
+"[Settings/ClearKeyFileAssociations/action]" = "Vymazať asociácie súboru s kľúčom";
 
 /* Title of the success message for `Clear Key File Associations` button */
 "[Settings/ClearKeyFileAssociations/Cleared/title]" = "Vymazané";
@@ -307,8 +529,23 @@
 /* Title of the success message for `Clear Master Keys` button */
 "[Settings/ClearMasterKeys/Cleared/title]" = "Vymazané";
 
+/* Title of a setting: time after which clipboard will be cleared */
+"[Settings/Clipboard/Timeout/title]" = "Časový limit schránky";
+
+/* Section title in Settings */
+"[Settings/Clipboard/title]" = "Schránka";
+
+/* Description of the 'Clipboard Timeout' setting. */
+"[Settings/ClipboardTimeout/description]" = "Keď niečo skopírujete, KeePassium po určitej dobe automaticky vyprázdni vašu schránku.";
+
 /* An option in Settings. Will be shown as 'Clipboard Timeout: Never' */
 "[Settings/ClipboardTimeout/Never/title]" = "Nikdy";
+
+/* Description of the 'Make Backup Copies' setting */
+"[Settings/DatabaseBackup/Active/description]" = "KeePassium bude automaticky vytvárať zálohu pred každým uložením databázy.";
+
+/* Title of a yes/no setting: whether to back up databases before saving them */
+"[Settings/DatabaseBackup/Active/title]" = "Vytvárať zálohy";
 
 /* Confirmation dialog message to delete all backup files */
 "[Settings/DatabaseBackup/DeleteAll/confirm]" = "Vymazať všetky zálohy?";
@@ -316,11 +553,32 @@
 /* Action to delete all backup files from the app. `ALL` is in capitals as a highlight. [backupFileCount: Int] */
 "[Settings/DatabaseBackup/DeleteAll/title]" = "Vymazať VŠETKY zálohy? (%d)";
 
+/* Description of the 'Exclude Backup Files from System Backup' setting */
+"[Settings/DatabaseBackup/ExcludeFromSystemBackup/description]" = "Určuje, či majú byť záložné databázy, vytvorené aplikáciou KeePassium, vylúčené pri zálohovaní na iCloud/iTunes. Platí pre všetky súčasné a budúce záložné súbory.";
+
+/* Title of a yes/no setting: whether app's internal backup copies should be excluded from global system backup */
+"[Settings/DatabaseBackup/ExcludeFromSystemBackup/title]" = "Vynechať záložné súbory zo zálohy systému";
+
 /* Setting title: how long to keep backup copies. Example: 'Keep Backup Files: Forever' */
 "[Settings/DatabaseBackup/KeepingDuration/Forever/title]" = "Navždy";
 
+/* Setting title: how long to keep backup copies. For example: `Keep Backup Files: 3 days` */
+"[Settings/DatabaseBackup/KeepingDuration/title]" = "Uchovávať záložné súbory";
+
 /* Status message: there are no backup files to delete */
 "[Settings/DatabaseBackup/NoFiles/title]" = "Nenašli sa žiadne zálohy";
+
+/* Description of the `Periodic Cleanup` settings */
+"[Settings/DatabaseBackup/PeriodicCleanup/description]" = "KeePassium môže automaticky vymazávať staré záložné súbory a uvoľniť tak miesto na vašom zariadení.";
+
+/* Settings section: automatic deletion of old backup files */
+"[Settings/DatabaseBackup/PeriodicCleanup/title]" = "Periodické vymazávanie";
+
+/* Description of the 'Show Backup Files' setting */
+"[Settings/DatabaseBackup/ShowBackupFiles/description]" = "Záložné súbory budú zobrazené spolu s originálnymi súbormi.";
+
+/* Section header, refers to Apple's backup services (https://support.apple.com/HT203977) */
+"[Settings/DatabaseBackup/SystemBackup/title]" = "Zálohovanie na iTunes a iCloud";
 
 /* Title of a settings section: backup of databases */
 "[Settings/DatabaseBackup/title]" = "Záloha databázy";
@@ -328,26 +586,110 @@
 /* Description of the `Database Timeout` setting */
 "[Settings/DatabaseLockTimeout/description]" = "Ak aplikáciu nejaký čas nepoužívate, databáza sa z dôvodu vašej bezpečnosti uzavrie. Pre jej opätovné otvorenie budete musieť znova zadať jej hlavné heslo.";
 
+/* Title of a setting: the time after which databases will be locked. */
+"[Settings/DatabaseLockTimeout/title]" = "Časový limit databázy";
+
 /* A description/subtitle for the 'Database Timeout: Immediately'. */
 "[Settings/DatabaseTimeout/Immediately/description]" = "Keď opustíte aplikáciu";
+
+/* An option in Settings. Will be shown as 'Database Timeout: Immediately' */
+"[Settings/DatabaseTimeout/Immediately/title" = "Okamžite";
 
 /* An option in Settings. Will be shown as 'Database Timeout: Never' */
 "[Settings/DatabaseTimeout/Never/title]" = "Nikdy";
 
+/* Section title: advanced/expert settings */
+"[Settings/DataProtection/Advanced/title]" = "Pokročilé";
+
+/* Title of a section in settings */
+"[Settings/DataProtection/AutomaticLock/title]" = "Automatický zámok";
+
 /* Setting switch: whether to lock databases after device reboot. */
 "[Settings/DataProtection/LockOnReboot/title]" = "Zamknúť pri reštarte zariadenia";
+
+/* Title of a yes/no setting: whether to lock databases when computer screen is locked (see https://support.apple.com/en-gb/guide/mac-help/mchl8e8b6a34/mac) */
+"[Settings/DataProtection/LockOnScreenLock/title]" = "Zamknúť pri uzamknutí obrazovky na macOS";
 
 /* Subtitle for `Data Protection` section in settings */
 "[Settings/DataProtection/subtitle]" = "Hlavné kľúče, súbory s kľúčom";
 
+/* Description of the 'Hide Passwords' setting. */
+"[Settings/HidePasswords/description]" = "Maskovať heslá a ďalšie chránená polia hviezdičkami (odporúčané).";
+
+/* Title of a yes/no setting */
+"[Settings/HidePasswords/title]" = "Skryť heslá";
+
+/* Description of the 'Remember Key Files' setting */
+"[Settings/KeyFiles/Remember/description]" = "Aplikácia si zapamätá naposledy použitý súbor s kľúčom pre každú databázu a vy ho tak nebudete musieť opakovane vyberať. Vymazanie asociácii neovplyvní žiadne súbory.";
+
+/* Title of a section in Settings */
+"[Settings/KeyFiles/title]" = "Súbory s kľúčom";
+
+/* Description of the 'Cache Derived Encryption Keys' setting */
+"[Settings/MasterKeys/CacheDerived/description]" = "Kľúče vo vyrovnávajúcej pamäti umožňujú aplikácii KeePassium preskočiť derivácie kľúčov a skenovanie YubiKey, kedykoľvek je to možné.";
+
+/* Action: clear/erase/delete stored master keys */
+"[Settings/MasterKeys/Clear/action]" = "Vymazať hlavné kľúče";
+
+/* Title of a yes/no setting. */
+"[Settings/MasterKeys/ClearOnTimeout/title]" = "Vymazať hlavný kľúč po vypršaní časového limitu";
+
+/* Description of the 'Remember Master Keys' setting. */
+"[Settings/MasterKeys/Remember/description]" = "Akonáhle odomknete databázu pomocou hlavného kľúča, aplikácia si ho uloží do kľúčenky na vašom zariadení. Pri ďalšom odomykaní databázy bude uložený kľúč použitý a vy tak nebudete musieť zadávať hlavné heslo znova.";
+
+/* Title of a section in settings */
+"[Settings/OTP/title]" = "Jednorázové heslá";
+
 /* Title of a section in settings */
 "[Settings/Premium/title]" = "Premium";
+
+/* Title of a section in Settings */
+"[Settings/ProtectedFields/title]" = "Chránené polia";
+
+/* Title of a section in settings */
+"[Settings/QuickUnlock/title]" = "Rýchle odomknutie";
+
+/* Title of a setting: whether search looks in field names */
+"[Settings/Search/InFieldNames/title]" = "Prehľadávať názvy polí";
+
+/* Title of a setting: whether search looks in passwords */
+"[Settings/Search/InPasswords/title]" = "Hľadať v heslách";
+
+/* Title of a setting: whether search looks in values of protected fields */
+"[Settings/Search/InProtectValues/title]" = "Hľadať v hodnotách s ochranou";
+
+/* Title of a setting: which fields to consider in search */
+"[Settings/Search/Scope/title]" = "Rozsah vyhľadávania";
+
+/* Description of the 'Start with Search' setting. */
+"[Settings/Search/StartWithSearch/description]" = "Vyhľadávacie pole sa zobrazí automaticky po otvorení databázy.";
+
+/* Title of a setting: whether to open search field immediately after opening a database */
+"[Settings/Search/StartWithSearch/title]" = "Začať s vyhľadávaním";
 
 /* Section title in settings */
 "[Settings/Search/title]" = "Vyhľadávanie";
 
+/* Description of the 'Ask for Confirmation' setting. */
+"[Settings/ShakeGestureAction/Confirm/description]" = "Ak je aplikácia uzamknutá, funguje bez potvrdenia.";
+
+/* Title for a setting: whether the app should show an 'Are you sure?' before continuing */
+"[Settings/ShakeGestureAction/Confirm/title]" = "Požiadať o potvrdenie";
+
+/* Title for a setting: what the app should do when the user shakes the device */
+"[Settings/ShakeGestureAction/title]" = "Pri zatrasení";
+
+/* Title of a section in settings: parameters that control what happens when the app is started. */
+"[Settings/Start/title]" = "Po spustení";
+
+/* Title of a section in settings: technical support and diagnostics */
+"[Settings/Support/title]" = "Podpora";
+
 /* Description of the 'Universal Clipboard' setting. */
 "[Settings/UniversalClipboard/description]" = "Použite univerzálnu schránku na kopírovanie a vkladanie medzi vašimi Apple zariadeniami. Na externých zariadeniach je táto schránka vymazaná po dvoch minútach.";
+
+/* Apple's term: https://support.apple.com/102430 */
+"[Settings/UniversalClipboard/title]" = "Univerzálna schránka";
 
 /* Action/button to create a new item tag */
 "[Tags/Create/action]" = "Vytvoriť štítok";
@@ -382,6 +724,45 @@
 /* Title: the number of times a tag is encountered in the database. */
 "[Tags/UsageCount/title]" = "Počet použití";
 
+/* Call to action in What's New announcement */
+"[WhatsNew/Announcement/body]" = "Objavte nové funkcie a vylepšenia v programe KeePassium.";
+
 /* Button which opens the What's New screen. */
 "[WhatsNew/Announcement/button]" = "Novinky";
+
+/* Description of a feature highlight, a call to action. */
+"[WhatsNew/Feature/AppScopedConnections/description]" = "Chráňte svoje údaje v cloude pomocou oprávnení len pre priečinky aplikácií.";
+
+/* Title of a feature highlight, a noun phrase. */
+"[WhatsNew/Feature/AppScopedConnections/title]" = "Bezpečnejší prístup do cloudu";
+
+/* Description of a feature highlight, a call to action. */
+"[WhatsNew/Feature/AutoFillWithMemory/description]" = "KeePassium si pamätá záznam, ktorý si vyberiete na každej webovej stránke.";
+
+/* Title of a feature highlight, a noun phrase. */
+"[WhatsNew/Feature/AutoFillWithMemory/title]" = "Inteligentnejšie automatické vyplňovanie";
+
+/* Description of a feature highlight, a call to action. */
+"[WhatsNew/Feature/AutoType/description]" = "Rýchlo sa prihláste do akejkoľvek aplikácie alebo webového prehliadača pomocou emulácie stlačenia klávesov.";
+
+/* Title of a feature highlight, a noun phrase. */
+"[WhatsNew/Feature/AutoType/title]" = "Automatické vypĺňanie hesiel";
+
+/* Description of a feature highlight, a call to action. */
+"[WhatsNew/Feature/CreativeAutoFill/description]" = "Vytvorte nové položky s funkciou automatického vyplňovania s automaticky predvyplnenými hlavnými polami.";
+
+/* Title of a feature highlight, a noun phrase. */
+"[WhatsNew/Feature/CreativeAutoFill/title]" = "Rýchlejšie registrácie";
+
+/* Description of a feature highlight, a call to action. `Browse alphabetically` refers to a phonebook-like index with letters. */
+"[WhatsNew/Feature/MoreInteractions/description]" = "Pretiahnite a pusťte, vyberte viacero položiek a prehliadajte abecedne.";
+
+/* Title of a feature highlight, a noun phrase. */
+"[WhatsNew/Feature/MoreInteractions/title]" = "Viac spôsobov interakcie";
+
+/* Title of the detailed history of app changes over time. */
+"[WhatsNew/FullChangelog/title]" = "Podrobný zoznam zmien";
+
+/* Full title for release highlights */
+"[WhatsNew/fullTitle]" = "Čo je nové v aplikácii KeePassium";
 

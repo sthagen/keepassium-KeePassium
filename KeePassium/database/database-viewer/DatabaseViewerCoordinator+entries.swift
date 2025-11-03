@@ -21,6 +21,15 @@ extension DatabaseViewerCoordinator {
             .first
     }
 
+    internal func _getDefaultEntryForSelection(in group: Group?) -> Entry? {
+        let sortOrder = Settings.current.groupSortOrder
+        guard let entries = group?.entries else { return nil }
+        if let initialEntry = entries.first(where: { $0.uuid == _initialEntryUUID }) {
+            return initialEntry
+        }
+        return entries.min { sortOrder.compare($0, $1) }
+    }
+
     internal func _selectEntry(_ entry: Entry?) {
         _focusOnEntry(entry)
         _showEntry(entry)

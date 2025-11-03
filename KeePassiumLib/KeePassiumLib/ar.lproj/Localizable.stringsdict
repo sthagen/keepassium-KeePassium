@@ -4,57 +4,123 @@
 <dict>
 	<key>[Generic/Count/Bits]</key>
 	<dict>
-		<key>NSStringLocalizedFormatKey</key>
-		<string>%#@GenericCountBits@</string>
 		<key>GenericCountBits</key>
 		<dict>
 			<key>NSStringFormatSpecTypeKey</key>
 			<string>NSStringPluralRuleType</string>
 			<key>NSStringFormatValueTypeKey</key>
 			<string>d</string>
-			<key>zero</key>
-			<string>%d bits</string>
+			<key>few</key>
+			<string>%d بت</string>
+			<key>many</key>
+			<string>%d بت</string>
 			<key>one</key>
-			<string>%d bit</string>
+			<string>%d بت</string>
 			<key>other</key>
-			<string>%d bits</string>
+			<string>%d بت</string>
+			<key>two</key>
+			<string>%d بت</string>
+			<key>zero</key>
+			<string>%d بت</string>
 		</dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@GenericCountBits@</string>
 	</dict>
 	<key>[Generic/Count/EntriesSelected]</key>
 	<dict>
-		<key>NSStringLocalizedFormatKey</key>
-		<string>%#@GenericCountEntriesSelected@</string>
 		<key>GenericCountEntriesSelected</key>
 		<dict>
 			<key>NSStringFormatSpecTypeKey</key>
 			<string>NSStringPluralRuleType</string>
 			<key>NSStringFormatValueTypeKey</key>
 			<string>d</string>
-			<key>zero</key>
-			<string>%d entries selected</string>
+			<key>few</key>
+			<string>تم تحديد %d إدخالات</string>
+			<key>many</key>
+			<string>تم تحديد %d إدخالًا</string>
 			<key>one</key>
-			<string>%d entry selected</string>
+			<string>تم تحديد إدخال واحد (%d)</string>
 			<key>other</key>
-			<string>%d entries selected</string>
+			<string>تم تحديد %d إدخال</string>
+			<key>two</key>
+			<string>تم تحديد إدخاليْن (%d)</string>
+			<key>zero</key>
+			<string>تم تحديد %d من الإدخالات</string>
 		</dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@GenericCountEntriesSelected@</string>
+	</dict>
+	<key>[Generic/Count/ItemsSelected]</key>
+	<dict>
+		<key>GenericCountItemsSelected</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>d</string>
+			<key>few</key>
+			<string>تم تحديد %d عناصر</string>
+			<key>many</key>
+			<string>تم تحديد %d عنصرًا</string>
+			<key>one</key>
+			<string>تم تحديد عنصر واحد (%d)</string>
+			<key>other</key>
+			<string>تم تحديد %d عنصر</string>
+			<key>two</key>
+			<string>تم تحديد عنصريْن (%d)</string>
+			<key>zero</key>
+			<string>تم تحديد %d من العناصر</string>
+		</dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@GenericCountItemsSelected@</string>
+	</dict>
+	<key>[Generic/Count/Items]</key>
+	<dict>
+		<key>GenericCountItems</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>d</string>
+			<key>few</key>
+			<string>‏%d عناصر</string>
+			<key>many</key>
+			<string>‏%d عنصرًا</string>
+			<key>one</key>
+			<string>عنصر واحد (%d)</string>
+			<key>other</key>
+			<string>‏%d عنصر</string>
+			<key>two</key>
+			<string>عنصران (%d)</string>
+			<key>zero</key>
+			<string>‏%d من العناصر</string>
+		</dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@GenericCountItems@</string>
 	</dict>
 	<key>[Generic/Count/Threads]</key>
 	<dict>
-		<key>NSStringLocalizedFormatKey</key>
-		<string>%#@GenericCountThreads@</string>
 		<key>GenericCountThreads</key>
 		<dict>
 			<key>NSStringFormatSpecTypeKey</key>
 			<string>NSStringPluralRuleType</string>
 			<key>NSStringFormatValueTypeKey</key>
 			<string>d</string>
-			<key>zero</key>
-			<string>%d threads</string>
+			<key>few</key>
+			<string>%d سلاسل</string>
+			<key>many</key>
+			<string>%d سلسلة</string>
 			<key>one</key>
-			<string>%d thread</string>
+			<string>سلسلة واحدة (%d)</string>
 			<key>other</key>
-			<string>%d threads</string>
+			<string>%d سلسلة</string>
+			<key>two</key>
+			<string>سلسلتان (%d)</string>
+			<key>zero</key>
+			<string>%d من السلاسل</string>
 		</dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@GenericCountThreads@</string>
 	</dict>
 </dict>
 </plist>

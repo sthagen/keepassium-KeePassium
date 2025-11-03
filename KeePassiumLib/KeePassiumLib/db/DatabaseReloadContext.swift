@@ -11,6 +11,7 @@ import Foundation
 public final class DatabaseReloadContext: Eraseable {
     public let compositeKey: CompositeKey
     public var groupUUID: UUID?
+    public var entryUUID: UUID?
 
     public convenience init(for database: Database) {
         self.init(key: database.compositeKey.clone())
@@ -27,5 +28,6 @@ public final class DatabaseReloadContext: Eraseable {
     public func erase() {
         compositeKey.erase()
         groupUUID?.erase()
+        entryUUID?.erase()
     }
 }

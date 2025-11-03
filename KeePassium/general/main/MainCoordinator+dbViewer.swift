@@ -39,12 +39,14 @@ extension MainCoordinator {
     internal func _reloadDatabase(
         _ databaseFile: DatabaseFile,
         targetGroupUUID: UUID?,
+        targetEntryUUID: UUID?,
         from databaseViewerCoordinator: DatabaseViewerCoordinator
     ) {
         let targetRef = databaseFile.originalReference
 
         let context = DatabaseReloadContext(for: databaseFile.database)
         context.groupUUID = targetGroupUUID
+        context.entryUUID = targetEntryUUID
 
         databaseViewerCoordinator.closeDatabase(
             shouldLock: false,
@@ -131,9 +133,15 @@ extension MainCoordinator: DatabaseViewerCoordinatorDelegate {
     func didPressReloadDatabase(
         _ databaseFile: DatabaseFile,
         currentGroupUUID: UUID?,
+        currentEntryUUID: UUID?,
         in coordinator: DatabaseViewerCoordinator
     ) {
-        _reloadDatabase(databaseFile, targetGroupUUID: currentGroupUUID, from: coordinator)
+        _reloadDatabase(
+            databaseFile,
+            targetGroupUUID: currentGroupUUID,
+            targetEntryUUID: currentEntryUUID,
+            from: coordinator
+        )
     }
 
     func didPressSwitchTo(

@@ -1,11 +1,104 @@
+/* Notification when user tries to set up too weak an app protection passcode. */
+"[AppLock/weakPasscodeWarning]" = "رمز المرور المختار سهل التخمين. حاول إدخال واحد أقوى.";
+
+/* Action in AutoFill: choose the entry and remember it for future use on this website. */
+"[AutoFill/AcceptAndRemember/action]" = "قبول وتذكر الاختيار";
+
+/* Title of a list */
+"[AutoFill/AllEntries/title]" = "كل الإدخالات";
+
+/* Title of AutoFill context when no context is available. Usage: `Context: Unknown` */
+"[AutoFill/Context/Empty/title]" = "غير معروف";
+
+/* Title of a list with search results */
+"[AutoFill/FoundEntries/title]" = "أفضل النتائج";
+
+/* Call for action to select an entry field for filling out. */
+"[AutoFill/InsertText/select]" = "اختر الحقل";
+
+/* Section title for the recently used entry in AutoFill */
+"[AutoFill/RecentlyUsed/title]" = "المستخدمة حديثًا";
+
+/* Not an action, but a button to activate the same-named setting */
+"[AutoFill/RememberContext/action]" = "تذكّر الإدخالات المحددة";
+
+/* Call to action */
+"[AutoFill/RememberContext/callToAction]" = "تحسين اقتراحات ميزة التعبئة التلقائية";
+
+/* Description of the 'Remember Selected Entries` feature */
+"[AutoFill/RememberContext/description]" = "سوف يتذكّر تطبيق KeePassium أي إدخال تختاره لأي موقع إلكتروني ثم يقترحه تلقائيًا.";
+
+/* Title for referring to the app or webpage that launched AutoFill. For example: `Context: google.com` */
+"[AutoFill/Search/Context/title]" = "السياق";
+
 /* No comment provided by engineer. */
 "[AutoFill/Setup/footer]" = "التعبئة التلقائية لا يمكنها الوصول تلقائياً إلى الملفات التي لديك بالفعل في تطبيق KeePassium الرئيسي.\n\nلماذا؟ وراء المشاهد، يتعامل النظام مع التعبئة التلقائية كتطبيق منفصل، مستقل عن عملية KeePassium الرئيسية. لأسباب أمنية، لا يمكن لأي تطبيق الوصول ببساطة إلى أي ملفات خارجية - ما لم تقم بربط هذه الملفات فعلياً بهذا التطبيق. وبالتالي يضمن النظام أن التطبيق يمكنه فقط الوصول إلى الملفات القليلة التي سُمح له بها.\n\nونتيجة لذلك، يجب إعطاء كل من تطبيق التعبئة التلقائية و KeePassium الاذونات الخاصة لكل ملف خارجي. لحسن الحظ، هذا إجراء لمرة واحدة فقط.";
+
+/* Must match Apple's translation, as found in iOS 18 Settings → General → AutoFill & Passwords. If unsure, leave untranslated. */
+"[AutoFill/Setup/UncheckKeychain/autofillFrom]" = "التعبئة التلقائية من:";
+
+/* Call to action: deselect the `Keychain` option. Keychain is a glossary term. */
+"[AutoFill/Setup/UncheckKeychain/callToAction]" = "إلغاء تحديد سلسلة المفاتيح";
+
+/* Instruction to deselect another app in the settings [appName: String] */
+"[AutoFill/Setup/UncheckKeychain/message]" = "لاختيار تطبيق KeePassium ليكون مدير كلمات المرور الافتراضي، عليك إلغاء تحديد \"%@\".";
 
 /* Must match Apple's translation, as found in iOS 17 Settings → Passwords → Password Options. If unsure, leave untranslated. */
 "[AutoFill/Setup/UncheckKeychain/usePasswordsAndPasskeysFrom]" = "استخدام كلمات السر ومفاتيح المرور من";
 
+/* Field title: name of the group that contains the entry */
+"[Database/Entry/Location/title]" = "الموقع";
+
+/* Title of a list with randomly generated usernames */
+"[Database/Entry/RandomUsernames/title]" = "أسماء مستخدمين عشوائية";
+
+/* Action/button that shows a list of usernames to pick from */
+"[Database/Entry/SelectUsername/action]" = "اختر اسم المستخدم";
+
+/* Action: select item from a list/menu, with item name in quotes. For example: `Select "Sample Group"` */
+"[Database/Item/SelectNamed/action]" = "حدد \"%@\"";
+
+/* Action: create a passkey and add it to existing entry */
+"[Database/Passkey/AddToExisting/action]" = "إضافة مفتاح مرور إلى إدخال موجود";
+
+/* Call to action: select an existing entry to add a new passkey to */
+"[Database/Passkey/AddToExisting/callToAction]" = "اختر إدخالًا لمفتاح المرور الجديد";
+
+/* Confirmation message before replacing an existing passkey. */
+"[Database/Passkey/AddToExisting/confirm]" = "هذا الإدخال يحتوي بالفعل على مفتاح مرور. هل تود استبداله؟";
+
+/* Title of an optional dialog for creating new passkeys */
+"[Database/Passkey/Create/title]" = "هل تريد إنشاء مفتاح مرور؟";
+
+/* Name of the Apple Passwords application, see https://support.apple.com/120758 */
+"[Generic/ApplePasswordsApp/title]" = "كلمات السر";
+
 /* Apple Keychain software; is a glossary term. */
 "[Generic/Keychain/title]" = "سلسلة المفاتيح";
+
+/* Menu action to add a user-provided word list file to the app. */
+"[PasswordGenerator/Wordlist/Import/menuAction]" = "استيراد قائمة الكلمات…";
+
+/* Password quality description. For example: `Password quality: Weak`. [level: String] */
+"[PasswordQuality/description]" = "قوة كلمة المرور: %@";
+
+/* Good password quality */
+"[PasswordQuality/Level] Good" = "جيدة";
+
+/* Very good password quality */
+"[PasswordQuality/Level] Very good" = "جيدة جدًا";
+
+/* Very weak password quality */
+"[PasswordQuality/Level] Very weak" = "ضعيفة جدًا";
+
+/* Weak password quality */
+"[PasswordQuality/Level] Weak" = "ضعيفة";
+
+/* Password quality description. Note the tilda that refers to an estimated/approximate value. For example: `Very good (~123 bits of entropy)`. [level: String, formattedBitCount: String] */
+"[PasswordQuality/LevelWithApproximateEntropy/description]" = "%1$@ (~%2$@ من العشوائية)";
+
+/* Password quality description. For example: `Very good (234 bits of entropy)`. [level: String, formattedBitCount: String] */
+"[PasswordQuality/LevelWithEntropy/description]" = "%1$@ (%2$@ من العشوائية)";
 
 /* Action/button to make password visible as plain-text */
 "[ProtectedTextField] Show Password" = "إظهار كلمة المرور";

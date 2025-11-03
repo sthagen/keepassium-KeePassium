@@ -1,9 +1,9 @@
 /* Class = "UINavigationItem"; title = "Unlock KeePassium"; ObjectID = "P3J-3c-ucU"; */
-"P3J-3c-ucU.title" = "KeePassium'un Kilidini Aç";
+"P3J-3c-ucU.title" = "KeePassium'un kilidini açın";
 
 /* Class = "UIButton"; normalTitle = "Cancel"; ObjectID = "z0x-Rz-Nfj"; */
-"z0x-Rz-Nfj.normalTitle" = "İptal";
+"z0x-Rz-Nfj.normalTitle" = "İptal et";
 
 /* Class = "UITextField"; placeholder = "Passcode"; ObjectID = "ZTd-Zj-qAs"; Note = "Placeholder text in the AppLock passcode field"; */
-"ZTd-Zj-qAs.placeholder" = "Şifre";
+"ZTd-Zj-qAs.placeholder" = "Şifre kodu";
 

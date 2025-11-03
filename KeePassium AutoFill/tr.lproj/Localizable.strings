@@ -1,14 +1,110 @@
+/* Notification when user tries to set up too weak an app protection passcode. */
+"[AppLock/weakPasscodeWarning]" = "Bu şifre kodunun tahmin edilmesi çok kolay. Daha güçlü bir şifre kodu girmeyi deneyin.";
+
+/* Action in AutoFill: choose the entry and remember it for future use on this website. */
+"[AutoFill/AcceptAndRemember/action]" = "Kabul Et ve Hatırla";
+
+/* Title of a list */
+"[AutoFill/AllEntries/title]" = "Tüm Girdiler";
+
+/* Title of AutoFill context when no context is available. Usage: `Context: Unknown` */
+"[AutoFill/Context/Empty/title]" = "Bilinmeyen";
+
+/* Title of a list with search results */
+"[AutoFill/FoundEntries/title]" = "En İyi Eşleşmeler";
+
+/* Call for action to select an entry field for filling out. */
+"[AutoFill/InsertText/select]" = "Alan seçin";
+
+/* Section title for the recently used entry in AutoFill */
+"[AutoFill/RecentlyUsed/title]" = "Son Kullanılanlar";
+
+/* Not an action, but a button to activate the same-named setting */
+"[AutoFill/RememberContext/action]" = "Seçilen Girdileri hatırla";
+
+/* Call to action */
+"[AutoFill/RememberContext/callToAction]" = "Otomatik Doldurma önerilerini iyileştir";
+
+/* Description of the 'Remember Selected Entries` feature */
+"[AutoFill/RememberContext/description]" = "KeePassium her bir web sitesi için seçtiğiniz girdiyi hatırlar ve otomatik olarak önerir.";
+
+/* Title for referring to the app or webpage that launched AutoFill. For example: `Context: google.com` */
+"[AutoFill/Search/Context/title]" = "Bağlam";
+
 /* No comment provided by engineer. */
-"[AutoFill/Setup/footer]" = "Otomatik Doldurma, ana KeePassium uygulamasında halihazırda var olan bilgilere otomatik olarak erişemez.\n\nPeki neden? Arka plandaki işleyişte; sistem Otomatik Doldurmayı ana KeePassium uygulamasından bağımsız apayrı bir uygulama gibi görmekte. Güvenlik kaynaklı sebeplerden ötürü, siz spesifik olarak aralarında bağıntı kurup izin vermedikçe; bir uygulama hiçbir dış dosyaya kolayca erişemez. Böylece sistem, uygulamanın sadece sizin izin verdiğiniz dosyalara erişebildiğini garanti eder.\n\nSonuç olarak, hem Otomatik Doldurma hem de KeePassium uygulaması veritabanınızı okumak ve değiştirmek için ayrı ayrı yetkilendirilmeye ihtiyaç duyar. Şükür ki, bu tek seferlik bir bürokrasidir.";
+"[AutoFill/Setup/footer]" = "Otomatik Doldurma, hâlihazırda ana KeePassium uygulamasında bulunan dosyalara otomatik olarak erişemez.\n\nNeden mi? Arka planda, sistem Otomatik Doldurma'yı KeePassium işleminden bağımsız, ayrı bir uygulama olarak kabul eder. Güvenlik sebebiyle, bu dosyaları o uygulamaya özel olarak bağlamazsanız uygulama harici dosyalara erişemez. Dolayısıyla sistem, uygulamanın yalnızca izin verdiğiniz birkaç dosyaya erişebilmesini garantiler.\n\nSonuç olarak hem Otomatik Doldurmaya hem de ana KeePassium uygulamasına her bir harici dosya için kendi izinlerinin verilmesi gerekir. Neyse ki, bu tek seferlik bir prosedürdür.";
+
+/* Must match Apple's translation, as found in iOS 18 Settings → General → AutoFill & Passwords. If unsure, leave untranslated. */
+"[AutoFill/Setup/UncheckKeychain/autofillFrom]" = "Otomatik Doldurma kaynağı:";
+
+/* Call to action: deselect the `Keychain` option. Keychain is a glossary term. */
+"[AutoFill/Setup/UncheckKeychain/callToAction]" = "Anahtar Zinciri seçimini kaldır";
+
+/* Instruction to deselect another app in the settings [appName: String] */
+"[AutoFill/Setup/UncheckKeychain/message]" = "KeePassium'u varsayılan şifre yöneticiniz yapmak için \"%@\" seçimini kaldırın.";
 
 /* Must match Apple's translation, as found in iOS 17 Settings → Passwords → Password Options. If unsure, leave untranslated. */
 "[AutoFill/Setup/UncheckKeychain/usePasswordsAndPasskeysFrom]" = "Şuradaki parolaları ve geçiş anahtarlarını kullan:";
 
+/* Field title: name of the group that contains the entry */
+"[Database/Entry/Location/title]" = "Konum";
+
+/* Title of a list with randomly generated usernames */
+"[Database/Entry/RandomUsernames/title]" = "Rastgele Kullanıcı Adları";
+
+/* Action/button that shows a list of usernames to pick from */
+"[Database/Entry/SelectUsername/action]" = "Kullanıcı Adı seç";
+
+/* Action: select item from a list/menu, with item name in quotes. For example: `Select "Sample Group"` */
+"[Database/Item/SelectNamed/action]" = "\"%@\" ögesini seç";
+
+/* Action: create a passkey and add it to existing entry */
+"[Database/Passkey/AddToExisting/action]" = "Mevcut Girdiye Geçiş Kodu ekle";
+
+/* Call to action: select an existing entry to add a new passkey to */
+"[Database/Passkey/AddToExisting/callToAction]" = "Yeni geçiş kodu için bir girdi seçin";
+
+/* Confirmation message before replacing an existing passkey. */
+"[Database/Passkey/AddToExisting/confirm]" = "Bu girdinin zaten bir geçiş kodu var. Değiştirilsin mi?";
+
+/* Title of an optional dialog for creating new passkeys */
+"[Database/Passkey/Create/title]" = "Geçiş Kodu oluşturulsun mu?";
+
+/* Name of the Apple Passwords application, see https://support.apple.com/120758 */
+"[Generic/ApplePasswordsApp/title]" = "Şifreler";
+
 /* Apple Keychain software; is a glossary term. */
 "[Generic/Keychain/title]" = "Anahtar Zinciri";
 
+/* Menu action to add a user-provided word list file to the app. */
+"[PasswordGenerator/Wordlist/Import/menuAction]" = "Kelime Listesini içe aktar…";
+
+/* Password quality description. For example: `Password quality: Weak`. [level: String] */
+"[PasswordQuality/description]" = "Şifre kalitesi: %@";
+
+/* Good password quality */
+"[PasswordQuality/Level] Good" = "İyi";
+
+/* Very good password quality */
+"[PasswordQuality/Level] Very good" = "Çok iyi";
+
+/* Very weak password quality */
+"[PasswordQuality/Level] Very weak" = "Çok zayıf";
+
+/* Weak password quality */
+"[PasswordQuality/Level] Weak" = "Zayıf";
+
+/* Password quality description. Note the tilda that refers to an estimated/approximate value. For example: `Very good (~123 bits of entropy)`. [level: String, formattedBitCount: String] */
+"[PasswordQuality/LevelWithApproximateEntropy/description]" = "%1$@ (~%2$@ entropi)";
+
+/* Password quality description. For example: `Very good (234 bits of entropy)`. [level: String, formattedBitCount: String] */
+"[PasswordQuality/LevelWithEntropy/description]" = "%1$@ (%2$@ entropi)";
+
 /* Action/button to make password visible as plain-text */
-"[ProtectedTextField] Show Password" = "Şifreyi Göster";
+"[ProtectedTextField] Show Password" = "Şifreyi göster";
+
+/* Call to action, invites the user to enable the Quick AutoFill feature */
+"[QuickAutoFill/Activate/callToAction]" = "Hızlı Otomatik Doldurma'yı etkinleştirin";
 
 /* Placeholder text for empty search results */
 "[Search/EmptyResult/title]" = "Uygun bir şey bulunamadı";

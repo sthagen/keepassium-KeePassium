@@ -257,8 +257,6 @@ class FilePickerVC: UIViewController {
         }
         let toolbarItems = toolbarDecorator?.getToolbarItems(mode: mode)
         setToolbarItems(toolbarItems, animated: animated)
-        let isToolbarEmpty = toolbarItems?.isEmpty ?? true
-        navigationController?.setToolbarHidden(isToolbarEmpty, animated: animated)
 
         navigationItem.leftItemsSupplementBackButton = true
         if let leftItems = toolbarDecorator?.getLeftBarButtonItems(mode: mode) {

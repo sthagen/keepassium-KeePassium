@@ -209,16 +209,22 @@ final class MainSettingsVC: BaseSettingsViewController<MainSettingsVC.Section> {
                 handler: { [unowned self] in
                     delegate?.didPressContactSupport(in: self)
                 }
-            )),
-            .basic(.init(
-                title: LString.tipBoxTitle2,
-                subtitle: LString.tipBoxTitle3,
-                image: .symbol(.heart, tint: .red),
-                fixedAccessories: [.disclosureIndicator()],
-                handler: { [unowned self] in
-                    delegate?.didPressDonations(in: self)
-                }
-            )),
+            ))
+        ])
+        if BusinessModel.type == .freemium {
+            snapshot.appendItems([
+                .basic(.init(
+                    title: LString.tipBoxTitle2,
+                    subtitle: LString.tipBoxTitle3,
+                    image: .symbol(.heart, tint: .red),
+                    fixedAccessories: [.disclosureIndicator()],
+                    handler: { [unowned self] in
+                        delegate?.didPressDonations(in: self)
+                    }
+                ))
+            ])
+        }
+        snapshot.appendItems([
             .basic(.init(
                 title: LString.titleDiagnosticLog,
                 subtitle: LString.diagnosticLogSubtitle,

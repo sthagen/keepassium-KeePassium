@@ -107,6 +107,7 @@ extension DatabaseViewerCoordinator {
                 delegate?.didPressReloadDatabase(
                     _databaseFile,
                     currentGroupUUID: _currentGroup?.uuid,
+                    currentEntryUUID: _currentEntry?.uuid,
                     in: self
                 )
             }
@@ -120,6 +121,7 @@ extension DatabaseViewerCoordinator {
             delegate?.didPressReloadDatabase(
                 _databaseFile,
                 currentGroupUUID: _currentGroup?.uuid,
+                currentEntryUUID: _currentEntry?.uuid,
                 in: self
             )
         }

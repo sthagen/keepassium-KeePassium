@@ -1435,6 +1435,18 @@
 /* Action: pick a photo (from gallery) to scan as QR code */
 "[OTP/Setup/ScanQRPhoto]" = "写真からQRをスキャン";
 
+/* Call to action/instruction during setup of OTP codes. */
+"[OTP/Setup/SelectDatabase/message]" = "確認コード (ワンタイムパスワード) を設定するためのデータベースを選択しましょう。";
+
+/* Call to action/instruction during setup of OTP codes. */
+"[OTP/Setup/SelectEntry/message]" = "確認コード (ワンタイムパスワード) を設定するためのエントリーを選択しましょう。";
+
+/* Confirmation message after successful OTP setup */
+"[OTP/Setup/Success]" = "OTPの設定が完了しました。";
+
+/* Title of a dialog related to setup of one-time passwords (OTP) */
+"[OTP/Setup/Title]" = "確認コードの設定";
+
 /* Description of an OTP code; sentence case. */
 "[OTP/Title/sentenceCase]" = "ワンタイムパスワード";
 

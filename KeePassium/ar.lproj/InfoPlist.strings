@@ -16,3 +16,6 @@
 /* Privacy - Photo Library Additions Usage Description */
 "NSPhotoLibraryAddUsageDescription" = "KeePassium يحتاج الإذن لتصدير الملفات إلى مكتبة الصور الخاصة بك.";
 
+/* Privacy - Photo Library Usage Description */
+"NSPhotoLibraryUsageDescription" = "يحتاج تطبيق KeePassium إلى صلاحية الوصول لاختيار الصور للأيقونات المخصصة ومسح رموز QR ضوئيًا لإعداد كلمة المرور لمرة واحدة.";
+

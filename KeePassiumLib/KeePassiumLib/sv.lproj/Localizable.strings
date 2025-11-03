@@ -7,6 +7,15 @@
 /* Call to action: perform accessibilty `activate` action to listen to text/content. */
 "[Accessibility/activateToListen]" = "Aktivera för att lyssna.";
 
+/* Accessibility notification for entries with attached files. */
+"[Accessibility/containsAttachments]" = "Innehåller bilagor.";
+
+/* Accessibility notification for entries with a problematic passkey */
+"[Accessibility/containsIncompatiblePasskey]" = "Innehåller en nyckel som inte är kompatibel med enheten.";
+
+/* Accessibility notification for entries with OTP codes. */
+"[Accessibility/containsOTP]" = "Innehåller engångslösenord.";
+
 /* Accessibility notification for entries with a passkey */
 "[Accessibility/containsPasskey]" = "Innehåller en nyckel.";
 
@@ -63,6 +72,24 @@
 
 /* Title of a message related to upgrading to the premium version */
 "[AutoFill/Premium/Upgrade/Manual/title] Premium Upgrade" = "Premiumuppgradering";
+
+/* Call to action / instruction on how to enable accessibility permission */
+"[AutoType/AccessibilityPrompt/callToAction]" = "Öppna systeminställningarna → Integritet och säkerhet → Tillgänglighet, och aktivera KeePassium.";
+
+/* Message explaining why accessibility permission is needed */
+"[AutoType/AccessibilityPrompt/message]" = "KeePassium behöver din tillåtelse att skicka knapptryckningar till andra appar.";
+
+/* Title of a dialog asking user to provide a security permission */
+"[AutoType/AccessibilityPrompt/title]" = "KeePassium behöver din tillåtelse";
+
+/* Action: send key presses to 'type in' entry data into another app */
+"[AutoType/action]" = "Använd Autoskriv";
+
+/* Button to open system settings (accessibility, permissions, etc) */
+"[AutoType/Action/OpenSettings]" = "Öppna inställningarna";
+
+/* Title for error when auto-type fails */
+"[AutoType/Error/Title]" = "Autoskriv misslyckades";
 
 /* Name of biometric authentication method. Trademarked, do not translate unless Apple traslated it to your language. */
 "[BiometricAuthType] Face ID" = "Face ID";
@@ -132,6 +159,9 @@
 
 /* Action: add/import an image as a custom icon */
 "[Database/CustomIcon/add]" = "Lägg till egenvald ikon";
+
+/* Notification when some custom icons are about to be deleted [iconCount: Int] */
+"[Database/CustomIcon/All/count]" = "Alla anpassade ikoner: %d";
 
 /* Action: delete all custom icons */
 "[Database/CustomIcon/deleteAll]" = "Radera allt";
@@ -228,6 +258,9 @@
 
 /* Placeholder shown when there are no database files available */
 "[Database/List/empty]" = "Inga databasfiler";
+
+/* Call to action. 'Open' here is used as 'launch'. */
+"[Database/List/LocalMissing/callToAction]" = "Öppna appen";
 
 /* Recommendation for solving a problem with a list of files. */
 "[Database/List/LocalMissing/message]" = "Om några lokala filer inte anges kan du först starta KeePassium-huvudappen.";
@@ -448,8 +481,17 @@
 /* Notification message */
 "[Database/UnsavedChanges/cannotModifyYet]" = "Autofyll kan tyvärr inte modifiera stora databaser än. Vi jobbar på att lösa det.";
 
+/* Notification message */
+"[Database/UnsavedChanges/couldNotApply]" = "Det gick inte att tillämpa några väntande ändringar automatiskt. De senaste ändringarna kanske saknas.";
+
 /* Call to action shown in AutoFill module. */
 "[Database/UnsavedChanges/OpenAppCallToAction]" = "Öppna KeePassium-huvudappen om du vill spara ändringar.";
+
+/* Notification message about a problem with unsaved/pending changes. */
+"[Database/UnsavedChanges/Problematic/info]" = "Några väntande ändringar handlar om poster eller grupper som saknas. KeePassium skapar dessa objekt i en separat grupp och tillämpar ändringarna där.";
+
+/* Title of a group where problematic pending changes are saved. %@ is the date of recovery. */
+"[Database/UnsavedChanges/RecoveredEntriesGroup/name]" = "Återställda ändringar (%@)";
 
 /* Action/button to save accummulated modifications */
 "[Database/UnsavedChanges/saveAction]" = "Spara ändringar";
@@ -557,7 +599,7 @@
 "[Database2/Loading/Warning/missingBinaries]" = "Bilagor för vissa poster saknar data. Detta är ett tecken på att databasen blivit skadad, troligen av den senaste använda appen (%1$@). KeePassium kommer behålla de tomma bilagorna, men kan inte återställa dem. Du bör återställa din databas från en backupkopia.\n\nSaknade bilagor: %2$@";
 
 /* A warning about nameless attachments, shown after loading the database. [listOfEntryNames: String] */
-"[Database2/Loading/Warning/namelessAttachments]" = "Några poster har bilagor utan ett namn. Det är ett tecken på tidigare skador på databasen.\n\nGranska bilagor för följande poster (och deras historik):\n%@";
+"[Database2/Loading/Warning/namelessAttachments]" = "Några poster har bilagor utan ett namn. Det är ett tecken på tidigare skador i databasen.\n\nGranska bilagor för följande poster (och deras historik):\n%@";
 
 /* A warning about misformatted custom fields after loading the database. [entryPaths: String] */
 "[Database2/Loading/Warning/namelessCustomFields]" = "Några poster har anpassade fält med tomma namn. Detta kan vara ett tecken på skadad databas. Kontrollera följande poster:\n\n%@";
@@ -652,11 +694,20 @@
 /* Default name of a newly created entry field */
 "[Entry/Edit/CreateField/defaultName] Field Name" = "Fältnamn";
 
+/* Action/button to add a new field to the entry */
+"[Entry/Field/Add/action]" = "Lägg till fält";
+
+/* On/off state: whether to show full-size or compact menu */
+"[Entry/Field/CompactMenu/title]" = "Komprimerad vy";
+
 /* Notification: a reference to an entry field has been copied to clipboard */
 "[Entry/Field/CopyReference/acknowledgement]" = "Referens till fällt kopierad";
 
 /* Action: copy a reference to the selected entry field to clipboard */
 "[Entry/Field/CopyReference/action]" = "Kopiera referens till fält";
+
+/* Title for a generic user-defined entry field. */
+"[Entry/Field/Custom/title]" = "Anpassat fält";
 
 /* Action: display text using large font */
 "[Entry/Field/LargeType/action]" = "Visa i stor typ";
@@ -685,6 +736,9 @@
 /* Title of a setting: whether the entry's field is protected (shown as asterisks). */
 "[Entry/Field/Protected/title]" = "Skyddat fält";
 
+/* Action: display text using QR code */
+"[Entry/Field/QRCode/action]" = "Visa som QR-kod";
+
 /* Name of an entry field */
 "[Entry/Field/tags] Tags" = "Taggar";
 
@@ -693,6 +747,9 @@
 
 /* Status message: loading file to be attached to an entry */
 "[Entry/Files/Add] Loading attachment file" = "Laddar fil att bifoga";
+
+/* Title of a list with frequently used entry fields. */
+"[Entry/FrequentlyUsedFields/title]" = "Används ofta";
 
 /* Title of a field with entry creation date and time */
 "[Entry/History] Creation Date" = "Skapad";
@@ -934,6 +991,9 @@
 /* Placeholder for folders without files */
 "[General/FileList/Empty/title]" = "Mappen är tom";
 
+/* Info message for keyboard-assisted selection */
+"[General/MultiSelectionKeys/hint]" = "Tryck och håll ned på Cmd- eller Shift-tangenten om du vill välja flera objekt.";
+
 /* Action/button to cancel whatever is going on */
 "[Generic] Cancel" = "Avbryt";
 
@@ -975,6 +1035,9 @@
 
 /* Action/button shown below error messages. Tapping the button will start the fixing/repairing workflow described in the error message. */
 "[Generic] Fix this" = "Åtgärda";
+
+/* Action/button to import an item to another app */
+"[Generic] Import" = "Importera";
 
 /* Action/button to view more help/info about some topic */
 "[Generic] Learn more" = "Läs mer…";
@@ -1033,6 +1096,9 @@
 /* Action/button to select some items in a list. */
 "[Generic/Action/SelectItems]" = "Välj";
 
+/* Number of entries found in an incoming file. For example: 'Found entries: 42' [itemCount: Int] */
+"[Generic/Count/ImportedEntries]" = "Poster som hittats: %d";
+
 /* Name of the Recently Deleted (Recycle Bin) directory, as shown in the Files app */
 "[Generic/Directory/Recently Deleted/name]" = "Senast raderade";
 
@@ -1048,6 +1114,9 @@
 /* Title of a generic file export screen. */
 "[Generic/File/Export/title]" = "Filexport";
 
+/* Action to save data, when we ignore minor problems in the process. */
+"[Generic/File/ForceSave]" = "Tvinga att spara";
+
 /* Action/button to save data to a different file */
 "[Generic/File/Save as]" = "Spara som…";
 
@@ -1059,6 +1128,9 @@
 
 /* Title of an error message about file import */
 "[Generic/File/title] Import Error" = "Importeringsfel";
+
+/* Action to proceed after a warning, basically 'I understand the risk' */
+"[Generic/GotIt/action]" = "Ok";
 
 /* Title of a list with predefined quick-choice values (for example: 'Presets: 1 week, 1 months, 1 year') */
 "[Generic/Presets]" = "Förval";
@@ -1177,6 +1249,15 @@
 /* Title of a list with possible hardware key connections */
 "[HardwareKey/Picker/title]" = "Hårdvarunycklar";
 
+/* Title of a slot of a hardware key. For example: `YubiKey Slot 1`. */
+"[HardwareKey/Slot/title]" = "%1$@ Plats %2$d";
+
+/* Hardware key slot number. [slotNumber: Int] */
+"[HardwareKey/SlotN]" = "Plats %d";
+
+/* Title for hardware key slot selection menu. */
+"[HardwareKey/SlotTitle]" = "Plats";
+
 /* Information notice. 'Challenge-response' is a glossary term. */
 "[HardwareKey/USB/chalRespNotSupported]" = "Den här enheten stöder inte kontrollsvar via USB-anslutning.";
 
@@ -1279,6 +1360,9 @@
 /* Description of the `Import Key File` action. */
 "[KeyFile/Import/actionDescription]" = "Lägg till fil i appen";
 
+/* Placeholder shown when there are no key files available */
+"[KeyFile/List/empty]" = "Inga nyckelfiler";
+
 /* Title of the list with key files. */
 "[KeyFile/List/title]" = "Nyckelfiler";
 
@@ -1344,6 +1428,24 @@
 
 /* Button/action: proceed with QR code based OTP setup */
 "[OTP/Setup/ScanQRCode]" = "Skanna QR-kod";
+
+/* Action: pick an image (from files) to scan as QR code */
+"[OTP/Setup/ScanQRImageFile]" = "Skanna QR-kod från fil";
+
+/* Action: pick a photo (from gallery) to scan as QR code */
+"[OTP/Setup/ScanQRPhoto]" = "Skanna QR-kod från foto";
+
+/* Call to action/instruction during setup of OTP codes. */
+"[OTP/Setup/SelectDatabase/message]" = "Välj databas för att konfigurera verifieringskoden (engångslösenord).";
+
+/* Call to action/instruction during setup of OTP codes. */
+"[OTP/Setup/SelectEntry/message]" = "Välj post för att konfigurera verifieringskoden (engångslösenord).";
+
+/* Confirmation message after successful OTP setup */
+"[OTP/Setup/Success]" = "Konfiguration av engångslösenord klar";
+
+/* Title of a dialog related to setup of one-time passwords (OTP) */
+"[OTP/Setup/Title]" = "Konfiguration av verifieringskod";
 
 /* Description of an OTP code; sentence case. */
 "[OTP/Title/sentenceCase]" = "Engångslösenord";
@@ -1464,6 +1566,9 @@
 
 /* Title of a premium feature */
 "[Premium/Benefits/BusinessClouds/title]" = "Synkronisera med företagslagring";
+
+/* Call to action / Title of a premium feature */
+"[Premium/Benefits/CreativeAutoFill/title]" = "Skapa konton snabbare";
 
 /* Explanation of the premium feature */
 "[Premium/Benefits/HardwareKeys/details]" = "Skydda din data med en hårdvarunyckel, såsom YubiKey.";
@@ -1615,6 +1720,12 @@
 /* Title of a premium feature: access to company's cloud accounts like 'OneDrive for Business' */
 "[PremiumFeature/BusinessClouds/title]" = "Företagslagring i molnet";
 
+/* Description/advertisement for the `Faster Sign-Ups` premium feature */
+"[PremiumFeature/CreativeAutoFill/description]" = "Skapa nya poster i Autofyll där huvudfälten redan fyllts i.";
+
+/* Title of a premium feature: easier registration of new accounts, directly in AutoFill dialog */
+"[PremiumFeature/CreativeAutoFill/title]" = "Registrera dig snabbare";
+
 /* A generic description of a premium feature */
 "[PremiumFeature/Generic/description]" = "Uppgradera till premium och upplev KeePassium när det är som bäst.";
 
@@ -1684,11 +1795,20 @@
 /* Description of the `Direct connection` sync method. */
 "[RemoteConnection/Direct/description]" = "KeePassium kommunicerar direkt med din onlinelagring vilket garanterar pålitlig filöverföring.";
 
+/* Title of a list with online storage services like OneDrive, Dropbox, etc. */
+"[RemoteConnection/Direct/title]" = "Onlinetjänster";
+
+/* Action: change properties of a remote network connection */
+"[RemoteConnection/Edit/action]" = "Redigera anslutning …";
+
 /* Error message: user credentials rejected by the server */
 "[RemoteConnection/Error/AuthenticationFailed/title]" = "Autentisering misslyckades";
 
 /* Network address of a file */
 "[RemoteConnection/FileURL]" = "Fil-URL";
+
+/* Complete WebDAV URL including path prefix */
+"[RemoteConnection/FullURL]" = "Fullständig URL";
 
 /* Name of a predefined Google Drive folder which contains user's own files */
 "[RemoteConnection/GoogleDrive/Folder/myDrive]" = "Min enhet";
@@ -1735,8 +1855,17 @@
 /* Description of the `Integration via Files app` sync method. */
 "[RemoteConnection/ViaFilesApp/description]" = "KeePassium tilldelar filsynkronisering till din lagringsleverantörs app. Vissa appar fungerar bättre än andra.";
 
+/* Link to a help page for an online storage service. The parameter is the service name in fixed neutral form. Example: 'Nextcloud Setup Guide' or 'Synology NAS Setup Guide'. */
+"[RemoteConnection/WebDAVService/SetupGuide]" = "Inställningsguide för %@";
+
 /* Name of an input field for entering the password again */
 "[Repeat Password/Field/title]" = "Repetera lösenord";
+
+/* Description of the auto-download favicons feature */
+"[Settings/AutoDownloadFavicons/description]" = "Ladda ned webbplatsikon automatiskt efter att en post har redigerats.";
+
+/* Settings option: automatically download website icons/favicons */
+"[Settings/AutoDownloadFavicons/title]" = "Ladda ned favoritikoner automatiskt";
 
 /* Title of AutoFill settings screen */
 "[Settings/AutoFill/title]" = "Autofyll lösenord";
@@ -1795,8 +1924,32 @@
 /* Action/button which resets some settings to their default state. */
 "[Settings/RestoreDefaults/action]" = "Återställ standardinställningar";
 
+/* Call to action (explains why a setting is disabled) */
+"[Settings/ShakeGestureAction/LockApp/disabledTitle]" = "Aktivera först appskyddet";
+
+/* An option in Settings. Will be shown as 'When Shaken: Lock App' */
+"[Settings/ShakeGestureAction/LockApp/shortTitle]" = "Lås appen";
+
+/* An option in Settings. Will be shown as 'When Shaken: Lock All Databases' */
+"[Settings/ShakeGestureAction/LockDatabases/shortTitle]" = "Lås alla databaser";
+
+/* An option in Settings. Will be shown as 'When Shaken: Do Nothing' */
+"[Settings/ShakeGestureAction/Nothing/shortTitle]" = "Gör ingenting";
+
+/* An option in Settings. Will be shown as 'When Shaken: Quit App' */
+"[Settings/ShakeGestureAction/QuitApp/shortTitle]" = "Avsluta appen";
+
 /* Title of the app settings screen */
 "[Settings/title]" = "Inställningar";
+
+/* Title of a settings value. For example: `Remember Master Keys: No` */
+"[Settings/Value/No/title]" = "Nej";
+
+/* Title of a settings value, when it is not customized and we default to app's global settings. For example: `Remember Master Keys: Use App Settings (No)` */
+"[Settings/Value/UseAppSettings/title]" = "Använd appinställningarna (%@)";
+
+/* Title of a settings value. For example: `Remember Master Keys: Yes` */
+"[Settings/Value/Yes/title]" = "Ja";
 
 /* List sorting option (for file names). Example: 'Sort by: Name' */
 "[SortBy/FileName]" = "Namn";
@@ -1806,6 +1959,9 @@
 
 /* List sorting option, when items are manually ordered by the user. Example: 'Sort order: Custom' */
 "[SortOrder/Custom]" = "Anpassat";
+
+/* Subtitle for a storage service: the app will have access only to its own dedicated folder. */
+"[StorageService/DedicatedAppFolder/title]" = "Endast appmappen";
 
 /* Name of a cloud storage service */
 "[StorageService/DropboxBusiness/title]" = "Dropbox Business";
@@ -1869,6 +2025,9 @@
 
 /* Human-readable file location. Example: 'File Location: Remote server' */
 "[URLReference/Location/RemoteServer]" = "Fjärrserver";
+
+/* Error shown when user selects a file path instead of folder path in WebDAV. */
+"[WebDAV/Export/NeedsFolder]" = "Välj sökväg till en mapp";
 
 /* Call for action: insert YubiKey 5Ci to the Lightning port */
 "[YubiKey] Insert the key" = "Sätt i nyckeln";

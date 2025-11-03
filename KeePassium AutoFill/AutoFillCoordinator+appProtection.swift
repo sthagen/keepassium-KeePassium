@@ -79,9 +79,11 @@ extension AutoFillCoordinator: WatchdogDelegate {
                 to: _router.navigationController,
                 options: .transitionCrossDissolve,
                 completion: { [weak self] _ in
-                    guard let self else { return }
-                    if !_isStartTasksCompleted {
-                        _runAfterStartTasks()
+                    DispatchQueue.main.async { [weak self] in
+                        guard let self else { return }
+                        if !_isStartTasksCompleted {
+                            _runAfterStartTasks()
+                        }
                     }
                 }
             )

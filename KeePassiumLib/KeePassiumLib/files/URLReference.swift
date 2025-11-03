@@ -83,7 +83,10 @@ final public class URLReference:
 
     public static let defaultTimeoutDuration: TimeInterval = 10.0
 
-    public var visibleFileName: String { return url?.lastPathComponent ?? "?" }
+    public var visibleFileName: String {
+        guard let strongURL = url else { return "?" }
+        return strongURL.lastPathComponent
+    }
 
     public let runtimeUUID = UUID()
 

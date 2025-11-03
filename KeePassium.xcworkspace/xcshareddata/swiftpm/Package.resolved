@@ -1,5 +1,5 @@
 {
-  "originHash" : "8046833e31d20d3895f6c779280ffa5759be7f989043e021d84b8bb0ff8bb3c6",
+  "originHash" : "e0bc3f52139c667af883664f421eab6d8da2b6cf398605bbcd3364261f7f3d33",
   "pins" : [
     {
       "identity" : "asn1swift",
@@ -17,6 +17,15 @@
       "state" : {
         "branch" : "keepassium-166",
         "revision" : "8d4b948242ab2b9a4ad035a0a0005a4200ccec7a"
+      }
+    },
+    {
+      "identity" : "ms-intune-app-sdk-ios",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/keepassium/ms-intune-app-sdk-ios",
+      "state" : {
+        "branch" : "keepassium-168",
+        "revision" : "c03fd5d2d9537e5b148aecdbb2b1e41339027fa1"
       }
     },
     {

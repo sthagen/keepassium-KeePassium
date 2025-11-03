@@ -2,7 +2,7 @@
 "7bL-fQ-OUc.headerTitle" = "Geri bildirim";
 
 /* Class = "UILabel"; text = "Do you like what you see?"; ObjectID = "AMd-x7-PDa"; Note = "First part of the 'Do you like what you see? / Leave an App Store review.\""; */
-"AMd-x7-PDa.text" = "Gördüğünüz hoşunuza gitti mi?";
+"AMd-x7-PDa.text" = "Gördükleriniz hoşunuza gitti mi?";
 
 /* Class = "UITableViewSection"; headerTitle = "Privacy Policy"; ObjectID = "JbR-nf-D9o"; Note = "Section: privacy policy"; */
 "JbR-nf-D9o.headerTitle" = "Gizlilik Politikası";
@@ -14,7 +14,7 @@
 "NLN-lQ-bh5.title" = "Hakkında";
 
 /* Class = "UILabel"; text = "Contact Support"; ObjectID = "TOl-DA-gYc"; Note = "Action: contact us"; */
-"TOl-DA-gYc.text" = "Destekle İletişim";
+"TOl-DA-gYc.text" = "Destekle İletişime Geçin";
 
 /* Class = "UILabel"; text = "Leave an App Store review."; ObjectID = "uiw-Qh-pNp"; Note = "Second part of the 'Do you like what you see? / Leave an App Store review.\""; */
 "uiw-Qh-pNp.text" = "AppStore'da bizi değerlendirin.";

@@ -63,7 +63,7 @@ extension KeyFilePickerCoordinator {
                         .flexibleSpace(),
                     ]
                 } else {
-                    return nil
+                    return []
                 }
             case .bulkEdit(let selectedFiles):
                 let bulkDeleteButton = UIBarButtonItem(

@@ -208,11 +208,14 @@
                     "title": "Changed: Refactored and rebuilt half the app to streamline future development."
                 },
                 {
+                    "title": "Changed: Removed Korean and Thai translations as outdated."
+                },
+                {
                     "title": "Changed: Org: Added app-scoped file provider IDs for AppConfig",
                     "edition": "org"
                 },
                 {
-                    "title": "Changed: Org: Updated to Intune SDK 20.8.0 and MSAL 2.4.1",
+                    "title": "Changed: Org: Updated to Intune SDK 20.9.0 and MSAL 2.4.1",
                     "edition": "org"
                 },
                 {
