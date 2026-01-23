@@ -168,19 +168,36 @@ extension DatabaseViewerCoordinator {
 #endif
 
     internal func _canCopyCurrentEntryField(_ fieldName: String) -> Bool {
-        guard let value = _currentEntry?.getField(fieldName)?.resolvedValue else {
-            return false
+        guard let _currentEntry else { return false }
+
+        switch fieldName {
+        case EntryField.totp: // special case: "virtual" field
+            return _currentEntry.hasValidTOTP
+        default:
+            guard let value = _currentEntry.getField(fieldName)?.resolvedValue else {
+                return false
+            }
+            return value.isNotEmpty
         }
-        return value.isNotEmpty
     }
 
     internal func _copyCurrentEntryField(_ fieldName: String) {
         guard let _currentEntry else { return }
-        guard let value = _currentEntry.getField(fieldName)?.resolvedValue else {
-            assertionFailure("Unexpected field name")
-            return
+
+        switch fieldName {
+        case EntryField.totp: // special case: "virtual" field
+            guard let value = _currentEntry.totpGenerator()?.generate() else {
+                assertionFailure("TOTP value is unexpectedly nil")
+                return
+            }
+            Clipboard.general.copyWithTimeout(value)
+        default:
+            guard let value = _currentEntry.getField(fieldName)?.resolvedValue else {
+                assertionFailure("Copied field is unexpectedly nil")
+                return
+            }
+            Clipboard.general.copyWithTimeout(value)
         }
-        Clipboard.general.copyWithTimeout(value)
     }
 
     internal func _canOpenCurrentEntryURL() -> Bool {

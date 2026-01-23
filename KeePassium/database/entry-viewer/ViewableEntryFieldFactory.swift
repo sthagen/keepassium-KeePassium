@@ -192,6 +192,8 @@ class ViewableEntryFieldFactory {
                 EntryField.passkeyPrivateKeyPEM,
                 EntryField.passkeyUserHandle,
                 EntryField.passkeyUsername,
+                EntryField.passkeyFlagBE,
+                EntryField.passkeyFlagBS,
             ])
         }
         let excludeEmptyValues = excludedFields.contains(.emptyValues)

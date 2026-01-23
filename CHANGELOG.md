@@ -1,5 +1,28 @@
 #CHANGELOG
 
+## [2.5.171] - 2025-11-14
+
+### Improved
+
+- AutoFill: Passwords for new entries respect site-specific rules (#106) [thanks, everyone]
+- Added Cmd+T to copy entry OTP (#450) [thanks, GHubbler]
+- Group viewer now indicates which items are expired [thanks, A.E.]
+- Minor UI inconsistencies [thanks, u/SeaRain8212]
+
+### Fixed
+
+- macOS: Fixed oversensitive app lock; immediate app timeout is replaced with 10 seconds (#474) [thanks, everyone]
+- Longer saving of AutoFill changes could corrupt database [thanks, Robin and OG]
+- iOS: Rolled back field actions menu to old-style action buttons [thanks, everyone]
+- Sometimes Cmd+C still copied password instead of selected text (#426) [thanks, everyone]
+- AutoFill: Prevent entry creation in KDB root group (#476) [thanks, everyone]
+- Auto-move entries errouneously created in KDB root group (#476)
+- AutoFill: Improved logging for premium-related issues [thanks, Andy]
+- Org: Applying Intune configuration policies (regression in 2.4)
+- Org: Enforcing expired business licenses
+- Org: Removed donations from app settings (regression in 2.4)
+
+
 ## [2.4.170] - 2025-10-30
 
 ### Fixed

@@ -176,6 +176,9 @@ extension DatabaseViewerCoordinator.ItemDecorator {
 
     func getAccessories(for group: Group, context: Context) -> [UICellAccessory]? {
         var result = [UICellAccessory]()
+        if group.isExpired {
+            result.append(.expiredItemIndicator())
+        }
         if group.isSmartGroup {
             result.append(.smartGroupIndicator(isAccessibilityElement: false))
         }
@@ -286,6 +289,9 @@ extension DatabaseViewerCoordinator.ItemDecorator {
 
     func getAccessories(for entry: Entry, context: Context) -> [UICellAccessory]? {
         var result = [UICellAccessory]()
+        if entry.isExpired {
+            result.append(.expiredItemIndicator())
+        }
         if entry.attachments.count > 0 {
             result.append(.attachmentPresenceIndicator())
         }

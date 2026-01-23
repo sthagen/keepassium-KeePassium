@@ -8,20 +8,24 @@
 
 import UIKit
 
-extension UIApplication {
+private protocol DeprecatedApplicationWindows {
+    var deprecatedWindows: [UIWindow] { get }
+}
+
+extension UIApplication: DeprecatedApplicationWindows {
     public var currentActiveScene: UIWindowScene? {
         connectedScenes
             .compactMap { $0 as? UIWindowScene }
             .first { $0.activationState == .foregroundActive }
     }
 
+    @available(*, deprecated)
+    var deprecatedWindows: [UIWindow] { self.windows }
+
     public var firstKeyWindow: UIWindow? {
-        let windowScenes = connectedScenes.compactMap { ($0 as? UIWindowScene) }
-        for scene in windowScenes {
-            if let keyWindow = scene.windows.first(where: { $0.isKeyWindow }) {
-                return keyWindow
-            }
-        }
-        return nil
+        let keyWindow = (self as DeprecatedApplicationWindows)
+            .deprecatedWindows
+            .first(where: { $0.isKeyWindow })
+        return keyWindow
     }
 }

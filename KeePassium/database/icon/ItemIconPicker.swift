@@ -286,6 +286,8 @@ final class ItemIconPicker: CollectionViewControllerWithContextActions, Refresha
                 } else {
                     cell.imageView.contentMode = .center
                 }
+                cell.imageView.preferredSymbolConfiguration =
+                    .init(pointSize: UIImage.kpIconMaxSize, weight: .light)
                 cell.imageView.image = kpIcon
             }
         }

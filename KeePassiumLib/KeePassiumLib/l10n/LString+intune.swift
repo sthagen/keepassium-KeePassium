@@ -26,6 +26,16 @@ extension LString {
             bundle: Bundle.framework,
             value: "KeePassium could not find the enterprise account of your organization.",
             comment: "Error message, euphemism for missing corporate license")
+        public static let orgLicenseInvalid = NSLocalizedString(
+            "[Org/LicenseInvalid]",
+            bundle: Bundle.framework,
+            value: "Business license is invalid",
+            comment: "Status message for enterprise users with a wrong license key")
+        public static let orgLicenseExpired = NSLocalizedString(
+            "[Org/LicenseExpired]",
+            bundle: Bundle.framework,
+            value: "Business license has expired",
+            comment: "Status message for enterprise users with an expired license key")
 
         public static let hintContactYourAdmin = NSLocalizedString(
             "[Org/ContactYourAdmin]",

@@ -56,6 +56,18 @@ extension UICellAccessory {
         return UICellAccessory.customView(configuration: .init(customView: imageView, placement: .trailing()))
     }
 
+    static func expiredItemIndicator() -> UICellAccessory {
+        let imageView = UIImageView(image: .symbol(
+            .clockBadgeXmark,
+            tint: .secondaryLabel,
+            accessibilityLabel: LString.A11y.isExpired
+        ))
+        imageView.isAccessibilityElement = true
+        imageView.accessibilityTraits = [.staticText]
+        imageView.preferredSymbolConfiguration = UIImage.SymbolConfiguration(textStyle: .body, scale: .default)
+        return UICellAccessory.customView(configuration: .init(customView: imageView, placement: .trailing()))
+    }
+
     static func otpPresenceIndicator() -> UICellAccessory {
         let imageView = UIImageView(image: .symbol(
             .oneTimePassword,

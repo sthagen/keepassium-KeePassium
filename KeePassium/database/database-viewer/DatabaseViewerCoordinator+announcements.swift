@@ -36,6 +36,10 @@ extension DatabaseViewerCoordinator {
             announcements.append(incomingOTPAnnouncement)
         }
 
+        if let orgLicenseAnnouncement = BusinessLicenseHelper.maybeMakeExpiredLicenseAnnouncement() {
+            announcements.append(orgLicenseAnnouncement)
+        }
+
         if let whatsNewAnnouncement = WhatsNewHelper.makeAnnouncement(
             presenter: _topGroupViewer,
             completion: { [weak self] in self?.refresh(animated: true) }

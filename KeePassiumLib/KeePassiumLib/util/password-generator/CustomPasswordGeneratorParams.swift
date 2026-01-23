@@ -77,6 +77,24 @@ public struct CustomPasswordGeneratorParams: Codable, Equatable {
 
     init() {
     }
+
+    init(
+        length: Int = 32,
+        fixedSets: [FixedSet: InclusionCondition] = [
+            .upperCase: .allowed,
+            .lowerCase: .allowed,
+            .digits: .allowed,
+            .specials: .allowed,
+            .lookalikes: .excluded,
+        ],
+        customLists: [InclusionCondition: String] = [:],
+        maxConsecutive: Int? = nil
+    ) {
+        self.length = length
+        self.fixedSets = fixedSets
+        self.customLists = customLists
+        self.maxConsecutive = maxConsecutive
+    }
 }
 
 extension CustomPasswordGeneratorParams: PasswordGeneratorRequirementsConvertible {

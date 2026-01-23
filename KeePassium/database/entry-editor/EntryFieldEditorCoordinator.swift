@@ -103,7 +103,9 @@ final class EntryFieldEditorCoordinator: BaseCoordinator {
             EntryField.passkeyRelyingParty,
             EntryField.passkeyPrivateKeyPEM,
             EntryField.passkeyUserHandle,
-            EntryField.passkeyUsername
+            EntryField.passkeyUsername,
+            EntryField.passkeyFlagBE,
+            EntryField.passkeyFlagBS,
         ]
 
         var names: [String: Int] = [:]

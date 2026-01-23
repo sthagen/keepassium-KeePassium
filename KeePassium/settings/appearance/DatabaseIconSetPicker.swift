@@ -12,13 +12,8 @@ protocol DatabaseIconSetPickerDelegate: AnyObject {
     func didSelect(iconSet: DatabaseIconSet, in picker: DatabaseIconSetPicker)
 }
 
-internal class DatabaseIconSetPickerCell: UITableViewCell {
-    @IBOutlet weak var iconView: UIImageView!
-    @IBOutlet weak var titleLabel: UILabel!
-}
-
 class DatabaseIconSetPicker: UITableViewController {
-    private let cellID = "DatabaseIconSetPickerCell"
+    private let cellID = SubtitleCell.reuseIdentifier
 
     weak var delegate: DatabaseIconSetPickerDelegate?
     var selectedItem: DatabaseIconSet? {
@@ -28,9 +23,16 @@ class DatabaseIconSetPicker: UITableViewController {
     }
     private var demoIconID: IconID = .key
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
+    init() {
+        super.init(style: .insetGrouped)
+        tableView.register(
+            SubtitleCell.classForCoder(),
+            forCellReuseIdentifier: SubtitleCell.reuseIdentifier)
         title = LString.appearanceDatabaseIconsTitle
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -66,11 +68,18 @@ class DatabaseIconSetPicker: UITableViewController {
         let cell = tableView.dequeueReusableCell(
             withIdentifier: cellID,
             for: indexPath)
-            as! DatabaseIconSetPickerCell
 
+        var content = UIListContentConfiguration.subtitleCell()
         let iconSet = DatabaseIconSet.allCases[indexPath.row]
-        cell.iconView?.image = iconSet.getIcon(demoIconID)
-        cell.titleLabel?.text = iconSet.title
+        content.text = iconSet.title
+        content.image = iconSet.getIcon(demoIconID)
+        content.imageProperties.preferredSymbolConfiguration =
+            .init(pointSize: UIImage.kpIconMaxSize, weight: .light)
+        content.imageProperties.maximumSize =
+            CGSize(width: UIImage.kpIconMaxSize, height: UIImage.kpIconMaxSize)
+        content.imageProperties.reservedLayoutSize =
+            CGSize(width: UIImage.kpIconMaxSize, height: UIImage.kpIconMaxSize)
+        cell.contentConfiguration = content
 
         let isCurrent = iconSet == selectedItem
         cell.accessoryType = isCurrent ? .checkmark : .none

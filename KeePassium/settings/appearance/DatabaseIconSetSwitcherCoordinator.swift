@@ -12,7 +12,7 @@ class DatabaseIconSetSwitcherCoordinator: BaseCoordinator {
     private let picker: DatabaseIconSetPicker
 
     override init(router: NavigationRouter) {
-        picker = DatabaseIconSetPicker.instantiateFromStoryboard()
+        picker = DatabaseIconSetPicker()
         super.init(router: router)
         picker.delegate = self
     }

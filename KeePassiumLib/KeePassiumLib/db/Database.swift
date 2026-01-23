@@ -6,8 +6,10 @@
 //  by the Free Software Foundation: https://www.gnu.org/licenses/).
 //  For commercial licensing, please contact the author.
 
-open class Database: Eraseable {
+public class Database: Eraseable {
     public internal(set) var root: Group?
+
+    public var supportsEntriesInRoot: Bool { fatalError("Pure virtual method") }
 
     public internal(set) var progress = ProgressEx()
 

@@ -191,7 +191,7 @@ class ReceiptAnalyzer {
         if BusinessModel.type == .prepaid {
             return PurchaseHistory.prepaidProVersion
         }
-        if LicenseManager.shared.hasActiveBusinessLicense() {
+        if LicenseManager.shared.hasAcceptableBusinessLicense {
             Diag.info("Using business license")
             return PurchaseHistory.businessLicense
         }

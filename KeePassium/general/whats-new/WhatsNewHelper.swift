@@ -11,14 +11,14 @@ import UIKit
 import WhatsNewKit
 
 final class WhatsNewHelper {
-    private static let version: WhatsNew.Version = .current()
+    private static let version = WhatsNew.Version(stringLiteral: "2.4")
     private static let versionStore = UserDefaultsWhatsNewVersionStore(userDefaults: .appGroupShared)
 
     static func makeAnnouncement(
         presenter: UIViewController,
         completion: @escaping () -> Void
     ) -> AnnouncementItem? {
-        if versionStore.hasPresented(version) {
+        guard let whatsNew = getWhatsNew() else {
             return nil
         }
 
@@ -30,7 +30,7 @@ final class WhatsNewHelper {
                 title: LString.WhatsNew.titleWhatsNew,
                 handler: { [weak presenter] _ in
                     guard let presenter else { return }
-                    showFullPage(presenter: presenter)
+                    showFullPage(whatsNew, presenter: presenter)
                     versionStore.save(presentedVersion: version)
                     completion()
                 }
@@ -42,9 +42,9 @@ final class WhatsNewHelper {
         )
     }
 
-    private static func showFullPage(presenter: UIViewController) {
+    private static func showFullPage(_ whatsNew: WhatsNew, presenter: UIViewController) {
         let whatsNewController = WhatsNewViewController(
-            whatsNew: getWhatsNew(),
+            whatsNew: whatsNew,
             layout: .init(
                 footerPrimaryActionButtonCornerRadius: 10,
             )
@@ -53,7 +53,11 @@ final class WhatsNewHelper {
         presenter.present(whatsNewController, animated: true)
     }
 
-    private static func getWhatsNew() -> WhatsNew {
+    private static func getWhatsNew() -> WhatsNew? {
+        if versionStore.hasPresented(version) {
+            return nil
+        }
+
         var features = [WhatsNew.Feature]()
         if !BusinessModel.isIntuneEdition {
             features.append(.init(
@@ -127,7 +131,7 @@ final class WhatsNewHelper {
         ))
 
         return WhatsNew(
-            version: "2.4.166",
+            version: Self.version,
             title: WhatsNew.Title(text: .init(LString.WhatsNew.fullTitle)),
             features: features,
             primaryAction: WhatsNew.PrimaryAction(

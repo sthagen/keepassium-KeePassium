@@ -6,56 +6,57 @@
 //  by the Free Software Foundation: https://www.gnu.org/licenses/).
 //  For commercial licensing, please contact the author.
 
+public enum BusinessLicenseStatus {
+    case missing
+    case invalid
+    case valid
+    case expired
+}
+
 public final class LicenseManager {
     public static let shared = LicenseManager()
-    private static let provisionalLicenseCutoffDate = Date(iso8601string: "2024-02-29T23:59:59Z")!
 
     private enum LicenseKeyFormat {
-        case version1 
-        case provisional
+        case version1
         case unknown
     }
 
-    private var cachedLicenseStatus: Bool?
-    public func hasActiveBusinessLicense() -> Bool {
+    private var cachedLicenseStatus: BusinessLicenseStatus?
+
+    public var hasAcceptableBusinessLicense: Bool {
+        switch businessLicenseStatus {
+        case .missing:
+            return false
+        case .valid, .expired, .invalid:
+            return true
+        }
+    }
+    public var businessLicenseStatus: BusinessLicenseStatus {
         if let cachedLicenseStatus {
             return cachedLicenseStatus
         }
 
-        let licenseStatus = isLicensedForBusiness()
+        let licenseStatus = _evaluateLicenseStatus()
         cachedLicenseStatus = licenseStatus
         return licenseStatus
     }
 
     internal func checkBusinessLicense() {
-        cachedLicenseStatus = isLicensedForBusiness()
+        cachedLicenseStatus = _evaluateLicenseStatus()
     }
 
-    private func isLicensedForBusiness() -> Bool {
+    private func _evaluateLicenseStatus() -> BusinessLicenseStatus {
         guard let licenseKey = ManagedAppConfig.shared.license else {
-            return false
+            return .missing
         }
 
         let keyFormat = getLicenseKeyFormat(licenseKey)
         switch keyFormat {
         case .version1:
-            do {
-                return try isValidLicenseV1(licenseKey)
-            } catch {
-                return false
-            }
-        case .provisional:
-            let formattedDate = Self.provisionalLicenseCutoffDate.formatted(date: .numeric, time: .omitted)
-            if Date.now.distance(to: Self.provisionalLicenseCutoffDate) > 0 {
-                Diag.info("Using provisional business license [validUntil: \(formattedDate)]")
-                return true
-            } else {
-                Diag.info("Provisional business license has expired [validUntil: \(formattedDate)]")
-                return false
-            }
+            return checkLicenseV1(licenseKey)
         case .unknown:
             Diag.error("Business license key is misformatted")
-            return false
+            return .invalid
         }
     }
 
@@ -63,15 +64,16 @@ public final class LicenseManager {
         if let _ = getLicenseDataV1(from: licenseKey) {
             return .version1
         }
-        if licenseKey.lowercased() == "provisional" {
-            return .provisional
-        }
         return .unknown
     }
 }
 
 extension LicenseManager {
     private static let proofListFileName = "v1-proofs.sha256"
+
+    // swiftlint:disable:next comma
+    private static let expiredIndices = Set<Int>([0,1,2,5,7,9,10,11,12,13,14,15,16,17,18,19,20,21,22])
+
     private enum LicenseV1 {
         static let keyLength = 32 
         static let proofSize = SHA256_SIZE
@@ -86,10 +88,10 @@ extension LicenseManager {
         return licenseData
     }
 
-    private func isValidLicenseV1(_ licenseKey: String) throws -> Bool {
+    private func checkLicenseV1(_ licenseKey: String) -> BusinessLicenseStatus {
         guard let licenseData = getLicenseDataV1(from: licenseKey) else {
             Diag.warning("Unexpected license key format")
-            return false
+            return .invalid
         }
         let licenseKeyHash = licenseData.sha256
 
@@ -101,7 +103,7 @@ extension LicenseManager {
               let proofList = try? ByteArray(contentsOf: proofListURL)
         else {
             Diag.error("License proof list is missing")
-            return false
+            return .invalid
         }
 
         let inputStream = proofList.asInputStream()
@@ -109,17 +111,24 @@ extension LicenseManager {
         defer {
             inputStream.close()
         }
+        var index = 0
         while inputStream.hasBytesAvailable {
             guard let aProof = inputStream.read(count: LicenseV1.proofSize) else {
                 Diag.error("License hash list is corrupted")
-                return false
+                return .invalid
             }
             if aProof == licenseKeyHash {
-                Diag.debug("License key is valid [hashPrefix: \(licenseKeyHash.prefix(8).asHexString)]")
-                return true
+                if Self.expiredIndices.contains(index) {
+                    Diag.debug("License key is expired [hashPrefix: \(licenseKeyHash.prefix(8).asHexString)]")
+                    return .expired
+                } else {
+                    Diag.debug("License key is valid [hashPrefix: \(licenseKeyHash.prefix(8).asHexString)]")
+                    return .valid
+                }
             }
+            index += 1
         }
         Diag.error("License key invalid [hash: \(licenseKeyHash.asHexString)]")
-        return false
+        return .invalid
     }
 }

@@ -59,6 +59,8 @@ public class Database1: Database {
         static let packing: Int64 = 10
     }
 
+    public override var supportsEntriesInRoot: Bool { false }
+
     public override var peakKDFMemoryFootprint: Int {
         return AESKDF.memoryFootprint
     }
@@ -303,11 +305,22 @@ public class Database1: Database {
         for entry in entries {
             if entry.isMetaStream {
                 metaStreamEntries.append(entry)
-            } else {
-                guard let group = groupByID[entry.groupID] else { throw FormatError.orphanedEntry }
-                entry.isDeleted = group.isDeleted
-                group.add(entry: entry)
+                continue
             }
+            let targetGroup: Group
+            if let group = groupByID[entry.groupID] {
+                targetGroup = group
+            } else {
+                if let defaultGroup = _root.groups.first(where: { !$0.isDeleted }) {
+                    Diag.warning("Orphaned entry detected, moving it to default group")
+                    targetGroup = defaultGroup
+                } else {
+                    Diag.error("Orphaned entry detected, but no default group found")
+                    throw FormatError.orphanedEntry
+                }
+            }
+            entry.isDeleted = targetGroup.isDeleted
+            targetGroup.add(entry: entry)
         }
         backupGroup?.deepSetDeleted(true)
 

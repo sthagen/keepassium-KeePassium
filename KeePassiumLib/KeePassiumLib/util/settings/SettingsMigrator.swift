@@ -34,6 +34,8 @@ public final class SettingsMigrator {
         case 4:
             upgradeVersion4toVersion5(settings)
         case 5:
+            upgradeVersion5toVersion6(settings)
+        case 6:
             break
         default:
             break
@@ -52,5 +54,14 @@ public final class SettingsMigrator {
         settings.migrateUserActivityTimestampToKeychain()
         FileKeeper.shared.migrateFileReferencesToKeychain()
         settings.settingsVersion = 5
+    }
+
+    private static func upgradeVersion5toVersion6(_ settings: Settings) {
+        if ProcessInfo.isRunningOnMac,
+           settings.appLockTimeout == .immediately
+        {
+            settings.appLockTimeout = .after10seconds
+        }
+        settings.settingsVersion = 6
     }
 }

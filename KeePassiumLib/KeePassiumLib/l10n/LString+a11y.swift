@@ -33,5 +33,10 @@ public extension LString {
             bundle: Bundle.framework,
             value: "Contains one-time password.",
             comment: "Accessibility notification for entries with OTP codes.")
+        public static let isExpired = NSLocalizedString(
+            "[Accessibility/isExpired]",
+            bundle: Bundle.framework,
+            value: "Expired.",
+            comment: "Accessibility notification for groups/entries beyond their expiry date.")
     }
 }

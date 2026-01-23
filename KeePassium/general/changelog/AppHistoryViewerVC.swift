@@ -171,7 +171,7 @@ extension AppHistoryViewerVC {
         cell.isAccessibilityElement = true
         cell.accessibilityLabel = [item.change.description, ": ", item.title].joined()
 
-        let itemType = LicenseManager.shared.hasActiveBusinessLicense() ? .none : item.type
+        let itemType = LicenseManager.shared.hasAcceptableBusinessLicense ? .none : item.type
         switch itemType {
         case .none:
             cell.accessoryView = nil

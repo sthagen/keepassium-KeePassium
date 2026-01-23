@@ -70,7 +70,7 @@ extension MainCoordinator {
         #if INTUNE
         _applyIntuneAppConfig()
 
-        guard LicenseManager.shared.hasActiveBusinessLicense() else {
+        guard LicenseManager.shared.hasAcceptableBusinessLicense else {
             _showOrgLicensePaywall()
             return
         }

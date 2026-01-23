@@ -14,7 +14,7 @@ final class GroupViewerGroupCell: SelectableCollectionViewListCell {
         var config = UIListContentConfiguration.valueCell()
         config.text = group.name
         config.textProperties.numberOfLines = 3
-        config.textProperties.font = .preferredFont(forTextStyle: .headline)
+        config.textProperties.font = .preferredFont(forTextStyle: .body)
 
         let childrenCount = group.groups.count + group.entries.count
         if !group.isSmartGroup {
@@ -24,7 +24,10 @@ final class GroupViewerGroupCell: SelectableCollectionViewListCell {
         config.secondaryTextProperties.numberOfLines = 1
 
         config.image = UIImage.kpIcon(forGroup: group)
-        config.imageProperties.maximumSize = UIImage.kpIconMaxSize
+        config.imageProperties.maximumSize = CGSize(width: UIImage.kpIconMaxSize, height: UIImage.kpIconMaxSize)
+        config.imageProperties.reservedLayoutSize = config.imageProperties.maximumSize
+        config.imageProperties.preferredSymbolConfiguration =
+            .init(pointSize: UIImage.kpIconMaxSize, weight: .light)
         self.contentConfiguration = config
 
         UIView.performWithoutAnimation { [weak self] in

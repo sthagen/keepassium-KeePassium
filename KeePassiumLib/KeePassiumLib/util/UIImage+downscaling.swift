@@ -15,19 +15,20 @@ public extension UIImage {
     }
 
     func downscalingToSquare(maxSidePoints: CGFloat) -> UIImage? {
-        let targetSide: CGFloat
-        if size.width > maxSidePoints && size.height > maxSidePoints {
-            targetSide = maxSidePoints
-        } else {
-            targetSide = min(size.width, size.height)
+        let targetSize = CGSize(width: maxSidePoints, height: maxSidePoints)
+        let scaleFactor = min(1.0, maxSidePoints / max(size.width, size.height))
+
+        let scaledSize = CGSize(width: size.width * scaleFactor, height: size.height * scaleFactor)
+
+        let origin = CGPoint(
+            x: (targetSize.width - scaledSize.width) / 2.0,
+            y: (targetSize.height - scaledSize.height) / 2.0
+        )
+
+        let renderer = UIGraphicsImageRenderer(size: targetSize, format: .default())
+        let resized = renderer.image { _ in
+            self.draw(in: CGRect(origin: origin, size: scaledSize))
         }
-
-        let targetSize = CGSize(width: targetSide, height: targetSide)
-        UIGraphicsBeginImageContextWithOptions(targetSize, false, UIScreen.main.scale)
-        self.draw(in: CGRect(x: 0, y: 0, width: targetSide, height: targetSide))
-        let resized = UIGraphicsGetImageFromCurrentImageContext()
-        UIGraphicsEndImageContext()
-
-        return resized?.withRenderingMode(self.renderingMode)
+        return resized.withRenderingMode(self.renderingMode)
     }
 }

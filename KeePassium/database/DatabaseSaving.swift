@@ -38,7 +38,10 @@ extension DatabaseSaving {
         timeoutDuration: TimeInterval = FileDataProvider.defaultTimeoutDuration,
         onSuccess: (() -> Void)? = nil
     ) {
-        assert(databaseSaver == nil)
+        guard databaseSaver == nil else {
+            Diag.warning("Saving already in progress, skipping")
+            return
+        }
         saveSuccessHandler = onSuccess
 
         var tasksToSkip = [DatabaseSaver.RelatedTasks]()

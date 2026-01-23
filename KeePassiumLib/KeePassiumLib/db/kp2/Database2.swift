@@ -128,6 +128,7 @@ public class Database2: Database {
 
     private(set) var header: Header2!
     private(set) var meta: Meta2!
+    public override var supportsEntriesInRoot: Bool { true }
     public var formatVersion: FormatVersion { header.formatVersion }
     public var encryptionSettings: EncryptionSettings {
         EncryptionSettings(header: header)

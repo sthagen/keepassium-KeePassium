@@ -211,7 +211,7 @@ final class MainSettingsVC: BaseSettingsViewController<MainSettingsVC.Section> {
                 }
             ))
         ])
-        if BusinessModel.type == .freemium {
+        if BusinessModel.type == .freemium && !LicenseManager.shared.hasAcceptableBusinessLicense {
             snapshot.appendItems([
                 .basic(.init(
                     title: LString.tipBoxTitle2,

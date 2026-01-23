@@ -33,6 +33,7 @@ public enum SymbolName: String, Equatable {
     public static let fieldReference = Self.arrowRightCircle
     public static let largeType = Self.characterMagnify
     public static let managedParameter = Self.person2BadgeGearshape
+    public static let orgLicenseProblem = Self.person2Slash
     public static let oneTimePassword = Self.clock
     public static let passkey = Self.personBadgeKey
     public static let passkeyBroken = Self.keySlash
@@ -87,6 +88,7 @@ public enum SymbolName: String, Equatable {
     case clock = "clock"
     case clockArrowCirclepath = "clock.arrow.circlepath"
     case clockBadgeCheckmark = "clock.badge.checkmark"
+    case clockBadgeXmark = "clock.badge.xmark"
     case clockShield = "clock.shield"
     case dieFace3 = "die.face.3"
     case docOnDoc = "doc.on.doc"
@@ -144,6 +146,7 @@ public enum SymbolName: String, Equatable {
     case person = "person"
     case personBadgePlus = "person.badge.plus"
     case person2BadgeGearshape = "person.2.badge.gearshape"
+    case person2Slash = "person.2.slash"
     case person3 = "person.3"
     case personCropCircleBadgeCheckmark = "person.crop.circle.badge.checkmark"
     case photo = "photo"
@@ -236,7 +239,7 @@ extension UIImage {
         self.init(named: asset.rawValue)! 
     }
 
-    public static let kpIconMaxSize = CGSize(width: 29, height: 29)
+    public static let kpIconMaxSize: CGFloat = 32
 
     static func kpIcon(forEntry entry: Entry, iconSet: DatabaseIconSet? = nil) -> UIImage? {
         if let entry2 = entry as? Entry2,

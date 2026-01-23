@@ -9,18 +9,27 @@
 import KeePassiumLib
 
 extension EntryCreatorCoordinator {
+    func _getDefaultParentGroup() -> Group? {
+        let database = _databaseFile.database
+        if database.supportsEntriesInRoot {
+            return database.root
+        } else {
+            return database.root?.groups.first(where: { !$0.isDeleted })
+        }
+    }
 
     func _makeInitialEntryData() {
-        guard let rootGroup = _databaseFile.database.root else {
+        guard let defaultParentGroup = _getDefaultParentGroup() else {
             assertionFailure()
             return
         }
         let username = UserNameHelper.getUserNameSuggestions(from: _databaseFile.database, count: 1).first
-        let password = _generateInitialPassword(with: Settings.current.passwordGeneratorConfig)
         let url = _getContextURL(from: _searchContext)
+        let password = _generateSiteSpecificPassword(for: url)
+                    ?? _generateAPassword(with: Settings.current.passwordGeneratorConfig)
         let title = _makeTitle(from: url)
         _entryData = EntryCreatorEntryData(
-            parentGroup: rootGroup,
+            parentGroup: defaultParentGroup,
             title: title ?? "",
             username: username ?? "",
             password: password ?? "",
@@ -48,7 +57,26 @@ extension EntryCreatorCoordinator {
         return title
     }
 
-    private func _generateInitialPassword(with config: PasswordGeneratorParams) -> String? {
+    private func _generateSiteSpecificPassword(for url: URL?) -> String? {
+        guard let url,
+              let host = url.host(percentEncoded: false) ?? url.host(percentEncoded: true),
+              let siteParams = PasswordGeneratorParams.siteSpecific[host]
+        else {
+            return nil
+        }
+
+        let reqs = siteParams.toRequirements()
+        do {
+            Diag.info("Found site-specific password rules, generating…")
+            let password = try PasswordGenerator().generate(with: reqs)
+            return password
+        } catch {
+            Diag.error("Failed to generate password [message: \(error)]")
+            return nil
+        }
+    }
+
+    private func _generateAPassword(with config: PasswordGeneratorParams) -> String? {
         switch config.lastMode {
         case .basic:
             let reqs = config.basicModeConfig.toRequirements()

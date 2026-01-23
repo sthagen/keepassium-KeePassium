@@ -10,7 +10,7 @@ import KeePassiumLib
 
 extension MainSettingsCoordinator {
     internal func _getPremiumState() -> SettingsPremiumState {
-        if BusinessModel.type == .prepaid || LicenseManager.shared.hasActiveBusinessLicense() {
+        if BusinessModel.type == .prepaid || LicenseManager.shared.hasAcceptableBusinessLicense {
             return .prepaid
         }
 

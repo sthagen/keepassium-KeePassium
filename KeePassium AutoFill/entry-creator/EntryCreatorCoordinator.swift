@@ -45,6 +45,16 @@ final class EntryCreatorCoordinator: BaseCoordinator {
         _makeInitialEntryData()
         _pushInitialViewController(_entryCreatorVC, to: _router, animated: true)
         refresh()
+
+        debugLogMissingPremium()
+    }
+
+    private func debugLogMissingPremium() {
+        if PremiumManager.shared.isAvailable(feature: .canCreateEntriesInAutoFill) {
+            return
+        }
+        let premiumHistory = String(describing: PremiumManager.shared.getPurchaseHistory())
+        Diag.info(premiumHistory)
     }
 
     override func refresh() {

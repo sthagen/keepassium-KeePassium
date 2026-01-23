@@ -29,14 +29,21 @@ extension EntryCreatorCoordinator {
             else { assertionFailure(); return nil }
 
             let selectedUUID = coordinator._entryData.parentGroup.runtimeUUID
-            return makeGroupPickerMenu(for: rootGroup, selectedUUID: selectedUUID) as? UIMenu
+            return makeGroupPickerMenu(
+                for: rootGroup,
+                in: coordinator._databaseFile.database,
+                selectedUUID: selectedUUID) as? UIMenu
         }
     }
 }
 
 fileprivate extension EntryCreatorCoordinator.ItemDecorator {
 
-    func makeGroupPickerMenu(for group: Group, selectedUUID: UUID) -> UIMenuElement {
+    func makeGroupPickerMenu(
+        for group: Group,
+        in database: Database,
+        selectedUUID: UUID
+    ) -> UIMenuElement {
         let isRoot = (group.parent == nil)
         let thisGroupAction: UIAction
         if group.groups.isEmpty {
@@ -50,12 +57,13 @@ fileprivate extension EntryCreatorCoordinator.ItemDecorator {
             thisGroupAction = makeGroupPickerAction(
                 for: group,
                 title: isRoot ? nil : selectActionTitle,
-                selected: group.runtimeUUID == selectedUUID
+                selected: group.runtimeUUID == selectedUUID,
+                enabled: !isRoot || database.supportsEntriesInRoot
             )
         }
 
         let subgroupElements = group.groups.map { group -> UIMenuElement in
-            makeGroupPickerMenu(for: group, selectedUUID: selectedUUID)
+            makeGroupPickerMenu(for: group, in: database, selectedUUID: selectedUUID)
         }
         return UIMenu(
             title: isRoot ? "" : group.name,
@@ -66,10 +74,16 @@ fileprivate extension EntryCreatorCoordinator.ItemDecorator {
             ])
     }
 
-    func makeGroupPickerAction(for group: Group, title: String? = nil, selected: Bool = false) -> UIAction {
+    func makeGroupPickerAction(
+        for group: Group,
+        title: String? = nil,
+        selected: Bool = false,
+        enabled: Bool = true
+    ) -> UIAction {
         UIAction(
             title: title ?? group.name,
             image: .kpIcon(forGroup: group),
+            attributes: enabled ? [] : [.disabled],
             state: selected ? .on : .off,
             handler: { [weak self] _ in
                 self?.coordinator?._didSelectLocation(group)

@@ -1,6 +1,79 @@
 {
     "sections": [
         {
+            "version": "2.5",
+            "releaseDate": "2025-11-14T00:00:00Z",
+            "items": [
+                {
+                    "title": "Improved: AutoFill: Passwords for new entries respect site-specific rules",
+                    "edition": "free,pro",
+                    "github": "#106",
+                    "credits": "everyone"
+                },
+                {
+                    "title": "Improved: Added Cmd+T to copy entry OTP",
+                    "github": "#450",
+                    "credits": "GHubbler"
+                },
+                {
+                    "title": "Improved: Group viewer now indicates which items are expired",
+                    "credits": "A.E."
+                },
+                {
+                    "title": "Improved: Minor UI inconsistencies",
+                    "credits": "u/SeaRain8212"
+                },
+                {
+                    "title": "Fixed: macOS: Fixed oversensitive app lock; immediate app timeout is replaced with 10 seconds",
+                    "os": "macos",
+                    "github": "#474",
+                    "credits": "everyone"
+                },
+                {
+                    "title": "Fixed: Longer saving of AutoFill changes could corrupt database",
+                    "edition": "free,pro",
+                    "credits": "Robin and OG"
+                },
+                {
+                    "title": "Fixed: Rolled back field actions menu to old-style action buttons",
+                    "os": "ios",
+                    "credits": "everyone"
+                },
+                {
+                    "title": "Fixed: Sometimes Cmd+C still copied password instead of selected text",
+                    "github": "#426",
+                    "credits": "everyone"
+                },
+                {
+                    "title": "Fixed: AutoFill: Prevent entry creation in KDB root group",
+                    "edition": "free,pro",
+                    "github": "#476",
+                    "credits": "everyone"
+                },
+                {
+                    "title": "Fixed: Auto-move entries errouneously created in KDB root group",
+                    "github": "#476"
+                },
+                {
+                    "title": "Fixed: AutoFill: Improved logging for premium-related issues",
+                    "edition": "free,pro",
+                    "credits": "Andy"
+                },
+                {
+                    "title": "Fixed: Applying Intune configuration policies (regression in 2.4)",
+                    "edition": "org"
+                },
+                {
+                    "title": "Fixed: Enforcing expired business licenses",
+                    "edition": "org"
+                },
+                {
+                    "title": "Fixed: Removed donations from app settings",
+                    "edition": "org"
+                }
+            ]
+        },
+        {
             "version": "2.4",
             "releaseDate": "2025-10-10T00:00:00Z",
             "items": [

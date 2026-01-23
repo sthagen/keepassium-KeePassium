@@ -90,7 +90,7 @@ extension ConnectionTypePickerVC {
         var content = UIListContentConfiguration.cell()
         var accessories = [UICellAccessory]()
         content.text = service.description
-        content.textProperties.font = .preferredFont(forTextStyle: .headline)
+        content.textProperties.font = .preferredFont(forTextStyle: .body)
         content.image = .symbol(service.iconSymbol)
 
         if status.isAllowed {

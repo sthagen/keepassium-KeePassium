@@ -73,6 +73,8 @@ extension DatabaseViewerCoordinator {
                     return false
                 }
                 return coordinator._canCopyCurrentEntryField(EntryField.password)
+            case #selector(kpmCopyEntryTOTP):
+                return coordinator._canCopyCurrentEntryField(EntryField.totp)
             case #selector(kpmCopyEntryURL):
                 return coordinator._canCopyCurrentEntryField(EntryField.url)
             case #selector(kpmOpenEntryURL):
@@ -271,6 +273,12 @@ extension DatabaseViewerCoordinator {
                     LString.fieldPassword),
                 action: #selector(kpmCopyEntryPassword),
                 hotkey: .copyPassword)
+            let copyTOTPAction = UIKeyCommand(
+                title: String.localizedStringWithFormat(
+                    LString.actionCopyToClipboardTemplate,
+                    LString.fieldOTP),
+                action: #selector(kpmCopyEntryTOTP),
+                hotkey: .copyTOTP)
             let copyURLAction = UIKeyCommand(
                 title: String.localizedStringWithFormat(
                     LString.actionCopyToClipboardTemplate,
@@ -287,6 +295,7 @@ extension DatabaseViewerCoordinator {
             return UIMenu(inlineChildren: [
                 copyUserNameAction,
                 copyPasswordAction,
+                copyTOTPAction,
                 copyURLAction,
                 openURLAction
             ])
@@ -352,6 +361,9 @@ extension DatabaseViewerCoordinator {
         }
         @objc func kpmCopyEntryPassword() {
             coordinator?._copyCurrentEntryField(EntryField.password)
+        }
+        @objc func kpmCopyEntryTOTP() {
+            coordinator?._copyCurrentEntryField(EntryField.totp)
         }
         @objc func kpmCopyEntryURL() {
             coordinator?._copyCurrentEntryField(EntryField.url)

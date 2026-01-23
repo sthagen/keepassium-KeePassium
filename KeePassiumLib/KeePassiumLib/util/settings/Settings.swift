@@ -9,7 +9,7 @@
 import Foundation
 
 public class Settings {
-    public static let latestVersion = 5
+    public static let latestVersion = 6
     public static let current = Settings()
 
     public enum Keys: String {

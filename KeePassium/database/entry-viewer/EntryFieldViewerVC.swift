@@ -176,16 +176,8 @@ final class EntryFieldViewerVC: UITableViewController, Refreshable {
             ].compactMap { $0 }
 
             delegate?.didPressCopyField(text: text, in: self)
-            if #available(iOS 17.4, *),
-               !ProcessInfo.isRunningOnMac,
-               !UIAccessibility.isVoiceOverRunning
-            {
-                let popoverAnchor = tableView.popoverAnchor(at: indexPath)
-                showFieldMenu(for: field, with: actions, in: cell, for: indexPath, at: popoverAnchor)
-                animateCopyingToClipboard(in: cell, at: indexPath, actions: [])
-            } else {
-                animateCopyingToClipboard(in: cell, at: indexPath, actions: actions)
-            }
+
+            animateCopyingToClipboard(in: cell, at: indexPath, actions: actions)
         default:
             fatalError("Unexpected section")
         }

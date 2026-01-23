@@ -30,6 +30,10 @@ extension DatabasePickerCoordinator {
         }
 
         #if MAIN_APP
+        if let orgLicenseAnnouncement = BusinessLicenseHelper.maybeMakeExpiredLicenseAnnouncement() {
+            announcements.append(orgLicenseAnnouncement)
+        }
+
         if let whatsNewAnnouncement = WhatsNewHelper.makeAnnouncement(
             presenter: _filePickerVC,
             completion: { [weak self] in self?.refresh(animated: true, reloadInfo: false) }

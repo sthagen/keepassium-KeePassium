@@ -76,7 +76,9 @@ extension EntryFinderCoordinator.ItemDecorator {
         EntryField.passkeyRelyingParty,
         EntryField.passkeyPrivateKeyPEM,
         EntryField.passkeyUserHandle,
-        EntryField.passkeyUsername
+        EntryField.passkeyUsername,
+        EntryField.passkeyFlagBE,
+        EntryField.passkeyFlagBS,
     ]
 
     func makeCopyEntryFieldMenu(for entry: Entry, inline: Bool) -> UIMenu? {

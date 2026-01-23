@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23504" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="dyC-HY-kh4">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23727" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="dyC-HY-kh4">
     <device id="retina5_5" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23506"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23721"/>
         <capability name="Image references" minToolsVersion="12.0"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
@@ -35,7 +35,7 @@
                                             <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                             <textInputTraits key="textInputTraits" autocapitalizationType="sentences" autocorrectionType="no"/>
                                         </textField>
-                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ldy-wH-etc">
+                                        <button opaque="NO" contentMode="center" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ldy-wH-etc">
                                             <rect key="frame" x="20" y="8" width="40" height="40"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" constant="40" id="dME-T0-u6B"/>
@@ -61,7 +61,7 @@
                                 </connections>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="TagsFieldEditorCell" id="mcm-F8-Jbp" customClass="TagsFieldEditorCell" customModule="KeePassium" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="190.33333587646484" width="414" height="72.333335876464844"/>
+                                <rect key="frame" x="0.0" y="106" width="414" height="72.333335876464844"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="mcm-F8-Jbp" id="3bh-uC-xyU">
                                     <rect key="frame" x="0.0" y="0.0" width="414" height="72.333335876464844"/>
@@ -122,7 +122,7 @@
                                 </connections>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="PasswordEntryFieldCell" id="Kw5-lo-PXD" customClass="PasswordEntryFieldCell" customModule="KeePassium" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="262.66667175292969" width="414" height="79.333335876464844"/>
+                                <rect key="frame" x="0.0" y="178.33333587646484" width="414" height="79.333335876464844"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Kw5-lo-PXD" id="n4E-7U-Owp">
                                     <rect key="frame" x="0.0" y="0.0" width="414" height="79.333335876464844"/>
@@ -210,7 +210,7 @@
                                 </connections>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="MultiLineCell" id="5Ke-qE-K1F" customClass="EntryFieldEditorMultiLineCell" customModule="KeePassium" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="342.00000762939453" width="414" height="254.33332824707031"/>
+                                <rect key="frame" x="0.0" y="257.66667175292969" width="414" height="254.33332824707031"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="5Ke-qE-K1F" id="MDp-Cu-Sys">
                                     <rect key="frame" x="0.0" y="0.0" width="414" height="254.33332824707031"/>
@@ -273,7 +273,7 @@
                                 </connections>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="CustomFieldCell" id="CcF-c8-r4M" customClass="EntryFieldEditorCustomFieldCell" customModule="KeePassium" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="596.33333587646484" width="414" height="258"/>
+                                <rect key="frame" x="0.0" y="512" width="414" height="258"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="CcF-c8-r4M" id="8k8-If-CEX">
                                     <rect key="frame" x="0.0" y="0.0" width="414" height="258"/>

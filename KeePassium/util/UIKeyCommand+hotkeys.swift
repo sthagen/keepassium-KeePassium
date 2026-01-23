@@ -36,6 +36,7 @@ struct Hotkey: Equatable {
 
     static let copyUserName = Self(input: "B", modifiers: [.command])
     static let copyPassword = Self(input: "C", modifiers: [.command])
+    static let copyTOTP     = Self(input: "T", modifiers: [.command])
     static let copyURL      = Self(input: "U", modifiers: [.command])
     static let openURL      = Self(input: "U", modifiers: [.command, .shift])
 }
