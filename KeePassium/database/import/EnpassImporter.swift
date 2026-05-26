@@ -12,6 +12,7 @@ public class EnpassImporter {
     private struct EnpassVault: Decodable {
         let items: [EnpassItem]
         let folders: [EnpassFolder]?
+        let custom_icons: [EnpassCustomIcon]?
     }
 
     private struct EnpassFolder: Decodable {
@@ -22,6 +23,15 @@ public class EnpassImporter {
     private struct EnpassAttachment: Decodable {
         let name: String
         let data: String
+    }
+
+    private struct EnpassCustomIcon: Decodable {
+        let uuid: String
+        let data: String
+    }
+
+    private struct EnpassItemIcon: Decodable {
+        let uuid: String?
     }
 
     private struct EnpassItem: Decodable {
@@ -35,6 +45,7 @@ public class EnpassImporter {
         let trashed: Int
         let createdAt: Double?
         let updated_at: Double?
+        let icon: EnpassItemIcon?
     }
 
     private struct EnpassField: Decodable {
@@ -86,6 +97,38 @@ public class EnpassImporter {
 
     public init() {}
 
+    private func makeUniqueCustomFieldName(preferredName: String, in entry: Entry) -> String {
+        if entry.getField(preferredName) == nil {
+            return preferredName
+        }
+
+        var index = 1
+        while true {
+            let candidate = "\(preferredName) (\(index))"
+            if entry.getField(candidate) == nil {
+                return candidate
+            }
+            index += 1
+        }
+    }
+
+    private func makeExtraFieldName(label: String, standardName: String, in entry: Entry) -> String {
+        let trimmedLabel = label.trimmingCharacters(in: .whitespacesAndNewlines)
+        let normalizedLabel = trimmedLabel.lowercased()
+        let normalizedStandardName = standardName.lowercased()
+        let equivalentStandardNames: Set<String> = {
+            if normalizedStandardName == EntryField.otp.lowercased() {
+                return [normalizedStandardName, EntryField.totp.lowercased()]
+            } else {
+                return [normalizedStandardName]
+            }
+        }()
+        let preferredName = (trimmedLabel.isEmpty || equivalentStandardNames.contains(normalizedLabel))
+            ? standardName
+            : trimmedLabel
+        return makeUniqueCustomFieldName(preferredName: preferredName, in: entry)
+    }
+
     public func importFromJSON(fileURL: URL, group: Group) throws -> ([Entry], [Group]) {
         let jsonData = try Data(contentsOf: fileURL)
 
@@ -97,6 +140,16 @@ public class EnpassImporter {
         do {
             let decoder = JSONDecoder()
             let vault = try decoder.decode(EnpassVault.self, from: jsonData)
+
+            var customIconsByUUID: [String: ByteArray] = [:]
+            if let icons = vault.custom_icons {
+                for icon in icons where !icon.uuid.isEmpty {
+                    guard let pngData = ByteArray(hexString: icon.data) else {
+                        continue
+                    }
+                    customIconsByUUID[icon.uuid] = pngData
+                }
+            }
 
             guard !vault.items.isEmpty else {
                 Diag.error("No items found in the Enpass vault")
@@ -135,6 +188,10 @@ public class EnpassImporter {
                 entry.rawNotes = item.note ?? ""
 
                 if let fields = item.fields {
+                    var hasPassword = false
+                    var hasUserName = false
+                    var hasURL = false
+                    var extraURLIndex = 0
                     for field in fields  {
                         if field.deleted == 1 {
                             continue
@@ -144,20 +201,56 @@ public class EnpassImporter {
 
                         switch field.type {
                         case .password:
-                            entry.rawPassword = value
+                            if !hasPassword {
+                                entry.rawPassword = value
+                                hasPassword = true
+                            } else {
+                                let fieldName = makeExtraFieldName(
+                                    label: field.label,
+                                    standardName: EntryField.password,
+                                    in: entry
+                                )
+                                entry.setField(name: fieldName, value: value, isProtected: true)
+                            }
                         case .username:
-                            entry.rawUserName = value
+                            if !hasUserName {
+                                entry.rawUserName = value
+                                hasUserName = true
+                            } else {
+                                let fieldName = makeExtraFieldName(
+                                    label: field.label,
+                                    standardName: EntryField.userName,
+                                    in: entry
+                                )
+                                entry.setField(name: fieldName, value: value, isProtected: field.sensitive == 1)
+                            }
                         case .email:
-                            entry.setField(name: "Email", value: value, isProtected: field.sensitive == 1)
+                            let fieldName = makeUniqueCustomFieldName(preferredName: "Email", in: entry)
+                            entry.setField(name: fieldName, value: value, isProtected: field.sensitive == 1)
                         case .url:
-                            entry.rawURL = value
+                            if !hasURL {
+                                entry.rawURL = value
+                                hasURL = true
+                            } else {
+                                let fieldName = extraURLIndex == 0
+                                    ? EntryField.kp2aURLPrefix
+                                    : "\(EntryField.kp2aURLPrefix)_\(extraURLIndex)"
+                                entry.setField(name: fieldName, value: value, isProtected: false)
+                                extraURLIndex += 1
+                            }
                         case .totp:
                             if TOTPGeneratorFactory.isValidURI(value) {
-                                entry.setField(name: EntryField.otp, value: value, isProtected: true)
+                                let fieldName = makeExtraFieldName(
+                                    label: field.label,
+                                    standardName: EntryField.otp,
+                                    in: entry
+                                )
+                                entry.setField(name: fieldName, value: value, isProtected: true)
                             }
                         case .phone, .text, .section, .custom:
                             if !field.label.isEmpty {
-                                entry.setField(name: field.label, value: value, isProtected: field.sensitive == 1)
+                                let fieldName = makeUniqueCustomFieldName(preferredName: field.label, in: entry)
+                                entry.setField(name: fieldName, value: value, isProtected: field.sensitive == 1)
                             }
                         }
                     }
@@ -203,6 +296,15 @@ public class EnpassImporter {
                     if !tags.isEmpty {
                         entry.tags = tags
                     }
+                }
+
+                if let iconUUID = item.icon?.uuid,
+                   !iconUUID.isEmpty,
+                   let pngData = customIconsByUUID[iconUUID],
+                   let database2 = group.database as? Database2,
+                   let entry2 = entry as? Entry2 {
+                    let customIcon = database2.addCustomIcon(pngData: pngData)
+                    database2.setCustomIcon(customIcon, for: entry2)
                 }
 
                 if let updatedAt = item.updated_at {

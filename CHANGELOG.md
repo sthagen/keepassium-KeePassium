@@ -1,5 +1,51 @@
 #CHANGELOG
 
+## [2.6.173] - 2025-05-23
+
+### Improved
+
+- Accept file drops onto entries in group viewer
+- AutoFill exclusion criteria are customizable now (#477) [thanks, everyone]
+- Added wildcards support in tag search (e.g. `tag:m*`) [thanks, M.C.]
+- Hold Option to reveal protected fields in entry viewer [thanks, u/xppx99]
+- Cmd+A will Select All in lists
+- Parse and import Enpass custom icons
+
+## Fixed 
+
+- Direct connections: sporadic network loss errors (code -1005) on iOS 26.3+ [thanks, everyone]
+- Speculative fix for excessive app locks (#474) [thanks, everyone]
+- Avoid freezes when estimating quality of very long passwords [thanks, everyone]
+- Avoid excessive file info reloads [thanks, Wolfgang]
+- Import of duplicate fields from Enpass [thanks, Laurent]
+- Downloaded favicons appeared too small in KeePassXC [thanks, Chad]
+- Minor UI fixes here and there
+
+
+## [2.6.172] - 2026-02-22
+
+### Added
+
+- macOS: Import from 1Password (1PUX format)
+- macOS: Import from Bitwarden (plaintext JSON)
+- macOS: Internet access policy for Little Snitch firewall (#416)
+
+### Improved
+
+- Updated app icons to iOS/macOS 26 style
+- macOS: Left click starts text selection, not copies the whole field [thanks, everyone]
+- macOS: Right click shows field (or text) actions menu [thanks, everyone]
+
+### Fixed
+
+- Re-added accessibility actions to copy entry fields from database viewer (regression in v2.4) [thanks, Vsevolod]
+- Apply database fallback timeout also for saving (fixes #494) [thanks, Will]
+- Direct Dropbox connections: excessive caching of file list requests [thanks, u/sw00sh79]
+- Direct Google Drive connections: access to files in shared drives (regression in 2.4.166) [thanks, Adam]
+- Direct HTTP/S connections: make credentials optional [thanks, Otto]
+- macOS: Fixed Pro app icon [thanks, everyone]
+
+
 ## [2.5.171] - 2025-11-14
 
 ### Improved

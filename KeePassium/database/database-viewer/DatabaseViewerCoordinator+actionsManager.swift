@@ -44,7 +44,9 @@ extension DatabaseViewerCoordinator {
                 #selector(kpmLockDatabase),
                 #selector(kpmExportDatabaseToCSV),
                 #selector(kmpImportDatabaseFromApplePasswordsCSV),
-                #selector(kmpImportDatabaseFromEnpassJSON):
+                #selector(kmpImportDatabaseFromBitwardenJSON),
+                #selector(kmpImportDatabaseFromEnpassJSON),
+                #selector(kmpImportDatabaseFromOnePassword1PUX):
                 return true
             case #selector(kpmShowPasswordAudit):
                 return permissions.contains(.auditPasswords)
@@ -66,6 +68,8 @@ extension DatabaseViewerCoordinator {
                 return permissions.contains(.editItem)
             case #selector(kpmSelect):
                 return permissions.contains(.selectItems)
+            case #selector(UIResponderStandardEditActions.selectAll(_:)):
+                return permissions.contains(.selectItems) && !isTextInputFirstResponder()
             case #selector(kpmCopyEntryUserName):
                 return coordinator._canCopyCurrentEntryField(EntryField.userName)
             case #selector(kpmCopyEntryPassword):
@@ -86,6 +90,20 @@ extension DatabaseViewerCoordinator {
             default:
                 return false
             }
+        }
+
+        override func selectAll(_ sender: Any?) {
+            coordinator?._topGroupViewer?.selectAll(sender)
+        }
+
+        private func isTextInputFirstResponder() -> Bool {
+            let keyWindow = UIApplication.shared.firstKeyWindow
+            guard let firstResponder = keyWindow?.findFirstResponder() else {
+                return false
+            }
+            return firstResponder is UITextField ||
+                firstResponder is UITextView ||
+                firstResponder is UISearchBar
         }
 
         private func isFirstResponderReadyToCopy() -> Bool {
@@ -138,14 +156,28 @@ extension DatabaseViewerCoordinator {
                 title: LString.titleApplePasswordsCSV,
                 action: #selector(kmpImportDatabaseFromApplePasswordsCSV)
             )
+            let importBitwardenJSONCommand = UICommand(
+                title: LString.titleBitwardenJSON,
+                action: #selector(kmpImportDatabaseFromBitwardenJSON)
+            )
             let importEnpassJSONCommand = UICommand(
                 title: LString.titleEnpassJSON,
                 action: #selector(kmpImportDatabaseFromEnpassJSON)
             )
+            let importOnePassword1PUXCommand = UICommand(
+                title: LString.titleOnePassword1PUX,
+                action: #selector(kmpImportDatabaseFromOnePassword1PUX)
+            )
             return UIMenu(
                 title: LString.actionImport,
                 identifier: .importDatabase,
-                children: [importApplePasswordsCSVCommand, importEnpassJSONCommand])
+                children: [
+                    importOnePassword1PUXCommand,
+                    importApplePasswordsCSVCommand,
+                    importBitwardenJSONCommand,
+                    importEnpassJSONCommand
+                ]
+            )
         }
 
         private func makeReloadDatabaseMenu() -> UIMenu {
@@ -305,7 +337,11 @@ extension DatabaseViewerCoordinator {
             let selectAction = UICommand(
                 title: LString.actionSelect,
                 action: #selector(kpmSelect))
-            return UIMenu(inlineChildren: [selectAction])
+            let selectAllAction = UIKeyCommand(
+                title: LString.actionSelectAll,
+                action: #selector(UIResponderStandardEditActions.selectAll(_:)),
+                hotkey: .selectAll)
+            return UIMenu(inlineChildren: [selectAction, selectAllAction])
         }
 
         @objc func kpmReloadDatabase() {
@@ -320,8 +356,14 @@ extension DatabaseViewerCoordinator {
         @objc func kmpImportDatabaseFromApplePasswordsCSV() {
             coordinator?._importDatabaseFromApplePasswordsCSV()
         }
+        @objc func kmpImportDatabaseFromBitwardenJSON() {
+            coordinator?._importDatabaseFromBitwardenJSON()
+        }
         @objc func kmpImportDatabaseFromEnpassJSON() {
             coordinator?._importDatabaseFromEnpassJSON()
+        }
+        @objc func kmpImportDatabaseFromOnePassword1PUX() {
+            coordinator?._importDatabaseFromOnePassword1PUX()
         }
         @objc func kpmShowPasswordAudit() {
             coordinator?._showPasswordAudit()

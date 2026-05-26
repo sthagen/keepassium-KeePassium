@@ -291,6 +291,10 @@ extension DatabaseViewerCoordinator: GroupViewerVC.Delegate {
         }
     }
 
+    func shouldAllowBulkSelection(in viewController: GroupViewerVC) -> Bool {
+        return _currentGroupPermissions.contains(.selectItems)
+    }
+
     func shouldAllowReorder(in viewController: GroupViewerVC) -> Bool {
         return _canReorderItems
     }
@@ -315,11 +319,18 @@ extension DatabaseViewerCoordinator: GroupViewerVC.Delegate {
         return true
     }
 
+    func canDropFiles(_ files: [UIDragItem], onto entry: Entry, in viewController: GroupViewerVC) -> Bool {
+        return _canDropFiles(files, onto: entry, in: viewController)
+    }
+
+    func didDropFiles(_ files: [UIDragItem], onto entry: Entry, in viewController: GroupViewerVC) {
+        _didDropFiles(files, onto: entry, in: viewController)
+    }
+
     internal func _canDeleteItem(_ databaseItem: DatabaseItem) -> Bool {
         let permissions = DatabaseViewerPermissionManager.getPermissions(for: databaseItem, in: _databaseFile)
         return permissions.contains(.deleteItem)
     }
-
 }
 
 extension DatabaseViewerCoordinator: GroupEditorCoordinatorDelegate {

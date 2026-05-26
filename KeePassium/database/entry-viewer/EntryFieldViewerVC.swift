@@ -54,6 +54,9 @@ final class EntryFieldViewerVC: UITableViewController, Refreshable {
     private var tags: [String] = []
     private var announcements: [AnnouncementItem] = []
 
+    private var optionKeyRevealedFields: [ViewableField] = []
+    private var isOptionKeyHeld = false
+
     override func viewDidLoad() {
         super.viewDidLoad()
         self.clearsSelectionOnViewWillAppear = true
@@ -85,14 +88,56 @@ final class EntryFieldViewerVC: UITableViewController, Refreshable {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         refresh()
+        startObservingOptionKey()
     }
 
     override var canBecomeFirstResponder: Bool {
         return true
     }
 
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        stopObservingOptionKey()
+        setProtectedFieldsRevealedByOptionKey(false)
+    }
+
     deinit {
         NotificationCenter.default.removeObserver(self)
+    }
+
+    private func startObservingOptionKey() {
+        #if targetEnvironment(macCatalyst)
+        let macUtils = (UIApplication.shared.delegate as? AppDelegate)?.appServices.macUtils
+        macUtils?.startObservingOptionKey { [weak self] pressed in
+            self?.setProtectedFieldsRevealedByOptionKey(pressed)
+        }
+        #endif
+    }
+
+    private func stopObservingOptionKey() {
+        #if targetEnvironment(macCatalyst)
+        let macUtils = (UIApplication.shared.delegate as? AppDelegate)?.appServices.macUtils
+        macUtils?.stopObservingOptionKey()
+        #endif
+    }
+
+    private func setProtectedFieldsRevealedByOptionKey(_ revealed: Bool) {
+        guard revealed != isOptionKeyHeld else { return }
+        isOptionKeyHeld = revealed
+
+        if revealed {
+            optionKeyRevealedFields = sortedFields.filter { $0.isProtected && $0.isValueHidden }
+            optionKeyRevealedFields.forEach { $0.isValueHidden = false }
+        } else {
+            optionKeyRevealedFields.forEach { $0.isValueHidden = true }
+            optionKeyRevealedFields.removeAll()
+        }
+
+        for case let cell as ProtectedFieldCell in tableView.visibleCells {
+            cell.refreshValueVisibility()
+        }
+        tableView.beginUpdates()
+        tableView.endUpdates()
     }
 
     func setContents(
@@ -162,6 +207,8 @@ final class EntryFieldViewerVC: UITableViewController, Refreshable {
         case .announcements:
             return
         case .fields:
+            guard !ProcessInfo.isRunningOnMac else { return }
+
             guard let field = getField(at: indexPath),
                   let text = field.resolvedValue,
                   let cell = tableView.cellForRow(at: indexPath)
@@ -348,6 +395,52 @@ extension EntryFieldViewerVC: ViewableFieldCellDelegate {
 
         HapticFeedback.play(.contextMenuOpened)
         delegate?.didPressExportField(text: value, at: accessoryView.asPopoverAnchor, in: self)
+    }
+
+    func contextMenuConfiguration(for cell: ViewableFieldCell) -> UIContextMenuConfiguration? {
+        guard let indexPath = tableView.indexPath(for: cell),
+              let field = getField(at: indexPath),
+              let value = field.resolvedValue
+        else {
+            return nil
+        }
+
+        let supportsFieldReferencing = field.field?.isStandardField ?? false
+        let actions: [ViewableFieldAction] = [
+            .copy,
+            .export,
+            .showLargeType,
+            .showQRCode,
+            supportsFieldReferencing ? .copyReference : nil
+        ].compactMap { $0 }
+
+        return UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { [weak self] _ in
+            guard let self else { return nil }
+
+            let menuActions = actions.map { action -> UIAction in
+                UIAction(title: action.title, image: action.icon) { [weak self] _ in
+                    guard let self else { return }
+                    let popoverAnchor = self.tableView.popoverAnchor(at: indexPath)
+
+                    switch action {
+                    case .copy:
+                        self.delegate?.didPressCopyField(text: value, in: self)
+                        HapticFeedback.play(.copiedToClipboard)
+                    case .export:
+                        self.delegate?.didPressExportField(text: value, at: popoverAnchor, in: self)
+                    case .showLargeType:
+                        self.delegate?.didPressShowLargeType(text: value, at: popoverAnchor, in: self)
+                    case .showQRCode:
+                        self.delegate?.didPressShowQRCode(text: value, at: popoverAnchor, in: self)
+                    case .copyReference:
+                        self.delegate?.didPressCopyFieldReference(from: field, in: self)
+                        HapticFeedback.play(.copiedToClipboard)
+                    }
+                }
+            }
+
+            return UIMenu(title: "", children: menuActions)
+        }
     }
 
     override var keyCommands: [UIKeyCommand]? {
